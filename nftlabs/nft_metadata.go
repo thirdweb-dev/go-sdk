@@ -1,7 +1,9 @@
 package nftlabs
 
+import "math/big"
+
 type NftMetadata struct {
-	Id string
+	Id *big.Int
 	Uri string `json:"external_url"`
 	Name string `json:"name"`
 	Description string `json:"description"`

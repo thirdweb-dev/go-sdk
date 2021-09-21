@@ -2,11 +2,13 @@ package nftlabs
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"math/big"
 	"net/http"
+	"sync"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -16,7 +18,7 @@ import (
 
 type NftSdk interface {
 	Get(tokenId big.Int) (NftMetadata, error)
-	GetAll() string
+	GetAll() ([]NftMetadata, error)
 	Balance(tokenId string) uint64
 	BalanceOf(address string, tokenId string) uint64
 	Transfer(tokenId string, to string)
@@ -59,12 +61,18 @@ func (sdk *NftSdkModule) Get(tokenId *big.Int) (NftMetadata, error) {
 		return NftMetadata{}, err
 	}
 
+	if resp.StatusCode != http.StatusOK {
+		return NftMetadata{}, errors.New(fmt.Sprintf("Bad status code, %d", resp.StatusCode))
+	}
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	metadata := NftMetadata{}
+	metadata := NftMetadata{
+		Id: tokenId,
+	}
 	if err := json.Unmarshal(body, &metadata); err != nil {
 		return NftMetadata{}, err
 	}
@@ -72,13 +80,48 @@ func (sdk *NftSdkModule) Get(tokenId *big.Int) (NftMetadata, error) {
 	return metadata, nil
 }
 
-func (sdk *NftSdkModule) GetAll() (string, error) {
+func (sdk *NftSdkModule) GetAsync(tokenId *big.Int, ch chan<-NftMetadata, errCh chan<-error, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	result, err := sdk.Get(tokenId)
+	if err != nil {
+		log.Printf("Failed to fetch nft with id %d\n err=%v", tokenId, err)
+		errCh <- err
+		return
+	}
+	ch <- result
+}
+
+func (sdk *NftSdkModule) GetAll() ([]NftMetadata, error) {
 	maxId, err := sdk.caller.NextTokenId(&bind.CallOpts{})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	fmt.Println("MaxID =", maxId)
-	// TODO: complete fetch by calling Get on all ids
-	return "", nil
+	var wg sync.WaitGroup
+
+	nfts := make([]NftMetadata, 0)
+	ch := make(chan NftMetadata)
+	errCh := make(chan error)
+
+	defer close(ch)
+	defer close(errCh)
+
+	count := maxId.Int64()
+	for i := int64(0); i < count; i++ {
+		id := new(big.Int)
+		id.SetInt64(i)
+
+		wg.Add(1)
+		go sdk.GetAsync(id, ch, errCh, &wg)
+	}
+
+	go func() {
+		for v := range ch {
+			nfts = append(nfts, v)
+		}
+	}()
+
+	wg.Wait()
+	return nfts, nil
 }
