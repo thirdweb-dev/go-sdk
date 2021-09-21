@@ -19,7 +19,7 @@ import (
 type NftSdk interface {
 	Get(tokenId big.Int) (NftMetadata, error)
 	GetAll() ([]NftMetadata, error)
-	Balance(tokenId string) uint64
+	Balance(tokenId big.Int) (big.Int, error)
 	BalanceOf(address string, tokenId string) uint64
 	Transfer(tokenId string, to string)
 }
@@ -124,4 +124,8 @@ func (sdk *NftSdkModule) GetAll() ([]NftMetadata, error) {
 
 	wg.Wait()
 	return nfts, nil
+}
+
+func (sdk *NftSdkModule) BalanceOf(address string) (*big.Int, error) {
+	return sdk.caller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
 }
