@@ -1,6 +1,7 @@
 package nftlabs
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -9,6 +10,7 @@ import (
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 	"log"
 	"math/big"
+	"time"
 )
 
 type PackSdk interface {
@@ -53,6 +55,15 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 }
 
 func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
+	packMeta, err := sdk.caller.GetPack(&bind.CallOpts{}, packId)
+	if err != nil {
+		return Pack{}, err
+	}
+
+	if packMeta.Uri == "" {
+		return Pack{}, errors.New(fmt.Sprintf("Could not find pack metadata with id %d", packId))
+	}
+
 	packUri, err := sdk.caller.TokenURI(&bind.CallOpts{}, packId)
 	if err != nil {
 		return Pack{}, err
@@ -67,9 +78,20 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 		return Pack{}, err
 	}
 
-	//metadata :=
-
+	// TODO: breakdown this object and apply to Pack
 	log.Printf("body = %v", string(body))
-	
-	return Pack{}, nil
+	metadata := NftMetadata{
+		Id: packId,
+	}
+	if err := json.Unmarshal(body, &metadata); err != nil {
+		return Pack{}, err
+	}
+
+	return Pack{
+		Creator: packMeta.Creator,
+		CurrentSupply: *packMeta.CurrentSupply,
+		OpenStart: time.Unix(packMeta.OpenStart.Int64(), 0),
+		OpenEnd: time.Unix(packMeta.OpenEnd.Int64(), 0),
+		NftMetadata: metadata,
+	}, nil
 }
