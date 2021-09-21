@@ -58,12 +58,11 @@ func (sdk *NftSdkModule) Get(tokenId *big.Int) (NftMetadata, error) {
 	}
 
 	body, err := sdk.gateway.Get(tokenUri)
-
 	metadata := NftMetadata{
 		Id: tokenId,
 	}
 	if err := json.Unmarshal(body, &metadata); err != nil {
-		return NftMetadata{}, err
+		return NftMetadata{}, &UnmarshalError{body: string(body), typeName: "pack", underlyingError: err}
 	}
 
 	return metadata, nil

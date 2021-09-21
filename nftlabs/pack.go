@@ -2,8 +2,6 @@ package nftlabs
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -61,7 +59,7 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 	}
 
 	if packMeta.Uri == "" {
-		return Pack{}, errors.New(fmt.Sprintf("Could not find pack metadata with id %d", packId))
+		return Pack{}, &NotFoundError{identifier: packId, typeName: "pack metadata"}
 	}
 
 	packUri, err := sdk.caller.TokenURI(&bind.CallOpts{}, packId)
@@ -70,7 +68,7 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 	}
 
 	if packUri == "" {
-		return Pack{}, errors.New(fmt.Sprintf("Could not find pack with id %d", packId))
+		return Pack{}, &NotFoundError{identifier: packId, typeName: "pack"}
 	}
 
 	body, err := sdk.gateway.Get(packUri)
