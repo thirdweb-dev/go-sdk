@@ -2,12 +2,8 @@ package nftlabs
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"math/big"
-	"net/http"
 	"sync"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -28,12 +24,13 @@ type NftSdkModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
+	gateway Gateway
 	caller *abi.NFTCaller
 }
 
 func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftSdkModule, error) {
 	if opt.IpfsGatewayUrl == "" {
-	opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
+		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
 
 	caller, err := abi.NewNFTCaller(common.HexToAddress(address), client)
@@ -41,10 +38,15 @@ func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) 
 		return nil, err
 	}
 
+	// internally we force this gw, but could allow an override for testing
+	var gw Gateway
+	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
+
 	return &NftSdkModule{
 		Client: client,
 		Address: address,
 		Options: opt,
+		gateway: gw,
 		caller: caller,
 	}, nil
 }
@@ -55,20 +57,7 @@ func (sdk *NftSdkModule) Get(tokenId *big.Int) (NftMetadata, error) {
 		return NftMetadata{}, err
 	}
 
-	gatewayUrl := replaceIpfsWithGateway(tokenUri, sdk.Options.IpfsGatewayUrl)
-	resp, err := http.Get(gatewayUrl)
-	if err != nil {
-		return NftMetadata{}, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return NftMetadata{}, errors.New(fmt.Sprintf("Bad status code, %d", resp.StatusCode))
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	body, err := sdk.gateway.Get(tokenUri)
 
 	metadata := NftMetadata{
 		Id: tokenId,
