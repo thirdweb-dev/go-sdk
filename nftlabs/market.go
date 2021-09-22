@@ -65,20 +65,24 @@ func (m *MarketSdkModule) Get(listingId *big.Int) (Listing, error) {
 }
 
 func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
-	// TODO: fill this in, but wtf
 	listingCurrency := listing.Currency
 
 	// TODO: this is bad, don't want to create an instance of the module every time but idk how else to get it in here
+	// damages testability
 	currency, err := NewCurrencySdkModule(m.Client, listingCurrency.Hex())
 	if err != nil {
+		// TODO: return better error
 		return Listing{}, err
 	}
 
 	currencyValue, err := currency.GetValue(listing.PricePerToken)
 	if err != nil {
+		// TODO: return better error
 		return Listing{}, err
 	}
 
+	// TODO: again, bad, need to create this in the function because we don't know the nft contract when we get here
+	// damages testability
 	nftModule, err := NewNftSdkModule(m.Client, listing.AssetContract.Hex(), &SdkOptions{})
 	if err != nil {
 		// TODO: return better error
