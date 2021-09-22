@@ -12,7 +12,7 @@ import (
 )
 
 type PackSdk interface {
-	Open(packId *big.Int) (NftMetadata, error)
+	Open(packId *big.Int) (PackNft, error)
 	Get(tokenId *big.Int) (Pack, error)
 	GetAll() ([]Pack, error)
 	GetNfts(packId *big.Int) ([]PackNft, error)
@@ -95,7 +95,7 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 }
 
 
-func (sdk *PackSdkModule) Open(packId *big.Int) (NftMetadata, error) {
+func (sdk *PackSdkModule) Open(packId *big.Int) (PackNft, error) {
 	panic("implement me")
 }
 
