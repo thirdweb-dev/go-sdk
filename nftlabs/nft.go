@@ -17,7 +17,7 @@ type NftSdk interface {
 	GetAll() ([]NftMetadata, error)
 	Balance(tokenId *big.Int) (*big.Int, error)
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
-	Transfer(tokenId string, to string)
+	Transfer(to string, tokenId *big.Int, amount *big.Int)
 }
 
 type NftSdkModule struct {
@@ -119,9 +119,10 @@ func (sdk *NftSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, 
 }
 
 func (sdk *NftSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
+	// TODO: use the authenticated wallet to make this call (use wallet address when checking balance)
 	panic("implement me")
 }
 
-func (sdk *NftSdkModule) Transfer(tokenId string, to string) {
+func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int, amount *big.Int) {
 	panic("implement me")
 }
