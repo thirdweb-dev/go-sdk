@@ -114,6 +114,6 @@ func (sdk *NftSdkModule) GetAll() ([]NftMetadata, error) {
 	return nfts, nil
 }
 
-func (sdk *NftSdkModule) BalanceOf(address string) (*big.Int, error) {
-	return sdk.caller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
+func (sdk *NftSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
+	return sdk.caller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), tokenId)
 }
