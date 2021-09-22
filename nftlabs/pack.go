@@ -8,6 +8,7 @@ import (
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 	"log"
 	"math/big"
+	"sync"
 	"time"
 )
 
@@ -27,6 +28,7 @@ type PackSdkModule struct {
 	Options *SdkOptions
 	gateway Gateway
 	caller *abi.PackCaller
+	transactor *abi.PackTransactor
 }
 
 func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackSdkModule, error) {
@@ -35,6 +37,11 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 	}
 
 	caller, err := abi.NewPackCaller(common.HexToAddress(address), client)
+	if err != nil {
+		return nil, err
+	}
+
+	transactor, err := abi.NewPackTransactor(common.HexToAddress(address), client)
 	if err != nil {
 		return nil, err
 	}
@@ -48,6 +55,7 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 		Address: address,
 		Options: opt,
 		gateway: gw,
+		transactor: transactor,
 		caller: caller,
 	}, nil
 }
@@ -94,13 +102,54 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 	}, nil
 }
 
+func (sdk *PackSdkModule) CreatePack(packId *big.Int) (PackNft, error) {
+	panic("implement me")
+}
 
 func (sdk *PackSdkModule) Open(packId *big.Int) (PackNft, error) {
 	panic("implement me")
 }
 
+func (sdk *PackSdkModule) GetAsync(tokenId *big.Int, ch chan<-Pack, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	result, err := sdk.Get(tokenId)
+	if err != nil {
+		log.Printf("Failed to fetch nft with id %d\n err=%v", tokenId, err)
+		return
+	}
+	ch <- result
+}
+
 func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
-	panic("implement me")
+	maxId, err := sdk.caller.NextTokenId(&bind.CallOpts{});
+	if err != nil {
+		return nil, err
+	}
+
+	var wg sync.WaitGroup
+
+	packs := make([]Pack, 0)
+	ch := make(chan Pack)
+	defer close(ch)
+
+	count := maxId.Int64()
+	for i := int64(0); i < count; i++ {
+		id := new(big.Int)
+		id.SetInt64(i)
+
+		wg.Add(1)
+		go sdk.GetAsync(id, ch, &wg)
+	}
+
+	go func() {
+		for v := range ch {
+			packs = append(packs, v)
+		}
+	}()
+
+	wg.Wait()
+	return packs, nil
 }
 
 func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
