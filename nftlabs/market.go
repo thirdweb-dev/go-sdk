@@ -6,6 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 	"math/big"
+	"time"
 )
 
 type MarketSdk interface {
@@ -25,7 +26,6 @@ type MarketSdk interface {
 }
 
 type MarketSdkModule struct {
-	CurrencySdk *CurrencySdk
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
@@ -33,7 +33,7 @@ type MarketSdkModule struct {
 	caller *abi.MarketCaller
 }
 
-func NewMarketSdkModule(client *ethclient.Client, currencySdk *CurrencySdk, address string, opt *SdkOptions) (*MarketSdkModule, error) {
+func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*MarketSdkModule, error) {
 	if opt.IpfsGatewayUrl == "" {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
@@ -48,7 +48,6 @@ func NewMarketSdkModule(client *ethclient.Client, currencySdk *CurrencySdk, addr
 	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
 
 	return &MarketSdkModule{
-		CurrencySdk: currencySdk,
 		Client: client,
 		Address: address,
 		Options: opt,
@@ -66,11 +65,60 @@ func (m *MarketSdkModule) Get(listingId *big.Int) (Listing, error) {
 }
 
 func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
-	//var currency CurrencyValue
-	//
-	//if c, err :=
+	// TODO: fill this in, but wtf
+	listingCurrency := listing.Currency
 
-	return Listing{}, nil
+	// TODO: this is bad, don't want to create an instance of the module every time but idk how else to get it in here
+	currency, err := NewCurrencySdkModule(m.Client, listingCurrency.Hex())
+	if err != nil {
+		return Listing{}, err
+	}
+
+	currencyValue, err := currency.GetValue(listing.PricePerToken)
+	if err != nil {
+		return Listing{}, err
+	}
+
+	nftModule, err := NewNftSdkModule(m.Client, listing.AssetContract.Hex(), &SdkOptions{})
+	if err != nil {
+		// TODO: return better error
+		return Listing{}, err
+	}
+	nftMetadata, err := nftModule.Get(listing.TokenId)
+	if err != nil {
+		// TODO: return better error
+		return Listing{}, err
+	}
+
+	var saleStart *time.Time
+	// TODO: should I be doing Int64() here ??? is there data loss ???
+	if listing.SaleStart.Int64() > 0 {
+		time.Unix(listing.SaleStart.Int64() * 1000, 0)
+	} else {
+		saleStart = nil
+	}
+
+	var saleEnd *time.Time
+	// TODO: should I be doing Int64() here ??? is there data loss ???
+	if listing.SaleEnd.Int64() > 0 && listing.SaleEnd.Int64() < big.MaxExp - 1 {
+		time.Unix(listing.SaleEnd.Int64() * 1000, 0)
+	} else {
+		saleEnd = nil
+	}
+
+	return Listing{
+		Id:               listing.ListingId,
+		Seller:           listing.Seller,
+		TokenContract:    listing.AssetContract,
+		TokenId:          listing.TokenId,
+		TokenMetadata:    nftMetadata,
+		Quantity:         listing.Quantity,
+		CurrentContract:  listingCurrency,
+		CurrencyMetadata: currencyValue,
+		Price:            listing.PricePerToken,
+		SaleStart:        saleStart,
+		SaleEnd:          saleEnd,
+	}, nil
 }
 
 func (m *MarketSdkModule) GetAll() ([]Listing, error) {
