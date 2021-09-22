@@ -1,7 +1,10 @@
 package nftlabs
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"log"
 	"math/big"
 	"sync"
@@ -17,7 +20,7 @@ type NftSdk interface {
 	GetAll() ([]NftMetadata, error)
 	Balance(tokenId *big.Int) (*big.Int, error)
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
-	Transfer(to string, tokenId *big.Int, amount *big.Int)
+	Transfer(to string, tokenId *big.Int, amount *big.Int) error
 }
 
 type NftSdkModule struct {
@@ -26,6 +29,7 @@ type NftSdkModule struct {
 	Options *SdkOptions
 	gateway Gateway
 	caller *abi.NFTCaller
+	transactor *abi.NFTTransactor
 }
 
 func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftSdkModule, error) {
@@ -35,6 +39,13 @@ func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) 
 
 	caller, err := abi.NewNFTCaller(common.HexToAddress(address), client)
 	if err != nil {
+		// TODO: return better error
+		return nil, err
+	}
+
+	transactor, err := abi.NewNFTTransactor(common.HexToAddress(address), client)
+	if err != nil {
+		// TODO: return better error
 		return nil, err
 	}
 
@@ -48,6 +59,7 @@ func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) 
 		Options: opt,
 		gateway: gw,
 		caller: caller,
+		transactor: transactor,
 	}, nil
 }
 
@@ -123,6 +135,29 @@ func (sdk *NftSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
 	panic("implement me")
 }
 
-func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int, amount *big.Int) {
-	panic("implement me")
+func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int, amount *big.Int) error {
+	// TODO: allow user to supply this to sdk
+	privateKey, err := crypto.HexToECDSA("omitted")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	publicAddress, err := getPublicAddress(privateKey)
+	if err != nil {
+		// TODO: return better error
+		return err
+	}
+
+	// TODO: allow you to pass transact opts
+	// note: `NoSend: false` means this tx will execute right away
+	_, err = sdk.transactor.SafeTransferFrom(&bind.TransactOpts{
+		NoSend: false,
+		From: publicAddress,
+		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+			ctx := context.Background()
+			chainId, _ := sdk.Client.ChainID(ctx)
+			return types.SignTx(transaction, types.NewEIP155Signer(chainId), privateKey)
+		},
+	}, publicAddress, common.HexToAddress(to), tokenId, amount, nil)
+	return err
 }
