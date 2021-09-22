@@ -64,6 +64,26 @@ func (m *MarketSdkModule) Get(listingId *big.Int) (Listing, error) {
 	}
 }
 
+func (m *MarketSdkModule) GetAll() ([]Listing, error) {
+	panic("implement me")
+}
+
+func (m *MarketSdkModule) List(assetContract string, tokenId string, currentContract string, price *big.Int, quantity *big.Int, secondsUntilStart uint64, secondsUntilEnd uint64) (Listing, error) {
+	panic("implement me")
+}
+
+func (m *MarketSdkModule) UnlistAll(listingId *big.Int) error {
+	panic("implement me")
+}
+
+func (m *MarketSdkModule) Unlist(listingId *big.Int, quantity *big.Int) error {
+	panic("implement me")
+}
+
+func (m *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
+	panic("implement me")
+}
+
 func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
 	listingCurrency := listing.Currency
 
@@ -123,24 +143,4 @@ func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (L
 		SaleStart:        saleStart,
 		SaleEnd:          saleEnd,
 	}, nil
-}
-
-func (m *MarketSdkModule) GetAll() ([]Listing, error) {
-	panic("implement me")
-}
-
-func (m *MarketSdkModule) List(assetContract string, tokenId string, currentContract string, price *big.Int, quantity *big.Int, secondsUntilStart uint64, secondsUntilEnd uint64) (Listing, error) {
-	panic("implement me")
-}
-
-func (m *MarketSdkModule) UnlistAll(listingId *big.Int) error {
-	panic("implement me")
-}
-
-func (m *MarketSdkModule) Unlist(listingId *big.Int, quantity *big.Int) error {
-	panic("implement me")
-}
-
-func (m *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
-	panic("implement me")
 }
