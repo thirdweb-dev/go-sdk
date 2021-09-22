@@ -12,13 +12,13 @@ import (
 )
 
 type PackSdk interface {
-	Open(packId big.Int) (NftMetadata, error)
-	Get(tokenId big.Int) (NftMetadata, error)
+	Open(packId *big.Int) (NftMetadata, error)
+	Get(tokenId *big.Int) (Pack, error)
 	GetAll() ([]Pack, error)
-	GetNfts(packId big.Int) ([]PackNft, error)
-	Balance(tokenId big.Int) (big.Int, error)
+	GetNfts(packId *big.Int) ([]PackNft, error)
+	Balance(tokenId *big.Int) (big.Int, error)
 	BalanceOf(address string, tokenId string) uint64
-	Transfer(to string, tokenId string, quantity big.Int) error
+	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
 }
 
 type PackSdkModule struct {
@@ -92,4 +92,29 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 		OpenEnd: time.Unix(packMeta.OpenEnd.Int64(), 0),
 		NftMetadata: metadata,
 	}, nil
+}
+
+
+func (sdk *PackSdkModule) Open(packId *big.Int) (NftMetadata, error) {
+	panic("implement me")
+}
+
+func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
+	panic("implement me")
+}
+
+func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
+	panic("implement me")
+}
+
+func (sdk *PackSdkModule) Balance(tokenId *big.Int) (big.Int, error) {
+	panic("implement me")
+}
+
+func (sdk *PackSdkModule) BalanceOf(address string, tokenId string) uint64 {
+	panic("implement me")
+}
+
+func (sdk *PackSdkModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error {
+	panic("implement me")
 }
