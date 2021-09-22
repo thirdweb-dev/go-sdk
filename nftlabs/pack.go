@@ -1,15 +1,19 @@
 package nftlabs
 
 import (
+	"context"
 	"encoding/json"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/nftlabs/nftlabs-sdk-go/abi"
 	"log"
 	"math/big"
 	"sync"
 	"time"
+
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/nftlabs/nftlabs-sdk-go/abi"
 )
 
 type PackSdk interface {
@@ -20,6 +24,7 @@ type PackSdk interface {
 	Balance(tokenId *big.Int) (big.Int, error)
 	BalanceOf(address string, tokenId string) uint64
 	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
+	Create(nftContractAddress string, assets []PackNftAddition) error
 }
 
 type PackSdkModule struct {
@@ -58,6 +63,51 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 		transactor: transactor,
 		caller: caller,
 	}, nil
+}
+
+func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddition) error {
+	// TODO: allow user to supply this to sdk
+	privateKey, err := crypto.HexToECDSA("omitted")
+	if err != nil {
+			return err
+	}
+
+	publicAddress, err := getPublicAddress(privateKey)
+	if err != nil {
+		// TODO: return better error
+		return err
+	}
+
+	log.Printf("Wallet used = %v\n", publicAddress)
+
+	ids := make([]*big.Int, 0)
+	counts := make([]*big.Int, 0)
+
+	for _, addition := range assets {
+		ids = append(ids, addition.NftId)
+		counts = append(counts, addition.Supply)
+	}
+
+	nftSdkModule, err := NewNftSdkModule(sdk.Client, nftContractAddress, sdk.Options)
+	if err != nil {
+		return err
+	}
+
+	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
+		NoSend: false,
+		From: publicAddress,
+		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+			ctx := context.Background()
+			chainId, _ := sdk.Client.ChainID(ctx)
+			return types.SignTx(transaction, types.NewEIP155Signer(chainId), privateKey)
+		},
+	}, publicAddress, common.HexToAddress(sdk.Address), ids, counts, nil)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
@@ -153,7 +203,51 @@ func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
 }
 
 func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
-	panic("implement me")
+	result, err := sdk.caller.GetPackWithRewards(&bind.CallOpts{}, packId)
+	if err != nil {
+		return nil, err
+	}
+
+	var wg *sync.WaitGroup
+	packNfts := make([]PackNft, 0)
+
+	ch := make(chan PackNft)
+	defer close(ch)
+
+	// TODO: I hate instantiating the module here, could move to New function because it shares the same address as the pack contract
+	nftModule, err := NewNftSdkModule(sdk.Client, sdk.Address, sdk.Options)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, i := range result.TokenIds {
+		wg.Add(1)
+
+		go func (id *big.Int) {
+			defer wg.Done()
+
+			metadata, err := nftModule.Get(id)
+			if err != nil {
+				// TODO (IMPORTANT): what to do in this case?? ts-sdk moves on I think...
+				log.Printf("Failed to get metdata for nft %d in pack %d\n", id, packId)
+				return
+			}
+
+			ch <- PackNft{
+				NftMetadata: metadata,
+				Supply:      result.Pack.CurrentSupply,
+			}
+		}(i)
+	}
+
+	go func () {
+		for packNft := range ch {
+			packNfts = append(packNfts, packNft)
+		}
+	}()
+
+	wg.Wait()
+	return packNfts, nil
 }
 
 func (sdk *PackSdkModule) Balance(tokenId *big.Int) (big.Int, error) {

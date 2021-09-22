@@ -1,9 +1,10 @@
 package nftlabs
 
 import (
-	"github.com/ethereum/go-ethereum/common"
 	"math/big"
 	"time"
+
+	"github.com/ethereum/go-ethereum/common"
 )
 
 type Pack struct {
@@ -16,5 +17,10 @@ type Pack struct {
 
 type PackNft struct {
 	NftMetadata
-	Supply big.Int
+	Supply *big.Int
+}
+
+type PackNftAddition struct {
+	NftId *big.Int
+	Supply *big.Int
 }
