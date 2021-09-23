@@ -116,13 +116,14 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
     }
 
 	bytes, _ := arguments.Pack(
-		"",
+		"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
         big.NewInt(0),
         big.NewInt(0),
         big.NewInt(1),
     )
 
 	_, err = nftSdkModule.transactor.SafeTransferFrom(&bind.TransactOpts{
+	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
 		NoSend: false,
 		From: publicAddress,
 		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
@@ -130,7 +131,7 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 			chainId, _ := sdk.Client.ChainID(ctx)
 			return types.SignTx(transaction, types.NewEIP155Signer(chainId), privateKey)
 		},
-	}, publicAddress, common.HexToAddress("0xC7dB76a94EB034f575317Ed436DE5934eB8286bB"), ids[0], counts[0], bytes)
+	}, publicAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
 
 	if err != nil {
 		return err
