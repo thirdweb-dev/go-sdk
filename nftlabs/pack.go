@@ -1,7 +1,6 @@
 package nftlabs
 
 import (
-	"context"
 	"encoding/json"
 	"log"
 	"math/big"
@@ -10,8 +9,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 
@@ -19,6 +16,7 @@ import (
 )
 
 type PackSdk interface {
+	CommonModule
 	Open(packId *big.Int) (PackNft, error)
 	Get(tokenId *big.Int) (Pack, error)
 	GetAll() ([]Pack, error)
@@ -33,9 +31,11 @@ type PackSdkModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
+	SigningAddress common.Address
 	gateway Gateway
 	caller *abi.PackCaller
 	transactor *abi.PackTransactor
+	signer         SigningMethod
 }
 
 func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackSdkModule, error) {
@@ -68,19 +68,15 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 }
 
 func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddition) error {
-	// TODO: allow user to supply this to sdk
-	privateKey, err := crypto.HexToECDSA("ommitted")
-	if err != nil {
-			return err
+	if sdk.SigningAddress == common.HexToAddress("0") {
+		return &NoAddressError{typeName: "pack"}
 	}
 
-	publicAddress, err := getPublicAddress(privateKey)
-	if err != nil {
-		// TODO: return better error
-		return err
+	if sdk.signer == nil {
+		return &NoSignerError{typeName: "pack"}
 	}
 
-	log.Printf("Wallet used = %v\n", publicAddress)
+	log.Printf("Wallet used = %v\n", sdk.SigningAddress)
 
 	ids := make([]*big.Int, 0)
 	counts := make([]*big.Int, 0)
@@ -124,13 +120,9 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 
 	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
 		NoSend: false,
-		From: publicAddress,
-		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-			ctx := context.Background()
-			chainId, _ := sdk.Client.ChainID(ctx)
-			return types.SignTx(transaction, types.NewEIP155Signer(chainId), privateKey)
-		},
-	}, publicAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
+		From: sdk.SigningAddress,
+		Signer: sdk.signer,
+	}, sdk.SigningAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
 
 	if err != nil {
 		return err
@@ -284,4 +276,12 @@ func (sdk *PackSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int,
 
 func (sdk *PackSdkModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error {
 	panic("implement me")
+}
+
+func (sdk *PackSdkModule) SetSigningMethod(signer SigningMethod) {
+	sdk.signer = signer
+}
+
+func (sdk *PackSdkModule) SetSigningAddress(address string) {
+	sdk.SigningAddress = common.HexToAddress(address)
 }

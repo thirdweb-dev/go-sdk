@@ -20,3 +20,19 @@ type UnmarshalError struct{
 func (m *UnmarshalError) Error() string {
 	return fmt.Sprintf("Could not unmarshal %v with body %v", m.typeName, m.body)
 }
+
+type NoSignerError struct{
+	typeName string
+}
+
+func (m *NoSignerError) Error() string {
+	return fmt.Sprintf("Could not proceed with transaction in %v module, missing SigningMethod", m.typeName)
+}
+
+type NoAddressError struct{
+	typeName string
+}
+
+func (m *NoAddressError) Error() string {
+	return fmt.Sprintf("Could not proceed with transaction in %v module, missing or invalid address", m.typeName)
+}
