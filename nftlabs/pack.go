@@ -180,10 +180,6 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 	}, nil
 }
 
-func (sdk *PackSdkModule) CreatePack(packId *big.Int) (PackNft, error) {
-	panic("implement me")
-}
-
 func (sdk *PackSdkModule) Open(packId *big.Int) (PackNft, error) {
 	panic("implement me")
 }
@@ -236,7 +232,7 @@ func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 		return nil, err
 	}
 
-	var wg *sync.WaitGroup
+	var wg sync.WaitGroup
 	packNfts := make([]PackNft, 0)
 
 	ch := make(chan PackNft)
