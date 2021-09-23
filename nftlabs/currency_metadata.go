@@ -3,7 +3,7 @@ package nftlabs
 type Currency struct {
 	Name string
 	Symbol string
-	Decimals uint64
+	Decimals uint8
 }
 
 type CurrencyValue struct {

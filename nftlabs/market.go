@@ -1,16 +1,19 @@
 package nftlabs
 
 import (
+	"log"
+	"math/big"
+	"strings"
+	"time"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
-	"math/big"
-	"time"
 )
 
 type MarketSdk interface {
-	Get(listingId *big.Int) (Listing, error)
+	GetListing(listingId *big.Int) (Listing, error)
 	GetAll() ([]Listing, error)
 	List(
 		assetContract string,
@@ -44,8 +47,7 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 	}
 
 	// internally we force this gw, but could allow an override for testing
-	var gw Gateway
-	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
+	gw := NewCloudflareGateway(opt.IpfsGatewayUrl)
 
 	return &MarketSdkModule{
 		Client: client,
@@ -56,7 +58,7 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 	}, nil
 }
 
-func (m *MarketSdkModule) Get(listingId *big.Int) (Listing, error) {
+func (m *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error) {
 	if result, err := m.caller.Listings(&bind.CallOpts{}, listingId); err != nil {
 		return Listing{}, err
 	} else {
@@ -87,31 +89,45 @@ func (m *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
 func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
 	listingCurrency := listing.Currency
 
-	// TODO: this is bad, don't want to create an instance of the module every time but idk how else to get it in here
-	// damages testability
-	currency, err := NewCurrencySdkModule(m.Client, listingCurrency.Hex())
-	if err != nil {
-		// TODO: return better error
-		return Listing{}, err
+	var currencyMetadata *CurrencyValue
+	if strings.HasPrefix(listingCurrency.String(), "0x000000000000") {
+		currencyMetadata = nil
+	} else {
+		// TODO: this is bad, don't want to create an instance of the module every time but idk how else to get it in here
+		// damages testability
+		log.Printf("Getting listing currency at address %v\n", listingCurrency)
+		currency, err := NewCurrencySdkModule(m.Client, listingCurrency.Hex())
+		if err != nil {
+			// TODO: return better error
+			return Listing{}, err
+		}
+
+		
+		if currencyValue, err := currency.GetValue(listing.PricePerToken); err != nil {
+			// TODO: return better error
+			return Listing{}, err
+		} else {
+			currencyMetadata = currencyValue
+		}
 	}
 
-	currencyValue, err := currency.GetValue(listing.PricePerToken)
-	if err != nil {
-		// TODO: return better error
-		return Listing{}, err
-	}
-
-	// TODO: again, bad, need to create this in the function because we don't know the nft contract when we get here
-	// damages testability
-	nftModule, err := NewNftSdkModule(m.Client, listing.AssetContract.Hex(), &SdkOptions{})
-	if err != nil {
-		// TODO: return better error
-		return Listing{}, err
-	}
-	nftMetadata, err := nftModule.Get(listing.TokenId)
-	if err != nil {
-		// TODO: return better error
-		return Listing{}, err
+	var nftMetadata *NftMetadata
+	if !strings.HasPrefix(listing.AssetContract.String(), "0x000000000000") {
+		log.Printf("Getting nft module at %v", listing.AssetContract)
+		// TODO: again, bad, need to create this in the function because we don't know the nft contract when we get here
+		// damages testability
+		nftModule, err := NewNftSdkModule(m.Client, listing.AssetContract.Hex(), &SdkOptions{})
+		if err != nil {
+			// TODO: return better error
+			return Listing{}, err
+		}
+		
+		if meta, err := nftModule.Get(listing.TokenId); err != nil {
+			// TODO: return better error
+			return Listing{}, err
+		} else {
+			nftMetadata = &meta
+		}
 	}
 
 	var saleStart *time.Time
@@ -138,7 +154,7 @@ func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (L
 		TokenMetadata:    nftMetadata,
 		Quantity:         listing.Quantity,
 		CurrentContract:  listingCurrency,
-		CurrencyMetadata: currencyValue,
+		CurrencyMetadata: currencyMetadata,
 		Price:            listing.PricePerToken,
 		SaleStart:        saleStart,
 		SaleEnd:          saleEnd,
