@@ -1,6 +1,7 @@
 package nftlabs
 
 import (
+	"crypto/ecdsa"
 	"log"
 	"math/big"
 	"strings"
@@ -33,10 +34,11 @@ type MarketSdkModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
-	SigningAddress common.Address
 	gateway Gateway
 	caller *abi.MarketCaller
-	signer         SigningMethod
+
+	privateKey *ecdsa.PrivateKey
+	signerAddress common.Address
 }
 
 func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*MarketSdkModule, error) {
@@ -164,10 +166,12 @@ func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (L
 	}, nil
 }
 
-func (m *MarketSdkModule) SetSigningMethod(signer SigningMethod) {
-	m.signer = signer
-}
-
-func (m *MarketSdkModule) SetSigningAddress(address string) {
-	m.SigningAddress = common.HexToAddress(address)
+func (sdk *MarketSdkModule) SetPrivateKey(privateKey string) error {
+	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
+		return err
+	} else {
+		sdk.privateKey = pKey
+		sdk.signerAddress = publicAddress
+	}
+	return nil
 }

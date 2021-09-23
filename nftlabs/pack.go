@@ -1,7 +1,10 @@
 package nftlabs
 
 import (
+	"context"
+	"crypto/ecdsa"
 	"encoding/json"
+	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
 	"sync"
@@ -31,11 +34,11 @@ type PackSdkModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
-	SigningAddress common.Address
 	gateway Gateway
 	caller *abi.PackCaller
 	transactor *abi.PackTransactor
-	signer         SigningMethod
+	privateKey *ecdsa.PrivateKey
+	signerAddress common.Address
 }
 
 func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackSdkModule, error) {
@@ -68,15 +71,11 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 }
 
 func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddition) error {
-	if sdk.SigningAddress == common.HexToAddress("0") {
-		return &NoAddressError{typeName: "pack"}
-	}
-
-	if sdk.signer == nil {
+	if sdk.signerAddress == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "pack"}
 	}
 
-	log.Printf("Wallet used = %v\n", sdk.SigningAddress)
+	log.Printf("Wallet used = %v\n", sdk.signerAddress)
 
 	ids := make([]*big.Int, 0)
 	counts := make([]*big.Int, 0)
@@ -119,10 +118,14 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
     )
 
 	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
-		NoSend: false,
-		From: sdk.SigningAddress,
-		Signer: sdk.signer,
-	}, sdk.SigningAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
+		From:      sdk.signerAddress,
+		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+			ctx := context.Background()
+			chainId, _ := sdk.Client.ChainID(ctx)
+			return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
+		},
+		NoSend:    false,
+	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
 
 	if err != nil {
 		return err
@@ -278,10 +281,12 @@ func (sdk *PackSdkModule) Transfer(to string, tokenId *big.Int, quantity *big.In
 	panic("implement me")
 }
 
-func (sdk *PackSdkModule) SetSigningMethod(signer SigningMethod) {
-	sdk.signer = signer
-}
-
-func (sdk *PackSdkModule) SetSigningAddress(address string) {
-	sdk.SigningAddress = common.HexToAddress(address)
+func (sdk *PackSdkModule) SetPrivateKey(privateKey string) error {
+	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
+		return err
+	} else {
+		sdk.privateKey = pKey
+		sdk.signerAddress = publicAddress
+	}
+	return nil
 }

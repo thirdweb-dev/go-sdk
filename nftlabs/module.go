@@ -8,6 +8,5 @@ import (
 type SigningMethod = func(common.Address, *types.Transaction) (*types.Transaction, error)
 
 type CommonModule interface {
-	SetSigningMethod(signer SigningMethod)
-	SetSigningAddress(address string)
+	SetPrivateKey(privateKey string) error
 }

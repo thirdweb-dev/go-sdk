@@ -18,3 +18,20 @@ func getPublicAddress(key *ecdsa.PrivateKey) (common.Address, error) {
 
 	return crypto.PubkeyToAddress(*publicKeyECDSA), nil
 }
+
+
+func processPrivateKey(privateKey string) (*ecdsa.PrivateKey, common.Address, error) {
+	pKey, err := crypto.HexToECDSA(privateKey)
+	if err != nil {
+		// TODO: return better error
+		return nil, [20]byte{}, err
+	}
+
+	publicAddress, err := getPublicAddress(pKey)
+	if err != nil {
+		// TODO: return better error
+		return nil, [20]byte{}, err
+	}
+
+	return pKey, publicAddress, nil
+}

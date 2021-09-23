@@ -1,7 +1,10 @@
 package nftlabs
 
 import (
+	"context"
+	"crypto/ecdsa"
 	"encoding/json"
+	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
 	"sync"
@@ -25,11 +28,12 @@ type NftSdkModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
-	SigningAddress common.Address
 	gateway Gateway
 	caller *abi.NFTCaller
 	transactor *abi.NFTTransactor
-	signer         SigningMethod
+
+	privateKey *ecdsa.PrivateKey
+	signerAddress common.Address
 }
 
 func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftSdkModule, error) {
@@ -136,28 +140,30 @@ func (sdk *NftSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
 }
 
 func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int, amount *big.Int) error {
-	if sdk.SigningAddress == common.HexToAddress("0") {
-		return &NoAddressError{typeName: "pack"}
-	}
-
-	if sdk.signer == nil {
-		return &NoSignerError{typeName: "pack"}
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "nft"}
 	}
 
 	// TODO: allow you to pass transact opts
 	_, err := sdk.transactor.SafeTransferFrom(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.SigningAddress,
-		Signer: sdk.signer,
-	}, sdk.SigningAddress, common.HexToAddress(to), tokenId, amount, nil)
+		From: sdk.signerAddress,
+		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+			ctx := context.Background()
+			chainId, _ := sdk.Client.ChainID(ctx)
+			return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
+		},
+	}, sdk.signerAddress, common.HexToAddress(to), tokenId, amount, nil)
 
 	return err
 }
 
-func (sdk *NftSdkModule) SetSigningMethod(signer SigningMethod) {
-	sdk.signer = signer
-}
-
-func (sdk *NftSdkModule) SetSigningAddress(address string) {
-	sdk.SigningAddress = common.HexToAddress(address)
+func (sdk *NftSdkModule) SetPrivateKey(privateKey string) error {
+	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
+		return err
+	} else {
+		sdk.privateKey = pKey
+		sdk.signerAddress = publicAddress
+	}
+	return nil
 }
