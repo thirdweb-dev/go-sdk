@@ -1,7 +1,9 @@
 package nftlabs
 
 import (
+	"context"
 	"crypto/ecdsa"
+	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
 	"strings"
@@ -19,12 +21,12 @@ type MarketSdk interface {
 	GetAll() ([]Listing, error)
 	List(
 		assetContract string,
-		tokenId string,
+		tokenId *big.Int,
 		currentContract string,
 		price *big.Int,
 		quantity *big.Int,
-		secondsUntilStart uint64,
-		secondsUntilEnd uint64) (Listing, error)
+		secondsUntilStart *big.Int,
+		secondsUntilEnd *big.Int) (Listing, error)
 	UnlistAll(listingId *big.Int) error
 	Unlist(listingId *big.Int, quantity *big.Int) error
 	Buy(listingId *big.Int, quantity *big.Int) error
@@ -36,6 +38,8 @@ type MarketSdkModule struct {
 	Options *SdkOptions
 	gateway Gateway
 	caller *abi.MarketCaller
+	transactor *abi.MarketTransactor
+	filterer *abi.MarketFilterer
 
 	privateKey *ecdsa.PrivateKey
 	signerAddress common.Address
@@ -51,6 +55,16 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 		return nil, err
 	}
 
+	transactor, err := abi.NewMarketTransactor(common.HexToAddress(address), client)
+	if err != nil {
+		return nil, err
+	}
+
+	filterer, err := abi.NewMarketFilterer(common.HexToAddress(address), client)
+	if err != nil {
+		return nil, err
+	}
+
 	// internally we force this gw, but could allow an override for testing
 	gw := NewCloudflareGateway(opt.IpfsGatewayUrl)
 
@@ -60,38 +74,110 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 		Options: opt,
 		gateway: gw,
 		caller: caller,
+		transactor: transactor,
+		filterer: filterer,
 	}, nil
 }
 
-func (m *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error) {
-	if result, err := m.caller.Listings(&bind.CallOpts{}, listingId); err != nil {
+func (sdk *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error) {
+	if result, err := sdk.caller.Listings(&bind.CallOpts{}, listingId); err != nil {
 		return Listing{}, err
 	} else {
-		return m.transformResultToListing(result)
+		return sdk.transformResultToListing(result)
 	}
 }
 
-func (m *MarketSdkModule) GetAll() ([]Listing, error) {
+func (sdk *MarketSdkModule) GetAll() ([]Listing, error) {
 	panic("implement me")
 }
 
-func (m *MarketSdkModule) List(assetContract string, tokenId string, currentContract string, price *big.Int, quantity *big.Int, secondsUntilStart uint64, secondsUntilEnd uint64) (Listing, error) {
+func (sdk *MarketSdkModule) List(
+	packContractAddress string,
+	tokenId *big.Int,
+	currencyContractAddress string,
+	pricePerToken *big.Int,
+	quantity *big.Int,
+	secondsUntilStart *big.Int,
+	secondsUntilEnd *big.Int) (Listing, error) {
+	packAddress := common.HexToAddress(packContractAddress)
+	currencyAddress := common.HexToAddress(currencyContractAddress)
+
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return Listing{}, &NoSignerError{typeName: "nft"}
+	}
+
+	packModule, err := NewPackSdkModule(sdk.Client, packContractAddress, &SdkOptions{})
+	if err != nil {
+		// TODO: return better error
+		return Listing{}, err
+	}
+	if err := packModule.SetPrivateKey(sdk.privateKey.D.String()); err != nil {
+		return Listing{}, err
+	}
+
+	if isApproved, err := packModule.caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
+		return Listing{}, err
+	} else {
+		if !isApproved {
+			if _, err := packModule.transactor.SetApprovalForAll(&bind.TransactOpts{
+				NoSend: false,
+				From: sdk.signerAddress,
+				Signer: packModule.getSigner(),
+			}, common.HexToAddress(sdk.Address), true); err != nil {
+				// return better error describing that "Failed to Gran approval on Pack contract"
+				return Listing{}, err
+			}
+		}
+	}
+
+	result, err := sdk.transactor.List(&bind.TransactOpts{
+		NoSend: false,
+		Signer: sdk.getSigner(),
+		From: sdk.signerAddress,
+	}, packAddress, tokenId, currencyAddress, pricePerToken, quantity, secondsUntilStart, secondsUntilEnd)
+	if err != nil {
+		return Listing{}, err
+	}
+
+	_, err = sdk.Client.TransactionReceipt(context.Background(), result.Hash())
+	if err != nil {
+		return Listing{}, err
+	}
+
+	//query := ethereum.FilterQuery{
+	//	FromBlock: receipt.BlockNumber,
+	//	ToBlock:   receipt.BlockNumber,
+	//	Addresses: []common.Address{
+	//		common.HexToAddress(sdk.Address),
+	//	},
+	//})
+
+	//logs, err := sdk.Client.FilterLogs(context.Background(), query)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//var event interface{}
+	//for _, log := range logs {
+	//	if log.DecodeRLP()
+	//}
+
+	return Listing{}, nil
+}
+
+func (sdk *MarketSdkModule) UnlistAll(listingId *big.Int) error {
 	panic("implement me")
 }
 
-func (m *MarketSdkModule) UnlistAll(listingId *big.Int) error {
+func (sdk *MarketSdkModule) Unlist(listingId *big.Int, quantity *big.Int) error {
 	panic("implement me")
 }
 
-func (m *MarketSdkModule) Unlist(listingId *big.Int, quantity *big.Int) error {
+func (sdk *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
 	panic("implement me")
 }
 
-func (m *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
-	panic("implement me")
-}
-
-func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
+func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
 	listingCurrency := listing.Currency
 
 	var currencyMetadata *CurrencyValue
@@ -101,7 +187,7 @@ func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (L
 		// TODO: this is bad, don't want to create an instance of the module every time but idk how else to get it in here
 		// damages testability
 		log.Printf("Getting listing currency at address %v\n", listingCurrency)
-		currency, err := NewCurrencySdkModule(m.Client, listingCurrency.Hex())
+		currency, err := NewCurrencySdkModule(sdk.Client, listingCurrency.Hex())
 		if err != nil {
 			// TODO: return better error
 			return Listing{}, err
@@ -121,7 +207,7 @@ func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (L
 		log.Printf("Getting nft module at %v", listing.AssetContract)
 		// TODO: again, bad, need to create this in the function because we don't know the nft contract when we get here
 		// damages testability
-		nftModule, err := NewNftSdkModule(m.Client, listing.AssetContract.Hex(), &SdkOptions{})
+		nftModule, err := NewNftSdkModule(sdk.Client, listing.AssetContract.Hex(), &SdkOptions{})
 		if err != nil {
 			// TODO: return better error
 			return Listing{}, err
@@ -174,4 +260,12 @@ func (sdk *MarketSdkModule) SetPrivateKey(privateKey string) error {
 		sdk.signerAddress = publicAddress
 	}
 	return nil
+}
+
+func (sdk *MarketSdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+		ctx := context.Background()
+		chainId, _ := sdk.Client.ChainID(ctx)
+		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
+	}
 }

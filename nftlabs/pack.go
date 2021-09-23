@@ -24,7 +24,7 @@ type PackSdk interface {
 	Get(tokenId *big.Int) (Pack, error)
 	GetAll() ([]Pack, error)
 	GetNfts(packId *big.Int) ([]PackNft, error)
-	Balance(tokenId *big.Int) (big.Int, error)
+	Balance(tokenId *big.Int) (*big.Int, error)
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
 	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
 	Create(nftContractAddress string, assets []PackNftAddition) error
@@ -110,6 +110,7 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
         },
     }
 
+	// TODO: allow user to pass these in from function params
 	bytes, _ := arguments.Pack(
 		"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
         big.NewInt(0),
@@ -119,11 +120,7 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 
 	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
 		From:      sdk.signerAddress,
-		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-			ctx := context.Background()
-			chainId, _ := sdk.Client.ChainID(ctx)
-			return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
-		},
+		Signer:    sdk.getSigner(),
 		NoSend:    false,
 	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
 
@@ -269,8 +266,12 @@ func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	return packNfts, nil
 }
 
-func (sdk *PackSdkModule) Balance(tokenId *big.Int) (big.Int, error) {
-	panic("implement me")
+func (sdk *PackSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return nil, &NoSignerError{typeName: "pack"}
+	}
+
+	return sdk.caller.BalanceOf(&bind.CallOpts{}, sdk.signerAddress, tokenId)
 }
 
 func (sdk *PackSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
@@ -289,4 +290,11 @@ func (sdk *PackSdkModule) SetPrivateKey(privateKey string) error {
 		sdk.signerAddress = publicAddress
 	}
 	return nil
+}
+func (sdk *PackSdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+		ctx := context.Background()
+		chainId, _ := sdk.Client.ChainID(ctx)
+		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
+	}
 }
