@@ -122,7 +122,6 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
         big.NewInt(1),
     )
 
-	_, err = nftSdkModule.transactor.SafeTransferFrom(&bind.TransactOpts{
 	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
 		NoSend: false,
 		From: publicAddress,
