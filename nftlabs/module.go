@@ -9,5 +9,5 @@ type SigningMethod = func(common.Address, *types.Transaction) (*types.Transactio
 
 type CommonModule interface {
 	SetSigningMethod(signer SigningMethod)
-	SetSigningAddress(publicKey string)
+	SetSigningAddress(address string)
 }

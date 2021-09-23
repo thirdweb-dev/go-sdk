@@ -34,5 +34,5 @@ type NoAddressError struct{
 }
 
 func (m *NoAddressError) Error() string {
-	return fmt.Sprintf("Could not proceed with transaction in %v module, missing or invalid address", m.typeName)
+	return fmt.Sprintf("Could not proceed with transaction in %v module, missing or invalid signer address", m.typeName)
 }

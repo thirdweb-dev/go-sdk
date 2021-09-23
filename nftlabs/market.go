@@ -13,6 +13,7 @@ import (
 )
 
 type MarketSdk interface {
+	CommonModule
 	GetListing(listingId *big.Int) (Listing, error)
 	GetAll() ([]Listing, error)
 	List(
@@ -32,8 +33,10 @@ type MarketSdkModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
+	SigningAddress common.Address
 	gateway Gateway
 	caller *abi.MarketCaller
+	signer         SigningMethod
 }
 
 func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*MarketSdkModule, error) {
@@ -159,4 +162,12 @@ func (m *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (L
 		SaleStart:        saleStart,
 		SaleEnd:          saleEnd,
 	}, nil
+}
+
+func (m *MarketSdkModule) SetSigningMethod(signer SigningMethod) {
+	m.signer = signer
+}
+
+func (m *MarketSdkModule) SetSigningAddress(address string) {
+	m.SigningAddress = common.HexToAddress(address)
 }
