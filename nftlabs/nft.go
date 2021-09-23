@@ -3,11 +3,12 @@ package nftlabs
 import (
 	"context"
 	"encoding/json"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"
 	"log"
 	"math/big"
 	"sync"
+
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -100,11 +101,10 @@ func (sdk *NftSdkModule) GetAll() ([]NftMetadata, error) {
 
 	var wg sync.WaitGroup
 
-	nfts := make([]NftMetadata, 0)
+	// nfts := make([]NftMetadata, 0)
 	ch := make(chan NftMetadata)
 	errCh := make(chan error)
 
-	defer close(ch)
 	defer close(errCh)
 
 	count := maxId.Int64()
@@ -116,14 +116,15 @@ func (sdk *NftSdkModule) GetAll() ([]NftMetadata, error) {
 		go sdk.GetAsync(id, ch, errCh, &wg)
 	}
 
-	go func() {
-		for v := range ch {
-			nfts = append(nfts, v)
-		}
-	}()
+	results := make([]NftMetadata, count)
+	for i := range results {
+		results[i] = <-ch
+	}
 
 	wg.Wait()
-	return nfts, nil
+	close(ch)
+
+	return results, nil
 }
 
 func (sdk *NftSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {

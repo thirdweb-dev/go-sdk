@@ -14,6 +14,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
+
+	ethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 )
 
 type PackSdk interface {
@@ -67,7 +69,7 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 
 func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddition) error {
 	// TODO: allow user to supply this to sdk
-	privateKey, err := crypto.HexToECDSA("omitted")
+	privateKey, err := crypto.HexToECDSA("ommitted")
 	if err != nil {
 			return err
 	}
@@ -88,12 +90,39 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 		counts = append(counts, addition.Supply)
 	}
 
+	log.Printf("ids = %v counts = %v\n", ids, counts)
+
 	nftSdkModule, err := NewNftSdkModule(sdk.Client, nftContractAddress, sdk.Options)
 	if err != nil {
 		return err
 	}
 
-	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
+	stringsTy, _ := ethAbi.NewType("string", "string", nil)
+	uint256Ty, _ := ethAbi.NewType("uint", "uint", nil)
+
+	arguments := ethAbi.Arguments{
+        {
+            Type: stringsTy,
+        },
+        {
+            Type: uint256Ty,
+        },
+        {
+            Type: uint256Ty,
+        },
+        {
+            Type: uint256Ty,
+        },
+    }
+
+	bytes, _ := arguments.Pack(
+		"",
+        big.NewInt(0),
+        big.NewInt(0),
+        big.NewInt(1),
+    )
+
+	_, err = nftSdkModule.transactor.SafeTransferFrom(&bind.TransactOpts{
 		NoSend: false,
 		From: publicAddress,
 		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
@@ -101,7 +130,7 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 			chainId, _ := sdk.Client.ChainID(ctx)
 			return types.SignTx(transaction, types.NewEIP155Signer(chainId), privateKey)
 		},
-	}, publicAddress, common.HexToAddress(sdk.Address), ids, counts, nil)
+	}, publicAddress, common.HexToAddress("0xC7dB76a94EB034f575317Ed436DE5934eB8286bB"), ids[0], counts[0], bytes)
 
 	if err != nil {
 		return err
@@ -165,7 +194,8 @@ func (sdk *PackSdkModule) GetAsync(tokenId *big.Int, ch chan<-Pack, wg *sync.Wai
 
 	result, err := sdk.Get(tokenId)
 	if err != nil {
-		log.Printf("Failed to fetch nft with id %d\n err=%v", tokenId, err)
+		log.Printf("Failed to fetch nft with id %d err=%v\n", tokenId, err)
+		ch <- Pack{}
 		return
 	}
 	ch <- result
@@ -179,11 +209,11 @@ func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
 
 	var wg sync.WaitGroup
 
-	packs := make([]Pack, 0)
 	ch := make(chan Pack)
 	defer close(ch)
 
 	count := maxId.Int64()
+	log.Printf("Found %d packs\n", count)
 	for i := int64(0); i < count; i++ {
 		id := new(big.Int)
 		id.SetInt64(i)
@@ -192,11 +222,10 @@ func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
 		go sdk.GetAsync(id, ch, &wg)
 	}
 
-	go func() {
-		for v := range ch {
-			packs = append(packs, v)
-		}
-	}()
+	packs := make([]Pack, count)
+	for i := range packs {
+		packs[i] = <-ch
+	}
 
 	wg.Wait()
 	return packs, nil
