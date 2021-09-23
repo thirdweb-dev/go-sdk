@@ -24,7 +24,7 @@ type PackSdk interface {
 	GetAll() ([]Pack, error)
 	GetNfts(packId *big.Int) ([]PackNft, error)
 	Balance(tokenId *big.Int) (big.Int, error)
-	BalanceOf(address string, tokenId string) uint64
+	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
 	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
 	Create(nftContractAddress string, assets []PackNftAddition) error
 }
@@ -233,7 +233,6 @@ func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	}
 
 	var wg sync.WaitGroup
-	packNfts := make([]PackNft, 0)
 
 	ch := make(chan PackNft)
 	defer close(ch)
@@ -254,6 +253,8 @@ func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 			if err != nil {
 				// TODO (IMPORTANT): what to do in this case?? ts-sdk moves on I think...
 				log.Printf("Failed to get metdata for nft %d in pack %d\n", id, packId)
+
+				ch <- PackNft{}
 				return
 			}
 
@@ -264,11 +265,10 @@ func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 		}(i)
 	}
 
-	go func () {
-		for packNft := range ch {
-			packNfts = append(packNfts, packNft)
-		}
-	}()
+	packNfts := make([]PackNft, len(result.TokenIds))
+	for i := range packNfts {
+		packNfts[i] = <-ch
+	}
 
 	wg.Wait()
 	return packNfts, nil
@@ -278,8 +278,8 @@ func (sdk *PackSdkModule) Balance(tokenId *big.Int) (big.Int, error) {
 	panic("implement me")
 }
 
-func (sdk *PackSdkModule) BalanceOf(address string, tokenId string) uint64 {
-	panic("implement me")
+func (sdk *PackSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
+	return sdk.caller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), tokenId)
 }
 
 func (sdk *PackSdkModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error {
