@@ -164,7 +164,6 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 	}
 
 	// TODO: breakdown this object and apply to Pack
-	log.Printf("body = %v", string(body))
 	metadata := NftMetadata{
 		Id: packId,
 	}
