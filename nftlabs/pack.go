@@ -35,10 +35,9 @@ type PackSdkModule struct {
 	Address string
 	Options *SdkOptions
 	gateway Gateway
-	caller *abi.PackCaller
-	transactor *abi.PackTransactor
 	privateKey *ecdsa.PrivateKey
 	signerAddress common.Address
+	module *abi.Pack
 }
 
 func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackSdkModule, error) {
@@ -46,28 +45,43 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
 
-	caller, err := abi.NewPackCaller(common.HexToAddress(address), client)
+	module, err := abi.NewPack(common.HexToAddress(address), client)
 	if err != nil {
 		return nil, err
 	}
 
-	transactor, err := abi.NewPackTransactor(common.HexToAddress(address), client)
-	if err != nil {
-		return nil, err
-	}
 
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
 	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
 
 	return &PackSdkModule{
-		Client: client,
+		Client:  client,
 		Address: address,
 		Options: opt,
 		gateway: gw,
-		transactor: transactor,
-		caller: caller,
+		module:  module,
 	}, nil
+}
+
+func (sdk *PackSdkModule) DeployContract(name string) error {
+	//chainID, err := sdk.Client.ChainID(context.Background())
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//parsedAbi, err := ethAbi.JSON(strings.NewReader(abi.ERC1155MetaData.ABI))
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//auth, err := bind.NewKeyedTransactorWithChainID(sdk.privateKey, chainID)
+	//if err != nil {
+	//	return err
+	//}
+
+	//result, err := bind.DeployContract(auth, parsedAbi, common.FromHex(abi.ERC1155MetaData.Bin), sdk.Client, )
+	return nil
 }
 
 func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddition) error {
@@ -132,7 +146,7 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 }
 
 func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
-	packMeta, err := sdk.caller.GetPack(&bind.CallOpts{}, packId)
+	packMeta, err := sdk.module.PackCaller.GetPack(&bind.CallOpts{}, packId)
 	if err != nil {
 		return Pack{}, err
 	}
@@ -141,7 +155,7 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 		return Pack{}, &NotFoundError{identifier: packId, typeName: "pack metadata"}
 	}
 
-	packUri, err := sdk.caller.TokenURI(&bind.CallOpts{}, packId)
+	packUri, err := sdk.module.PackCaller.TokenURI(&bind.CallOpts{}, packId)
 	if err != nil {
 		return Pack{}, err
 	}
@@ -189,7 +203,7 @@ func (sdk *PackSdkModule) GetAsync(tokenId *big.Int, ch chan<-Pack, wg *sync.Wai
 }
 
 func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
-	maxId, err := sdk.caller.NextTokenId(&bind.CallOpts{});
+	maxId, err := sdk.module.PackCaller.NextTokenId(&bind.CallOpts{});
 	if err != nil {
 		return nil, err
 	}
@@ -219,7 +233,7 @@ func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
 }
 
 func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
-	result, err := sdk.caller.GetPackWithRewards(&bind.CallOpts{}, packId)
+	result, err := sdk.module.PackCaller.GetPackWithRewards(&bind.CallOpts{}, packId)
 	if err != nil {
 		return nil, err
 	}
@@ -271,11 +285,11 @@ func (sdk *PackSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
 		return nil, &NoSignerError{typeName: "pack"}
 	}
 
-	return sdk.caller.BalanceOf(&bind.CallOpts{}, sdk.signerAddress, tokenId)
+	return sdk.module.PackCaller.BalanceOf(&bind.CallOpts{}, sdk.signerAddress, tokenId)
 }
 
 func (sdk *PackSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
-	return sdk.caller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), tokenId)
+	return sdk.module.PackCaller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), tokenId)
 }
 
 func (sdk *PackSdkModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error {
