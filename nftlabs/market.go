@@ -3,11 +3,12 @@ package nftlabs
 import (
 	"context"
 	"crypto/ecdsa"
-	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
 	"strings"
 	"time"
+
+	"github.com/ethereum/go-ethereum/core/types"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -22,7 +23,7 @@ type MarketSdk interface {
 	List(
 		assetContract string,
 		tokenId *big.Int,
-		currentContract string,
+		currencyContractAddress string,
 		price *big.Int,
 		quantity *big.Int,
 		secondsUntilStart *big.Int,
@@ -106,23 +107,23 @@ func (sdk *MarketSdkModule) List(
 		return Listing{}, &NoSignerError{typeName: "nft"}
 	}
 
-	packModule, err := NewPackSdkModule(sdk.Client, packContractAddress, &SdkOptions{})
+	erc1155Module, err := newErc1155SdkModule(sdk.Client, packContractAddress, &SdkOptions{})
 	if err != nil {
 		// TODO: return better error
 		return Listing{}, err
 	}
-	if err := packModule.SetPrivateKey(sdk.privateKey.D.String()); err != nil {
+	if err := erc1155Module.SetPrivateKey(sdk.privateKey.D.String()); err != nil {
 		return Listing{}, err
 	}
 
-	if isApproved, err := packModule.caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
+	if isApproved, err := erc1155Module.caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
 		return Listing{}, err
 	} else {
 		if !isApproved {
-			if _, err := packModule.transactor.SetApprovalForAll(&bind.TransactOpts{
+			if _, err := erc1155Module.transactor.SetApprovalForAll(&bind.TransactOpts{
 				NoSend: false,
-				From: sdk.signerAddress,
-				Signer: packModule.getSigner(),
+				From:   sdk.signerAddress,
+				Signer: erc1155Module.getSigner(),
 			}, common.HexToAddress(sdk.Address), true); err != nil {
 				// return better error describing that "Failed to Gran approval on Pack contract"
 				return Listing{}, err
