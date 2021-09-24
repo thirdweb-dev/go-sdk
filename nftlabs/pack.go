@@ -14,8 +14,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
-
-	ethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 )
 
 type PackSdk interface {
@@ -106,37 +104,39 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 		return err
 	}
 
-	stringsTy, _ := ethAbi.NewType("string", "string", nil)
-	uint256Ty, _ := ethAbi.NewType("uint", "uint", nil)
+	//stringsTy, _ := ethAbi.NewType("string", "string", nil)
+	//uint256Ty, _ := ethAbi.NewType("uint", "uint", nil)
 
-	arguments := ethAbi.Arguments{
-        {
-            Type: stringsTy,
-        },
-        {
-            Type: uint256Ty,
-        },
-        {
-            Type: uint256Ty,
-        },
-        {
-            Type: uint256Ty,
-        },
-    }
+	//arguments := ethAbi.Arguments{
+    //    {
+    //        Type: stringsTy,
+    //    },
+    //    {
+    //        Type: uint256Ty,
+    //    },
+    //    {
+    //        Type: uint256Ty,
+    //    },
+    //    {
+    //        Type: uint256Ty,
+    //    },
+    //}
 
 	// TODO: allow user to pass these in from function params
-	bytes, _ := arguments.Pack(
-		"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
-        big.NewInt(0),
-        big.NewInt(0),
-        big.NewInt(1),
-    )
+	//bytes, _ := arguments.Pack(
+	//	"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
+    //    big.NewInt(0),
+    //    big.NewInt(0),
+    //    big.NewInt(1),
+    //)
 
-	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
+	// TODO: check if whats added to pack is erc721 or erc1155
+
+	_, err = nftSdkModule.module.NFTTransactor.SafeTransferFrom(&bind.TransactOpts{
 		From:      sdk.signerAddress,
 		Signer:    sdk.getSigner(),
 		NoSend:    false,
-	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
+	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids[0])
 
 	if err != nil {
 		return err
