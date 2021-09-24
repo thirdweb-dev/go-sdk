@@ -20,8 +20,8 @@ type NftSdk interface {
 	Get(tokenId *big.Int) (NftMetadata, error)
 	GetAll() ([]NftMetadata, error)
 	Balance(tokenId *big.Int) (*big.Int, error)
-	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
-	Transfer(to string, tokenId *big.Int, amount *big.Int) error
+	BalanceOf(address string) (*big.Int, error)
+	Transfer(to string, tokenId *big.Int) error
 }
 
 type NftSdkModule struct {
@@ -29,8 +29,7 @@ type NftSdkModule struct {
 	Address string
 	Options *SdkOptions
 	gateway Gateway
-	caller *abi.NFTCaller
-	transactor *abi.NFTTransactor
+	module *abi.NFT
 
 	privateKey *ecdsa.PrivateKey
 	signerAddress common.Address
@@ -41,13 +40,7 @@ func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) 
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
 
-	caller, err := abi.NewNFTCaller(common.HexToAddress(address), client)
-	if err != nil {
-		// TODO: return better error
-		return nil, err
-	}
-
-	transactor, err := abi.NewNFTTransactor(common.HexToAddress(address), client)
+	module, err := abi.NewNFT(common.HexToAddress(address), client)
 	if err != nil {
 		// TODO: return better error
 		return nil, err
@@ -62,13 +55,12 @@ func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) 
 		Address: address,
 		Options: opt,
 		gateway: gw,
-		caller: caller,
-		transactor: transactor,
+		module: module,
 	}, nil
 }
 
 func (sdk *NftSdkModule) Get(tokenId *big.Int) (NftMetadata, error) {
-	tokenUri, err := sdk.caller.TokenURI(&bind.CallOpts{}, tokenId)
+	tokenUri, err := sdk.module.NFTCaller.TokenURI(&bind.CallOpts{}, tokenId)
 	if err != nil {
 		return NftMetadata{}, err
 	}
@@ -97,7 +89,7 @@ func (sdk *NftSdkModule) GetAsync(tokenId *big.Int, ch chan<-NftMetadata, errCh 
 }
 
 func (sdk *NftSdkModule) GetAll() ([]NftMetadata, error) {
-	maxId, err := sdk.caller.NextTokenId(&bind.CallOpts{})
+	maxId, err := sdk.module.NFTCaller.NextTokenId(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
@@ -130,8 +122,8 @@ func (sdk *NftSdkModule) GetAll() ([]NftMetadata, error) {
 	return results, nil
 }
 
-func (sdk *NftSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
-	return sdk.caller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), tokenId)
+func (sdk *NftSdkModule) BalanceOf(address string) (*big.Int, error) {
+	return sdk.module.NFTCaller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
 }
 
 func (sdk *NftSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
@@ -139,13 +131,13 @@ func (sdk *NftSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
 	panic("implement me")
 }
 
-func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int, amount *big.Int) error {
+func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int) error {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
 
 	// TODO: allow you to pass transact opts
-	_, err := sdk.transactor.SafeTransferFrom(&bind.TransactOpts{
+	_, err := sdk.module.NFTTransactor.SafeTransferFrom(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.signerAddress,
 		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
@@ -153,7 +145,7 @@ func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int, amount *big.Int) 
 			chainId, _ := sdk.Client.ChainID(ctx)
 			return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
 		},
-	}, sdk.signerAddress, common.HexToAddress(to), tokenId, amount, nil)
+	}, sdk.signerAddress, common.HexToAddress(to), tokenId)
 
 	return err
 }
