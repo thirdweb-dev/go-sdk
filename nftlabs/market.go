@@ -122,7 +122,7 @@ func (sdk *MarketSdkModule) List(
 	if isApproved, err := erc1155Module.module.ERC1155Caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
 		return Listing{}, err
 	} else {
-		log.Println("Caller is not approved, setting approval")
+		log.Printf("Caller is not approved, setting approval on marketplace %v\n", sdk.Address)
 		if !isApproved {
 			if _, err := erc1155Module.module.ERC1155Transactor.SetApprovalForAll(&bind.TransactOpts{
 				NoSend: false,
