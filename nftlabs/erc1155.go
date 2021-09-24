@@ -18,8 +18,7 @@ type erc1155SdkModule struct {
 	Address string
 	Options *SdkOptions
 	gateway Gateway
-	caller *abi.ERC1155Caller
-	transactor *abi.ERC1155Transactor
+	module *abi.ERC1155
 
 	privateKey *ecdsa.PrivateKey
 	signerAddress common.Address
@@ -30,17 +29,12 @@ func newErc1155SdkModule(client *ethclient.Client, address string, opt *SdkOptio
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
 
-	caller, err := abi.NewERC1155Caller(common.HexToAddress(address), client)
+	module, err := abi.NewERC1155(common.HexToAddress(address), client)
 	if err != nil {
 		// TODO: return better error
 		return nil, err
 	}
 
-	transactor, err := abi.NewERC1155Transactor(common.HexToAddress(address), client)
-	if err != nil {
-		// TODO: return better error
-		return nil, err
-	}
 
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
@@ -51,15 +45,14 @@ func newErc1155SdkModule(client *ethclient.Client, address string, opt *SdkOptio
 		Address: address,
 		Options: opt,
 		gateway: gw,
-		caller: caller,
-		transactor: transactor,
+		module: module,
 	}, nil
 }
 
 
 func (sdk *erc1155SdkModule) SetPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
-		return err
+		return &NoSignerError{typeName: "erc1155", Err: err}
 	} else {
 		sdk.privateKey = pKey
 		sdk.signerAddress = publicAddress

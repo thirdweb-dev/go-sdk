@@ -23,6 +23,7 @@ func (m *UnmarshalError) Error() string {
 
 type NoSignerError struct{
 	typeName string
+	Err error
 }
 
 func (m *NoSignerError) Error() string {

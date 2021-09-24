@@ -133,7 +133,7 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 
 	// TODO: check if whats added to pack is erc721 or erc1155
 
-	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
+	_, err = nftSdkModule.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
 		From:      sdk.signerAddress,
 		Signer:    sdk.getSigner(),
 		NoSend:    false,
@@ -215,7 +215,6 @@ func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
 	defer close(ch)
 
 	count := maxId.Int64()
-	log.Printf("Found %d packs\n", count)
 	for i := int64(0); i < count; i++ {
 		id := new(big.Int)
 		id.SetInt64(i)

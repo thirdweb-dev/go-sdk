@@ -43,6 +43,7 @@ type MarketSdkModule struct {
 	filterer *abi.MarketFilterer
 
 	privateKey *ecdsa.PrivateKey
+	rawPrivateKey string
 	signerAddress common.Address
 }
 
@@ -107,20 +108,23 @@ func (sdk *MarketSdkModule) List(
 		return Listing{}, &NoSignerError{typeName: "nft"}
 	}
 
+	log.Printf("Creating erc1155 module, at address %v\n", packContractAddress)
 	erc1155Module, err := newErc1155SdkModule(sdk.Client, packContractAddress, &SdkOptions{})
 	if err != nil {
 		// TODO: return better error
 		return Listing{}, err
 	}
-	if err := erc1155Module.SetPrivateKey(sdk.privateKey.D.String()); err != nil {
+	if err := erc1155Module.SetPrivateKey(sdk.rawPrivateKey); err != nil {
 		return Listing{}, err
 	}
 
-	if isApproved, err := erc1155Module.caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
+	log.Printf("Checking if caller (%v) is approved\n", sdk.signerAddress)
+	if isApproved, err := erc1155Module.module.ERC1155Caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
 		return Listing{}, err
 	} else {
+		log.Println("Caller is not approved, setting approval")
 		if !isApproved {
-			if _, err := erc1155Module.transactor.SetApprovalForAll(&bind.TransactOpts{
+			if _, err := erc1155Module.module.ERC1155Transactor.SetApprovalForAll(&bind.TransactOpts{
 				NoSend: false,
 				From:   sdk.signerAddress,
 				Signer: erc1155Module.getSigner(),
@@ -257,6 +261,7 @@ func (sdk *MarketSdkModule) SetPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
 		return err
 	} else {
+		sdk.rawPrivateKey = privateKey
 		sdk.privateKey = pKey
 		sdk.signerAddress = publicAddress
 	}
