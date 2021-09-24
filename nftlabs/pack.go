@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/json"
+	ethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
@@ -99,44 +100,44 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 
 	log.Printf("ids = %v counts = %v\n", ids, counts)
 
-	nftSdkModule, err := NewNftSdkModule(sdk.Client, nftContractAddress, sdk.Options)
+	nftSdkModule, err := newErc1155SdkModule(sdk.Client, nftContractAddress, sdk.Options)
 	if err != nil {
 		return err
 	}
 
-	//stringsTy, _ := ethAbi.NewType("string", "string", nil)
-	//uint256Ty, _ := ethAbi.NewType("uint", "uint", nil)
+	stringsTy, _ := ethAbi.NewType("string", "string", nil)
+	uint256Ty, _ := ethAbi.NewType("uint", "uint", nil)
 
-	//arguments := ethAbi.Arguments{
-    //    {
-    //        Type: stringsTy,
-    //    },
-    //    {
-    //        Type: uint256Ty,
-    //    },
-    //    {
-    //        Type: uint256Ty,
-    //    },
-    //    {
-    //        Type: uint256Ty,
-    //    },
-    //}
+	arguments := ethAbi.Arguments{
+       {
+           Type: stringsTy,
+       },
+       {
+           Type: uint256Ty,
+       },
+       {
+           Type: uint256Ty,
+       },
+       {
+           Type: uint256Ty,
+       },
+    }
 
 	// TODO: allow user to pass these in from function params
-	//bytes, _ := arguments.Pack(
-	//	"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
-    //    big.NewInt(0),
-    //    big.NewInt(0),
-    //    big.NewInt(1),
-    //)
+	bytes, _ := arguments.Pack(
+		"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
+       big.NewInt(0),
+       big.NewInt(0),
+       big.NewInt(1),
+    )
 
 	// TODO: check if whats added to pack is erc721 or erc1155
 
-	_, err = nftSdkModule.module.NFTTransactor.SafeTransferFrom(&bind.TransactOpts{
+	_, err = nftSdkModule.transactor.SafeBatchTransferFrom(&bind.TransactOpts{
 		From:      sdk.signerAddress,
 		Signer:    sdk.getSigner(),
 		NoSend:    false,
-	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids[0])
+	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
 
 	if err != nil {
 		return err
