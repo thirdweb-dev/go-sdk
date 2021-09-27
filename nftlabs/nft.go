@@ -128,7 +128,7 @@ func (sdk *NftSdkModule) BalanceOf(address string) (*big.Int, error) {
 
 func (sdk *NftSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
-		return &NoSignerError{typeName: "nft"}
+		return nil, &NoSignerError{typeName: "nft"}
 	}
 
 	return sdk.module.NFTCaller.BalanceOf(&bind.CallOpts{}, sdk.signerAddress)
