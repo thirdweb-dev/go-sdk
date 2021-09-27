@@ -127,8 +127,11 @@ func (sdk *NftSdkModule) BalanceOf(address string) (*big.Int, error) {
 }
 
 func (sdk *NftSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
-	// TODO: use the authenticated wallet to make this call (use wallet address when checking balance)
-	panic("implement me")
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "nft"}
+	}
+
+	return sdk.module.NFTCaller.BalanceOf(&bind.CallOpts{}, sdk.signerAddress)
 }
 
 func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int) error {
