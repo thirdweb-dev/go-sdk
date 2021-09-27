@@ -305,10 +305,19 @@ func (sdk *PackSdkModule) SetPrivateKey(privateKey string) error {
 	}
 	return nil
 }
+
 func (sdk *PackSdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		ctx := context.Background()
 		chainId, _ := sdk.Client.ChainID(ctx)
 		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
+	}
+}
+
+func (sdk *PackSdkModule) getSignerAddress() common.Address {
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return common.HexToAddress(sdk.Address)
+	} else {
+		return sdk.signerAddress
 	}
 }

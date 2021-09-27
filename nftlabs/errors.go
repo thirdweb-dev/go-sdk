@@ -37,3 +37,12 @@ type NoAddressError struct{
 func (m *NoAddressError) Error() string {
 	return fmt.Sprintf("Could not proceed with transaction in %v module, missing or invalid signer address", m.typeName)
 }
+
+type UnsupportedFunctionError struct{
+	typeName string
+	body string
+}
+
+func (m *UnsupportedFunctionError) Error() string {
+	return fmt.Sprintf("The method you're executing in the %v module is not supported yet. %v", m.typeName, m.body)
+}

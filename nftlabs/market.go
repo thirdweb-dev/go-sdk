@@ -94,59 +94,43 @@ func (sdk *MarketSdkModule) GetAll() ([]Listing, error) {
 }
 
 func (sdk *MarketSdkModule) List(
-	packContractAddress string,
+	assetContractAddress string,
 	tokenId *big.Int,
 	currencyContractAddress string,
 	pricePerToken *big.Int,
 	quantity *big.Int,
 	secondsUntilStart *big.Int,
 	secondsUntilEnd *big.Int) (Listing, error) {
-	packAddress := common.HexToAddress(packContractAddress)
-	currencyAddress := common.HexToAddress(currencyContractAddress)
-
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return Listing{}, &NoSignerError{typeName: "nft"}
 	}
 
-	log.Printf("Creating erc1155 module, at address %v\n", packContractAddress)
-	erc1155Module, err := newErc1155SdkModule(sdk.Client, packContractAddress, &SdkOptions{})
+	erc165Module, err := newErc165SdkModule(sdk.Client, assetContractAddress, &SdkOptions{})
 	if err != nil {
-		// TODO: return better error
-		return Listing{}, err
-	}
-	if err := erc1155Module.SetPrivateKey(sdk.rawPrivateKey); err != nil {
 		return Listing{}, err
 	}
 
-	log.Printf("Checking if caller (%v) is approved\n", sdk.signerAddress)
-	if isApproved, err := erc1155Module.module.ERC1155Caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
-		return Listing{}, err
+	isERC721, err := erc165Module.module.ERC165Caller.SupportsInterface(&bind.CallOpts{}, InterfaceIdErc721)
+	if err != nil {
+		return  Listing{}, err
+	}
+
+	if isERC721 {
+		log.Printf("Contract %v is an erc721 contract", assetContractAddress)
+		return sdk.listErc721(
+			assetContractAddress,
+			tokenId,
+			currencyContractAddress,
+			pricePerToken,
+			quantity,
+			secondsUntilStart,
+			secondsUntilEnd)
 	} else {
-		log.Printf("Caller is not approved, setting approval on marketplace %v\n", sdk.Address)
-		if !isApproved {
-			if _, err := erc1155Module.module.ERC1155Transactor.SetApprovalForAll(&bind.TransactOpts{
-				NoSend: false,
-				From:   sdk.signerAddress,
-				Signer: erc1155Module.getSigner(),
-			}, common.HexToAddress(sdk.Address), true); err != nil {
-				// return better error describing that "Failed to Gran approval on Pack contract"
-				return Listing{}, err
-			}
+		log.Printf("Contract %v is not a erc721 contract", assetContractAddress)
+		return Listing{}, &UnsupportedFunctionError{
+			typeName: "market",
+			body:     "Asset must be an ERC721 contract. Other types will be supported soon.",
 		}
-	}
-
-	result, err := sdk.transactor.List(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.getSigner(),
-		From: sdk.signerAddress,
-	}, packAddress, tokenId, currencyAddress, pricePerToken, quantity, secondsUntilStart, secondsUntilEnd)
-	if err != nil {
-		return Listing{}, err
-	}
-
-	_, err = sdk.Client.TransactionReceipt(context.Background(), result.Hash())
-	if err != nil {
-		return Listing{}, err
 	}
 
 	//query := ethereum.FilterQuery{
@@ -166,9 +150,72 @@ func (sdk *MarketSdkModule) List(
 	//for _, log := range logs {
 	//	if log.DecodeRLP()
 	//}
-
-	return Listing{}, nil
 }
+
+func (sdk *MarketSdkModule) listErc721(
+	assetContractAddress string,
+	tokenId *big.Int,
+	currencyContractAddress string,
+	pricePerToken *big.Int,
+	quantity *big.Int,
+	secondsUntilStart *big.Int,
+	secondsUntilEnd *big.Int) (Listing, error) {
+
+	packAddress := common.HexToAddress(assetContractAddress)
+	currencyAddress := common.HexToAddress(currencyContractAddress)
+
+	log.Printf("Creating erc721 module, at address %v\n", assetContractAddress)
+	erc721Module, err := newErc721SdkModule(sdk.Client, assetContractAddress, &SdkOptions{})
+	if err != nil {
+		// TODO: return better error
+		return Listing{}, err
+	}
+	if err := erc721Module.SetPrivateKey(sdk.rawPrivateKey); err != nil {
+		return Listing{}, err
+	}
+
+	log.Printf("Checking if caller (%v) is approved\n", sdk.signerAddress)
+	if isApproved, err := erc721Module.module.ERC721Caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
+		return Listing{}, err
+	} else {
+		log.Printf("Caller is not approved, setting approval on marketplace %v\n", sdk.Address)
+		if !isApproved {
+			if _, err := erc721Module.module.ERC721Transactor.SetApprovalForAll(&bind.TransactOpts{
+				NoSend: false,
+				From:   sdk.signerAddress,
+				Signer: erc721Module.getSigner(),
+			}, common.HexToAddress(sdk.Address), true); err != nil {
+				// return better error describing that "Failed to Gran approval on Pack contract"
+				return Listing{}, err
+			}
+		}
+	}
+
+	log.Printf("Caller %v has been approved from %v\n", sdk.Address, sdk.signerAddress.String())
+
+	result, err := sdk.transactor.List(&bind.TransactOpts{
+		NoSend: false,
+		Signer: sdk.getSigner(),
+		From: sdk.signerAddress,
+	}, packAddress, tokenId, currencyAddress, pricePerToken, quantity, secondsUntilStart, secondsUntilEnd)
+
+	log.Printf("List call completed, result  = %v\n", result.Hash())
+
+	if err != nil {
+		return Listing{}, err
+	}
+
+	_, err = sdk.Client.TransactionReceipt(context.Background(), result.Hash())
+	if err != nil {
+		log.Printf("Failed to lookup transaction receipt with hash %v\n", result.Hash().String())
+		return Listing{}, err
+	}
+
+
+	panic("implement me")
+}
+
+
 
 func (sdk *MarketSdkModule) UnlistAll(listingId *big.Int) error {
 	panic("implement me")
@@ -273,5 +320,13 @@ func (sdk *MarketSdkModule) getSigner() func(address common.Address, transaction
 		ctx := context.Background()
 		chainId, _ := sdk.Client.ChainID(ctx)
 		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
+	}
+}
+
+func (sdk *MarketSdkModule) getSignerAddress() common.Address {
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return common.HexToAddress(sdk.Address)
+	} else {
+		return sdk.signerAddress
 	}
 }

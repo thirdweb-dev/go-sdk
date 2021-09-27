@@ -166,3 +166,11 @@ func (sdk *NftSdkModule) getSigner() func(address common.Address, transaction *t
 		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
 	}
 }
+
+func (sdk *NftSdkModule) getSignerAddress() common.Address {
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return common.HexToAddress(sdk.Address)
+	} else {
+		return sdk.signerAddress
+	}
+}
