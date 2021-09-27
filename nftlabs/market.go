@@ -3,6 +3,7 @@ package nftlabs
 import (
 	"context"
 	"crypto/ecdsa"
+	"fmt"
 	"log"
 	"math/big"
 	"strings"
@@ -38,9 +39,7 @@ type MarketSdkModule struct {
 	Address string
 	Options *SdkOptions
 	gateway Gateway
-	caller *abi.MarketCaller
-	transactor *abi.MarketTransactor
-	filterer *abi.MarketFilterer
+	module *abi.Market
 
 	privateKey *ecdsa.PrivateKey
 	rawPrivateKey string
@@ -52,17 +51,7 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
 
-	caller, err := abi.NewMarketCaller(common.HexToAddress(address), client)
-	if err != nil {
-		return nil, err
-	}
-
-	transactor, err := abi.NewMarketTransactor(common.HexToAddress(address), client)
-	if err != nil {
-		return nil, err
-	}
-
-	filterer, err := abi.NewMarketFilterer(common.HexToAddress(address), client)
+	module, err := abi.NewMarket(common.HexToAddress(address), client)
 	if err != nil {
 		return nil, err
 	}
@@ -75,14 +64,12 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 		Address: address,
 		Options: opt,
 		gateway: gw,
-		caller: caller,
-		transactor: transactor,
-		filterer: filterer,
+		module: module,
 	}, nil
 }
 
 func (sdk *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error) {
-	if result, err := sdk.caller.Listings(&bind.CallOpts{}, listingId); err != nil {
+	if result, err := sdk.module.MarketCaller.Listings(&bind.CallOpts{}, listingId); err != nil {
 		return Listing{}, err
 	} else {
 		return sdk.transformResultToListing(result)
@@ -160,7 +147,6 @@ func (sdk *MarketSdkModule) listErc721(
 	quantity *big.Int,
 	secondsUntilStart *big.Int,
 	secondsUntilEnd *big.Int) (Listing, error) {
-
 	packAddress := common.HexToAddress(assetContractAddress)
 	currencyAddress := common.HexToAddress(currencyContractAddress)
 
@@ -193,10 +179,11 @@ func (sdk *MarketSdkModule) listErc721(
 
 	log.Printf("Caller %v has been approved from %v\n", sdk.Address, sdk.signerAddress.String())
 
-	result, err := sdk.transactor.List(&bind.TransactOpts{
+	result, err := sdk.module.MarketTransactor.List(&bind.TransactOpts{
 		NoSend: false,
 		Signer: sdk.getSigner(),
 		From: sdk.signerAddress,
+		Context: context.Background(),
 	}, packAddress, tokenId, currencyAddress, pricePerToken, quantity, secondsUntilStart, secondsUntilEnd)
 	if err != nil {
 		return Listing{}, err
@@ -204,17 +191,43 @@ func (sdk *MarketSdkModule) listErc721(
 
 	log.Printf("List call completed, result  = %v\n", result.Hash())
 
-	_, err = sdk.Client.TransactionReceipt(context.Background(), result.Hash())
+	if err := waitForTx(sdk.Client, result.Hash(), time.Second * 2, 5); err != nil {
+		// TODO: return tx failed err
+		return Listing{}, err
+	}
+
+	receipt, err := sdk.Client.TransactionReceipt(context.Background(), result.Hash())
 	if err != nil {
 		log.Printf("Failed to lookup transaction receipt with hash %v\n", result.Hash().String())
 		return Listing{}, err
 	}
 
+	log.Printf("Got receipt %v for tx %v\n", receipt.TxHash, result.Hash())
 
-	panic("implement me")
+	if newListing, err := sdk.getNewMarketListing(receipt.Logs); err != nil {
+		return Listing{}, err
+	} else {
+		return sdk.transformResultToListing(*newListing)
+	}
 }
 
+func (sdk *MarketSdkModule) getNewMarketListing(logs []*types.Log) (*abi.MarketListing, error) {
+	var listing abi.MarketListing
+	for _, l := range logs {
+		iterator, err := sdk.module.MarketFilterer.ParseNewListing(*l)
+		if err != nil {
+			return nil, err
+		}
 
+		if iterator.Listing.ListingId != nil {
+			fmt.Printf("Listing id = %v, listing = %v\n", iterator.ListingId, iterator.Listing)
+			listing = iterator.Listing
+			break
+		}
+	}
+
+	return &listing, nil
+}
 
 func (sdk *MarketSdkModule) UnlistAll(listingId *big.Int) error {
 	panic("implement me")
@@ -231,6 +244,7 @@ func (sdk *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
 func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
 	listingCurrency := listing.Currency
 
+	log.Println("Transforming result to listing, starting with currency metadata")
 	var currencyMetadata *CurrencyValue
 	if strings.HasPrefix(listingCurrency.String(), "0x000000000000") {
 		currencyMetadata = nil
@@ -253,6 +267,7 @@ func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) 
 		}
 	}
 
+	log.Println("Transforming nft metadata")
 	var nftMetadata *NftMetadata
 	if !strings.HasPrefix(listing.AssetContract.String(), "0x000000000000") {
 		log.Printf("Getting nft module at %v", listing.AssetContract)
@@ -272,6 +287,7 @@ func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) 
 		}
 	}
 
+	log.Println("Transforming sale start date")
 	var saleStart *time.Time
 	// TODO: should I be doing Int64() here ??? is there data loss ???
 	if listing.SaleStart.Int64() > 0 {
@@ -280,6 +296,7 @@ func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) 
 		saleStart = nil
 	}
 
+	log.Println("Transforming sale end date")
 	var saleEnd *time.Time
 	// TODO: should I be doing Int64() here ??? is there data loss ???
 	if listing.SaleEnd.Int64() > 0 && listing.SaleEnd.Int64() < big.MaxExp - 1 {
