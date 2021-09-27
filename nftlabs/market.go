@@ -198,12 +198,11 @@ func (sdk *MarketSdkModule) listErc721(
 		Signer: sdk.getSigner(),
 		From: sdk.signerAddress,
 	}, packAddress, tokenId, currencyAddress, pricePerToken, quantity, secondsUntilStart, secondsUntilEnd)
-
-	log.Printf("List call completed, result  = %v\n", result.Hash())
-
 	if err != nil {
 		return Listing{}, err
 	}
+
+	log.Printf("List call completed, result  = %v\n", result.Hash())
 
 	_, err = sdk.Client.TransactionReceipt(context.Background(), result.Hash())
 	if err != nil {
