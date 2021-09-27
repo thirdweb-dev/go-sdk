@@ -70,7 +70,7 @@ func (sdk *NftSdkModule) Get(tokenId *big.Int) (NftMetadata, error) {
 		Id: tokenId,
 	}
 	if err := json.Unmarshal(body, &metadata); err != nil {
-		return NftMetadata{}, &UnmarshalError{body: string(body), typeName: "pack", underlyingError: err}
+		return NftMetadata{}, &UnmarshalError{body: string(body), typeName: "nft", underlyingError: err}
 	}
 
 	return metadata, nil
@@ -143,11 +143,7 @@ func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int) error {
 	_, err := sdk.module.NFTTransactor.SafeTransferFrom(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.signerAddress,
-		Signer: func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-			ctx := context.Background()
-			chainId, _ := sdk.Client.ChainID(ctx)
-			return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
-		},
+		Signer: sdk.getSigner(),
 	}, sdk.signerAddress, common.HexToAddress(to), tokenId)
 
 	return err
@@ -161,4 +157,12 @@ func (sdk *NftSdkModule) SetPrivateKey(privateKey string) error {
 		sdk.signerAddress = publicAddress
 	}
 	return nil
+}
+
+func (sdk *NftSdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+		ctx := context.Background()
+		chainId, _ := sdk.Client.ChainID(ctx)
+		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
+	}
 }
