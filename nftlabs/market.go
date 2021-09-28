@@ -20,7 +20,7 @@ import (
 type MarketSdk interface {
 	CommonModule
 	GetListing(listingId *big.Int) (Listing, error)
-	GetAll() ([]Listing, error)
+	GetAll(filter ListingFilter) ([]Listing, error)
 	List(
 		assetContract string,
 		tokenId *big.Int,
@@ -76,8 +76,83 @@ func (sdk *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error) {
 	}
 }
 
-func (sdk *MarketSdkModule) GetAll() ([]Listing, error) {
-	panic("implement me")
+func (sdk *MarketSdkModule) GetAll(filter ListingFilter) ([]Listing, error) {
+	listings := make([]abi.MarketListing, 0)
+
+	hasFilter := filter.TokenContract != "" || filter.TokenId != nil || filter.Seller != ""
+
+	if !hasFilter {
+		// TODO: fetch all
+		result, err := sdk.module.GetAllListings(&bind.CallOpts{})
+		if err != nil {
+			return nil, err
+		}
+		for _, l := range result {
+			listings = append(listings, l)
+		}
+	} else {
+		if filter.TokenContract != "" && filter.TokenId != nil {
+			result, err := sdk.module.GetListingsByAsset(&bind.CallOpts{}, common.HexToAddress(filter.TokenContract), filter.TokenId)
+			if err != nil {
+				return nil, err
+			}
+			for _, l := range result {
+				listings = append(listings, l)
+			}
+		} else if filter.Seller != "" {
+			result, err := sdk.module.GetListingsBySeller(&bind.CallOpts{}, common.HexToAddress(filter.Seller))
+			if err != nil {
+				return nil, err
+			}
+			for _, l := range result {
+				listings = append(listings, l)
+			}
+		} else if filter.TokenContract != "" {
+			result, err := sdk.module.GetListingsByAssetContract(&bind.CallOpts{}, common.HexToAddress(filter.TokenContract))
+			if err != nil {
+				return nil, err
+			}
+			for _, l := range result {
+				listings = append(listings, l)
+			}
+		}
+	}
+
+	availableListings := make([]Listing, 0)
+	for _, listing := range listings {
+		if listing.Quantity.Int64() == 0 {
+			continue
+		}
+
+		if !hasFilter {
+			if transformed, err := sdk.transformResultToListing(listing); err != nil {
+				return nil, err
+			} else {
+				availableListings = append(availableListings, transformed)
+			}
+			continue
+		}
+
+		if filter.Seller != "" && strings.ToLower(filter.Seller) != strings.ToLower(listing.Seller.String()) {
+			continue
+		}
+
+		if filter.TokenContract != "" && strings.ToLower(filter.TokenContract) != strings.ToLower(listing.AssetContract.String()) {
+			continue
+		}
+
+		if filter.TokenId.String() != "" && strings.ToLower(filter.TokenId.String()) != strings.ToLower(listing.TokenId.String()) {
+			continue
+		}
+
+		if transformed, err := sdk.transformResultToListing(listing); err != nil {
+			return nil, err
+		} else {
+			availableListings = append(availableListings, transformed)
+		}
+	}
+
+	return availableListings, nil
 }
 
 func (sdk *MarketSdkModule) List(
@@ -244,7 +319,6 @@ func (sdk *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
 func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
 	listingCurrency := listing.Currency
 
-	log.Println("Transforming result to listing, starting with currency metadata")
 	var currencyMetadata *CurrencyValue
 	if strings.HasPrefix(listingCurrency.String(), "0x000000000000") {
 		currencyMetadata = nil
@@ -267,10 +341,8 @@ func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) 
 		}
 	}
 
-	log.Println("Transforming nft metadata")
 	var nftMetadata *NftMetadata
 	if !strings.HasPrefix(listing.AssetContract.String(), "0x000000000000") {
-		log.Printf("Getting nft module at %v", listing.AssetContract)
 		// TODO: again, bad, need to create this in the function because we don't know the nft contract when we get here
 		// damages testability
 		nftModule, err := NewNftSdkModule(sdk.Client, listing.AssetContract.Hex(), &SdkOptions{})
@@ -287,7 +359,6 @@ func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) 
 		}
 	}
 
-	log.Println("Transforming sale start date")
 	var saleStart *time.Time
 	// TODO: should I be doing Int64() here ??? is there data loss ???
 	if listing.SaleStart.Int64() > 0 {
@@ -296,7 +367,6 @@ func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) 
 		saleStart = nil
 	}
 
-	log.Println("Transforming sale end date")
 	var saleEnd *time.Time
 	// TODO: should I be doing Int64() here ??? is there data loss ???
 	if listing.SaleEnd.Int64() > 0 && listing.SaleEnd.Int64() < big.MaxExp - 1 {

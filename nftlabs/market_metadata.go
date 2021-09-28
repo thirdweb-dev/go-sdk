@@ -20,3 +20,9 @@ type Listing struct {
 	SaleStart *time.Time
 	SaleEnd *time.Time
 }
+
+type ListingFilter struct {
+	Seller string `json:"seller"`
+	TokenContract string `json:"tokenContract"`
+	TokenId *big.Int `json:"tokenId"`
+}

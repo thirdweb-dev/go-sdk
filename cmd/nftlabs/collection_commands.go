@@ -23,7 +23,6 @@ var (
 var collectionCmd = &cobra.Command{
 	Use:   "collection [command]",
 	Short: "Interact with a collection contract",
-	Args: cobra.MinimumNArgs(1),
 }
 
 var collectionGetAllCmd = &cobra.Command {

@@ -79,3 +79,27 @@ func getCollectionModule() (sdk.NftCollectionSdk, error) {
 	return module, nil
 }
 
+func getMarketplaceModule() (sdk.MarketSdk, error) {
+	client, err := ethclient.Dial(chainRpcUrl)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Creating a Marketplace sdk module on chain %v, contract %v\n", chainRpcUrl, marketplaceContractAddress)
+
+	// You can mock the sdk.NftSdk interface when writing tests against the SDK
+	var module sdk.MarketSdk
+	if caller, err := sdk.NewMarketSdkModule(client, marketplaceContractAddress, &sdk.SdkOptions{}); err != nil {
+		log.Println("Failed to create an Marketplace caller object")
+		panic(err)
+	} else {
+		module = caller
+	}
+
+	if err := module.SetPrivateKey(privateKey); err != nil {
+		panic(err)
+	}
+
+	return module, nil
+}
+

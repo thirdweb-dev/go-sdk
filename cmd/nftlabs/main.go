@@ -33,6 +33,7 @@ func init() {
 	rootCmd.AddCommand(nftCmd)
 	rootCmd.AddCommand(packCmd)
 	rootCmd.AddCommand(collectionCmd)
+	rootCmd.AddCommand(marketplaceCmd)
 }
 
 func initConfig() {
@@ -44,5 +45,5 @@ func initConfig() {
 }
 
 func main() {
-Execute()
+	Execute()
 }
