@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/json"
+	"fmt"
 	ethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/types"
 	"log"
@@ -26,7 +27,7 @@ type PackSdk interface {
 	Balance(tokenId *big.Int) (*big.Int, error)
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
 	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
-	Create(nftContractAddress string, assets []PackNftAddition) error
+	Create(args CreatePackArgs) (Pack, error)
 }
 
 type PackSdkModule struct {
@@ -83,9 +84,9 @@ func (sdk *PackSdkModule) DeployContract(name string) error {
 	return nil
 }
 
-func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddition) error {
+func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
-		return &NoSignerError{typeName: "pack"}
+		return Pack{}, &NoSignerError{typeName: "pack"}
 	}
 
 	log.Printf("Wallet used = %v\n", sdk.signerAddress)
@@ -93,16 +94,16 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 	ids := make([]*big.Int, 0)
 	counts := make([]*big.Int, 0)
 
-	for _, addition := range assets {
+	for _, addition := range args.Assets {
 		ids = append(ids, addition.NftId)
 		counts = append(counts, addition.Supply)
 	}
 
 	log.Printf("ids = %v counts = %v\n", ids, counts)
 
-	nftSdkModule, err := newErc1155SdkModule(sdk.Client, nftContractAddress, sdk.Options)
+	nftSdkModule, err := newErc1155SdkModule(sdk.Client, args.AssetContractAddress, sdk.Options)
 	if err != nil {
-		return err
+		return Pack{}, err
 	}
 
 	stringsTy, _ := ethAbi.NewType("string", "string", nil)
@@ -126,24 +127,39 @@ func (sdk *PackSdkModule) Create(nftContractAddress string, assets []PackNftAddi
 	// TODO: allow user to pass these in from function params
 	bytes, _ := arguments.Pack(
 		"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
-       big.NewInt(0),
-       big.NewInt(0),
-       big.NewInt(1),
+       args.SecondsUntilOpenStart,
+       args.SecondsUntilOpenEnd,
+       args.RewardsPerOpen,
     )
 
 	// TODO: check if whats added to pack is erc721 or erc1155
 
-	_, err = nftSdkModule.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
+	tx, err := nftSdkModule.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
 		From:      sdk.signerAddress,
 		Signer:    sdk.getSigner(),
 		NoSend:    false,
 	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
-
 	if err != nil {
-		return err
+		return Pack{}, err
 	}
 
-	return nil
+	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
+		return Pack{}, err
+	}
+
+	receipt, err := sdk.Client.TransactionReceipt(context.Background(), tx.Hash())
+	if err != nil {
+		log.Printf("Failed to lookup transaction receipt with hash %v\n", tx.Hash().String())
+		return Pack{}, err
+	}
+
+	log.Printf("Got receipt %v for tx %v\n", receipt.TxHash, tx.Hash())
+
+	if newListing, err := sdk.getNewMarketListing(receipt.Logs); err != nil {
+		return Pack{}, err
+	} else {
+		return sdk.Get(newListing)
+	}
 }
 
 func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
@@ -320,4 +336,22 @@ func (sdk *PackSdkModule) getSignerAddress() common.Address {
 	} else {
 		return sdk.signerAddress
 	}
+}
+
+func (sdk *PackSdkModule) getNewMarketListing(logs []*types.Log) (*big.Int, error) {
+	var packId *big.Int
+	for _, l := range logs {
+		iterator, err := sdk.module.ParsePackCreated(*l)
+		if err != nil {
+			return nil, err
+		}
+
+		if iterator.PackId != nil {
+			fmt.Printf("Pack id = %v, listing = %v\n", iterator.PackId, iterator.PackState)
+			packId = iterator.PackId
+			break
+		}
+	}
+
+	return packId, nil
 }

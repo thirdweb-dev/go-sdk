@@ -191,7 +191,7 @@ func (sdk *MarketSdkModule) listErc721(
 
 	log.Printf("List call completed, result  = %v\n", result.Hash())
 
-	if err := waitForTx(sdk.Client, result.Hash(), time.Second * 2, 5); err != nil {
+	if err := waitForTx(sdk.Client, result.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
 		// TODO: return tx failed err
 		return Listing{}, err
 	}

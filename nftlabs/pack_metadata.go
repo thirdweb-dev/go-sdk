@@ -20,6 +20,26 @@ type PackNft struct {
 	Supply *big.Int
 }
 
+/**
+  assetContract: string;
+  metadata: MetadataURIOrObject;
+  assets: {
+    tokenId: BigNumberish;
+    amount: BigNumberish;
+  }[];
+  secondsUntilOpenStart?: number;
+  secondsUntilOpenEnd?: number;
+  rewardsPerOpen?: number;
+ */
+
+type CreatePackArgs struct {
+	AssetContractAddress string
+	Assets []PackNftAddition
+	SecondsUntilOpenStart *big.Int
+	SecondsUntilOpenEnd *big.Int
+	RewardsPerOpen *big.Int
+}
+
 type PackNftAddition struct {
 	NftId *big.Int
 	Supply *big.Int
