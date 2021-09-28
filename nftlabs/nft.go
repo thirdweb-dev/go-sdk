@@ -123,6 +123,9 @@ func (sdk *NftSdkModule) mintTo(metadata MintNftMetadata) (NftMetadata, error) {
 }
 
 func (sdk *NftSdkModule) Mint(metadata MintNftMetadata) (NftMetadata, error) {
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return NftMetadata{}, &NoSignerError{typeName: "nft"}
+	}
 	return sdk.mintTo(metadata)
 }
 

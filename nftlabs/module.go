@@ -18,4 +18,5 @@ type SigningMethod = func(common.Address, *types.Transaction) (*types.Transactio
 type CommonModule interface {
 	SetPrivateKey(privateKey string) error
 	getSignerAddress() common.Address
+	getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error)
 }

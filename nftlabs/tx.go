@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func waitForTx(client *ethclient.Client, hash common.Hash, wait time.Duration, maxAttempts uint8) (error) {
+func waitForTx(client *ethclient.Client, hash common.Hash, wait time.Duration, maxAttempts uint8) error {
 	attempts := uint8(0)
 	var syncError error
 	for {
@@ -18,7 +18,7 @@ func waitForTx(client *ethclient.Client, hash common.Hash, wait time.Duration, m
 			return syncError
 		}
 
-		if tx, isPending, err := client.TransactionByHash(context.Background(), hash); err != nil {
+		if _, isPending, err := client.TransactionByHash(context.Background(), hash); err != nil {
 			syncError = err
 			log.Printf("Failed to get tx, err = %v\n", err)
 			attempts += 1
@@ -30,8 +30,6 @@ func waitForTx(client *ethclient.Client, hash common.Hash, wait time.Duration, m
 				time.Sleep(wait)
 				continue
 			}
-
-			log.Printf("Sync tx = %v, isPending = %v\n", tx, isPending)
 			break
 		}
 	}

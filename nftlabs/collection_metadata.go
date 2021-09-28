@@ -17,3 +17,8 @@ type MintCollectionArgs struct {
 	TokenId *big.Int `json:"tokenId"`
 	Amount *big.Int `json:"amount"`
 }
+
+type collectionAssetMetadata struct {
+	Uri string
+	Supply *big.Int
+}
