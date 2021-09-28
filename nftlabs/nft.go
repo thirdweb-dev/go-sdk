@@ -15,13 +15,30 @@ import (
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 )
 
+type Role string
+
+const (
+	AdminRole Role = "admin"
+	MinterRole = "minter"
+)
+
 type NftSdk interface {
 	CommonModule
 	Get(tokenId *big.Int) (NftMetadata, error)
 	GetAll() ([]NftMetadata, error)
+	GetOwned(address string) ([]NftMetadata, error)
 	Balance(tokenId *big.Int) (*big.Int, error)
 	BalanceOf(address string) (*big.Int, error)
 	Transfer(to string, tokenId *big.Int) error
+	TotalSupply() (*big.Int, error)
+	SetApproval(operator string, approved bool) (error)
+	Mint(metadata interface{}) (NftMetadata, error)
+	MintBatch(meta []interface{}) ([]NftMetadata, error)
+	Burn(tokenId *big.Int) error
+	TransferFrom(from string, to string, tokenId *big.Int) error
+	SetRoyaltyBps(amount *big.Int) error
+	GrantRole(role Role, address string) error
+	RevokeRole(role Role, address string) error
 }
 
 type NftSdkModule struct {
@@ -33,6 +50,50 @@ type NftSdkModule struct {
 
 	privateKey *ecdsa.PrivateKey
 	signerAddress common.Address
+}
+
+func (sdk *NftSdkModule) RevokeRole(role Role, address string) error {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) MintBatch(meta []interface{}) ([]NftMetadata, error) {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) Burn(tokenId *big.Int) error {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) TransferFrom(from string, to string, tokenId *big.Int) error {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) SetRoyaltyBps(amount *big.Int) error {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) GrantRole(role Role, address string) error {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) mintTo(metadata interface{}) (NftMetadata, error) {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) Mint(metadata interface{}) (NftMetadata, error) {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) SetApproval(operator string, approved bool) error {
+	panic("implement me")
+}
+
+func (sdk *NftSdkModule) TotalSupply() (*big.Int, error) {
+	return sdk.module.TotalSupply(&bind.CallOpts{})
+}
+
+func (sdk *NftSdkModule) GetOwned(address string) ([]NftMetadata, error) {
+	panic("implement me")
 }
 
 func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftSdkModule, error) {
