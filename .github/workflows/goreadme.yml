@@ -16,6 +16,7 @@ jobs:
         - name: Update readme according to Go doc
           uses: posener/goreadme@v1
           with:
+            email: 'abeahmed2@gmail.com'
             input-path: 'nftlabs'
             types: 'true'
             functions: 'true'
