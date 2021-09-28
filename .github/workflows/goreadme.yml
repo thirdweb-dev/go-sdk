@@ -4,7 +4,6 @@ on:
   pull_request:
     branches: [master]
 permissions:
-  # Goreadme needs permissions to update pull requests comments and change contents.
   pull-requests: write
   contents: write
 jobs:
@@ -13,11 +12,5 @@ jobs:
         steps:
         - name: Check out repository
           uses: actions/checkout@v2
-        - name: Update readme according to Go doc
-          uses: posener/goreadme@v1
-          with:
-            email: 'abeahmed2@gmail.com'
-            import-path: 'nftlabs'
-            functions: 'true'
-            # Optional: Token allows goreadme to comment the PR with diff preview.
-            github-token: '${{ secrets.GITHUB_TOKEN }}'
+        - name: GoDoc Action
+          uses: ktr0731/godoc-action@v0.1.0
