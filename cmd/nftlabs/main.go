@@ -31,6 +31,7 @@ func init() {
 	viper.SetDefault("chainRpcUrl", "https://rpc-mumbai.maticvigil.com")
 
 	rootCmd.AddCommand(nftCmd)
+	rootCmd.AddCommand(packCmd)
 }
 
 func initConfig() {

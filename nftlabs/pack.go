@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/json"
+	"errors"
 	"fmt"
 	ethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -99,15 +100,13 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
 		counts = append(counts, addition.Supply)
 	}
 
-	log.Printf("ids = %v counts = %v\n", ids, counts)
-
 	nftSdkModule, err := newErc1155SdkModule(sdk.Client, args.AssetContractAddress, sdk.Options)
 	if err != nil {
 		return Pack{}, err
 	}
 
 	stringsTy, _ := ethAbi.NewType("string", "string", nil)
-	uint256Ty, _ := ethAbi.NewType("uint", "uint", nil)
+	uint256Ty, _ := ethAbi.NewType("uint256", "uint256", nil)
 
 	arguments := ethAbi.Arguments{
        {
@@ -125,12 +124,16 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
     }
 
 	// TODO: allow user to pass these in from function params
-	bytes, _ := arguments.Pack(
+	bytes, err := arguments.Pack(
 		"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
        args.SecondsUntilOpenStart,
        args.SecondsUntilOpenEnd,
        args.RewardsPerOpen,
     )
+	if err != nil {
+		log.Print("Failed to pack args")
+		return Pack{}, err
+	}
 
 	// TODO: check if whats added to pack is erc721 or erc1155
 
@@ -138,6 +141,7 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
 		From:      sdk.signerAddress,
 		Signer:    sdk.getSigner(),
 		NoSend:    false,
+		GasLimit: 100000,
 	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
 	if err != nil {
 		return Pack{}, err
@@ -155,9 +159,10 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
 
 	log.Printf("Got receipt %v for tx %v\n", receipt.TxHash, tx.Hash())
 
-	if newListing, err := sdk.getNewMarketListing(receipt.Logs); err != nil {
+	if newListing, err := sdk.getNewPack(receipt.Logs); err != nil {
 		return Pack{}, err
 	} else {
+		log.Printf("Getting pack with id %v\n", newListing)
 		return sdk.Get(newListing)
 	}
 }
@@ -338,12 +343,12 @@ func (sdk *PackSdkModule) getSignerAddress() common.Address {
 	}
 }
 
-func (sdk *PackSdkModule) getNewMarketListing(logs []*types.Log) (*big.Int, error) {
+func (sdk *PackSdkModule) getNewPack(logs []*types.Log) (*big.Int, error) {
 	var packId *big.Int
 	for _, l := range logs {
 		iterator, err := sdk.module.ParsePackCreated(*l)
 		if err != nil {
-			return nil, err
+			continue
 		}
 
 		if iterator.PackId != nil {
@@ -351,6 +356,10 @@ func (sdk *PackSdkModule) getNewMarketListing(logs []*types.Log) (*big.Int, erro
 			packId = iterator.PackId
 			break
 		}
+	}
+
+	if packId == nil {
+		return nil, errors.New("Could not find Minted pack event for transaction")
 	}
 
 	return packId, nil

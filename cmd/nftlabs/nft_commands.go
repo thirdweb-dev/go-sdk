@@ -35,7 +35,7 @@ var nftCmd = &cobra.Command{
 }
 
 var nftGetAllCmd = &cobra.Command {
-	Use: "getAll [tokenId]",
+	Use: "getAll",
 	Short: "Get all available nfts in a contract `ADDRESS`",
 	Run: func(cmd *cobra.Command, args []string) {
 		module, err := getNftModule()
@@ -55,14 +55,11 @@ var nftGetAllCmd = &cobra.Command {
 }
 
 var nftMintCmd = &cobra.Command {
-	Use: "mint [tokenId]",
-	Short: "Get all available nfts in a contract `ADDRESS`",
+	Use: "mint",
+	Short: "Get all available nfts in a contract",
 	Run: func(cmd *cobra.Command, args []string) {
 		module, err := getNftModule()
 		if err != nil {
-			panic(err)
-		}
-		if err := module.SetPrivateKey(privateKey); err != nil {
 			panic(err)
 		}
 
