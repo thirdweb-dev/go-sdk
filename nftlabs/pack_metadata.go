@@ -34,13 +34,14 @@ type PackNft struct {
 
 type CreatePackArgs struct {
 	AssetContractAddress string
-	Assets []PackNftAddition
+	Assets []PackAssetAddition
 	SecondsUntilOpenStart *big.Int
 	SecondsUntilOpenEnd *big.Int
 	RewardsPerOpen *big.Int
+	Metadata interface{}
 }
 
-type PackNftAddition struct {
+type PackAssetAddition struct {
 	NftId *big.Int
 	Supply *big.Int
 }

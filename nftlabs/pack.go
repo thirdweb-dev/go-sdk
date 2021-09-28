@@ -123,26 +123,29 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
        },
     }
 
-	// TODO: allow user to pass these in from function params
+	uri, err := sdk.gateway.Upload(args.Metadata, sdk.Address, sdk.signerAddress.String())
+	if err != nil {
+		return Pack{}, err
+	}
+
 	bytes, err := arguments.Pack(
-		"ipfs://bafkreifa5nqfbknj5pxy74i734qhv7mbnl2ri75p3actz5b2y7mtvcvn7u",
-       args.SecondsUntilOpenStart,
-       args.SecondsUntilOpenEnd,
-       args.RewardsPerOpen,
+		uri,
+		args.SecondsUntilOpenStart,
+		args.SecondsUntilOpenEnd,
+		args.RewardsPerOpen,
     )
 	if err != nil {
 		log.Print("Failed to pack args")
 		return Pack{}, err
 	}
 
-	// TODO: check if whats added to pack is erc721 or erc1155
-
+	// TODO: check if whats added to pack is erc721 or erc1155, will do later when we support erc721
 	tx, err := nftSdkModule.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
 		From:      sdk.signerAddress,
 		Signer:    sdk.getSigner(),
 		NoSend:    false,
 		GasLimit: 100000,
-	}, sdk.signerAddress, common.HexToAddress(sdk.Address), ids, counts, bytes)
+	}, sdk.signerAddress, sdk.signerAddress, ids, counts, bytes)
 	if err != nil {
 		return Pack{}, err
 	}

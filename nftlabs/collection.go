@@ -141,11 +141,11 @@ func (sdk *NftCollectionSdkModule) GetAll() ([]CollectionMetadata, error) {
 }
 
 func (sdk *NftCollectionSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
-	panic("implement me")
+	return sdk.module.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), tokenId)
 }
 
 func (sdk *NftCollectionSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
-	panic("implement me")
+	return sdk.module.BalanceOf(&bind.CallOpts{}, sdk.signerAddress, tokenId)
 }
 
 func (sdk *NftCollectionSdkModule) IsApproved(address string, operator string) (bool, error) {

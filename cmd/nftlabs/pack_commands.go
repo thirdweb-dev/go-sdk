@@ -67,7 +67,7 @@ var packCreateCmd = &cobra.Command {
 		}
 
 
-		assets := make([]nftlabs.PackNftAddition, len(assetPairs))
+		assets := make([]nftlabs.PackAssetAddition, len(assetPairs))
 		cnt := 0
 		for tokenId, quantity := range assetPairs {
 			tokenIdParse, err := strconv.ParseInt(tokenId, 10, 64)
@@ -75,7 +75,7 @@ var packCreateCmd = &cobra.Command {
 				// TODO: return better error
 				panic(err)
 			}
-			assets[cnt] = nftlabs.PackNftAddition{
+			assets[cnt] = nftlabs.PackAssetAddition{
 				NftId: big.NewInt(tokenIdParse),
 				Supply: big.NewInt(quantity),
 			}
@@ -86,7 +86,6 @@ var packCreateCmd = &cobra.Command {
 		createPackArgs.SecondsUntilOpenStart = big.NewInt(secondsUntilOpenStart)
 		createPackArgs.SecondsUntilOpenEnd = big.NewInt(secondsUntilOpenEnd)
 		createPackArgs.RewardsPerOpen = big.NewInt(rewardsPerOpen)
-		log.Printf("Args = %v\n", createPackArgs)
 		if nft, err := module.Create(createPackArgs); err != nil {
 			panic(err)
 		} else {

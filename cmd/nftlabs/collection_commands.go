@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/nftlabs/nftlabs-sdk-go/nftlabs"
 	"github.com/spf13/cobra"
 	"log"
@@ -43,6 +44,29 @@ var collectionGetAllCmd = &cobra.Command {
 		for _, nft := range allNfts {
 			log.Printf("Got nft with name '%v' and description '%v' and id '%d', supply '%v'\n", nft.Name, nft.Description, nft.Id, nft.Supply)
 		}
+	},
+}
+
+var collectionBalanceCmd = &cobra.Command {
+	Use: "balance [tokenId]",
+	Short: "Check your balance of [tokenId]",
+	ValidArgs: []string{"tokenId"},
+	Args: cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		tokenId, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
+		module, err := getCollectionModule()
+		if err != nil {
+			panic(err)
+		}
+		balance, err := module.Balance(big.NewInt(tokenId))
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(balance)
 	},
 }
 
@@ -99,4 +123,6 @@ func init() {
 
 	collectionCmd.PersistentFlags().StringVarP(&collectionContractAddress, "address", "a", "", "collection contract address")
 	collectionCmd.AddCommand(collectionGetAllCmd)
+
+	collectionCmd.AddCommand(collectionBalanceCmd)
 }
