@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/nftlabs/nftlabs-sdk-go/nftlabs"
 	"github.com/spf13/cobra"
 	"log"
@@ -69,6 +71,9 @@ var nftMintCmd = &cobra.Command {
 			panic(err)
 		} else {
 			log.Printf("Minted nft with info = %v\n", nft)
+
+			result, _ := json.Marshal(&nft)
+			fmt.Println(string(result))
 		}
 	},
 }
