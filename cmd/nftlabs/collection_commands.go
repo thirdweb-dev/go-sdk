@@ -29,6 +29,7 @@ var collectionCmd = &cobra.Command{
 var collectionGetAllCmd = &cobra.Command {
 	Use: "getAll",
 	Short: "Get all available nfts in a contract `ADDRESS`",
+	Example:"nftlabs -k $PKEY collection -a $COLLECTION_ADDRESS getAll",
 	Run: func(cmd *cobra.Command, args []string) {
 		module, err := getCollectionModule()
 		if err != nil {
@@ -49,6 +50,7 @@ var collectionGetAllCmd = &cobra.Command {
 var collectionCreateCmd = &cobra.Command {
 	Use: "create [name] [supply]",
 	Short: "Create a collection with a single asset in the contract `ADDRESS`",
+	Example:"nftlabs -k $PKEY collection -a $COLLECTION_ADDRESS create testNft 10 # creates collection with nft name 'testNft' and supply of 10",
 	ValidArgs: []string{
 		createCollectionSupplyFlag,
 	},
