@@ -17,7 +17,7 @@ jobs:
           uses: posener/goreadme@v1
           with:
             email: 'abeahmed2@gmail.com'
-            input-path: 'nftlabs'
+            import-path: 'nftlabs'
             types: 'true'
             functions: 'true'
             badge-travisci: 'true'
