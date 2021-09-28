@@ -32,6 +32,7 @@ func init() {
 
 	rootCmd.AddCommand(nftCmd)
 	rootCmd.AddCommand(packCmd)
+	rootCmd.AddCommand(collectionCmd)
 }
 
 func initConfig() {
