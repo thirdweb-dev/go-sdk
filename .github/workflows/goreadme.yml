@@ -16,6 +16,8 @@ jobs:
         - name: Update readme according to Go doc
           uses: posener/goreadme@v1
           with:
+            types: 'true'
+            functions: 'true'
             badge-travisci: 'true'
             badge-codecov: 'true'
             badge-godoc: 'true'
