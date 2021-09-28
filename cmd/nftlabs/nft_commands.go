@@ -1,14 +1,26 @@
 package main
 
 import (
-	"github.com/ethereum/go-ethereum/ethclient"
-	sdk "github.com/nftlabs/nftlabs-sdk-go/nftlabs"
+	"github.com/nftlabs/nftlabs-sdk-go/nftlabs"
 	"github.com/spf13/cobra"
 	"log"
+	"math/big"
+)
+
+const (
+	nameFlag = "name"
+	descriptionFlag = "description"
+	imageFlag = "image"
+	externalUrlFlag = "externalUrl"
+	sellerFeeBasisPointsFlag = "sellerFeeBasisPoints"
+	feeRecipientFlag = "feeRecipient"
+	backgroundColorFlag = "backgroundColor"
 )
 
 var (
 	contractAddress string
+	nftMetadata nftlabs.MintNftMetadata
+	sellerFeeBasisPoints int64
 )
 
 var nftCmd = &cobra.Command{
@@ -24,20 +36,9 @@ var nftGetAllCmd = &cobra.Command {
 	Use: "getAll [tokenId]",
 	Short: "Get all available nfts in a contract `ADDRESS`",
 	Run: func(cmd *cobra.Command, args []string) {
-		client, err := ethclient.Dial(chainRpcUrl)
+		module, err := getNftModule()
 		if err != nil {
-			log.Fatal(err)
-		}
-
-		log.Printf("Creating an NFT sdk module on chain %v, contract %v\n", chainRpcUrl, contractAddress)
-
-		// You can mock the sdk.NftSdk interface when writing tests against the SDK
-		var module sdk.NftSdk
-		if caller, err := sdk.NewNftSdkModule(client, contractAddress, &sdk.SdkOptions{}); err != nil {
-			log.Println("Failed to create an NFT caller object")
 			panic(err)
-		} else {
-			module = caller
 		}
 
 		allNfts, err := module.GetAll()
@@ -51,7 +52,38 @@ var nftGetAllCmd = &cobra.Command {
 	},
 }
 
+var nftMintCmd = &cobra.Command {
+	Use: "mint [tokenId]",
+	Short: "Get all available nfts in a contract `ADDRESS`",
+	Run: func(cmd *cobra.Command, args []string) {
+		module, err := getNftModule()
+		if err != nil {
+			panic(err)
+		}
+		if err := module.SetPrivateKey(privateKey); err != nil {
+			panic(err)
+		}
+
+		nftMetadata.SellerFeeBasisPoints = big.NewInt(sellerFeeBasisPoints)
+		if nft, err := module.Mint(nftMetadata); err != nil {
+			panic(err)
+		} else {
+			log.Printf("Minted nft with info = %v\n", nft)
+		}
+	},
+}
+
 func init() {
+	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.Name, nameFlag, "", "name for nft")
+	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.Description, descriptionFlag, "", "description for nft")
+	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.ExternalUrl, externalUrlFlag, "", "external url for nft")
+	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.Image, imageFlag, "", "image for nft")
+	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.FeeRecipient, feeRecipientFlag, "", "fee recipient for nft royalties")
+	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.BackgroundColor, backgroundColorFlag, "", "hex value for background color")
+	nftMintCmd.PersistentFlags().Int64Var(&sellerFeeBasisPoints, sellerFeeBasisPointsFlag, 0, "basis points to collect (to feeRecipient) on each sale")
+	_ = nftMintCmd.MarkPersistentFlagRequired(nameFlag)
+	nftCmd.AddCommand(nftMintCmd)
+
 	nftCmd.PersistentFlags().StringVarP(&contractAddress, "address", "a", "", "nft contract address")
 	nftCmd.AddCommand(nftGetAllCmd)
 }

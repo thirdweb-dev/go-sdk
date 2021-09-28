@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/json"
+	"errors"
 	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
@@ -32,13 +33,15 @@ type NftSdk interface {
 	Transfer(to string, tokenId *big.Int) error
 	TotalSupply() (*big.Int, error)
 	SetApproval(operator string, approved bool) (error)
-	Mint(metadata interface{}) (NftMetadata, error)
+	Mint(metadata MintNftMetadata) (NftMetadata, error)
 	MintBatch(meta []interface{}) ([]NftMetadata, error)
 	Burn(tokenId *big.Int) error
 	TransferFrom(from string, to string, tokenId *big.Int) error
 	SetRoyaltyBps(amount *big.Int) error
 	GrantRole(role Role, address string) error
 	RevokeRole(role Role, address string) error
+
+	mintTo(meta MintNftMetadata) (NftMetadata, error)
 }
 
 type NftSdkModule struct {
@@ -76,12 +79,51 @@ func (sdk *NftSdkModule) GrantRole(role Role, address string) error {
 	panic("implement me")
 }
 
-func (sdk *NftSdkModule) mintTo(metadata interface{}) (NftMetadata, error) {
-	panic("implement me")
+func (sdk *NftSdkModule) mintTo(metadata MintNftMetadata) (NftMetadata, error) {
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return NftMetadata{}, &NoSignerError{
+			typeName: "Nft",
+		}
+	}
+	uri, err := sdk.gateway.Upload(metadata, "", "")
+	if err != nil {
+		return NftMetadata{}, err
+	}
+	log.Printf("Got back uri = %v\n", uri)
+
+	tx, err := sdk.module.NFTTransactor.MintNFT(&bind.TransactOpts{
+		NoSend: false,
+		Signer: sdk.getSigner(),
+		From: sdk.signerAddress,
+	}, sdk.signerAddress, uri)
+
+	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
+		// TODO: return clearer error
+		return NftMetadata{}, err
+	}
+
+	receipt, err := sdk.Client.TransactionReceipt(context.Background(), tx.Hash())
+	if err != nil {
+		log.Printf("Failed to lookup transaction receipt with hash %v\n", tx.Hash().String())
+		return NftMetadata{}, err
+	}
+
+	tokenId, err := sdk.getNewMintedNft(receipt.Logs)
+	if err != nil {
+		return NftMetadata{}, err
+	}
+
+	return NftMetadata{
+		Id: tokenId,
+		Image: metadata.Image,
+		Description: metadata.Description,
+		Uri: metadata.ExternalUrl,
+		Name: metadata.Name,
+	}, err
 }
 
-func (sdk *NftSdkModule) Mint(metadata interface{}) (NftMetadata, error) {
-	panic("implement me")
+func (sdk *NftSdkModule) Mint(metadata MintNftMetadata) (NftMetadata, error) {
+	return sdk.mintTo(metadata)
 }
 
 func (sdk *NftSdkModule) SetApproval(operator string, approved bool) error {
@@ -234,4 +276,25 @@ func (sdk *NftSdkModule) getSignerAddress() common.Address {
 	} else {
 		return sdk.signerAddress
 	}
+}
+
+func (sdk *NftSdkModule) getNewMintedNft(logs []*types.Log) (*big.Int, error) {
+	var tokenId *big.Int
+	for _, l := range logs {
+		iterator, err := sdk.module.ParseMinted(*l)
+		if err != nil {
+			continue
+		}
+
+		if iterator.TokenId != nil {
+			tokenId = iterator.TokenId
+			break
+		}
+	}
+
+	if tokenId == nil {
+		return nil, errors.New("Could not find Minted event for transaction")
+	}
+
+	return tokenId, nil
 }
