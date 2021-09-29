@@ -64,7 +64,19 @@ func (sdk *NftSdkModule) MintBatch(meta []interface{}) ([]NftMetadata, error) {
 }
 
 func (sdk *NftSdkModule) Burn(tokenId *big.Int) error {
-	panic("implement me")
+	if sdk.signerAddress == common.HexToAddress("0") {
+		return &NoSignerError{
+			typeName: "nft",
+		}
+	}
+
+	_, err := sdk.module.Burn(&bind.TransactOpts{
+		NoSend: false,
+		From: sdk.signerAddress,
+		Signer: sdk.getSigner(),
+	}, tokenId)
+
+	return err
 }
 
 func (sdk *NftSdkModule) TransferFrom(from string, to string, tokenId *big.Int) error {
