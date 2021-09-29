@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"github.com/ethereum/go-ethereum/core/types"
-	"log"
 	"math/big"
 	"strings"
 
