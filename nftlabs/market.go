@@ -198,6 +198,8 @@ func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
 	packAddress := common.HexToAddress(args.AssetContractAddress)
 	currencyAddress := common.HexToAddress(args.CurrencyContractAddress)
 
+	log.Println(args)
+
 	log.Printf("Creating erc721 module, at address %v\n", args.AssetContractAddress)
 	erc721Module, err := newErc721SdkModule(sdk.Client, args.AssetContractAddress, &SdkOptions{})
 	if err != nil {
