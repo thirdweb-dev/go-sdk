@@ -98,7 +98,7 @@ func init() {
 	packCreateCmd.PersistentFlags().StringVar(&createPackArgs.AssetContractAddress, assetContractFlag, "", "address of the asset going in the pack")
 	packCreateCmd.PersistentFlags().Int64Var(&secondsUntilOpenStart, secondsUntilOpenStartFlag, 0, "seconds until open start (default 0)")
 	packCreateCmd.PersistentFlags().Int64Var(&secondsUntilOpenEnd, secondsUntilOpenEndFlag, 0, "seconds until open end (default 0)")
-	packCreateCmd.PersistentFlags().Int64Var(&rewardsPerOpen, rewardsPerOpenFlag, 0, "rewards per open")
+	packCreateCmd.PersistentFlags().Int64Var(&rewardsPerOpen, rewardsPerOpenFlag, 1, "rewards per open")
 	packCreateCmd.PersistentFlags().StringToInt64Var(&assetPairs, assetSuppliesFlag, map[string]int64{}, "pairs of (tokenid, quantity) to transfer to the pack")
 	_ = packCreateCmd.MarkPersistentFlagRequired(rewardsPerOpenFlag)
 	_ = packCreateCmd.MarkPersistentFlagRequired(assetContractFlag)
