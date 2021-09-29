@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"github.com/ethereum/go-ethereum/core/types"
+	"log"
 	"math/big"
 	"strings"
 
@@ -190,7 +191,8 @@ func (sdk *CurrencyModule) formatUnits(value *big.Int, units *big.Int) string {
 
 	ten := big.NewInt(10)
 	ten.Exp(ten, unit, big.NewInt(0))
-	v := big.NewInt(value.Int64())
+	v := big.NewInt(0)
+	v.SetString(value.String(), 10)
 	return v.Div(v, ten).String()
 }
 
