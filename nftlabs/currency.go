@@ -26,6 +26,7 @@ type CurrencySdk interface {
 	TransferFrom(from string, to string, amount *big.Int) error
 	GrantRole(role Role, address string) error
 	RevokeRole(role Role, address string) error
+	TotalSupply() (*big.Int, error)
 }
 
 type CurrencySdkModule struct {
@@ -37,6 +38,10 @@ type CurrencySdkModule struct {
 	privateKey *ecdsa.PrivateKey
 	rawPrivateKey string
 	signerAddress common.Address
+}
+
+func (sdk *CurrencySdkModule) TotalSupply() (*big.Int, error) {
+	return sdk.module.TotalSupply(&bind.CallOpts{})
 }
 
 func (sdk *CurrencySdkModule) Allowance(spender string) (*big.Int, error) {
