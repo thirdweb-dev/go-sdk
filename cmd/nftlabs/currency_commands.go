@@ -80,10 +80,33 @@ var currencyTotalSupplyCmd = &cobra.Command{
 	},
 }
 
+var currencyBurnCmd = &cobra.Command{
+	Use: "burn [amount]",
+	Short: "Burns [amount] of the currency at the specified address",
+	Run: func(cmd *cobra.Command, args []string) {
+		amount, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
+		module, err := getCurrencyModule()
+		if err != nil {
+			panic(err)
+		}
+
+		if err := module.Burn(big.NewInt(amount)); err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("%d burned successfully\n", amount)
+	},
+}
+
 func init() {
 	currencyCmd.AddCommand(currencyTotalSupplyCmd)
 	currencyCmd.AddCommand(currencyMintCmd)
 	currencyCmd.AddCommand(currencyGetCmd)
+	currencyCmd.AddCommand(currencyBurnCmd)
 
 	currencyCmd.PersistentFlags().StringVarP(&currencyContractAddress, "address", "a", "", "currency contract address")
 }
