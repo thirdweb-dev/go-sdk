@@ -13,9 +13,9 @@ import (
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 )
 
-type CurrencySdk interface {
+type Currency interface {
 	CommonModule
-	Get() (Currency, error)
+	Get() (CurrencyMetadata, error)
 	GetValue(value *big.Int) (*CurrencyValue, error)
 	Balance() (CurrencyValue, error)
 	BalanceOf(address string, tokenId string) (CurrencyValue, error)
@@ -31,7 +31,7 @@ type CurrencySdk interface {
 	TotalSupply() (*big.Int, error)
 }
 
-type CurrencySdkModule struct {
+type CurrencyModule struct {
 	Client *ethclient.Client
 	Address string
 	module *abi.Currency
@@ -41,15 +41,15 @@ type CurrencySdkModule struct {
 	signerAddress common.Address
 }
 
-func (sdk *CurrencySdkModule) TotalSupply() (*big.Int, error) {
+func (sdk *CurrencyModule) TotalSupply() (*big.Int, error) {
 	return sdk.module.TotalSupply(&bind.CallOpts{})
 }
 
-func (sdk *CurrencySdkModule) Allowance(spender string) (*big.Int, error) {
+func (sdk *CurrencyModule) Allowance(spender string) (*big.Int, error) {
 	return sdk.module.Allowance(&bind.CallOpts{}, sdk.getSignerAddress(), common.HexToAddress(spender))
 }
 
-func (sdk *CurrencySdkModule) SetAllowance(spender string, amount *big.Int) error {
+func (sdk *CurrencyModule) SetAllowance(spender string, amount *big.Int) error {
 	if tx, err := sdk.module.Approve(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -61,7 +61,7 @@ func (sdk *CurrencySdkModule) SetAllowance(spender string, amount *big.Int) erro
 	}
 }
 
-func (sdk *CurrencySdkModule) Mint(amount *big.Int) error {
+func (sdk *CurrencyModule) Mint(amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.Mint(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -73,7 +73,7 @@ func (sdk *CurrencySdkModule) Mint(amount *big.Int) error {
 	}
 }
 
-func (sdk *CurrencySdkModule) Burn(amount *big.Int) error {
+func (sdk *CurrencyModule) Burn(amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.Burn(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -85,7 +85,7 @@ func (sdk *CurrencySdkModule) Burn(amount *big.Int) error {
 	}
 }
 
-func (sdk *CurrencySdkModule) BurnFrom(from string, amount *big.Int) error {
+func (sdk *CurrencyModule) BurnFrom(from string, amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.BurnFrom(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -97,7 +97,7 @@ func (sdk *CurrencySdkModule) BurnFrom(from string, amount *big.Int) error {
 	}
 }
 
-func (sdk *CurrencySdkModule) TransferFrom(from string, to string, amount *big.Int) error {
+func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.TransferFrom(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -109,7 +109,7 @@ func (sdk *CurrencySdkModule) TransferFrom(from string, to string, amount *big.I
 	}
 }
 
-func (sdk *CurrencySdkModule) GrantRole(role Role, address string) error {
+func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 	if tx, err := sdk.module.CurrencyTransactor.GrantRole(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -121,7 +121,7 @@ func (sdk *CurrencySdkModule) GrantRole(role Role, address string) error {
 	}
 }
 
-func (sdk *CurrencySdkModule) RevokeRole(role Role, address string) error {
+func (sdk *CurrencyModule) RevokeRole(role Role, address string) error {
 	if tx, err := sdk.module.CurrencyTransactor.RevokeRole(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -133,52 +133,52 @@ func (sdk *CurrencySdkModule) RevokeRole(role Role, address string) error {
 	}
 }
 
-func NewCurrencySdkModule(client *ethclient.Client, asset string) (*CurrencySdkModule, error) {
+func NewCurrencySdkModule(client *ethclient.Client, asset string) (*CurrencyModule, error) {
 	module, err := abi.NewCurrency(common.HexToAddress(asset), client)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CurrencySdkModule{
+	return &CurrencyModule{
 		Client: client,
 		Address: asset,
 		module: module,
 	}, nil
 }
 
-func (sdk *CurrencySdkModule) Get() (Currency, error) {
+func (sdk *CurrencyModule) Get() (CurrencyMetadata, error) {
 	if strings.HasPrefix(sdk.Address, "0x0000000") {
-		return Currency{}, nil
+		return CurrencyMetadata{}, nil
 	}
 
 	erc20Module, err := newErc20SdkModule(sdk.Client, sdk.Address, &SdkOptions{})
 	if err != nil {
-		return Currency{}, err
+		return CurrencyMetadata{}, err
 	}
 
 	name, err := erc20Module.module.Name(&bind.CallOpts{})
 	if err != nil {
-		return Currency{}, err
+		return CurrencyMetadata{}, err
 	}
 
 	symbol, err := erc20Module.module.Symbol(&bind.CallOpts{})
 	if err != nil {
-		return Currency{}, err
+		return CurrencyMetadata{}, err
 	}
 
 	decimals, err := erc20Module.module.Decimals(&bind.CallOpts{})
 	if err != nil {
-		return Currency{}, err
+		return CurrencyMetadata{}, err
 	}
 
-	return Currency{
+	return CurrencyMetadata{
 		Name: name,
 		Symbol: symbol,
 		Decimals: decimals,
 	}, nil
 }
 
-func (sdk *CurrencySdkModule) GetValue(value *big.Int) (*CurrencyValue, error) {
+func (sdk *CurrencyModule) GetValue(value *big.Int) (*CurrencyValue, error) {
 	if sdk.Address == common.HexToAddress("0").Hex() {
 		return &CurrencyValue{}, nil
 	}
@@ -199,7 +199,7 @@ func (sdk *CurrencySdkModule) GetValue(value *big.Int) (*CurrencyValue, error) {
 	}
 
 	return &CurrencyValue{
-		Currency: Currency{
+		CurrencyMetadata: CurrencyMetadata{
 			Name: name,
 			Symbol: symbol,
 			Decimals: decimals,
@@ -207,19 +207,19 @@ func (sdk *CurrencySdkModule) GetValue(value *big.Int) (*CurrencyValue, error) {
 	}, nil
 }
 
-func (sdk *CurrencySdkModule) Balance() (CurrencyValue, error) {
+func (sdk *CurrencyModule) Balance() (CurrencyValue, error) {
 	panic("implement me")
 }
 
-func (sdk *CurrencySdkModule) BalanceOf(address string, tokenId string) (CurrencyValue, error) {
+func (sdk *CurrencyModule) BalanceOf(address string, tokenId string) (CurrencyValue, error) {
 	panic("implement me")
 }
 
-func (sdk *CurrencySdkModule) Transfer(to string, amount *big.Int) error {
+func (sdk *CurrencyModule) Transfer(to string, amount *big.Int) error {
 	panic("implement me")
 }
 
-func (sdk *CurrencySdkModule) SetPrivateKey(privateKey string) error {
+func (sdk *CurrencyModule) SetPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
 		return err
 	} else {
@@ -230,7 +230,7 @@ func (sdk *CurrencySdkModule) SetPrivateKey(privateKey string) error {
 	return nil
 }
 
-func (sdk *CurrencySdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+func (sdk *CurrencyModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		ctx := context.Background()
 		chainId, _ := sdk.Client.ChainID(ctx)
@@ -238,7 +238,7 @@ func (sdk *CurrencySdkModule) getSigner() func(address common.Address, transacti
 	}
 }
 
-func (sdk *CurrencySdkModule) getSignerAddress() common.Address {
+func (sdk *CurrencyModule) getSignerAddress() common.Address {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return common.HexToAddress(sdk.Address)
 	} else {
