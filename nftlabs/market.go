@@ -192,24 +192,6 @@ func (sdk *MarketModule) List(args NewListingArgs) (Listing, error) {
 			body:     "Asset must be an ERC721 contract. Other types will be supported soon.",
 		}
 	}
-
-	//query := ethereum.FilterQuery{
-	//	FromBlock: receipt.BlockNumber,
-	//	ToBlock:   receipt.BlockNumber,
-	//	Addresses: []common.Address{
-	//		common.HexToAddress(sdk.Address),
-	//	},
-	//})
-
-	//logs, err := sdk.Client.FilterLogs(context.Background(), query)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//var event interface{}
-	//for _, log := range logs {
-	//	if log.DecodeRLP()
-	//}
 }
 
 func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
