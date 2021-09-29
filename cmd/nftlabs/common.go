@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func getNftModule() (sdk.NftSdk, error) {
+func getNftModule() (sdk.Nft, error) {
 	client, err := ethclient.Dial(chainRpcUrl)
 	if err != nil {
 		log.Fatal(err)
@@ -14,8 +14,8 @@ func getNftModule() (sdk.NftSdk, error) {
 
 	log.Printf("Creating an NFT sdk module on chain %v, contract %v\n", chainRpcUrl, contractAddress)
 
-	// You can mock the sdk.NftSdk interface when writing tests against the SDK
-	var module sdk.NftSdk
+	// You can mock the sdk.Nft interface when writing tests against the SDK
+	var module sdk.Nft
 	if caller, err := sdk.NewNftSdkModule(client, contractAddress, &sdk.SdkOptions{}); err != nil {
 		log.Println("Failed to create an NFT caller object")
 		panic(err)
@@ -30,7 +30,7 @@ func getNftModule() (sdk.NftSdk, error) {
 	return module, nil
 }
 
-func getPackModule() (sdk.PackSdk, error) {
+func getPackModule() (sdk.Pack, error) {
 	// TODO: need to reuse these
 	client, err := ethclient.Dial(chainRpcUrl)
 	if err != nil {
@@ -39,8 +39,8 @@ func getPackModule() (sdk.PackSdk, error) {
 
 	log.Printf("Creating a pack sdk module on chain %v, contract %v\n", chainRpcUrl, packContractAddress)
 
-	// You can mock the sdk.NftSdk interface when writing tests against the SDK
-	var module sdk.PackSdk
+	// You can mock the sdk.Nft interface when writing tests against the SDK
+	var module sdk.Pack
 	if caller, err := sdk.NewPackSdkModule(client, packContractAddress, &sdk.SdkOptions{}); err != nil {
 		log.Println("Failed to create a pack sdk module")
 		panic(err)
@@ -63,7 +63,7 @@ func getCollectionModule() (sdk.NftCollection, error) {
 
 	log.Printf("Creating an NFT sdk module on chain %v, contract %v\n", chainRpcUrl, collectionContractAddress)
 
-	// You can mock the sdk.NftSdk interface when writing tests against the SDK
+	// You can mock the sdk.Nft interface when writing tests against the SDK
 	var module sdk.NftCollection
 	if caller, err := sdk.NewNftCollectionModule(client, collectionContractAddress, &sdk.SdkOptions{}); err != nil {
 		log.Println("Failed to create an NFT caller object")
@@ -79,7 +79,7 @@ func getCollectionModule() (sdk.NftCollection, error) {
 	return module, nil
 }
 
-func getMarketplaceModule() (sdk.MarketSdk, error) {
+func getMarketplaceModule() (sdk.Market, error) {
 	client, err := ethclient.Dial(chainRpcUrl)
 	if err != nil {
 		log.Fatal(err)
@@ -87,8 +87,8 @@ func getMarketplaceModule() (sdk.MarketSdk, error) {
 
 	log.Printf("Creating a Marketplace sdk module on chain %v, contract %v\n", chainRpcUrl, marketplaceContractAddress)
 
-	// You can mock the sdk.NftSdk interface when writing tests against the SDK
-	var module sdk.MarketSdk
+	// You can mock the sdk.Nft interface when writing tests against the SDK
+	var module sdk.Market
 	if caller, err := sdk.NewMarketSdkModule(client, marketplaceContractAddress, &sdk.SdkOptions{}); err != nil {
 		log.Println("Failed to create an Marketplace caller object")
 		panic(err)
@@ -111,7 +111,7 @@ func getCurrencyModule() (sdk.Currency, error) {
 
 	log.Printf("Creating a CurrencyMetadata sdk module on chain %v, contract %v\n", chainRpcUrl, currencyContractAddress)
 
-	// You can mock the sdk.NftSdk interface when writing tests against the SDK
+	// You can mock the sdk.Nft interface when writing tests against the SDK
 	var module sdk.Currency
 	if caller, err := sdk.NewCurrencySdkModule(client, currencyContractAddress); err != nil {
 		log.Println("Failed to create an currency caller object")

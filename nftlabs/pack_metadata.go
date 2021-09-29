@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-type Pack struct {
+type PackMetadata struct {
 	NftMetadata
 	Creator common.Address
 	CurrentSupply big.Int

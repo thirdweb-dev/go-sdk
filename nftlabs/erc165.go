@@ -9,11 +9,11 @@ import (
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 )
 
-type erc165Sdk interface {
+type erc165 interface {
 	CommonModule
 }
 
-type erc165SdkModule struct {
+type erc165Module struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
@@ -24,7 +24,7 @@ type erc165SdkModule struct {
 	signerAddress common.Address
 }
 
-func newErc165SdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*erc165SdkModule, error) {
+func newErc165SdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*erc165Module, error) {
 	if opt.IpfsGatewayUrl == "" {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
@@ -40,7 +40,7 @@ func newErc165SdkModule(client *ethclient.Client, address string, opt *SdkOption
 	var gw Gateway
 	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
 
-	return &erc165SdkModule{
+	return &erc165Module{
 		Client: client,
 		Address: address,
 		Options: opt,
@@ -50,7 +50,7 @@ func newErc165SdkModule(client *ethclient.Client, address string, opt *SdkOption
 }
 
 
-func (sdk *erc165SdkModule) SetPrivateKey(privateKey string) error {
+func (sdk *erc165Module) SetPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
 		return &NoSignerError{typeName: "erc165", Err: err}
 	} else {
@@ -59,7 +59,7 @@ func (sdk *erc165SdkModule) SetPrivateKey(privateKey string) error {
 	}
 	return nil
 }
-func (sdk *erc165SdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+func (sdk *erc165Module) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		ctx := context.Background()
 		chainId, _ := sdk.Client.ChainID(ctx)

@@ -17,7 +17,7 @@ import (
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 )
 
-type MarketSdk interface {
+type Market interface {
 	CommonModule
 	GetListing(listingId *big.Int) (Listing, error)
 	GetAll(filter ListingFilter) ([]Listing, error)
@@ -29,7 +29,7 @@ type MarketSdk interface {
 	SetMarketFeeBps(fee *big.Int) error
 }
 
-type MarketSdkModule struct {
+type MarketModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
@@ -41,7 +41,7 @@ type MarketSdkModule struct {
 	signerAddress common.Address
 }
 
-func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*MarketSdkModule, error) {
+func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*MarketModule, error) {
 	if opt.IpfsGatewayUrl == "" {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
@@ -54,7 +54,7 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 	// internally we force this gw, but could allow an override for testing
 	gw := NewCloudflareGateway(opt.IpfsGatewayUrl)
 
-	return &MarketSdkModule{
+	return &MarketModule{
 		Client: client,
 		Address: address,
 		Options: opt,
@@ -63,11 +63,11 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 	}, nil
 }
 
-func (sdk *MarketSdkModule) GetMarketFeeBps() (*big.Int, error) {
+func (sdk *MarketModule) GetMarketFeeBps() (*big.Int, error) {
 	return sdk.module.MarketCaller.MarketFeeBps(&bind.CallOpts{})
 }
 
-func (sdk *MarketSdkModule) SetMarketFeeBps(fee *big.Int) error {
+func (sdk *MarketModule) SetMarketFeeBps(fee *big.Int) error {
 	if tx, err := sdk.module.SetMarketFeeBps(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -79,7 +79,7 @@ func (sdk *MarketSdkModule) SetMarketFeeBps(fee *big.Int) error {
 	}
 }
 
-func (sdk *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error) {
+func (sdk *MarketModule) GetListing(listingId *big.Int) (Listing, error) {
 	if result, err := sdk.module.MarketCaller.Listings(&bind.CallOpts{}, listingId); err != nil {
 		return Listing{}, err
 	} else {
@@ -87,7 +87,7 @@ func (sdk *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error) {
 	}
 }
 
-func (sdk *MarketSdkModule) GetAll(filter ListingFilter) ([]Listing, error) {
+func (sdk *MarketModule) GetAll(filter ListingFilter) ([]Listing, error) {
 	listings := make([]abi.MarketListing, 0)
 
 	hasFilter := filter.TokenContract != "" || filter.TokenId != nil || filter.Seller != ""
@@ -167,7 +167,7 @@ func (sdk *MarketSdkModule) GetAll(filter ListingFilter) ([]Listing, error) {
 }
 
 // TODO: change args to struct
-func (sdk *MarketSdkModule) List(args NewListingArgs) (Listing, error) {
+func (sdk *MarketModule) List(args NewListingArgs) (Listing, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return Listing{}, &NoSignerError{typeName: "nft"}
 	}
@@ -212,7 +212,7 @@ func (sdk *MarketSdkModule) List(args NewListingArgs) (Listing, error) {
 	//}
 }
 
-func (sdk *MarketSdkModule) listErc721(args NewListingArgs) (Listing, error) {
+func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
 	packAddress := common.HexToAddress(args.AssetContractAddress)
 	currencyAddress := common.HexToAddress(args.CurrencyContractAddress)
 
@@ -237,7 +237,7 @@ func (sdk *MarketSdkModule) listErc721(args NewListingArgs) (Listing, error) {
 				From:   sdk.signerAddress,
 				Signer: erc721Module.getSigner(),
 			}, common.HexToAddress(sdk.Address), true); err != nil {
-				// return better error describing that "Failed to Gran approval on Pack contract"
+				// return better error describing that "Failed to Gran approval on PackMetadata contract"
 				return Listing{}, err
 			}
 		}
@@ -277,7 +277,7 @@ func (sdk *MarketSdkModule) listErc721(args NewListingArgs) (Listing, error) {
 	}
 }
 
-func (sdk *MarketSdkModule) getNewMarketListing(logs []*types.Log) (*abi.MarketListing, error) {
+func (sdk *MarketModule) getNewMarketListing(logs []*types.Log) (*abi.MarketListing, error) {
 	var listing abi.MarketListing
 	for _, l := range logs {
 		iterator, err := sdk.module.MarketFilterer.ParseNewListing(*l)
@@ -295,7 +295,7 @@ func (sdk *MarketSdkModule) getNewMarketListing(logs []*types.Log) (*abi.MarketL
 	return &listing, nil
 }
 
-func (sdk *MarketSdkModule) UnlistAll(listingId *big.Int) error {
+func (sdk *MarketModule) UnlistAll(listingId *big.Int) error {
 	listing, err := sdk.GetListing(listingId)
 	if err != nil {
 		return err
@@ -303,7 +303,7 @@ func (sdk *MarketSdkModule) UnlistAll(listingId *big.Int) error {
 	return sdk.Unlist(listingId, listing.Quantity)
 }
 
-func (sdk *MarketSdkModule) Unlist(listingId *big.Int, quantity *big.Int) error {
+func (sdk *MarketModule) Unlist(listingId *big.Int, quantity *big.Int) error {
 	if tx, err := sdk.module.Unlist(&bind.TransactOpts{
 		NoSend: false,
 		From: sdk.getSignerAddress(),
@@ -315,7 +315,7 @@ func (sdk *MarketSdkModule) Unlist(listingId *big.Int, quantity *big.Int) error 
 	}
 }
 
-func (sdk *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
+func (sdk *MarketModule) Buy(listingId *big.Int, quantity *big.Int) error {
 	listing, err := sdk.GetListing(listingId)
 	if err != nil {
 		return err
@@ -327,7 +327,7 @@ func (sdk *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
 	return nil
 }
 
-func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
+func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
 	listingCurrency := listing.Currency
 
 	var currencyMetadata *CurrencyValue
@@ -401,7 +401,7 @@ func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) 
 	}, nil
 }
 
-func (sdk *MarketSdkModule) SetPrivateKey(privateKey string) error {
+func (sdk *MarketModule) SetPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
 		return err
 	} else {
@@ -412,7 +412,7 @@ func (sdk *MarketSdkModule) SetPrivateKey(privateKey string) error {
 	return nil
 }
 
-func (sdk *MarketSdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+func (sdk *MarketModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		ctx := context.Background()
 		chainId, _ := sdk.Client.ChainID(ctx)
@@ -420,7 +420,7 @@ func (sdk *MarketSdkModule) getSigner() func(address common.Address, transaction
 	}
 }
 
-func (sdk *MarketSdkModule) getSignerAddress() common.Address {
+func (sdk *MarketModule) getSignerAddress() common.Address {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return common.HexToAddress(sdk.Address)
 	} else {

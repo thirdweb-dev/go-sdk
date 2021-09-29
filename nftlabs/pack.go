@@ -19,19 +19,19 @@ import (
 	"github.com/nftlabs/nftlabs-sdk-go/abi"
 )
 
-type PackSdk interface {
+type Pack interface {
 	CommonModule
 	Open(packId *big.Int) (PackNft, error)
-	Get(tokenId *big.Int) (Pack, error)
-	GetAll() ([]Pack, error)
+	Get(tokenId *big.Int) (PackMetadata, error)
+	GetAll() ([]PackMetadata, error)
 	GetNfts(packId *big.Int) ([]PackNft, error)
 	Balance(tokenId *big.Int) (*big.Int, error)
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
 	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
-	Create(args CreatePackArgs) (Pack, error)
+	Create(args CreatePackArgs) (PackMetadata, error)
 }
 
-type PackSdkModule struct {
+type PackModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
@@ -41,7 +41,7 @@ type PackSdkModule struct {
 	module *abi.Pack
 }
 
-func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackSdkModule, error) {
+func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackModule, error) {
 	if opt.IpfsGatewayUrl == "" {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
@@ -56,7 +56,7 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 	var gw Gateway
 	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
 
-	return &PackSdkModule{
+	return &PackModule{
 		Client:  client,
 		Address: address,
 		Options: opt,
@@ -65,7 +65,7 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 	}, nil
 }
 
-func (sdk *PackSdkModule) DeployContract(name string) error {
+func (sdk *PackModule) DeployContract(name string) error {
 	//chainID, err := sdk.Client.ChainID(context.Background())
 	//if err != nil {
 	//	return err
@@ -85,9 +85,9 @@ func (sdk *PackSdkModule) DeployContract(name string) error {
 	return nil
 }
 
-func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
+func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
-		return Pack{}, &NoSignerError{typeName: "pack"}
+		return PackMetadata{}, &NoSignerError{typeName: "pack"}
 	}
 
 	log.Printf("Wallet used = %v\n", sdk.signerAddress)
@@ -102,7 +102,7 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
 
 	nftSdkModule, err := newErc1155SdkModule(sdk.Client, args.AssetContractAddress, sdk.Options)
 	if err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
 	stringsTy, _ := ethAbi.NewType("string", "string", nil)
@@ -125,7 +125,7 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
 
 	uri, err := sdk.gateway.Upload(args.Metadata, sdk.Address, sdk.signerAddress.String())
 	if err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
 	bytes, err := arguments.Pack(
@@ -136,7 +136,7 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
     )
 	if err != nil {
 		log.Print("Failed to pack args")
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
 	// TODO: check if whats added to pack is erc721 or erc1155, will do later when we support erc721
@@ -147,62 +147,62 @@ func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error) {
 		GasLimit: 100000,
 	}, sdk.signerAddress, sdk.signerAddress, ids, counts, bytes)
 	if err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
 	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
 	receipt, err := sdk.Client.TransactionReceipt(context.Background(), tx.Hash())
 	if err != nil {
 		log.Printf("Failed to lookup transaction receipt with hash %v\n", tx.Hash().String())
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
 	log.Printf("Got receipt %v for tx %v\n", receipt.TxHash, tx.Hash())
 
 	if newListing, err := sdk.getNewPack(receipt.Logs); err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	} else {
 		log.Printf("Getting pack with id %v\n", newListing)
 		return sdk.Get(newListing)
 	}
 }
 
-func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
+func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
 	packMeta, err := sdk.module.PackCaller.GetPack(&bind.CallOpts{}, packId)
 	if err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
 	if packMeta.Uri == "" {
-		return Pack{}, &NotFoundError{identifier: packId, typeName: "pack metadata"}
+		return PackMetadata{}, &NotFoundError{identifier: packId, typeName: "pack metadata"}
 	}
 
 	packUri, err := sdk.module.PackCaller.TokenURI(&bind.CallOpts{}, packId)
 	if err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
 	if packUri == "" {
-		return Pack{}, &NotFoundError{identifier: packId, typeName: "pack"}
+		return PackMetadata{}, &NotFoundError{identifier: packId, typeName: "pack"}
 	}
 
 	body, err := sdk.gateway.Get(packUri)
 	if err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
-	// TODO: breakdown this object and apply to Pack
+	// TODO: breakdown this object and apply to PackMetadata
 	metadata := NftMetadata{
 		Id: packId,
 	}
 	if err := json.Unmarshal(body, &metadata); err != nil {
-		return Pack{}, err
+		return PackMetadata{}, err
 	}
 
-	return Pack{
+	return PackMetadata{
 		Creator: packMeta.Creator,
 		CurrentSupply: *packMeta.CurrentSupply,
 		OpenStart: time.Unix(packMeta.OpenStart.Int64(), 0),
@@ -211,23 +211,23 @@ func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error) {
 	}, nil
 }
 
-func (sdk *PackSdkModule) Open(packId *big.Int) (PackNft, error) {
+func (sdk *PackModule) Open(packId *big.Int) (PackNft, error) {
 	panic("implement me")
 }
 
-func (sdk *PackSdkModule) GetAsync(tokenId *big.Int, ch chan<-Pack, wg *sync.WaitGroup) {
+func (sdk *PackModule) GetAsync(tokenId *big.Int, ch chan<- PackMetadata, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	result, err := sdk.Get(tokenId)
 	if err != nil {
 		log.Printf("Failed to fetch nft with id %d err=%v\n", tokenId, err)
-		ch <- Pack{}
+		ch <- PackMetadata{}
 		return
 	}
 	ch <- result
 }
 
-func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
+func (sdk *PackModule) GetAll() ([]PackMetadata, error) {
 	maxId, err := sdk.module.PackCaller.NextTokenId(&bind.CallOpts{});
 	if err != nil {
 		return nil, err
@@ -235,7 +235,7 @@ func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
 
 	var wg sync.WaitGroup
 
-	ch := make(chan Pack)
+	ch := make(chan PackMetadata)
 	defer close(ch)
 
 	count := maxId.Int64()
@@ -247,7 +247,7 @@ func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
 		go sdk.GetAsync(id, ch, &wg)
 	}
 
-	packs := make([]Pack, count)
+	packs := make([]PackMetadata, count)
 	for i := range packs {
 		packs[i] = <-ch
 	}
@@ -256,7 +256,7 @@ func (sdk *PackSdkModule) GetAll() ([]Pack, error) {
 	return packs, nil
 }
 
-func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
+func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	result, err := sdk.module.PackCaller.GetPackWithRewards(&bind.CallOpts{}, packId)
 	if err != nil {
 		return nil, err
@@ -304,7 +304,7 @@ func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	return packNfts, nil
 }
 
-func (sdk *PackSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
+func (sdk *PackModule) Balance(tokenId *big.Int) (*big.Int, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return nil, &NoSignerError{typeName: "pack"}
 	}
@@ -312,15 +312,15 @@ func (sdk *PackSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
 	return sdk.module.PackCaller.BalanceOf(&bind.CallOpts{}, sdk.signerAddress, tokenId)
 }
 
-func (sdk *PackSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
+func (sdk *PackModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
 	return sdk.module.PackCaller.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), tokenId)
 }
 
-func (sdk *PackSdkModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error {
+func (sdk *PackModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error {
 	panic("implement me")
 }
 
-func (sdk *PackSdkModule) SetPrivateKey(privateKey string) error {
+func (sdk *PackModule) SetPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
 		return err
 	} else {
@@ -330,7 +330,7 @@ func (sdk *PackSdkModule) SetPrivateKey(privateKey string) error {
 	return nil
 }
 
-func (sdk *PackSdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+func (sdk *PackModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		ctx := context.Background()
 		chainId, _ := sdk.Client.ChainID(ctx)
@@ -338,7 +338,7 @@ func (sdk *PackSdkModule) getSigner() func(address common.Address, transaction *
 	}
 }
 
-func (sdk *PackSdkModule) getSignerAddress() common.Address {
+func (sdk *PackModule) getSignerAddress() common.Address {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return common.HexToAddress(sdk.Address)
 	} else {
@@ -346,7 +346,7 @@ func (sdk *PackSdkModule) getSignerAddress() common.Address {
 	}
 }
 
-func (sdk *PackSdkModule) getNewPack(logs []*types.Log) (*big.Int, error) {
+func (sdk *PackModule) getNewPack(logs []*types.Log) (*big.Int, error) {
 	var packId *big.Int
 	for _, l := range logs {
 		iterator, err := sdk.module.ParsePackCreated(*l)
@@ -355,7 +355,7 @@ func (sdk *PackSdkModule) getNewPack(logs []*types.Log) (*big.Int, error) {
 		}
 
 		if iterator.PackId != nil {
-			fmt.Printf("Pack id = %v, listing = %v\n", iterator.PackId, iterator.PackState)
+			fmt.Printf("PackMetadata id = %v, listing = %v\n", iterator.PackId, iterator.PackState)
 			packId = iterator.PackId
 			break
 		}
