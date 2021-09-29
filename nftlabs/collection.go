@@ -15,7 +15,7 @@ import (
 	"sync"
 )
 
-type NftCollectionSdk interface {
+type NftCollection interface {
 	CommonModule
 	Get(tokenId *big.Int) (CollectionMetadata, error)
 	GetAll() ([]CollectionMetadata, error)
@@ -28,7 +28,7 @@ type NftCollectionSdk interface {
 	Mint(args MintCollectionArgs) (error)
 }
 
-type NftCollectionSdkModule struct {
+type NftCollectionModule struct {
 	Client *ethclient.Client
 	Address string
 	Options *SdkOptions
@@ -39,7 +39,7 @@ type NftCollectionSdkModule struct {
 	signerAddress common.Address
 }
 
-func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftCollectionSdkModule, error) {
+func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftCollectionModule, error) {
 	if opt.IpfsGatewayUrl == "" {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
@@ -54,7 +54,7 @@ func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOp
 	var gw Gateway
 	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
 
-	return &NftCollectionSdkModule{
+	return &NftCollectionModule{
 		Client: client,
 		Address: address,
 		Options: opt,
@@ -63,7 +63,7 @@ func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOp
 	}, nil
 }
 
-func (sdk *NftCollectionSdkModule) Get(tokenId *big.Int) (CollectionMetadata, error) {
+func (sdk *NftCollectionModule) Get(tokenId *big.Int) (CollectionMetadata, error) {
 	info, err := sdk.module.NftInfo(&bind.CallOpts{}, tokenId)
 	if err != nil {
 		return CollectionMetadata{}, err
@@ -87,7 +87,7 @@ func (sdk *NftCollectionSdkModule) Get(tokenId *big.Int) (CollectionMetadata, er
 	}, nil
 }
 
-func (sdk *NftCollectionSdkModule) getMetadata(tokenId *big.Int) ([]byte, error) {
+func (sdk *NftCollectionModule) getMetadata(tokenId *big.Int) ([]byte, error) {
 	uri, err := sdk.module.Uri(&bind.CallOpts{}, tokenId)
 	if err != nil {
 		return nil, err
@@ -101,7 +101,7 @@ func (sdk *NftCollectionSdkModule) getMetadata(tokenId *big.Int) ([]byte, error)
 	return metadata, nil
 }
 
-func (sdk *NftCollectionSdkModule) GetAsync(tokenId *big.Int, ch chan<-CollectionMetadata, wg *sync.WaitGroup) {
+func (sdk *NftCollectionModule) GetAsync(tokenId *big.Int, ch chan<-CollectionMetadata, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	result, err := sdk.Get(tokenId)
@@ -113,7 +113,7 @@ func (sdk *NftCollectionSdkModule) GetAsync(tokenId *big.Int, ch chan<-Collectio
 	ch <- result
 }
 
-func (sdk *NftCollectionSdkModule) GetAll() ([]CollectionMetadata, error) {
+func (sdk *NftCollectionModule) GetAll() ([]CollectionMetadata, error) {
 	maxId, err := sdk.module.NFTCollectionCaller.NextTokenId(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
@@ -140,27 +140,27 @@ func (sdk *NftCollectionSdkModule) GetAll() ([]CollectionMetadata, error) {
 	return results, nil
 }
 
-func (sdk *NftCollectionSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
+func (sdk *NftCollectionModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
 	return sdk.module.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), tokenId)
 }
 
-func (sdk *NftCollectionSdkModule) Balance(tokenId *big.Int) (*big.Int, error) {
+func (sdk *NftCollectionModule) Balance(tokenId *big.Int) (*big.Int, error) {
 	return sdk.module.BalanceOf(&bind.CallOpts{}, sdk.signerAddress, tokenId)
 }
 
-func (sdk *NftCollectionSdkModule) IsApproved(address string, operator string) (bool, error) {
+func (sdk *NftCollectionModule) IsApproved(address string, operator string) (bool, error) {
 	panic("implement me")
 }
 
-func (sdk *NftCollectionSdkModule) SetApproved(operator string, approved bool) error {
+func (sdk *NftCollectionModule) SetApproved(operator string, approved bool) error {
 	panic("implement me")
 }
 
-func (sdk *NftCollectionSdkModule) Transfer(to string, tokenId *big.Int, amount *big.Int) error {
+func (sdk *NftCollectionModule) Transfer(to string, tokenId *big.Int, amount *big.Int) error {
 	panic("implement me")
 }
 
-func (sdk *NftCollectionSdkModule) Create(args []CreateCollectionArgs) ([]CollectionMetadata, error) {
+func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]CollectionMetadata, error) {
 	assetMeta, err := sdk.uploadBatchMetadata(args)
 	if err != nil {
 		return nil, err
@@ -212,7 +212,7 @@ func (sdk *NftCollectionSdkModule) Create(args []CreateCollectionArgs) ([]Collec
 	return results, nil
 }
 
-func (sdk *NftCollectionSdkModule) getNewCollection(logs []*types.Log) ([]*big.Int, error) {
+func (sdk *NftCollectionModule) getNewCollection(logs []*types.Log) ([]*big.Int, error) {
 	var tokenIds []*big.Int
 	for _, l := range logs {
 		iterator, err := sdk.module.ParseNativeNfts(*l)
@@ -233,7 +233,7 @@ func (sdk *NftCollectionSdkModule) getNewCollection(logs []*types.Log) ([]*big.I
 	return tokenIds, nil
 }
 
-func (sdk *NftCollectionSdkModule) uploadBatchMetadata(args []CreateCollectionArgs) ([]collectionAssetMetadata, error) {
+func (sdk *NftCollectionModule) uploadBatchMetadata(args []CreateCollectionArgs) ([]collectionAssetMetadata, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return nil, &NoSignerError{typeName: "collection"}
 	}
@@ -271,11 +271,11 @@ func (sdk *NftCollectionSdkModule) uploadBatchMetadata(args []CreateCollectionAr
 	return results, nil
 }
 
-func (sdk *NftCollectionSdkModule) Mint(args MintCollectionArgs) error {
+func (sdk *NftCollectionModule) Mint(args MintCollectionArgs) error {
 	panic("implement me")
 }
 
-func (sdk *NftCollectionSdkModule) SetPrivateKey(privateKey string) error {
+func (sdk *NftCollectionModule) SetPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
 		return err
 	} else {
@@ -285,7 +285,7 @@ func (sdk *NftCollectionSdkModule) SetPrivateKey(privateKey string) error {
 	return nil
 }
 
-func (sdk *NftCollectionSdkModule) getSignerAddress() common.Address {
+func (sdk *NftCollectionModule) getSignerAddress() common.Address {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return common.HexToAddress(sdk.Address)
 	} else {
@@ -293,7 +293,7 @@ func (sdk *NftCollectionSdkModule) getSignerAddress() common.Address {
 	}
 }
 
-func (sdk *NftCollectionSdkModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+func (sdk *NftCollectionModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		ctx := context.Background()
 		chainId, _ := sdk.Client.ChainID(ctx)
