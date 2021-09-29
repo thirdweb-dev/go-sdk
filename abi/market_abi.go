@@ -30,21 +30,22 @@ var (
 
 // MarketListing is an auto generated low-level Go binding around an user-defined struct.
 type MarketListing struct {
-	ListingId     *big.Int
-	Seller        common.Address
-	AssetContract common.Address
-	TokenId       *big.Int
-	Quantity      *big.Int
-	Currency      common.Address
-	PricePerToken *big.Int
-	SaleStart     *big.Int
-	SaleEnd       *big.Int
-	TokenType     uint8
+	ListingId      *big.Int
+	Seller         common.Address
+	AssetContract  common.Address
+	TokenId        *big.Int
+	Quantity       *big.Int
+	Currency       common.Address
+	PricePerToken  *big.Int
+	SaleStart      *big.Int
+	SaleEnd        *big.Int
+	TokensPerBuyer *big.Int
+	TokenType      uint8
 }
 
 // MarketMetaData contains all meta data concerning the Market contract.
 var MarketMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_controlCenter\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_trustedForwarder\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"structMarket.Listing\",\"name\":\"listing\",\"type\":\"tuple\"}],\"name\":\"ListingUpdate\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"protocolFeeBps\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"creatorFeeBps\",\"type\":\"uint256\"}],\"name\":\"MarketFeesUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"structMarket.Listing\",\"name\":\"listing\",\"type\":\"tuple\"}],\"name\":\"NewListing\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"quanitytBought\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"structMarket.Listing\",\"name\":\"listing\",\"type\":\"tuple\"}],\"name\":\"NewSale\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"_contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"}],\"name\":\"addToListing\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"}],\"name\":\"buy\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllListings\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing[]\",\"name\":\"allListings\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"}],\"name\":\"getListing\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing\",\"name\":\"listing\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getListingsByAsset\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing[]\",\"name\":\"tokenListings\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_assetContract\",\"type\":\"address\"}],\"name\":\"getListingsByAssetContract\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing[]\",\"name\":\"tokenListings\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_seller\",\"type\":\"address\"}],\"name\":\"getListingsBySeller\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing[]\",\"name\":\"sellerListings\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilEnd\",\"type\":\"uint256\"}],\"name\":\"list\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"listings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_URI\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalListings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"}],\"name\":\"unlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilEnd\",\"type\":\"uint256\"}],\"name\":\"updateListingParams\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_controlCenter\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_trustedForwarder\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"structMarket.Listing\",\"name\":\"listing\",\"type\":\"tuple\"}],\"name\":\"ListingUpdate\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint128\",\"name\":\"newFee\",\"type\":\"uint128\"}],\"name\":\"MarketFeeUpdate\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"structMarket.Listing\",\"name\":\"listing\",\"type\":\"tuple\"}],\"name\":\"NewListing\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"indexed\":false,\"internalType\":\"structMarket.Listing\",\"name\":\"listing\",\"type\":\"tuple\"}],\"name\":\"NewSale\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"_contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"}],\"name\":\"addToListing\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"boughtFromListing\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"}],\"name\":\"buy\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllListings\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing[]\",\"name\":\"allListings\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"}],\"name\":\"getListing\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing\",\"name\":\"listing\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getListingsByAsset\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing[]\",\"name\":\"tokenListings\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_assetContract\",\"type\":\"address\"}],\"name\":\"getListingsByAssetContract\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing[]\",\"name\":\"tokenListings\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_seller\",\"type\":\"address\"}],\"name\":\"getListingsBySeller\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"internalType\":\"structMarket.Listing[]\",\"name\":\"sellerListings\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilEnd\",\"type\":\"uint256\"}],\"name\":\"list\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"listings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"assetContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"saleEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"enumMarket.TokenType\",\"name\":\"tokenType\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"marketFeeBps\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"\",\"type\":\"uint128\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_URI\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"feeBps\",\"type\":\"uint128\"}],\"name\":\"setMarketFeeBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalListings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"}],\"name\":\"unlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokensPerBuyer\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilEnd\",\"type\":\"uint256\"}],\"name\":\"updateListingParams\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // MarketABI is the input ABI used to generate the binding from.
@@ -224,6 +225,37 @@ func (_Market *MarketCallerSession) ContractURI() (string, error) {
 	return _Market.Contract.ContractURI(&_Market.CallOpts)
 }
 
+// BoughtFromListing is a free data retrieval call binding the contract method 0x20c7852c.
+//
+// Solidity: function boughtFromListing(uint256 , address ) view returns(uint256)
+func (_Market *MarketCaller) BoughtFromListing(opts *bind.CallOpts, arg0 *big.Int, arg1 common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _Market.contract.Call(opts, &out, "boughtFromListing", arg0, arg1)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// BoughtFromListing is a free data retrieval call binding the contract method 0x20c7852c.
+//
+// Solidity: function boughtFromListing(uint256 , address ) view returns(uint256)
+func (_Market *MarketSession) BoughtFromListing(arg0 *big.Int, arg1 common.Address) (*big.Int, error) {
+	return _Market.Contract.BoughtFromListing(&_Market.CallOpts, arg0, arg1)
+}
+
+// BoughtFromListing is a free data retrieval call binding the contract method 0x20c7852c.
+//
+// Solidity: function boughtFromListing(uint256 , address ) view returns(uint256)
+func (_Market *MarketCallerSession) BoughtFromListing(arg0 *big.Int, arg1 common.Address) (*big.Int, error) {
+	return _Market.Contract.BoughtFromListing(&_Market.CallOpts, arg0, arg1)
+}
+
 // InternalContractURI is a free data retrieval call binding the contract method 0xe8a3d485.
 //
 // Solidity: function contractURI() view returns(string)
@@ -257,7 +289,7 @@ func (_Market *MarketCallerSession) InternalContractURI() (string, error) {
 
 // GetAllListings is a free data retrieval call binding the contract method 0xae73ccec.
 //
-// Solidity: function getAllListings() view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] allListings)
+// Solidity: function getAllListings() view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] allListings)
 func (_Market *MarketCaller) GetAllListings(opts *bind.CallOpts) ([]MarketListing, error) {
 	var out []interface{}
 	err := _Market.contract.Call(opts, &out, "getAllListings")
@@ -274,21 +306,21 @@ func (_Market *MarketCaller) GetAllListings(opts *bind.CallOpts) ([]MarketListin
 
 // GetAllListings is a free data retrieval call binding the contract method 0xae73ccec.
 //
-// Solidity: function getAllListings() view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] allListings)
+// Solidity: function getAllListings() view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] allListings)
 func (_Market *MarketSession) GetAllListings() ([]MarketListing, error) {
 	return _Market.Contract.GetAllListings(&_Market.CallOpts)
 }
 
 // GetAllListings is a free data retrieval call binding the contract method 0xae73ccec.
 //
-// Solidity: function getAllListings() view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] allListings)
+// Solidity: function getAllListings() view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] allListings)
 func (_Market *MarketCallerSession) GetAllListings() ([]MarketListing, error) {
 	return _Market.Contract.GetAllListings(&_Market.CallOpts)
 }
 
 // GetListing is a free data retrieval call binding the contract method 0x107a274a.
 //
-// Solidity: function getListing(uint256 _listingId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: function getListing(uint256 _listingId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketCaller) GetListing(opts *bind.CallOpts, _listingId *big.Int) (MarketListing, error) {
 	var out []interface{}
 	err := _Market.contract.Call(opts, &out, "getListing", _listingId)
@@ -305,21 +337,21 @@ func (_Market *MarketCaller) GetListing(opts *bind.CallOpts, _listingId *big.Int
 
 // GetListing is a free data retrieval call binding the contract method 0x107a274a.
 //
-// Solidity: function getListing(uint256 _listingId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: function getListing(uint256 _listingId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketSession) GetListing(_listingId *big.Int) (MarketListing, error) {
 	return _Market.Contract.GetListing(&_Market.CallOpts, _listingId)
 }
 
 // GetListing is a free data retrieval call binding the contract method 0x107a274a.
 //
-// Solidity: function getListing(uint256 _listingId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: function getListing(uint256 _listingId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketCallerSession) GetListing(_listingId *big.Int) (MarketListing, error) {
 	return _Market.Contract.GetListing(&_Market.CallOpts, _listingId)
 }
 
 // GetListingsByAsset is a free data retrieval call binding the contract method 0x1d0cd75e.
 //
-// Solidity: function getListingsByAsset(address _assetContract, uint256 _tokenId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] tokenListings)
+// Solidity: function getListingsByAsset(address _assetContract, uint256 _tokenId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] tokenListings)
 func (_Market *MarketCaller) GetListingsByAsset(opts *bind.CallOpts, _assetContract common.Address, _tokenId *big.Int) ([]MarketListing, error) {
 	var out []interface{}
 	err := _Market.contract.Call(opts, &out, "getListingsByAsset", _assetContract, _tokenId)
@@ -336,21 +368,21 @@ func (_Market *MarketCaller) GetListingsByAsset(opts *bind.CallOpts, _assetContr
 
 // GetListingsByAsset is a free data retrieval call binding the contract method 0x1d0cd75e.
 //
-// Solidity: function getListingsByAsset(address _assetContract, uint256 _tokenId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] tokenListings)
+// Solidity: function getListingsByAsset(address _assetContract, uint256 _tokenId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] tokenListings)
 func (_Market *MarketSession) GetListingsByAsset(_assetContract common.Address, _tokenId *big.Int) ([]MarketListing, error) {
 	return _Market.Contract.GetListingsByAsset(&_Market.CallOpts, _assetContract, _tokenId)
 }
 
 // GetListingsByAsset is a free data retrieval call binding the contract method 0x1d0cd75e.
 //
-// Solidity: function getListingsByAsset(address _assetContract, uint256 _tokenId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] tokenListings)
+// Solidity: function getListingsByAsset(address _assetContract, uint256 _tokenId) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] tokenListings)
 func (_Market *MarketCallerSession) GetListingsByAsset(_assetContract common.Address, _tokenId *big.Int) ([]MarketListing, error) {
 	return _Market.Contract.GetListingsByAsset(&_Market.CallOpts, _assetContract, _tokenId)
 }
 
 // GetListingsByAssetContract is a free data retrieval call binding the contract method 0x4edeaa81.
 //
-// Solidity: function getListingsByAssetContract(address _assetContract) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] tokenListings)
+// Solidity: function getListingsByAssetContract(address _assetContract) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] tokenListings)
 func (_Market *MarketCaller) GetListingsByAssetContract(opts *bind.CallOpts, _assetContract common.Address) ([]MarketListing, error) {
 	var out []interface{}
 	err := _Market.contract.Call(opts, &out, "getListingsByAssetContract", _assetContract)
@@ -367,21 +399,21 @@ func (_Market *MarketCaller) GetListingsByAssetContract(opts *bind.CallOpts, _as
 
 // GetListingsByAssetContract is a free data retrieval call binding the contract method 0x4edeaa81.
 //
-// Solidity: function getListingsByAssetContract(address _assetContract) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] tokenListings)
+// Solidity: function getListingsByAssetContract(address _assetContract) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] tokenListings)
 func (_Market *MarketSession) GetListingsByAssetContract(_assetContract common.Address) ([]MarketListing, error) {
 	return _Market.Contract.GetListingsByAssetContract(&_Market.CallOpts, _assetContract)
 }
 
 // GetListingsByAssetContract is a free data retrieval call binding the contract method 0x4edeaa81.
 //
-// Solidity: function getListingsByAssetContract(address _assetContract) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] tokenListings)
+// Solidity: function getListingsByAssetContract(address _assetContract) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] tokenListings)
 func (_Market *MarketCallerSession) GetListingsByAssetContract(_assetContract common.Address) ([]MarketListing, error) {
 	return _Market.Contract.GetListingsByAssetContract(&_Market.CallOpts, _assetContract)
 }
 
 // GetListingsBySeller is a free data retrieval call binding the contract method 0xd8cba251.
 //
-// Solidity: function getListingsBySeller(address _seller) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] sellerListings)
+// Solidity: function getListingsBySeller(address _seller) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] sellerListings)
 func (_Market *MarketCaller) GetListingsBySeller(opts *bind.CallOpts, _seller common.Address) ([]MarketListing, error) {
 	var out []interface{}
 	err := _Market.contract.Call(opts, &out, "getListingsBySeller", _seller)
@@ -398,14 +430,14 @@ func (_Market *MarketCaller) GetListingsBySeller(opts *bind.CallOpts, _seller co
 
 // GetListingsBySeller is a free data retrieval call binding the contract method 0xd8cba251.
 //
-// Solidity: function getListingsBySeller(address _seller) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] sellerListings)
+// Solidity: function getListingsBySeller(address _seller) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] sellerListings)
 func (_Market *MarketSession) GetListingsBySeller(_seller common.Address) ([]MarketListing, error) {
 	return _Market.Contract.GetListingsBySeller(&_Market.CallOpts, _seller)
 }
 
 // GetListingsBySeller is a free data retrieval call binding the contract method 0xd8cba251.
 //
-// Solidity: function getListingsBySeller(address _seller) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8)[] sellerListings)
+// Solidity: function getListingsBySeller(address _seller) view returns((uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8)[] sellerListings)
 func (_Market *MarketCallerSession) GetListingsBySeller(_seller common.Address) ([]MarketListing, error) {
 	return _Market.Contract.GetListingsBySeller(&_Market.CallOpts, _seller)
 }
@@ -443,33 +475,35 @@ func (_Market *MarketCallerSession) IsTrustedForwarder(forwarder common.Address)
 
 // Listings is a free data retrieval call binding the contract method 0xde74e57b.
 //
-// Solidity: function listings(uint256 ) view returns(uint256 listingId, address seller, address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint256 saleStart, uint256 saleEnd, uint8 tokenType)
+// Solidity: function listings(uint256 ) view returns(uint256 listingId, address seller, address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint256 saleStart, uint256 saleEnd, uint256 tokensPerBuyer, uint8 tokenType)
 func (_Market *MarketCaller) Listings(opts *bind.CallOpts, arg0 *big.Int) (struct {
-	ListingId     *big.Int
-	Seller        common.Address
-	AssetContract common.Address
-	TokenId       *big.Int
-	Quantity      *big.Int
-	Currency      common.Address
-	PricePerToken *big.Int
-	SaleStart     *big.Int
-	SaleEnd       *big.Int
-	TokenType     uint8
+	ListingId      *big.Int
+	Seller         common.Address
+	AssetContract  common.Address
+	TokenId        *big.Int
+	Quantity       *big.Int
+	Currency       common.Address
+	PricePerToken  *big.Int
+	SaleStart      *big.Int
+	SaleEnd        *big.Int
+	TokensPerBuyer *big.Int
+	TokenType      uint8
 }, error) {
 	var out []interface{}
 	err := _Market.contract.Call(opts, &out, "listings", arg0)
 
 	outstruct := new(struct {
-		ListingId     *big.Int
-		Seller        common.Address
-		AssetContract common.Address
-		TokenId       *big.Int
-		Quantity      *big.Int
-		Currency      common.Address
-		PricePerToken *big.Int
-		SaleStart     *big.Int
-		SaleEnd       *big.Int
-		TokenType     uint8
+		ListingId      *big.Int
+		Seller         common.Address
+		AssetContract  common.Address
+		TokenId        *big.Int
+		Quantity       *big.Int
+		Currency       common.Address
+		PricePerToken  *big.Int
+		SaleStart      *big.Int
+		SaleEnd        *big.Int
+		TokensPerBuyer *big.Int
+		TokenType      uint8
 	})
 	if err != nil {
 		return *outstruct, err
@@ -484,7 +518,8 @@ func (_Market *MarketCaller) Listings(opts *bind.CallOpts, arg0 *big.Int) (struc
 	outstruct.PricePerToken = *abi.ConvertType(out[6], new(*big.Int)).(**big.Int)
 	outstruct.SaleStart = *abi.ConvertType(out[7], new(*big.Int)).(**big.Int)
 	outstruct.SaleEnd = *abi.ConvertType(out[8], new(*big.Int)).(**big.Int)
-	outstruct.TokenType = *abi.ConvertType(out[9], new(uint8)).(*uint8)
+	outstruct.TokensPerBuyer = *abi.ConvertType(out[9], new(*big.Int)).(**big.Int)
+	outstruct.TokenType = *abi.ConvertType(out[10], new(uint8)).(*uint8)
 
 	return *outstruct, err
 
@@ -492,38 +527,71 @@ func (_Market *MarketCaller) Listings(opts *bind.CallOpts, arg0 *big.Int) (struc
 
 // Listings is a free data retrieval call binding the contract method 0xde74e57b.
 //
-// Solidity: function listings(uint256 ) view returns(uint256 listingId, address seller, address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint256 saleStart, uint256 saleEnd, uint8 tokenType)
+// Solidity: function listings(uint256 ) view returns(uint256 listingId, address seller, address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint256 saleStart, uint256 saleEnd, uint256 tokensPerBuyer, uint8 tokenType)
 func (_Market *MarketSession) Listings(arg0 *big.Int) (struct {
-	ListingId     *big.Int
-	Seller        common.Address
-	AssetContract common.Address
-	TokenId       *big.Int
-	Quantity      *big.Int
-	Currency      common.Address
-	PricePerToken *big.Int
-	SaleStart     *big.Int
-	SaleEnd       *big.Int
-	TokenType     uint8
+	ListingId      *big.Int
+	Seller         common.Address
+	AssetContract  common.Address
+	TokenId        *big.Int
+	Quantity       *big.Int
+	Currency       common.Address
+	PricePerToken  *big.Int
+	SaleStart      *big.Int
+	SaleEnd        *big.Int
+	TokensPerBuyer *big.Int
+	TokenType      uint8
 }, error) {
 	return _Market.Contract.Listings(&_Market.CallOpts, arg0)
 }
 
 // Listings is a free data retrieval call binding the contract method 0xde74e57b.
 //
-// Solidity: function listings(uint256 ) view returns(uint256 listingId, address seller, address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint256 saleStart, uint256 saleEnd, uint8 tokenType)
+// Solidity: function listings(uint256 ) view returns(uint256 listingId, address seller, address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint256 saleStart, uint256 saleEnd, uint256 tokensPerBuyer, uint8 tokenType)
 func (_Market *MarketCallerSession) Listings(arg0 *big.Int) (struct {
-	ListingId     *big.Int
-	Seller        common.Address
-	AssetContract common.Address
-	TokenId       *big.Int
-	Quantity      *big.Int
-	Currency      common.Address
-	PricePerToken *big.Int
-	SaleStart     *big.Int
-	SaleEnd       *big.Int
-	TokenType     uint8
+	ListingId      *big.Int
+	Seller         common.Address
+	AssetContract  common.Address
+	TokenId        *big.Int
+	Quantity       *big.Int
+	Currency       common.Address
+	PricePerToken  *big.Int
+	SaleStart      *big.Int
+	SaleEnd        *big.Int
+	TokensPerBuyer *big.Int
+	TokenType      uint8
 }, error) {
 	return _Market.Contract.Listings(&_Market.CallOpts, arg0)
+}
+
+// MarketFeeBps is a free data retrieval call binding the contract method 0x3f5c3e87.
+//
+// Solidity: function marketFeeBps() view returns(uint128)
+func (_Market *MarketCaller) MarketFeeBps(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _Market.contract.Call(opts, &out, "marketFeeBps")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// MarketFeeBps is a free data retrieval call binding the contract method 0x3f5c3e87.
+//
+// Solidity: function marketFeeBps() view returns(uint128)
+func (_Market *MarketSession) MarketFeeBps() (*big.Int, error) {
+	return _Market.Contract.MarketFeeBps(&_Market.CallOpts)
+}
+
+// MarketFeeBps is a free data retrieval call binding the contract method 0x3f5c3e87.
+//
+// Solidity: function marketFeeBps() view returns(uint128)
+func (_Market *MarketCallerSession) MarketFeeBps() (*big.Int, error) {
+	return _Market.Contract.MarketFeeBps(&_Market.CallOpts)
 }
 
 // OnERC721Received is a free data retrieval call binding the contract method 0x150b7a02.
@@ -661,25 +729,25 @@ func (_Market *MarketTransactorSession) Buy(_listingId *big.Int, _quantity *big.
 	return _Market.Contract.Buy(&_Market.TransactOpts, _listingId, _quantity)
 }
 
-// List is a paid mutator transaction binding the contract method 0xd34cbd44.
+// List is a paid mutator transaction binding the contract method 0x9b782ff2.
 //
-// Solidity: function list(address _assetContract, uint256 _tokenId, address _currency, uint256 _pricePerToken, uint256 _quantity, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
-func (_Market *MarketTransactor) List(opts *bind.TransactOpts, _assetContract common.Address, _tokenId *big.Int, _currency common.Address, _pricePerToken *big.Int, _quantity *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
-	return _Market.contract.Transact(opts, "list", _assetContract, _tokenId, _currency, _pricePerToken, _quantity, _secondsUntilStart, _secondsUntilEnd)
+// Solidity: function list(address _assetContract, uint256 _tokenId, address _currency, uint256 _pricePerToken, uint256 _quantity, uint256 _tokensPerBuyer, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
+func (_Market *MarketTransactor) List(opts *bind.TransactOpts, _assetContract common.Address, _tokenId *big.Int, _currency common.Address, _pricePerToken *big.Int, _quantity *big.Int, _tokensPerBuyer *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
+	return _Market.contract.Transact(opts, "list", _assetContract, _tokenId, _currency, _pricePerToken, _quantity, _tokensPerBuyer, _secondsUntilStart, _secondsUntilEnd)
 }
 
-// List is a paid mutator transaction binding the contract method 0xd34cbd44.
+// List is a paid mutator transaction binding the contract method 0x9b782ff2.
 //
-// Solidity: function list(address _assetContract, uint256 _tokenId, address _currency, uint256 _pricePerToken, uint256 _quantity, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
-func (_Market *MarketSession) List(_assetContract common.Address, _tokenId *big.Int, _currency common.Address, _pricePerToken *big.Int, _quantity *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
-	return _Market.Contract.List(&_Market.TransactOpts, _assetContract, _tokenId, _currency, _pricePerToken, _quantity, _secondsUntilStart, _secondsUntilEnd)
+// Solidity: function list(address _assetContract, uint256 _tokenId, address _currency, uint256 _pricePerToken, uint256 _quantity, uint256 _tokensPerBuyer, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
+func (_Market *MarketSession) List(_assetContract common.Address, _tokenId *big.Int, _currency common.Address, _pricePerToken *big.Int, _quantity *big.Int, _tokensPerBuyer *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
+	return _Market.Contract.List(&_Market.TransactOpts, _assetContract, _tokenId, _currency, _pricePerToken, _quantity, _tokensPerBuyer, _secondsUntilStart, _secondsUntilEnd)
 }
 
-// List is a paid mutator transaction binding the contract method 0xd34cbd44.
+// List is a paid mutator transaction binding the contract method 0x9b782ff2.
 //
-// Solidity: function list(address _assetContract, uint256 _tokenId, address _currency, uint256 _pricePerToken, uint256 _quantity, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
-func (_Market *MarketTransactorSession) List(_assetContract common.Address, _tokenId *big.Int, _currency common.Address, _pricePerToken *big.Int, _quantity *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
-	return _Market.Contract.List(&_Market.TransactOpts, _assetContract, _tokenId, _currency, _pricePerToken, _quantity, _secondsUntilStart, _secondsUntilEnd)
+// Solidity: function list(address _assetContract, uint256 _tokenId, address _currency, uint256 _pricePerToken, uint256 _quantity, uint256 _tokensPerBuyer, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
+func (_Market *MarketTransactorSession) List(_assetContract common.Address, _tokenId *big.Int, _currency common.Address, _pricePerToken *big.Int, _quantity *big.Int, _tokensPerBuyer *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
+	return _Market.Contract.List(&_Market.TransactOpts, _assetContract, _tokenId, _currency, _pricePerToken, _quantity, _tokensPerBuyer, _secondsUntilStart, _secondsUntilEnd)
 }
 
 // OnERC1155BatchReceived is a paid mutator transaction binding the contract method 0xbc197c81.
@@ -745,6 +813,27 @@ func (_Market *MarketTransactorSession) SetContractURI(_URI string) (*types.Tran
 	return _Market.Contract.SetContractURI(&_Market.TransactOpts, _URI)
 }
 
+// SetMarketFeeBps is a paid mutator transaction binding the contract method 0x09679b39.
+//
+// Solidity: function setMarketFeeBps(uint128 feeBps) returns()
+func (_Market *MarketTransactor) SetMarketFeeBps(opts *bind.TransactOpts, feeBps *big.Int) (*types.Transaction, error) {
+	return _Market.contract.Transact(opts, "setMarketFeeBps", feeBps)
+}
+
+// SetMarketFeeBps is a paid mutator transaction binding the contract method 0x09679b39.
+//
+// Solidity: function setMarketFeeBps(uint128 feeBps) returns()
+func (_Market *MarketSession) SetMarketFeeBps(feeBps *big.Int) (*types.Transaction, error) {
+	return _Market.Contract.SetMarketFeeBps(&_Market.TransactOpts, feeBps)
+}
+
+// SetMarketFeeBps is a paid mutator transaction binding the contract method 0x09679b39.
+//
+// Solidity: function setMarketFeeBps(uint128 feeBps) returns()
+func (_Market *MarketTransactorSession) SetMarketFeeBps(feeBps *big.Int) (*types.Transaction, error) {
+	return _Market.Contract.SetMarketFeeBps(&_Market.TransactOpts, feeBps)
+}
+
 // Unlist is a paid mutator transaction binding the contract method 0x4fd69f3c.
 //
 // Solidity: function unlist(uint256 _listingId, uint256 _quantity) returns()
@@ -766,25 +855,25 @@ func (_Market *MarketTransactorSession) Unlist(_listingId *big.Int, _quantity *b
 	return _Market.Contract.Unlist(&_Market.TransactOpts, _listingId, _quantity)
 }
 
-// UpdateListingParams is a paid mutator transaction binding the contract method 0x61a69e9b.
+// UpdateListingParams is a paid mutator transaction binding the contract method 0x31851012.
 //
-// Solidity: function updateListingParams(uint256 _listingId, uint256 _pricePerToken, address _currency, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
-func (_Market *MarketTransactor) UpdateListingParams(opts *bind.TransactOpts, _listingId *big.Int, _pricePerToken *big.Int, _currency common.Address, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
-	return _Market.contract.Transact(opts, "updateListingParams", _listingId, _pricePerToken, _currency, _secondsUntilStart, _secondsUntilEnd)
+// Solidity: function updateListingParams(uint256 _listingId, uint256 _pricePerToken, address _currency, uint256 _tokensPerBuyer, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
+func (_Market *MarketTransactor) UpdateListingParams(opts *bind.TransactOpts, _listingId *big.Int, _pricePerToken *big.Int, _currency common.Address, _tokensPerBuyer *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
+	return _Market.contract.Transact(opts, "updateListingParams", _listingId, _pricePerToken, _currency, _tokensPerBuyer, _secondsUntilStart, _secondsUntilEnd)
 }
 
-// UpdateListingParams is a paid mutator transaction binding the contract method 0x61a69e9b.
+// UpdateListingParams is a paid mutator transaction binding the contract method 0x31851012.
 //
-// Solidity: function updateListingParams(uint256 _listingId, uint256 _pricePerToken, address _currency, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
-func (_Market *MarketSession) UpdateListingParams(_listingId *big.Int, _pricePerToken *big.Int, _currency common.Address, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
-	return _Market.Contract.UpdateListingParams(&_Market.TransactOpts, _listingId, _pricePerToken, _currency, _secondsUntilStart, _secondsUntilEnd)
+// Solidity: function updateListingParams(uint256 _listingId, uint256 _pricePerToken, address _currency, uint256 _tokensPerBuyer, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
+func (_Market *MarketSession) UpdateListingParams(_listingId *big.Int, _pricePerToken *big.Int, _currency common.Address, _tokensPerBuyer *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
+	return _Market.Contract.UpdateListingParams(&_Market.TransactOpts, _listingId, _pricePerToken, _currency, _tokensPerBuyer, _secondsUntilStart, _secondsUntilEnd)
 }
 
-// UpdateListingParams is a paid mutator transaction binding the contract method 0x61a69e9b.
+// UpdateListingParams is a paid mutator transaction binding the contract method 0x31851012.
 //
-// Solidity: function updateListingParams(uint256 _listingId, uint256 _pricePerToken, address _currency, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
-func (_Market *MarketTransactorSession) UpdateListingParams(_listingId *big.Int, _pricePerToken *big.Int, _currency common.Address, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
-	return _Market.Contract.UpdateListingParams(&_Market.TransactOpts, _listingId, _pricePerToken, _currency, _secondsUntilStart, _secondsUntilEnd)
+// Solidity: function updateListingParams(uint256 _listingId, uint256 _pricePerToken, address _currency, uint256 _tokensPerBuyer, uint256 _secondsUntilStart, uint256 _secondsUntilEnd) returns()
+func (_Market *MarketTransactorSession) UpdateListingParams(_listingId *big.Int, _pricePerToken *big.Int, _currency common.Address, _tokensPerBuyer *big.Int, _secondsUntilStart *big.Int, _secondsUntilEnd *big.Int) (*types.Transaction, error) {
+	return _Market.Contract.UpdateListingParams(&_Market.TransactOpts, _listingId, _pricePerToken, _currency, _tokensPerBuyer, _secondsUntilStart, _secondsUntilEnd)
 }
 
 // MarketListingUpdateIterator is returned from FilterListingUpdate and is used to iterate over the raw logs and unpacked data for ListingUpdate events raised by the Market contract.
@@ -862,9 +951,9 @@ type MarketListingUpdate struct {
 	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterListingUpdate is a free log retrieval operation binding the contract event 0x1b8ddfdd6ac3e5a29ff1523294456784db693ed91ed9cbcbcaba3f7b3297281d.
+// FilterListingUpdate is a free log retrieval operation binding the contract event 0xb4c8fd604ad229ddf17ffe34f0851a2abf5113b048f8235b12edbabcc6dd9193.
 //
-// Solidity: event ListingUpdate(address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event ListingUpdate(address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) FilterListingUpdate(opts *bind.FilterOpts, seller []common.Address, listingId []*big.Int) (*MarketListingUpdateIterator, error) {
 
 	var sellerRule []interface{}
@@ -883,9 +972,9 @@ func (_Market *MarketFilterer) FilterListingUpdate(opts *bind.FilterOpts, seller
 	return &MarketListingUpdateIterator{contract: _Market.contract, event: "ListingUpdate", logs: logs, sub: sub}, nil
 }
 
-// WatchListingUpdate is a free log subscription operation binding the contract event 0x1b8ddfdd6ac3e5a29ff1523294456784db693ed91ed9cbcbcaba3f7b3297281d.
+// WatchListingUpdate is a free log subscription operation binding the contract event 0xb4c8fd604ad229ddf17ffe34f0851a2abf5113b048f8235b12edbabcc6dd9193.
 //
-// Solidity: event ListingUpdate(address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event ListingUpdate(address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) WatchListingUpdate(opts *bind.WatchOpts, sink chan<- *MarketListingUpdate, seller []common.Address, listingId []*big.Int) (event.Subscription, error) {
 
 	var sellerRule []interface{}
@@ -929,9 +1018,9 @@ func (_Market *MarketFilterer) WatchListingUpdate(opts *bind.WatchOpts, sink cha
 	}), nil
 }
 
-// ParseListingUpdate is a log parse operation binding the contract event 0x1b8ddfdd6ac3e5a29ff1523294456784db693ed91ed9cbcbcaba3f7b3297281d.
+// ParseListingUpdate is a log parse operation binding the contract event 0xb4c8fd604ad229ddf17ffe34f0851a2abf5113b048f8235b12edbabcc6dd9193.
 //
-// Solidity: event ListingUpdate(address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event ListingUpdate(address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) ParseListingUpdate(log types.Log) (*MarketListingUpdate, error) {
 	event := new(MarketListingUpdate)
 	if err := _Market.contract.UnpackLog(event, "ListingUpdate", log); err != nil {
@@ -941,9 +1030,9 @@ func (_Market *MarketFilterer) ParseListingUpdate(log types.Log) (*MarketListing
 	return event, nil
 }
 
-// MarketMarketFeesUpdatedIterator is returned from FilterMarketFeesUpdated and is used to iterate over the raw logs and unpacked data for MarketFeesUpdated events raised by the Market contract.
-type MarketMarketFeesUpdatedIterator struct {
-	Event *MarketMarketFeesUpdated // Event containing the contract specifics and raw log
+// MarketMarketFeeUpdateIterator is returned from FilterMarketFeeUpdate and is used to iterate over the raw logs and unpacked data for MarketFeeUpdate events raised by the Market contract.
+type MarketMarketFeeUpdateIterator struct {
+	Event *MarketMarketFeeUpdate // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -957,7 +1046,7 @@ type MarketMarketFeesUpdatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *MarketMarketFeesUpdatedIterator) Next() bool {
+func (it *MarketMarketFeeUpdateIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -966,7 +1055,7 @@ func (it *MarketMarketFeesUpdatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(MarketMarketFeesUpdated)
+			it.Event = new(MarketMarketFeeUpdate)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -981,7 +1070,7 @@ func (it *MarketMarketFeesUpdatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(MarketMarketFeesUpdated)
+		it.Event = new(MarketMarketFeeUpdate)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -997,42 +1086,41 @@ func (it *MarketMarketFeesUpdatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *MarketMarketFeesUpdatedIterator) Error() error {
+func (it *MarketMarketFeeUpdateIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *MarketMarketFeesUpdatedIterator) Close() error {
+func (it *MarketMarketFeeUpdateIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// MarketMarketFeesUpdated represents a MarketFeesUpdated event raised by the Market contract.
-type MarketMarketFeesUpdated struct {
-	ProtocolFeeBps *big.Int
-	CreatorFeeBps  *big.Int
-	Raw            types.Log // Blockchain specific contextual infos
+// MarketMarketFeeUpdate represents a MarketFeeUpdate event raised by the Market contract.
+type MarketMarketFeeUpdate struct {
+	NewFee *big.Int
+	Raw    types.Log // Blockchain specific contextual infos
 }
 
-// FilterMarketFeesUpdated is a free log retrieval operation binding the contract event 0xad19762870c89120dbf99ae20ad94fa38021cffd4d0898920810970f74c81ace.
+// FilterMarketFeeUpdate is a free log retrieval operation binding the contract event 0xd50e64e6eb05cd7ceafe1a28b1a7ad949edb90451106259c7117252d605178ef.
 //
-// Solidity: event MarketFeesUpdated(uint256 protocolFeeBps, uint256 creatorFeeBps)
-func (_Market *MarketFilterer) FilterMarketFeesUpdated(opts *bind.FilterOpts) (*MarketMarketFeesUpdatedIterator, error) {
+// Solidity: event MarketFeeUpdate(uint128 newFee)
+func (_Market *MarketFilterer) FilterMarketFeeUpdate(opts *bind.FilterOpts) (*MarketMarketFeeUpdateIterator, error) {
 
-	logs, sub, err := _Market.contract.FilterLogs(opts, "MarketFeesUpdated")
+	logs, sub, err := _Market.contract.FilterLogs(opts, "MarketFeeUpdate")
 	if err != nil {
 		return nil, err
 	}
-	return &MarketMarketFeesUpdatedIterator{contract: _Market.contract, event: "MarketFeesUpdated", logs: logs, sub: sub}, nil
+	return &MarketMarketFeeUpdateIterator{contract: _Market.contract, event: "MarketFeeUpdate", logs: logs, sub: sub}, nil
 }
 
-// WatchMarketFeesUpdated is a free log subscription operation binding the contract event 0xad19762870c89120dbf99ae20ad94fa38021cffd4d0898920810970f74c81ace.
+// WatchMarketFeeUpdate is a free log subscription operation binding the contract event 0xd50e64e6eb05cd7ceafe1a28b1a7ad949edb90451106259c7117252d605178ef.
 //
-// Solidity: event MarketFeesUpdated(uint256 protocolFeeBps, uint256 creatorFeeBps)
-func (_Market *MarketFilterer) WatchMarketFeesUpdated(opts *bind.WatchOpts, sink chan<- *MarketMarketFeesUpdated) (event.Subscription, error) {
+// Solidity: event MarketFeeUpdate(uint128 newFee)
+func (_Market *MarketFilterer) WatchMarketFeeUpdate(opts *bind.WatchOpts, sink chan<- *MarketMarketFeeUpdate) (event.Subscription, error) {
 
-	logs, sub, err := _Market.contract.WatchLogs(opts, "MarketFeesUpdated")
+	logs, sub, err := _Market.contract.WatchLogs(opts, "MarketFeeUpdate")
 	if err != nil {
 		return nil, err
 	}
@@ -1042,8 +1130,8 @@ func (_Market *MarketFilterer) WatchMarketFeesUpdated(opts *bind.WatchOpts, sink
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(MarketMarketFeesUpdated)
-				if err := _Market.contract.UnpackLog(event, "MarketFeesUpdated", log); err != nil {
+				event := new(MarketMarketFeeUpdate)
+				if err := _Market.contract.UnpackLog(event, "MarketFeeUpdate", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1064,12 +1152,12 @@ func (_Market *MarketFilterer) WatchMarketFeesUpdated(opts *bind.WatchOpts, sink
 	}), nil
 }
 
-// ParseMarketFeesUpdated is a log parse operation binding the contract event 0xad19762870c89120dbf99ae20ad94fa38021cffd4d0898920810970f74c81ace.
+// ParseMarketFeeUpdate is a log parse operation binding the contract event 0xd50e64e6eb05cd7ceafe1a28b1a7ad949edb90451106259c7117252d605178ef.
 //
-// Solidity: event MarketFeesUpdated(uint256 protocolFeeBps, uint256 creatorFeeBps)
-func (_Market *MarketFilterer) ParseMarketFeesUpdated(log types.Log) (*MarketMarketFeesUpdated, error) {
-	event := new(MarketMarketFeesUpdated)
-	if err := _Market.contract.UnpackLog(event, "MarketFeesUpdated", log); err != nil {
+// Solidity: event MarketFeeUpdate(uint128 newFee)
+func (_Market *MarketFilterer) ParseMarketFeeUpdate(log types.Log) (*MarketMarketFeeUpdate, error) {
+	event := new(MarketMarketFeeUpdate)
+	if err := _Market.contract.UnpackLog(event, "MarketFeeUpdate", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -1152,9 +1240,9 @@ type MarketNewListing struct {
 	Raw           types.Log // Blockchain specific contextual infos
 }
 
-// FilterNewListing is a free log retrieval operation binding the contract event 0xd2b9362693b450efe0eba286dabb8fc2c4d8e9567ee2db206d3f2823f4cbe9f1.
+// FilterNewListing is a free log retrieval operation binding the contract event 0x70c5741a020504dbda58d308c3efe5275326c456d3b00c541925222c40f7c62e.
 //
-// Solidity: event NewListing(address indexed assetContract, address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event NewListing(address indexed assetContract, address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) FilterNewListing(opts *bind.FilterOpts, assetContract []common.Address, seller []common.Address, listingId []*big.Int) (*MarketNewListingIterator, error) {
 
 	var assetContractRule []interface{}
@@ -1177,9 +1265,9 @@ func (_Market *MarketFilterer) FilterNewListing(opts *bind.FilterOpts, assetCont
 	return &MarketNewListingIterator{contract: _Market.contract, event: "NewListing", logs: logs, sub: sub}, nil
 }
 
-// WatchNewListing is a free log subscription operation binding the contract event 0xd2b9362693b450efe0eba286dabb8fc2c4d8e9567ee2db206d3f2823f4cbe9f1.
+// WatchNewListing is a free log subscription operation binding the contract event 0x70c5741a020504dbda58d308c3efe5275326c456d3b00c541925222c40f7c62e.
 //
-// Solidity: event NewListing(address indexed assetContract, address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event NewListing(address indexed assetContract, address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) WatchNewListing(opts *bind.WatchOpts, sink chan<- *MarketNewListing, assetContract []common.Address, seller []common.Address, listingId []*big.Int) (event.Subscription, error) {
 
 	var assetContractRule []interface{}
@@ -1227,9 +1315,9 @@ func (_Market *MarketFilterer) WatchNewListing(opts *bind.WatchOpts, sink chan<-
 	}), nil
 }
 
-// ParseNewListing is a log parse operation binding the contract event 0xd2b9362693b450efe0eba286dabb8fc2c4d8e9567ee2db206d3f2823f4cbe9f1.
+// ParseNewListing is a log parse operation binding the contract event 0x70c5741a020504dbda58d308c3efe5275326c456d3b00c541925222c40f7c62e.
 //
-// Solidity: event NewListing(address indexed assetContract, address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event NewListing(address indexed assetContract, address indexed seller, uint256 indexed listingId, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) ParseNewListing(log types.Log) (*MarketNewListing, error) {
 	event := new(MarketNewListing)
 	if err := _Market.contract.UnpackLog(event, "NewListing", log); err != nil {
@@ -1308,18 +1396,18 @@ func (it *MarketNewSaleIterator) Close() error {
 
 // MarketNewSale represents a NewSale event raised by the Market contract.
 type MarketNewSale struct {
-	AssetContract  common.Address
-	Seller         common.Address
-	ListingId      *big.Int
-	Buyer          common.Address
-	QuanitytBought *big.Int
-	Listing        MarketListing
-	Raw            types.Log // Blockchain specific contextual infos
+	AssetContract common.Address
+	Seller        common.Address
+	ListingId     *big.Int
+	Buyer         common.Address
+	Quantity      *big.Int
+	Listing       MarketListing
+	Raw           types.Log // Blockchain specific contextual infos
 }
 
-// FilterNewSale is a free log retrieval operation binding the contract event 0xca61ad62dd0d03a15c18b6b324fec84841d4a7a3b09dc67787211a2162f56898.
+// FilterNewSale is a free log retrieval operation binding the contract event 0xc848190182320d1cb2ea6d8a80041c6780e56643bc41fe9060bb1f1349902cba.
 //
-// Solidity: event NewSale(address indexed assetContract, address indexed seller, uint256 indexed listingId, address buyer, uint256 quanitytBought, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event NewSale(address indexed assetContract, address indexed seller, uint256 indexed listingId, address buyer, uint256 quantity, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) FilterNewSale(opts *bind.FilterOpts, assetContract []common.Address, seller []common.Address, listingId []*big.Int) (*MarketNewSaleIterator, error) {
 
 	var assetContractRule []interface{}
@@ -1342,9 +1430,9 @@ func (_Market *MarketFilterer) FilterNewSale(opts *bind.FilterOpts, assetContrac
 	return &MarketNewSaleIterator{contract: _Market.contract, event: "NewSale", logs: logs, sub: sub}, nil
 }
 
-// WatchNewSale is a free log subscription operation binding the contract event 0xca61ad62dd0d03a15c18b6b324fec84841d4a7a3b09dc67787211a2162f56898.
+// WatchNewSale is a free log subscription operation binding the contract event 0xc848190182320d1cb2ea6d8a80041c6780e56643bc41fe9060bb1f1349902cba.
 //
-// Solidity: event NewSale(address indexed assetContract, address indexed seller, uint256 indexed listingId, address buyer, uint256 quanitytBought, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event NewSale(address indexed assetContract, address indexed seller, uint256 indexed listingId, address buyer, uint256 quantity, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) WatchNewSale(opts *bind.WatchOpts, sink chan<- *MarketNewSale, assetContract []common.Address, seller []common.Address, listingId []*big.Int) (event.Subscription, error) {
 
 	var assetContractRule []interface{}
@@ -1392,9 +1480,9 @@ func (_Market *MarketFilterer) WatchNewSale(opts *bind.WatchOpts, sink chan<- *M
 	}), nil
 }
 
-// ParseNewSale is a log parse operation binding the contract event 0xca61ad62dd0d03a15c18b6b324fec84841d4a7a3b09dc67787211a2162f56898.
+// ParseNewSale is a log parse operation binding the contract event 0xc848190182320d1cb2ea6d8a80041c6780e56643bc41fe9060bb1f1349902cba.
 //
-// Solidity: event NewSale(address indexed assetContract, address indexed seller, uint256 indexed listingId, address buyer, uint256 quanitytBought, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint8) listing)
+// Solidity: event NewSale(address indexed assetContract, address indexed seller, uint256 indexed listingId, address buyer, uint256 quantity, (uint256,address,address,uint256,uint256,address,uint256,uint256,uint256,uint256,uint8) listing)
 func (_Market *MarketFilterer) ParseNewSale(log types.Log) (*MarketNewSale, error) {
 	event := new(MarketNewSale)
 	if err := _Market.contract.UnpackLog(event, "NewSale", log); err != nil {

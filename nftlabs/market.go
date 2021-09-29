@@ -28,10 +28,13 @@ type MarketSdk interface {
 		price *big.Int,
 		quantity *big.Int,
 		secondsUntilStart *big.Int,
-		secondsUntilEnd *big.Int) (Listing, error)
+		secondsUntilEnd *big.Int,
+		rewardsPerOpen *big.Int) (Listing, error)
 	UnlistAll(listingId *big.Int) error
 	Unlist(listingId *big.Int, quantity *big.Int) error
 	Buy(listingId *big.Int, quantity *big.Int) error
+	GetMarketFeeBps() (*big.Int, error)
+	SetMarketFeeBps(fee *big.Int) error
 }
 
 type MarketSdkModule struct {
@@ -66,6 +69,22 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 		gateway: gw,
 		module: module,
 	}, nil
+}
+
+func (sdk *MarketSdkModule) GetMarketFeeBps() (*big.Int, error) {
+	return sdk.module.MarketCaller.MarketFeeBps(&bind.CallOpts{})
+}
+
+func (sdk *MarketSdkModule) SetMarketFeeBps(fee *big.Int) error {
+	if tx, err := sdk.module.SetMarketFeeBps(&bind.TransactOpts{
+		NoSend: false,
+		From: sdk.getSignerAddress(),
+		Signer: sdk.getSigner(),
+	}, fee); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
 
 func (sdk *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error) {
@@ -155,6 +174,7 @@ func (sdk *MarketSdkModule) GetAll(filter ListingFilter) ([]Listing, error) {
 	return availableListings, nil
 }
 
+// TODO: change args to struct
 func (sdk *MarketSdkModule) List(
 	assetContractAddress string,
 	tokenId *big.Int,
@@ -162,7 +182,8 @@ func (sdk *MarketSdkModule) List(
 	pricePerToken *big.Int,
 	quantity *big.Int,
 	secondsUntilStart *big.Int,
-	secondsUntilEnd *big.Int) (Listing, error) {
+	secondsUntilEnd *big.Int,
+	tokensPerBuy *big.Int) (Listing, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return Listing{}, &NoSignerError{typeName: "nft"}
 	}
@@ -186,7 +207,8 @@ func (sdk *MarketSdkModule) List(
 			pricePerToken,
 			quantity,
 			secondsUntilStart,
-			secondsUntilEnd)
+			secondsUntilEnd,
+			tokensPerBuy)
 	} else {
 		log.Printf("Contract %v is not a erc721 contract", assetContractAddress)
 		return Listing{}, &UnsupportedFunctionError{
@@ -221,7 +243,8 @@ func (sdk *MarketSdkModule) listErc721(
 	pricePerToken *big.Int,
 	quantity *big.Int,
 	secondsUntilStart *big.Int,
-	secondsUntilEnd *big.Int) (Listing, error) {
+	secondsUntilEnd *big.Int,
+	tokensPerBuy *big.Int) (Listing, error) {
 	packAddress := common.HexToAddress(assetContractAddress)
 	currencyAddress := common.HexToAddress(currencyContractAddress)
 
@@ -259,7 +282,7 @@ func (sdk *MarketSdkModule) listErc721(
 		Signer: sdk.getSigner(),
 		From: sdk.signerAddress,
 		Context: context.Background(),
-	}, packAddress, tokenId, currencyAddress, pricePerToken, quantity, secondsUntilStart, secondsUntilEnd)
+	}, packAddress, tokenId, currencyAddress, pricePerToken, quantity, tokensPerBuy, secondsUntilStart, secondsUntilEnd)
 	if err != nil {
 		return Listing{}, err
 	}
@@ -305,15 +328,35 @@ func (sdk *MarketSdkModule) getNewMarketListing(logs []*types.Log) (*abi.MarketL
 }
 
 func (sdk *MarketSdkModule) UnlistAll(listingId *big.Int) error {
-	panic("implement me")
+	listing, err := sdk.GetListing(listingId)
+	if err != nil {
+		return err
+	}
+	return sdk.Unlist(listingId, listing.Quantity)
 }
 
 func (sdk *MarketSdkModule) Unlist(listingId *big.Int, quantity *big.Int) error {
-	panic("implement me")
+	if tx, err := sdk.module.Unlist(&bind.TransactOpts{
+		NoSend: false,
+		From: sdk.getSignerAddress(),
+		Signer: sdk.getSigner(),
+	}, listingId, quantity); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
 
 func (sdk *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error {
-	panic("implement me")
+	listing, err := sdk.GetListing(listingId)
+	if err != nil {
+		return err
+	}
+	totalPrice := big.Int{}
+	totalPrice.Set(listing.Price)
+	totalPrice.Mul(&totalPrice, quantity)
+
+	return nil
 }
 
 func (sdk *MarketSdkModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {

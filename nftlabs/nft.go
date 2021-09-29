@@ -60,7 +60,64 @@ func (sdk *NftSdkModule) RevokeRole(role Role, address string) error {
 }
 
 func (sdk *NftSdkModule) MintBatch(meta []interface{}) ([]NftMetadata, error) {
-	panic("implement me")
+	if sdk.signerAddress == common.HexToAddress("0") {
+												  return nil, &NoSignerError{typeName: "collection"}
+												  }
+
+	var wg sync.WaitGroup
+	ch := make(chan string)
+
+	for _, asset := range meta {
+		 wg.Add(1)
+		 go func(meta interface{}) {
+			 log.Printf("Uploading collection meta %v\n", meta)
+			 defer wg.Done()
+
+			 uri, err := sdk.gateway.Upload(meta, sdk.Address, sdk.signerAddress.String())
+			 if err != nil {
+				 // TODO: need better handling, ts sdk does nothing if this fails
+				 log.Printf("Failed to upload one of the nft metadata in collection creation")
+				 ch <- ""
+			 } else {
+				 ch <- uri
+			 }
+		 }(asset)
+	}
+
+	results := make([]string, len(meta))
+	for i := range results {
+		 results[i] = <-ch
+	}
+
+	wg.Wait()
+	close(ch)
+
+	tx, err := sdk.module.MintNFTBatch(&bind.TransactOpts{
+		From: sdk.signerAddress,
+		NoSend: false,
+		Signer: sdk.getSigner(),
+	}, sdk.signerAddress, results)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
+		return nil, err
+	}
+
+	receipt, err := sdk.Client.TransactionReceipt(context.Background(), tx.Hash())
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = sdk.getNewMintedBatch(receipt.Logs)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: process batch and fetch new nfts
+
+	return nil, nil
 }
 
 func (sdk *NftSdkModule) Burn(tokenId *big.Int) error {
@@ -312,4 +369,25 @@ func (sdk *NftSdkModule) getNewMintedNft(logs []*types.Log) (*big.Int, error) {
 	}
 
 	return tokenId, nil
+}
+
+func (sdk *NftSdkModule) getNewMintedBatch(logs []*types.Log) (*abi.NFTMintedBatch, error) {
+	var batch *abi.NFTMintedBatch
+	for _, l := range logs {
+		iterator, err := sdk.module.ParseMintedBatch(*l)
+		if err != nil {
+			continue
+		}
+
+		if iterator.TokenIds != nil {
+			batch = iterator
+			break
+		}
+	}
+
+	if batch == nil {
+		return nil, errors.New("Could not find Minted batch event for transaction")
+	}
+
+	return batch, nil
 }
