@@ -66,7 +66,7 @@ func (gw *CloudflareGateway) Upload(data interface{}, contractAddress string, si
 	req.Header.Set("X-Public-Address", signerAddress)
 	req.Header.Set("Content-Type", mp.FormDataContentType())
 
-	if result, err:= client.Do(req); err != nil {
+	if result, err := client.Do(req); err != nil {
 		return "", err
 	} else {
 		if result.StatusCode != http.StatusOK {
@@ -87,6 +87,6 @@ func (gw *CloudflareGateway) Upload(data interface{}, contractAddress string, si
 				underlyingError: err,
 			}
 		}
-		 return uploadMeta.IpfsUri, nil
+		return uploadMeta.IpfsUri, nil
 	}
 }

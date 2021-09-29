@@ -9,10 +9,10 @@ import (
 
 type PackMetadata struct {
 	NftMetadata
-	Creator common.Address
+	Creator       common.Address
 	CurrentSupply big.Int
-	OpenStart time.Time
-	OpenEnd time.Time
+	OpenStart     time.Time
+	OpenEnd       time.Time
 }
 
 type PackNft struct {
@@ -30,18 +30,18 @@ type PackNft struct {
   secondsUntilOpenStart?: number;
   secondsUntilOpenEnd?: number;
   rewardsPerOpen?: number;
- */
+*/
 
 type CreatePackArgs struct {
-	AssetContractAddress string
-	Assets []PackAssetAddition
+	AssetContractAddress  string
+	Assets                []PackAssetAddition
 	SecondsUntilOpenStart *big.Int
-	SecondsUntilOpenEnd *big.Int
-	RewardsPerOpen *big.Int
-	Metadata interface{}
+	SecondsUntilOpenEnd   *big.Int
+	RewardsPerOpen        *big.Int
+	Metadata              interface{}
 }
 
 type PackAssetAddition struct {
-	NftId *big.Int
+	NftId  *big.Int
 	Supply *big.Int
 }

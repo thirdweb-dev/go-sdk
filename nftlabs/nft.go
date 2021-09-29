@@ -19,8 +19,8 @@ import (
 type Role string
 
 const (
-	AdminRole Role = "admin"
-	MinterRole = "minter"
+	AdminRole  Role = "admin"
+	MinterRole      = "minter"
 )
 
 type Nft interface {
@@ -32,7 +32,7 @@ type Nft interface {
 	BalanceOf(address string) (*big.Int, error)
 	Transfer(to string, tokenId *big.Int) error
 	TotalSupply() (*big.Int, error)
-	SetApproval(operator string, approved bool) (error)
+	SetApproval(operator string, approved bool) error
 	Mint(metadata MintNftMetadata) (NftMetadata, error)
 	MintBatch(meta []interface{}) ([]NftMetadata, error)
 	Burn(tokenId *big.Int) error
@@ -45,13 +45,13 @@ type Nft interface {
 }
 
 type NftModule struct {
-	Client *ethclient.Client
+	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
 	gateway Gateway
-	module *abi.NFT
+	module  *abi.NFT
 
-	privateKey *ecdsa.PrivateKey
+	privateKey    *ecdsa.PrivateKey
 	signerAddress common.Address
 }
 
@@ -61,39 +61,39 @@ func (sdk *NftModule) RevokeRole(role Role, address string) error {
 
 func (sdk *NftModule) MintBatch(meta []interface{}) ([]NftMetadata, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
-												  return nil, &NoSignerError{typeName: "collection"}
-												  }
+		return nil, &NoSignerError{typeName: "collection"}
+	}
 
 	var wg sync.WaitGroup
 	ch := make(chan string)
 
 	for _, asset := range meta {
-		 wg.Add(1)
-		 go func(meta interface{}) {
-			 log.Printf("Uploading collection meta %v\n", meta)
-			 defer wg.Done()
+		wg.Add(1)
+		go func(meta interface{}) {
+			log.Printf("Uploading collection meta %v\n", meta)
+			defer wg.Done()
 
-			 uri, err := sdk.gateway.Upload(meta, sdk.Address, sdk.signerAddress.String())
-			 if err != nil {
-				 // TODO: need better handling, ts sdk does nothing if this fails
-				 log.Printf("Failed to upload one of the nft metadata in collection creation")
-				 ch <- ""
-			 } else {
-				 ch <- uri
-			 }
-		 }(asset)
+			uri, err := sdk.gateway.Upload(meta, sdk.Address, sdk.signerAddress.String())
+			if err != nil {
+				// TODO: need better handling, ts sdk does nothing if this fails
+				log.Printf("Failed to upload one of the nft metadata in collection creation")
+				ch <- ""
+			} else {
+				ch <- uri
+			}
+		}(asset)
 	}
 
 	results := make([]string, len(meta))
 	for i := range results {
-		 results[i] = <-ch
+		results[i] = <-ch
 	}
 
 	wg.Wait()
 	close(ch)
 
 	tx, err := sdk.module.MintNFTBatch(&bind.TransactOpts{
-		From: sdk.signerAddress,
+		From:   sdk.signerAddress,
 		NoSend: false,
 		Signer: sdk.getSigner(),
 	}, sdk.signerAddress, results)
@@ -129,7 +129,7 @@ func (sdk *NftModule) Burn(tokenId *big.Int) error {
 
 	_, err := sdk.module.Burn(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.signerAddress,
+		From:   sdk.signerAddress,
 		Signer: sdk.getSigner(),
 	}, tokenId)
 
@@ -163,7 +163,7 @@ func (sdk *NftModule) mintTo(metadata MintNftMetadata) (NftMetadata, error) {
 	tx, err := sdk.module.NFTTransactor.MintNFT(&bind.TransactOpts{
 		NoSend: false,
 		Signer: sdk.getSigner(),
-		From: sdk.signerAddress,
+		From:   sdk.signerAddress,
 	}, sdk.signerAddress, uri)
 
 	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
@@ -183,11 +183,11 @@ func (sdk *NftModule) mintTo(metadata MintNftMetadata) (NftMetadata, error) {
 	}
 
 	return NftMetadata{
-		Id: tokenId,
-		Image: metadata.Image,
+		Id:          tokenId,
+		Image:       metadata.Image,
 		Description: metadata.Description,
-		Uri: metadata.ExternalUrl,
-		Name: metadata.Name,
+		Uri:         metadata.ExternalUrl,
+		Name:        metadata.Name,
 	}, err
 }
 
@@ -226,11 +226,11 @@ func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) 
 	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
 
 	return &NftModule{
-		Client: client,
+		Client:  client,
 		Address: address,
 		Options: opt,
 		gateway: gw,
-		module: module,
+		module:  module,
 	}, nil
 }
 
@@ -251,7 +251,7 @@ func (sdk *NftModule) Get(tokenId *big.Int) (NftMetadata, error) {
 	return metadata, nil
 }
 
-func (sdk *NftModule) GetAsync(tokenId *big.Int, ch chan<-NftMetadata, errCh chan<-error, wg *sync.WaitGroup) {
+func (sdk *NftModule) GetAsync(tokenId *big.Int, ch chan<- NftMetadata, errCh chan<- error, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	result, err := sdk.Get(tokenId)
@@ -317,7 +317,7 @@ func (sdk *NftModule) Transfer(to string, tokenId *big.Int) error {
 	// TODO: allow you to pass transact opts
 	_, err := sdk.module.NFTTransactor.SafeTransferFrom(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.signerAddress,
+		From:   sdk.signerAddress,
 		Signer: sdk.getSigner(),
 	}, sdk.signerAddress, common.HexToAddress(to), tokenId)
 

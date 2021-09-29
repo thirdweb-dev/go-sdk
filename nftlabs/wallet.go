@@ -19,7 +19,6 @@ func getPublicAddress(key *ecdsa.PrivateKey) (common.Address, error) {
 	return crypto.PubkeyToAddress(*publicKeyECDSA), nil
 }
 
-
 func processPrivateKey(privateKey string) (*ecdsa.PrivateKey, common.Address, error) {
 	pKey, err := crypto.HexToECDSA(privateKey)
 	if err != nil {

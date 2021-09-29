@@ -32,13 +32,13 @@ type Pack interface {
 }
 
 type PackModule struct {
-	Client *ethclient.Client
-	Address string
-	Options *SdkOptions
-	gateway Gateway
-	privateKey *ecdsa.PrivateKey
+	Client        *ethclient.Client
+	Address       string
+	Options       *SdkOptions
+	gateway       Gateway
+	privateKey    *ecdsa.PrivateKey
 	signerAddress common.Address
-	module *abi.Pack
+	module        *abi.Pack
 }
 
 func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackModule, error) {
@@ -50,7 +50,6 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 	if err != nil {
 		return nil, err
 	}
-
 
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
@@ -109,19 +108,19 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 	uint256Ty, _ := ethAbi.NewType("uint256", "uint256", nil)
 
 	arguments := ethAbi.Arguments{
-       {
-           Type: stringsTy,
-       },
-       {
-           Type: uint256Ty,
-       },
-       {
-           Type: uint256Ty,
-       },
-       {
-           Type: uint256Ty,
-       },
-    }
+		{
+			Type: stringsTy,
+		},
+		{
+			Type: uint256Ty,
+		},
+		{
+			Type: uint256Ty,
+		},
+		{
+			Type: uint256Ty,
+		},
+	}
 
 	uri, err := sdk.gateway.Upload(args.Metadata, sdk.Address, sdk.signerAddress.String())
 	if err != nil {
@@ -133,7 +132,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		args.SecondsUntilOpenStart,
 		args.SecondsUntilOpenEnd,
 		args.RewardsPerOpen,
-    )
+	)
 	if err != nil {
 		log.Print("Failed to pack args")
 		return PackMetadata{}, err
@@ -141,9 +140,9 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 
 	// TODO: check if whats added to pack is erc721 or erc1155, will do later when we support erc721
 	tx, err := nftSdkModule.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
-		From:      sdk.signerAddress,
-		Signer:    sdk.getSigner(),
-		NoSend:    false,
+		From:     sdk.signerAddress,
+		Signer:   sdk.getSigner(),
+		NoSend:   false,
 		GasLimit: 100000,
 	}, sdk.signerAddress, sdk.signerAddress, ids, counts, bytes)
 	if err != nil {
@@ -203,11 +202,11 @@ func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
 	}
 
 	return PackMetadata{
-		Creator: packMeta.Creator,
+		Creator:       packMeta.Creator,
 		CurrentSupply: *packMeta.CurrentSupply,
-		OpenStart: time.Unix(packMeta.OpenStart.Int64(), 0),
-		OpenEnd: time.Unix(packMeta.OpenEnd.Int64(), 0),
-		NftMetadata: metadata,
+		OpenStart:     time.Unix(packMeta.OpenStart.Int64(), 0),
+		OpenEnd:       time.Unix(packMeta.OpenEnd.Int64(), 0),
+		NftMetadata:   metadata,
 	}, nil
 }
 
@@ -228,7 +227,7 @@ func (sdk *PackModule) GetAsync(tokenId *big.Int, ch chan<- PackMetadata, wg *sy
 }
 
 func (sdk *PackModule) GetAll() ([]PackMetadata, error) {
-	maxId, err := sdk.module.PackCaller.NextTokenId(&bind.CallOpts{});
+	maxId, err := sdk.module.PackCaller.NextTokenId(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +275,7 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	for _, i := range result.TokenIds {
 		wg.Add(1)
 
-		go func (id *big.Int) {
+		go func(id *big.Int) {
 			defer wg.Done()
 
 			metadata, err := nftModule.Get(id)

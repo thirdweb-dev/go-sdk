@@ -14,13 +14,13 @@ type erc1155 interface {
 }
 
 type erc1155Module struct {
-	Client *ethclient.Client
+	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
 	gateway Gateway
-	module *abi.ERC1155
+	module  *abi.ERC1155
 
-	privateKey *ecdsa.PrivateKey
+	privateKey    *ecdsa.PrivateKey
 	signerAddress common.Address
 }
 
@@ -35,20 +35,18 @@ func newErc1155SdkModule(client *ethclient.Client, address string, opt *SdkOptio
 		return nil, err
 	}
 
-
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
 	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
 
 	return &erc1155Module{
-		Client: client,
+		Client:  client,
 		Address: address,
 		Options: opt,
 		gateway: gw,
-		module: module,
+		module:  module,
 	}, nil
 }
-
 
 func (sdk *erc1155Module) SetPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {

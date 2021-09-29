@@ -4,5 +4,5 @@ import "time"
 
 const (
 	txWaitTimeBetweenAttempts = time.Second * 1
-	txMaxAttempts = 20
+	txMaxAttempts             = 20
 )

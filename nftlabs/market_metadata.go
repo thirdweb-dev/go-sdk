@@ -33,7 +33,7 @@ type NewListingArgs struct {
 	CurrencyContractAddress string
 	Price                   *big.Int
 	Quantity                *big.Int
-	SecondsUntilOpenStart *big.Int
-	SecondsUntilOpenEnd *big.Int
-	RewardsPerOpen *big.Int
+	SecondsUntilOpenStart   *big.Int
+	SecondsUntilOpenEnd     *big.Int
+	RewardsPerOpen          *big.Int
 }

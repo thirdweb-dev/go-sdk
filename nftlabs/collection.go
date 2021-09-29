@@ -22,20 +22,20 @@ type NftCollection interface {
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
 	Balance(tokenId *big.Int) (*big.Int, error)
 	IsApproved(address string, operator string) (bool, error)
-	SetApproved(operator string, approved bool) (error)
-	Transfer(to string, tokenId *big.Int, amount *big.Int) (error)
+	SetApproved(operator string, approved bool) error
+	Transfer(to string, tokenId *big.Int, amount *big.Int) error
 	Create(args []CreateCollectionArgs) ([]CollectionMetadata, error)
-	Mint(args MintCollectionArgs) (error)
+	Mint(args MintCollectionArgs) error
 }
 
 type NftCollectionModule struct {
-	Client *ethclient.Client
+	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
 	gateway Gateway
-	module *abi.NFTCollection
+	module  *abi.NFTCollection
 
-	privateKey *ecdsa.PrivateKey
+	privateKey    *ecdsa.PrivateKey
 	signerAddress common.Address
 }
 
@@ -55,11 +55,11 @@ func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOp
 	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
 
 	return &NftCollectionModule{
-		Client: client,
+		Client:  client,
 		Address: address,
 		Options: opt,
 		gateway: gw,
-		module: module,
+		module:  module,
 	}, nil
 }
 
@@ -101,7 +101,7 @@ func (sdk *NftCollectionModule) getMetadata(tokenId *big.Int) ([]byte, error) {
 	return metadata, nil
 }
 
-func (sdk *NftCollectionModule) GetAsync(tokenId *big.Int, ch chan<-CollectionMetadata, wg *sync.WaitGroup) {
+func (sdk *NftCollectionModule) GetAsync(tokenId *big.Int, ch chan<- CollectionMetadata, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	result, err := sdk.Get(tokenId)
@@ -175,7 +175,7 @@ func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]Collectio
 
 	tx, err := sdk.module.NFTCollectionTransactor.CreateNativeNfts(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, uris, supplies)
 

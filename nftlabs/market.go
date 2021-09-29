@@ -30,13 +30,13 @@ type Market interface {
 }
 
 type MarketModule struct {
-	Client *ethclient.Client
+	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
 	gateway Gateway
-	module *abi.Market
+	module  *abi.Market
 
-	privateKey *ecdsa.PrivateKey
+	privateKey    *ecdsa.PrivateKey
 	rawPrivateKey string
 	signerAddress common.Address
 }
@@ -55,11 +55,11 @@ func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOption
 	gw := NewCloudflareGateway(opt.IpfsGatewayUrl)
 
 	return &MarketModule{
-		Client: client,
+		Client:  client,
 		Address: address,
 		Options: opt,
 		gateway: gw,
-		module: module,
+		module:  module,
 	}, nil
 }
 
@@ -70,7 +70,7 @@ func (sdk *MarketModule) GetMarketFeeBps() (*big.Int, error) {
 func (sdk *MarketModule) SetMarketFeeBps(fee *big.Int) error {
 	if tx, err := sdk.module.SetMarketFeeBps(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, fee); err != nil {
 		return err
@@ -179,7 +179,7 @@ func (sdk *MarketModule) List(args NewListingArgs) (Listing, error) {
 
 	isERC721, err := erc165Module.module.ERC165Caller.SupportsInterface(&bind.CallOpts{}, InterfaceIdErc721)
 	if err != nil {
-		return  Listing{}, err
+		return Listing{}, err
 	}
 
 	if isERC721 {
@@ -246,9 +246,9 @@ func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
 	log.Printf("Caller %v has been approved from %v\n", sdk.Address, sdk.signerAddress.String())
 
 	result, err := sdk.module.MarketTransactor.List(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.getSigner(),
-		From: sdk.signerAddress,
+		NoSend:  false,
+		Signer:  sdk.getSigner(),
+		From:    sdk.signerAddress,
 		Context: context.Background(),
 	}, packAddress, args.TokenId, currencyAddress, args.Price, args.Quantity, args.RewardsPerOpen, args.SecondsUntilOpenStart, args.SecondsUntilOpenEnd)
 	if err != nil {
@@ -306,7 +306,7 @@ func (sdk *MarketModule) UnlistAll(listingId *big.Int) error {
 func (sdk *MarketModule) Unlist(listingId *big.Int, quantity *big.Int) error {
 	if tx, err := sdk.module.Unlist(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, listingId, quantity); err != nil {
 		return err
@@ -343,7 +343,6 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 			return Listing{}, err
 		}
 
-		
 		if currencyValue, err := currency.GetValue(listing.PricePerToken); err != nil {
 			// TODO: return better error
 			return Listing{}, err
@@ -361,7 +360,7 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 			// TODO: return better error
 			return Listing{}, err
 		}
-		
+
 		if meta, err := nftModule.Get(listing.TokenId); err != nil {
 			// TODO: return better error
 			return Listing{}, err
@@ -373,15 +372,15 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 	var saleStart *time.Time
 	// TODO: should I be doing Int64() here ??? is there data loss ???
 	if listing.SaleStart.Int64() > 0 {
-		time.Unix(listing.SaleStart.Int64() * 1000, 0)
+		time.Unix(listing.SaleStart.Int64()*1000, 0)
 	} else {
 		saleStart = nil
 	}
 
 	var saleEnd *time.Time
 	// TODO: should I be doing Int64() here ??? is there data loss ???
-	if listing.SaleEnd.Int64() > 0 && listing.SaleEnd.Int64() < big.MaxExp - 1 {
-		time.Unix(listing.SaleEnd.Int64() * 1000, 0)
+	if listing.SaleEnd.Int64() > 0 && listing.SaleEnd.Int64() < big.MaxExp-1 {
+		time.Unix(listing.SaleEnd.Int64()*1000, 0)
 	} else {
 		saleEnd = nil
 	}

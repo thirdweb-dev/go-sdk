@@ -32,11 +32,11 @@ type Currency interface {
 }
 
 type CurrencyModule struct {
-	Client *ethclient.Client
+	Client  *ethclient.Client
 	Address string
-	module *abi.Currency
+	module  *abi.Currency
 
-	privateKey *ecdsa.PrivateKey
+	privateKey    *ecdsa.PrivateKey
 	rawPrivateKey string
 	signerAddress common.Address
 }
@@ -52,7 +52,7 @@ func (sdk *CurrencyModule) Allowance(spender string) (*big.Int, error) {
 func (sdk *CurrencyModule) SetAllowance(spender string, amount *big.Int) error {
 	if tx, err := sdk.module.Approve(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, common.HexToAddress(spender), amount); err != nil {
 		return err
@@ -64,7 +64,7 @@ func (sdk *CurrencyModule) SetAllowance(spender string, amount *big.Int) error {
 func (sdk *CurrencyModule) Mint(amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.Mint(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, sdk.signerAddress, amount); err != nil {
 		return err
@@ -76,7 +76,7 @@ func (sdk *CurrencyModule) Mint(amount *big.Int) error {
 func (sdk *CurrencyModule) Burn(amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.Burn(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, amount); err != nil {
 		return err
@@ -88,7 +88,7 @@ func (sdk *CurrencyModule) Burn(amount *big.Int) error {
 func (sdk *CurrencyModule) BurnFrom(from string, amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.BurnFrom(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, common.HexToAddress(from), amount); err != nil {
 		return err
@@ -100,7 +100,7 @@ func (sdk *CurrencyModule) BurnFrom(from string, amount *big.Int) error {
 func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.TransferFrom(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, common.HexToAddress(from), common.HexToAddress(to), amount); err != nil {
 		return err
@@ -112,7 +112,7 @@ func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int)
 func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 	if tx, err := sdk.module.CurrencyTransactor.GrantRole(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, [32]byte{}, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
 		return err
@@ -124,7 +124,7 @@ func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 func (sdk *CurrencyModule) RevokeRole(role Role, address string) error {
 	if tx, err := sdk.module.CurrencyTransactor.RevokeRole(&bind.TransactOpts{
 		NoSend: false,
-		From: sdk.getSignerAddress(),
+		From:   sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
 	}, [32]byte{}, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
 		return err
@@ -140,9 +140,9 @@ func NewCurrencySdkModule(client *ethclient.Client, asset string) (*CurrencyModu
 	}
 
 	return &CurrencyModule{
-		Client: client,
+		Client:  client,
 		Address: asset,
-		module: module,
+		module:  module,
 	}, nil
 }
 
@@ -172,8 +172,8 @@ func (sdk *CurrencyModule) Get() (CurrencyMetadata, error) {
 	}
 
 	return CurrencyMetadata{
-		Name: name,
-		Symbol: symbol,
+		Name:     name,
+		Symbol:   symbol,
 		Decimals: decimals,
 	}, nil
 }
@@ -200,8 +200,8 @@ func (sdk *CurrencyModule) GetValue(value *big.Int) (*CurrencyValue, error) {
 
 	return &CurrencyValue{
 		CurrencyMetadata: CurrencyMetadata{
-			Name: name,
-			Symbol: symbol,
+			Name:     name,
+			Symbol:   symbol,
 			Decimals: decimals,
 		},
 	}, nil
