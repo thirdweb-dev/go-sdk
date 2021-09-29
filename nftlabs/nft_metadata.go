@@ -3,7 +3,7 @@ package nftlabs
 import "math/big"
 
 type NftMetadata struct {
-	Id          *big.Int
+	Id          *big.Int `json:"id"`
 	Uri         string      `json:"external_url"`
 	Name        string      `json:"name"`
 	Description string      `json:"description"`

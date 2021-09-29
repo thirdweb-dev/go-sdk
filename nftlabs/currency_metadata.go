@@ -1,13 +1,15 @@
 package nftlabs
 
+import "math/big"
+
 type CurrencyMetadata struct {
-	Name     string
-	Symbol   string
-	Decimals uint8
+	Name     string `json:"name"`
+	Symbol   string `json:"symbol"`
+	Decimals uint8 `json:"decimals"`
 }
 
 type CurrencyValue struct {
 	CurrencyMetadata
-	Value        string
-	DisplayValue uint64
+	Value        *big.Int `json:"value"`
+	DisplayValue string `json:"displayValue"`
 }

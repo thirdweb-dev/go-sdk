@@ -3,7 +3,6 @@ package nftlabs
 import (
 	"context"
 	"crypto/ecdsa"
-	"fmt"
 	"log"
 	"math/big"
 	"strings"
@@ -239,8 +238,6 @@ func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
 		return Listing{}, err
 	}
 
-	log.Printf("List call completed, result  = %v\n", result.Hash())
-
 	if err := waitForTx(sdk.Client, result.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
 		// TODO: return tx failed err
 		return Listing{}, err
@@ -251,8 +248,6 @@ func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
 		log.Printf("Failed to lookup transaction receipt with hash %v\n", result.Hash().String())
 		return Listing{}, err
 	}
-
-	log.Printf("Got receipt %v for tx %v\n", receipt.TxHash, result.Hash())
 
 	if newListing, err := sdk.getNewMarketListing(receipt.Logs); err != nil {
 		return Listing{}, err
@@ -270,7 +265,6 @@ func (sdk *MarketModule) getNewMarketListing(logs []*types.Log) (*abi.MarketList
 		}
 
 		if iterator.Listing.ListingId != nil {
-			fmt.Printf("Listing id = %v, listing = %v\n", iterator.ListingId, iterator.Listing)
 			listing = iterator.Listing
 			break
 		}
@@ -312,6 +306,7 @@ func (sdk *MarketModule) Buy(listingId *big.Int, quantity *big.Int) error {
 }
 
 func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Listing, error) {
+
 	listingCurrency := listing.Currency
 
 	var currencyMetadata *CurrencyValue
@@ -320,7 +315,6 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 	} else {
 		// TODO: this is bad, don't want to create an instance of the module every time but idk how else to get it in here
 		// damages testability
-		log.Printf("Getting listing currency at address %v\n", listingCurrency)
 		currency, err := NewCurrencySdkModule(sdk.Client, listingCurrency.Hex())
 		if err != nil {
 			// TODO: return better error

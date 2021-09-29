@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"github.com/nftlabs/nftlabs-sdk-go/nftlabs"
 	"github.com/spf13/cobra"
-	"log"
 	"math/big"
-	"strconv"
 )
 
 const (
@@ -38,11 +36,40 @@ var marketplaceGetAllCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		log.Printf("Recieved %d listings in collection %v\n", len(allListings), marketplaceContractAddress)
-		for _, listing := range allListings {
-			log.Printf("Got listing with ID '%v', price '%d', quantity '%d'\n", listing.Id, listing.Price, listing.Quantity)
-			log.Printf("Listing asset metadata: %v\n", listing.TokenMetadata)
+		jsonStr, err := json.Marshal(allListings)
+		if err != nil {
+			panic(err)
 		}
+		println(string(jsonStr))
+	},
+}
+
+var marketplaceGetCmd = &cobra.Command{
+	Use: "get [listingId]",
+	Short: "Gets listing [listingId] from marketplace",
+	Args: cobra.ExactArgs(1),
+	ValidArgs: []string{"listingId"},
+	Run: func(cmd *cobra.Command, args []string) {
+		listingId := big.NewInt(0)
+		if _, success := listingId.SetString(args[0], 10); !success {
+			panic("Failed to parse ID")
+		}
+		newMarketplaceListing.TokenId = listingId
+
+		module, err := getMarketplaceModule()
+		if err != nil {
+			panic(err)
+		}
+
+		listing, err := module.GetListing(listingId)
+		if err != nil {
+			panic(err)
+		}
+		jsonStr, err := json.Marshal(listing)
+		if err != nil {
+			panic(err)
+		}
+		println(string(jsonStr))
 	},
 }
 
@@ -59,41 +86,41 @@ var marketplaceListCmd = &cobra.Command{
 		"secondsUntilOpenEnd",
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		if listingId, err := strconv.ParseInt(args[0], 10, 64); err != nil {
-			panic(err)
-		} else {
-			newMarketplaceListing.TokenId = big.NewInt(listingId)
+		listingId := big.NewInt(0)
+		if _, success := listingId.SetString(args[0], 10); !success {
+			panic("Failed to parse ID")
 		}
+		newMarketplaceListing.TokenId = listingId
 
-		if quantity, err := strconv.ParseInt(args[1], 10, 64); err != nil {
-			panic(err)
-		} else {
-			newMarketplaceListing.Quantity = big.NewInt(quantity)
+		quantity := big.NewInt(0)
+		if _, success := quantity.SetString(args[1], 10); !success {
+			panic("Failed to parse quantity")
 		}
+		newMarketplaceListing.Quantity = quantity
 
-		if price, err := strconv.ParseInt(args[2], 10, 64); err != nil {
-			panic(err)
-		} else {
-			newMarketplaceListing.Price = big.NewInt(price)
+		price := big.NewInt(0)
+		if _, success := price.SetString(args[2], 10); !success {
+			panic("Failed to parse price")
 		}
+		newMarketplaceListing.Price = price
 
-		if tokensPerBuyer, err := strconv.ParseInt(args[3], 10, 64); err != nil {
-			panic(err)
-		} else {
-			newMarketplaceListing.RewardsPerOpen = big.NewInt(tokensPerBuyer)
+		tokensPerBuyer := big.NewInt(0)
+		if _, success := tokensPerBuyer.SetString(args[3], 10); !success {
+			panic("Failed to parse tokensPerBuyer")
 		}
+		newMarketplaceListing.RewardsPerOpen = tokensPerBuyer
 
-		if secondsUntilOpenStart, err := strconv.ParseInt(args[4], 10, 64); err != nil {
-			panic(err)
-		} else {
-			newMarketplaceListing.SecondsUntilOpenStart = big.NewInt(secondsUntilOpenStart)
+		secondsUntilOpenStart := big.NewInt(0)
+		if _, success := secondsUntilOpenStart.SetString(args[4], 10); !success {
+			panic("Failed to parse secondsUntilOpenStart")
 		}
+		newMarketplaceListing.SecondsUntilOpenStart = secondsUntilOpenStart
 
-		if secondsUntilOpenEnd, err := strconv.ParseInt(args[5], 10, 64); err != nil {
-			panic(err)
-		} else {
-			newMarketplaceListing.SecondsUntilOpenEnd = big.NewInt(secondsUntilOpenEnd)
+		secondsUntilOpenEnd := big.NewInt(0)
+		if _, success := secondsUntilOpenEnd.SetString(args[5], 10); !success {
+			panic("Failed to parse secondsUntilOpenEnd")
 		}
+		newMarketplaceListing.SecondsUntilOpenEnd = secondsUntilOpenEnd
 
 		module, err := getMarketplaceModule()
 		if err != nil {
@@ -122,6 +149,7 @@ func init() {
 
 	marketplaceCmd.AddCommand(marketplaceGetAllCmd)
 	marketplaceCmd.AddCommand(marketplaceListCmd)
+	marketplaceCmd.AddCommand(marketplaceGetCmd)
 
 	marketplaceCmd.PersistentFlags().StringVarP(&marketplaceContractAddress, "address", "a", "", "marketplace contract address")
 }

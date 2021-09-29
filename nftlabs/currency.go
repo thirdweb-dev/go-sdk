@@ -178,6 +178,22 @@ func (sdk *CurrencyModule) Get() (CurrencyMetadata, error) {
 	}, nil
 }
 
+func (sdk *CurrencyModule) formatUnits(value *big.Int, units *big.Int) string {
+	if value.Int64() == 0 {
+		return "0"
+	}
+
+	unit := big.NewInt(18)
+	if units != nil {
+		unit.Set(units)
+	}
+
+	ten := big.NewInt(10)
+	ten.Exp(ten, unit, big.NewInt(0))
+	v := big.NewInt(value.Int64())
+	return v.Div(v, ten).String()
+}
+
 func (sdk *CurrencyModule) GetValue(value *big.Int) (*CurrencyValue, error) {
 	if sdk.Address == common.HexToAddress("0").Hex() {
 		return &CurrencyValue{}, nil
@@ -204,6 +220,8 @@ func (sdk *CurrencyModule) GetValue(value *big.Int) (*CurrencyValue, error) {
 			Symbol:   symbol,
 			Decimals: decimals,
 		},
+		Value: value,
+		DisplayValue: sdk.formatUnits(value, big.NewInt(int64(decimals))),
 	}, nil
 }
 
