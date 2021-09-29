@@ -21,15 +21,7 @@ type MarketSdk interface {
 	CommonModule
 	GetListing(listingId *big.Int) (Listing, error)
 	GetAll(filter ListingFilter) ([]Listing, error)
-	List(
-		assetContract string,
-		tokenId *big.Int,
-		currencyContractAddress string,
-		price *big.Int,
-		quantity *big.Int,
-		secondsUntilStart *big.Int,
-		secondsUntilEnd *big.Int,
-		rewardsPerOpen *big.Int) (Listing, error)
+	List(args NewListingArgs) (Listing, error)
 	UnlistAll(listingId *big.Int) error
 	Unlist(listingId *big.Int, quantity *big.Int) error
 	Buy(listingId *big.Int, quantity *big.Int) error
@@ -175,20 +167,12 @@ func (sdk *MarketSdkModule) GetAll(filter ListingFilter) ([]Listing, error) {
 }
 
 // TODO: change args to struct
-func (sdk *MarketSdkModule) List(
-	assetContractAddress string,
-	tokenId *big.Int,
-	currencyContractAddress string,
-	pricePerToken *big.Int,
-	quantity *big.Int,
-	secondsUntilStart *big.Int,
-	secondsUntilEnd *big.Int,
-	tokensPerBuy *big.Int) (Listing, error) {
+func (sdk *MarketSdkModule) List(args NewListingArgs) (Listing, error) {
 	if sdk.signerAddress == common.HexToAddress("0") {
 		return Listing{}, &NoSignerError{typeName: "nft"}
 	}
 
-	erc165Module, err := newErc165SdkModule(sdk.Client, assetContractAddress, &SdkOptions{})
+	erc165Module, err := newErc165SdkModule(sdk.Client, args.AssetContractAddress, &SdkOptions{})
 	if err != nil {
 		return Listing{}, err
 	}
@@ -199,18 +183,10 @@ func (sdk *MarketSdkModule) List(
 	}
 
 	if isERC721 {
-		log.Printf("Contract %v is an erc721 contract", assetContractAddress)
-		return sdk.listErc721(
-			assetContractAddress,
-			tokenId,
-			currencyContractAddress,
-			pricePerToken,
-			quantity,
-			secondsUntilStart,
-			secondsUntilEnd,
-			tokensPerBuy)
+		log.Printf("Contract %v is an erc721 contract", args.AssetContractAddress)
+		return sdk.listErc721(args)
 	} else {
-		log.Printf("Contract %v is not a erc721 contract", assetContractAddress)
+		log.Printf("Contract %v is not a erc721 contract", args.AssetContractAddress)
 		return Listing{}, &UnsupportedFunctionError{
 			typeName: "market",
 			body:     "Asset must be an ERC721 contract. Other types will be supported soon.",
@@ -236,20 +212,12 @@ func (sdk *MarketSdkModule) List(
 	//}
 }
 
-func (sdk *MarketSdkModule) listErc721(
-	assetContractAddress string,
-	tokenId *big.Int,
-	currencyContractAddress string,
-	pricePerToken *big.Int,
-	quantity *big.Int,
-	secondsUntilStart *big.Int,
-	secondsUntilEnd *big.Int,
-	tokensPerBuy *big.Int) (Listing, error) {
-	packAddress := common.HexToAddress(assetContractAddress)
-	currencyAddress := common.HexToAddress(currencyContractAddress)
+func (sdk *MarketSdkModule) listErc721(args NewListingArgs) (Listing, error) {
+	packAddress := common.HexToAddress(args.AssetContractAddress)
+	currencyAddress := common.HexToAddress(args.CurrencyContractAddress)
 
-	log.Printf("Creating erc721 module, at address %v\n", assetContractAddress)
-	erc721Module, err := newErc721SdkModule(sdk.Client, assetContractAddress, &SdkOptions{})
+	log.Printf("Creating erc721 module, at address %v\n", args.AssetContractAddress)
+	erc721Module, err := newErc721SdkModule(sdk.Client, args.AssetContractAddress, &SdkOptions{})
 	if err != nil {
 		// TODO: return better error
 		return Listing{}, err
@@ -282,7 +250,7 @@ func (sdk *MarketSdkModule) listErc721(
 		Signer: sdk.getSigner(),
 		From: sdk.signerAddress,
 		Context: context.Background(),
-	}, packAddress, tokenId, currencyAddress, pricePerToken, quantity, tokensPerBuy, secondsUntilStart, secondsUntilEnd)
+	}, packAddress, args.TokenId, currencyAddress, args.Price, args.Quantity, args.RewardsPerOpen, args.SecondsUntilOpenStart, args.SecondsUntilOpenEnd)
 	if err != nil {
 		return Listing{}, err
 	}
