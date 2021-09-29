@@ -34,6 +34,7 @@ func init() {
 	rootCmd.AddCommand(packCmd)
 	rootCmd.AddCommand(collectionCmd)
 	rootCmd.AddCommand(marketplaceCmd)
+	rootCmd.AddCommand(currencyCmd)
 }
 
 func initConfig() {

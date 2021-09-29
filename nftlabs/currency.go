@@ -5,6 +5,7 @@ import (
 	"crypto/ecdsa"
 	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -13,6 +14,7 @@ import (
 )
 
 type CurrencySdk interface {
+	CommonModule
 	Get() (Currency, error)
 	GetValue(value *big.Int) (*CurrencyValue, error)
 	Balance() (CurrencyValue, error)
@@ -30,7 +32,6 @@ type CurrencySdk interface {
 }
 
 type CurrencySdkModule struct {
-	CommonModule
 	Client *ethclient.Client
 	Address string
 	module *abi.Currency
@@ -146,7 +147,35 @@ func NewCurrencySdkModule(client *ethclient.Client, asset string) (*CurrencySdkM
 }
 
 func (sdk *CurrencySdkModule) Get() (Currency, error) {
-	panic("implement me")
+	if strings.HasPrefix(sdk.Address, "0x0000000") {
+		return Currency{}, nil
+	}
+
+	erc20Module, err := newErc20SdkModule(sdk.Client, sdk.Address, &SdkOptions{})
+	if err != nil {
+		return Currency{}, err
+	}
+
+	name, err := erc20Module.module.Name(&bind.CallOpts{})
+	if err != nil {
+		return Currency{}, err
+	}
+
+	symbol, err := erc20Module.module.Symbol(&bind.CallOpts{})
+	if err != nil {
+		return Currency{}, err
+	}
+
+	decimals, err := erc20Module.module.Decimals(&bind.CallOpts{})
+	if err != nil {
+		return Currency{}, err
+	}
+
+	return Currency{
+		Name: name,
+		Symbol: symbol,
+		Decimals: decimals,
+	}, nil
 }
 
 func (sdk *CurrencySdkModule) GetValue(value *big.Int) (*CurrencyValue, error) {

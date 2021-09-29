@@ -103,3 +103,27 @@ func getMarketplaceModule() (sdk.MarketSdk, error) {
 	return module, nil
 }
 
+func getCurrencyModule() (sdk.CurrencySdk, error) {
+	client, err := ethclient.Dial(chainRpcUrl)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Creating a Currency sdk module on chain %v, contract %v\n", chainRpcUrl, currencyContractAddress)
+
+	// You can mock the sdk.NftSdk interface when writing tests against the SDK
+	var module sdk.CurrencySdk
+	if caller, err := sdk.NewCurrencySdkModule(client, currencyContractAddress); err != nil {
+		log.Println("Failed to create an currency caller object")
+		panic(err)
+	} else {
+		module = caller
+	}
+
+	if err := module.SetPrivateKey(privateKey); err != nil {
+		panic(err)
+	}
+
+	return module, nil
+}
+
