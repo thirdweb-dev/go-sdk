@@ -299,7 +299,8 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 	if strings.HasPrefix(listingCurrency.String(), "0x000000000000") {
 		currencyMetadata = nil
 	} else {
-		// TODO: this is bad, don't want to create an instance of the module every time but idk how else to get it in here
+		// TODO: this is bad, don't want to create an instance of the module every time
+		// but idk how else to get it in here given that the address is dynamic per listing
 		// damages testability
 		currency, err := newCurrencyModule(sdk.Client, listingCurrency.Hex(), sdk.main)
 		if err != nil {

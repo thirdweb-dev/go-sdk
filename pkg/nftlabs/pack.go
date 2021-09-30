@@ -71,6 +71,7 @@ func (sdk *PackModule) deployContract(name string) error {
 	return nil
 }
 
+// Still a WIP, do not use
 func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return PackMetadata{}, &NoSignerError{typeName: "pack"}
@@ -196,8 +197,9 @@ func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
 	}, nil
 }
 
+// Work in progress, do not use
 func (sdk *PackModule) Open(packId *big.Int) (PackNft, error) {
-	panic("implement me")
+	panic("this method will be implemented soon")
 }
 
 func (sdk *PackModule) GetAsync(tokenId *big.Int, ch chan<- PackMetadata, wg *sync.WaitGroup) {
@@ -302,7 +304,18 @@ func (sdk *PackModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, er
 }
 
 func (sdk *PackModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error {
-	panic("implement me")
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "pack"}
+	}
+	if tx, err := sdk.module.SafeTransferFrom(&bind.TransactOpts{
+		NoSend: false,
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
+	}, sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId, quantity, nil); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
 
 func (sdk *PackModule) getNewPack(logs []*types.Log) (*big.Int, error) {
