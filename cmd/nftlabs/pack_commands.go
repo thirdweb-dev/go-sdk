@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/nftlabs/nftlabs-sdk-go/nftlabs"
+	"github.com/nftlabs/nftlabs-sdk-go/pkg/nftlabs"
 	"github.com/spf13/cobra"
 	"log"
 	"math/big"

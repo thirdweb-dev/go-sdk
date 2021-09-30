@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/nftlabs/nftlabs-sdk-go/nftlabs"
+	"github.com/nftlabs/nftlabs-sdk-go/pkg/nftlabs"
 	"github.com/spf13/cobra"
 	"math/big"
 )

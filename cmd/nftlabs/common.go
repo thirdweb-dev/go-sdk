@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/nftlabs/nftlabs-sdk-go/nftlabs"
+	"github.com/nftlabs/nftlabs-sdk-go/pkg/nftlabs"
 	"log"
 )
 
