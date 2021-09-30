@@ -9,7 +9,7 @@ func TestReplaceGatewayWithSlash(t *testing.T) {
 	gatewayUrl := "https://cloudflare-ipfs.com/ipfs/"
 
 	expected := "https://cloudflare-ipfs.com/ipfs/bafkreiebhfacq6ccsuywmmc44ictgglr33zipvwv3lhg3rzs7wnkwlro4e"
-	result := replaceIpfsWithGateway(ipfsUrl, gatewayUrl)
+	result := replaceIpfsPrefixWithGateway(ipfsUrl, gatewayUrl)
 	if result != expected {
 		t.Fatalf("Got %v expected %v", result, expected)
 	}
@@ -20,7 +20,7 @@ func TestReplaceGatewayWithoutSlash(t *testing.T) {
 	gatewayUrl := "https://cloudflare-ipfs.com/ipfs"
 
 	expected := "https://cloudflare-ipfs.com/ipfs/bafkreiebhfacq6ccsuywmmc44ictgglr33zipvwv3lhg3rzs7wnkwlro4e"
-	result := replaceIpfsWithGateway(ipfsUrl, gatewayUrl)
+	result := replaceIpfsPrefixWithGateway(ipfsUrl, gatewayUrl)
 	if result != expected {
 		t.Fatalf("Got %v expected %v", result, expected)
 	}

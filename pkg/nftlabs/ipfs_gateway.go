@@ -24,18 +24,18 @@ const (
 	nftLabsApiUrl = "https://upload.nftlabs.co"
 )
 
-type IpfsGateway struct {
+type IpfsStorage struct {
 	Url string
 }
 
-func newIpfsGateway(uri string) Gateway {
-	return &IpfsGateway{
+func newIpfsStorage(uri string) Storage {
+	return &IpfsStorage{
 		Url: uri,
 	}
 }
 
-func (gw *IpfsGateway) Get(uri string) ([]byte, error) {
-	gatewayUrl := replaceIpfsWithGateway(uri, gw.Url)
+func (gw *IpfsStorage) Get(uri string) ([]byte, error) {
+	gatewayUrl := replaceIpfsPrefixWithGateway(uri, gw.Url)
 	resp, err := http.Get(gatewayUrl)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (gw *IpfsGateway) Get(uri string) ([]byte, error) {
 	return body, nil
 }
 
-func (gw *IpfsGateway) Upload(data interface{}, contractAddress string, signerAddress string) (string, error) {
+func (gw *IpfsStorage) Upload(data interface{}, contractAddress string, signerAddress string) (string, error) {
 	client := &http.Client{}
 	jsonData, err := json.Marshal(data)
 	if err != nil {

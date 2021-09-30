@@ -2,7 +2,7 @@ package nftlabs
 
 import "strings"
 
-func replaceIpfsWithGateway(ipfsUrl string, gatewayUrl string) string {
+func replaceIpfsPrefixWithGateway(ipfsUrl string, gatewayUrl string) string {
 	if ipfsUrl == "" {
 		return ""
 	}

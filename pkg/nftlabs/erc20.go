@@ -17,7 +17,6 @@ type erc20Module struct {
 	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
-	gateway Gateway
 	module  *abi.ERC20
 
 	privateKey    *ecdsa.PrivateKey
@@ -25,25 +24,16 @@ type erc20Module struct {
 }
 
 func newErc20SdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*erc20Module, error) {
-	if opt.IpfsGatewayUrl == "" {
-		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
-	}
-
 	module, err := abi.NewERC20(common.HexToAddress(address), client)
 	if err != nil {
 		// TODO: return better error
 		return nil, err
 	}
 
-	// internally we force this gw, but could allow an override for testing
-	var gw Gateway
-	gw = newIpfsGateway(opt.IpfsGatewayUrl)
-
 	return &erc20Module{
 		Client:  client,
 		Address: address,
 		Options: opt,
-		gateway: gw,
 		module:  module,
 	}, nil
 }
