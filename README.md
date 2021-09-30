@@ -62,7 +62,7 @@ func main() {
 
 ## Examples
 
-Checkout the sdk usage examples [here](https://github.com/nftlabs/nftlabs-sdk-go/tree/master/examples).
+Checkout the sdk usage examples [here](https://github.com/nftlabs/nftlabs-sdk-go/tree/master/examples) and our CLI example [here](https://github.com/nftlabs/nftlabs-sdk-go/tree/master/cmd/nftlabs)
 
 ## Getting the CLI
 
