@@ -237,6 +237,7 @@ type ISdk interface {
 	GetMarketModule(address string) (Market, error)
 	GetCurrencyModule(address string) (Currency, error)
 	GetPackModule(address string) (Pack, error)
+	GetNftCollectionModule(address string) (NftCollection, error)
 	// contains filtered or unexported methods
 }
 ```
@@ -416,7 +417,6 @@ type Nft interface {
 
 ```go
 type NftCollection interface {
-	CommonModule
 	Get(tokenId *big.Int) (CollectionMetadata, error)
 	GetAll() ([]CollectionMetadata, error)
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
@@ -436,16 +436,9 @@ type NftCollection interface {
 type NftCollectionModule struct {
 	Client  *ethclient.Client
 	Address string
-	Options *SdkOptions
 }
 ```
 
-
-#### func  NewNftCollectionModule
-
-```go
-func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftCollectionModule, error)
-```
 
 #### func (*NftCollectionModule) Balance
 
@@ -499,12 +492,6 @@ func (sdk *NftCollectionModule) Mint(args MintCollectionArgs) error
 
 ```go
 func (sdk *NftCollectionModule) SetApproved(operator string, approved bool) error
-```
-
-#### func (*NftCollectionModule) SetPrivateKey
-
-```go
-func (sdk *NftCollectionModule) SetPrivateKey(privateKey string) error
 ```
 
 #### func (*NftCollectionModule) Transfer
@@ -834,6 +821,12 @@ func (sdk *Sdk) GetGateway(address string) Gateway
 
 ```go
 func (sdk *Sdk) GetMarketModule(address string) (Market, error)
+```
+
+#### func (*Sdk) GetNftCollectionModule
+
+```go
+func (sdk *Sdk) GetNftCollectionModule(address string) (NftCollection, error)
 ```
 
 #### func (*Sdk) GetNftModule
