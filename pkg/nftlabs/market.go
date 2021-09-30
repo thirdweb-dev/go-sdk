@@ -311,7 +311,7 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 			// TODO: return better error
 			return Listing{}, err
 		} else {
-			currencyMetadata = currencyValue
+			currencyMetadata = &currencyValue
 		}
 	}
 
