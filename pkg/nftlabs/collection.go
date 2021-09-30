@@ -135,15 +135,31 @@ func (sdk *NftCollectionModule) Balance(tokenId *big.Int) (*big.Int, error) {
 }
 
 func (sdk *NftCollectionModule) IsApproved(address string, operator string) (bool, error) {
-	panic("implement me")
+	return sdk.module.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
 }
 
 func (sdk *NftCollectionModule) SetApproved(operator string, approved bool) error {
-	panic("implement me")
+	if tx, err := sdk.module.SetApprovalForAll(&bind.TransactOpts{
+		NoSend: false,
+		Signer: sdk.main.getSigner(),
+		From: sdk.main.getSignerAddress(),
+	}, common.HexToAddress(operator), approved); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
 
 func (sdk *NftCollectionModule) Transfer(to string, tokenId *big.Int, amount *big.Int) error {
-	panic("implement me")
+	tx, err := sdk.module.SafeTransferFrom(&bind.TransactOpts{
+		NoSend: false,
+		From: sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
+	}, sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId, amount, nil)
+	if err != nil {
+		return err
+	}
+	return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
 }
 
 func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]CollectionMetadata, error) {
@@ -219,6 +235,7 @@ func (sdk *NftCollectionModule) getNewCollection(logs []*types.Log) ([]*big.Int,
 	return tokenIds, nil
 }
 
+// Could/should go into the Storage interface UploadBatch(args ...interface{})
 func (sdk *NftCollectionModule) uploadBatchMetadata(args []CreateCollectionArgs) ([]collectionAssetMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return nil, &NoSignerError{typeName: "collection"}
@@ -258,6 +275,14 @@ func (sdk *NftCollectionModule) uploadBatchMetadata(args []CreateCollectionArgs)
 }
 
 func (sdk *NftCollectionModule) Mint(args MintCollectionArgs) error {
-	panic("implement me")
+	if tx, err := sdk.module.Mint(&bind.TransactOpts{
+		NoSend: false,
+		Signer: sdk.main.getSigner(),
+		From: sdk.main.getSignerAddress(),
+	}, common.HexToAddress(sdk.Address), args.TokenId, args.Amount, nil); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
 
