@@ -46,5 +46,7 @@ func initConfig() {
 }
 
 func main() {
-	Execute()
+	if err := Execute(); err != nil {
+		panic(err)
+	}
 }

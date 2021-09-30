@@ -20,8 +20,8 @@ const (
 )
 
 var (
-	contractAddress string
-	nftMetadata nftlabs.MintNftMetadata
+	nftContractAddress string
+	nftMetadata        nftlabs.MintNftMetadata
 	sellerFeeBasisPoints int64
 )
 
@@ -86,6 +86,6 @@ func init() {
 	_ = nftMintCmd.MarkPersistentFlagRequired(nameFlag)
 	nftCmd.AddCommand(nftMintCmd)
 
-	nftCmd.PersistentFlags().StringVarP(&contractAddress, "address", "a", "", "nft contract address")
+	nftCmd.PersistentFlags().StringVarP(&nftContractAddress, "address", "a", "", "nft contract address")
 	nftCmd.AddCommand(nftGetAllCmd)
 }

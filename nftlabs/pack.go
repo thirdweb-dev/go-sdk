@@ -267,7 +267,7 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	defer close(ch)
 
 	// TODO: I hate instantiating the module here, could move to New function because it shares the same address as the pack contract
-	nftModule, err := NewNftSdkModule(sdk.Client, sdk.Address, sdk.Options)
+	nftModule, err := NewNftSdkModule(sdk.Client, sdk.Address, sdk.Options, nil)
 	if err != nil {
 		return nil, err
 	}

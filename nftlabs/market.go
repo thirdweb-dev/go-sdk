@@ -333,7 +333,7 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 	if !strings.HasPrefix(listing.AssetContract.String(), "0x000000000000") {
 		// TODO: again, bad, need to create this in the function because we don't know the nft contract when we get here
 		// damages testability
-		nftModule, err := NewNftSdkModule(sdk.Client, listing.AssetContract.Hex(), &SdkOptions{})
+		nftModule, err := NewNftSdkModule(sdk.Client, listing.AssetContract.Hex(), &SdkOptions{}, nil)
 		if err != nil {
 			// TODO: return better error
 			return Listing{}, err
