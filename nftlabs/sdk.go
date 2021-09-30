@@ -117,6 +117,7 @@ func (sdk *Sdk) setPrivateKey(privateKey string) error {
 	} else {
 		sdk.privateKey = pKey
 		sdk.signerAddress = publicAddress
+		sdk.rawPrivateKey = privateKey
 	}
 	return nil
 }
