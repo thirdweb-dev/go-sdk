@@ -2,7 +2,6 @@ package nftlabs
 
 import (
 	"context"
-	"crypto/ecdsa"
 	"log"
 	"math/big"
 	"strings"
@@ -17,7 +16,6 @@ import (
 )
 
 type Market interface {
-	CommonModule
 	GetListing(listingId *big.Int) (Listing, error)
 	GetAll(filter ListingFilter) ([]Listing, error)
 	List(args NewListingArgs) (Listing, error)
@@ -31,34 +29,27 @@ type Market interface {
 type MarketModule struct {
 	Client  *ethclient.Client
 	Address string
-	Options *SdkOptions
 	gateway Gateway
 	module  *abi.Market
 
-	privateKey    *ecdsa.PrivateKey
-	rawPrivateKey string
-	signerAddress common.Address
+	main ISdk
 }
 
-func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*MarketModule, error) {
-	if opt.IpfsGatewayUrl == "" {
-		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
-	}
-
+func newMarketSdkModule(client *ethclient.Client, address string, main ISdk) (*MarketModule, error) {
 	module, err := abi.NewMarket(common.HexToAddress(address), client)
 	if err != nil {
 		return nil, err
 	}
 
 	// internally we force this gw, but could allow an override for testing
-	gw := NewCloudflareGateway(opt.IpfsGatewayUrl)
+	gw := NewCloudflareGateway(main.getOptions().IpfsGatewayUrl)
 
 	return &MarketModule{
 		Client:  client,
 		Address: address,
-		Options: opt,
 		gateway: gw,
 		module:  module,
+		main: main,
 	}, nil
 }
 
@@ -69,8 +60,8 @@ func (sdk *MarketModule) GetMarketFeeBps() (*big.Int, error) {
 func (sdk *MarketModule) SetMarketFeeBps(fee *big.Int) error {
 	if tx, err := sdk.module.SetMarketFeeBps(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, fee); err != nil {
 		return err
 	} else {
@@ -167,7 +158,7 @@ func (sdk *MarketModule) GetAll(filter ListingFilter) ([]Listing, error) {
 
 // TODO: change args to struct
 func (sdk *MarketModule) List(args NewListingArgs) (Listing, error) {
-	if sdk.signerAddress == common.HexToAddress("0") {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return Listing{}, &NoSignerError{typeName: "nft"}
 	}
 
@@ -205,19 +196,19 @@ func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
 		// TODO: return better error
 		return Listing{}, err
 	}
-	if err := erc721Module.SetPrivateKey(sdk.rawPrivateKey); err != nil {
+	if err := erc721Module.SetPrivateKey(sdk.main.getRawPrivateKey()); err != nil {
 		return Listing{}, err
 	}
 
-	log.Printf("Checking if caller (%v) is approved\n", sdk.signerAddress)
-	if isApproved, err := erc721Module.module.ERC721Caller.IsApprovedForAll(&bind.CallOpts{}, sdk.signerAddress, common.HexToAddress(sdk.Address)); err != nil {
+	log.Printf("Checking if caller (%v) is approved\n", sdk.main.getSignerAddress())
+	if isApproved, err := erc721Module.module.ERC721Caller.IsApprovedForAll(&bind.CallOpts{}, sdk.main.getSignerAddress(), common.HexToAddress(sdk.Address)); err != nil {
 		return Listing{}, err
 	} else {
 		log.Printf("Caller is not approved, setting approval on marketplace %v\n", sdk.Address)
 		if !isApproved {
 			if _, err := erc721Module.module.ERC721Transactor.SetApprovalForAll(&bind.TransactOpts{
 				NoSend: false,
-				From:   sdk.signerAddress,
+				From:   sdk.main.getSignerAddress(),
 				Signer: erc721Module.getSigner(),
 			}, common.HexToAddress(sdk.Address), true); err != nil {
 				// return better error describing that "Failed to Gran approval on PackMetadata contract"
@@ -226,12 +217,12 @@ func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
 		}
 	}
 
-	log.Printf("Caller %v has been approved from %v\n", sdk.Address, sdk.signerAddress.String())
+	log.Printf("Caller %v has been approved from %v\n", sdk.Address, sdk.main.getSignerAddress().String())
 
 	result, err := sdk.module.MarketTransactor.List(&bind.TransactOpts{
 		NoSend:  false,
-		Signer:  sdk.getSigner(),
-		From:    sdk.signerAddress,
+		Signer:  sdk.main.getSigner(),
+		From:    sdk.main.getSignerAddress(),
 		Context: context.Background(),
 	}, packAddress, args.TokenId, currencyAddress, args.Price, args.Quantity, args.RewardsPerOpen, args.SecondsUntilOpenStart, args.SecondsUntilOpenEnd)
 	if err != nil {
@@ -284,8 +275,8 @@ func (sdk *MarketModule) UnlistAll(listingId *big.Int) error {
 func (sdk *MarketModule) Unlist(listingId *big.Int, quantity *big.Int) error {
 	if tx, err := sdk.module.Unlist(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, listingId, quantity); err != nil {
 		return err
 	} else {
@@ -376,31 +367,4 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 		SaleStart:        saleStart,
 		SaleEnd:          saleEnd,
 	}, nil
-}
-
-func (sdk *MarketModule) SetPrivateKey(privateKey string) error {
-	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
-		return err
-	} else {
-		sdk.rawPrivateKey = privateKey
-		sdk.privateKey = pKey
-		sdk.signerAddress = publicAddress
-	}
-	return nil
-}
-
-func (sdk *MarketModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-		ctx := context.Background()
-		chainId, _ := sdk.Client.ChainID(ctx)
-		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
-	}
-}
-
-func (sdk *MarketModule) getSignerAddress() common.Address {
-	if sdk.signerAddress == common.HexToAddress("0") {
-		return common.HexToAddress(sdk.Address)
-	} else {
-		return sdk.signerAddress
-	}
 }
