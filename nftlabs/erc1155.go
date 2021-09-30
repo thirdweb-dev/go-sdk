@@ -24,7 +24,7 @@ type erc1155Module struct {
 	signerAddress common.Address
 }
 
-func newErc1155SdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*erc1155Module, error) {
+func newErc1155Module(client *ethclient.Client, address string, opt *SdkOptions) (*erc1155Module, error) {
 	if opt.IpfsGatewayUrl == "" {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}

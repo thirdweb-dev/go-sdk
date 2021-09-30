@@ -2,7 +2,6 @@ package nftlabs
 
 import (
 	"context"
-	"crypto/ecdsa"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -20,7 +19,6 @@ import (
 )
 
 type Pack interface {
-	CommonModule
 	Open(packId *big.Int) (PackNft, error)
 	Get(tokenId *big.Int) (PackMetadata, error)
 	GetAll() ([]PackMetadata, error)
@@ -34,18 +32,13 @@ type Pack interface {
 type PackModule struct {
 	Client        *ethclient.Client
 	Address       string
-	Options       *SdkOptions
 	gateway       Gateway
-	privateKey    *ecdsa.PrivateKey
-	signerAddress common.Address
 	module        *abi.Pack
+
+	main ISdk
 }
 
-func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackModule, error) {
-	if opt.IpfsGatewayUrl == "" {
-		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
-	}
-
+func newPackModule(client *ethclient.Client, address string, main ISdk) (*PackModule, error) {
 	module, err := abi.NewPack(common.HexToAddress(address), client)
 	if err != nil {
 		return nil, err
@@ -53,18 +46,18 @@ func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions)
 
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
-	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
+	gw = NewCloudflareGateway(main.getOptions().IpfsGatewayUrl)
 
 	return &PackModule{
 		Client:  client,
 		Address: address,
-		Options: opt,
 		gateway: gw,
 		module:  module,
+		main: main,
 	}, nil
 }
 
-func (sdk *PackModule) DeployContract(name string) error {
+func (sdk *PackModule) deployContract(name string) error {
 	//chainID, err := sdk.Client.ChainID(context.Background())
 	//if err != nil {
 	//	return err
@@ -85,11 +78,11 @@ func (sdk *PackModule) DeployContract(name string) error {
 }
 
 func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
-	if sdk.signerAddress == common.HexToAddress("0") {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return PackMetadata{}, &NoSignerError{typeName: "pack"}
 	}
 
-	log.Printf("Wallet used = %v\n", sdk.signerAddress)
+	log.Printf("Wallet used = %v\n", sdk.main.getSignerAddress())
 
 	ids := make([]*big.Int, 0)
 	counts := make([]*big.Int, 0)
@@ -99,7 +92,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		counts = append(counts, addition.Supply)
 	}
 
-	nftSdkModule, err := newErc1155SdkModule(sdk.Client, args.AssetContractAddress, sdk.Options)
+	erc155Module, err := newErc1155Module(sdk.Client, args.AssetContractAddress, sdk.main.getOptions())
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -122,7 +115,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		},
 	}
 
-	uri, err := sdk.gateway.Upload(args.Metadata, sdk.Address, sdk.signerAddress.String())
+	uri, err := sdk.gateway.Upload(args.Metadata, sdk.Address, sdk.main.getSignerAddress().String())
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -139,12 +132,12 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 	}
 
 	// TODO: check if whats added to pack is erc721 or erc1155, will do later when we support erc721
-	tx, err := nftSdkModule.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
-		From:     sdk.signerAddress,
-		Signer:   sdk.getSigner(),
+	tx, err := erc155Module.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
+		From:     sdk.main.getSignerAddress(),
+		Signer:   sdk.main.getSigner(),
 		NoSend:   false,
 		GasLimit: 100000,
-	}, sdk.signerAddress, sdk.signerAddress, ids, counts, bytes)
+	}, sdk.main.getSignerAddress(), sdk.main.getSignerAddress(), ids, counts, bytes)
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -267,7 +260,7 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	defer close(ch)
 
 	// TODO: I hate instantiating the module here, could move to New function because it shares the same address as the pack contract
-	nftModule, err := NewNftSdkModule(sdk.Client, sdk.Address, sdk.Options, nil)
+	nftModule, err := newNftModule(sdk.Client, sdk.Address, sdk.main)
 	if err != nil {
 		return nil, err
 	}
@@ -304,11 +297,11 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 }
 
 func (sdk *PackModule) Balance(tokenId *big.Int) (*big.Int, error) {
-	if sdk.signerAddress == common.HexToAddress("0") {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return nil, &NoSignerError{typeName: "pack"}
 	}
 
-	return sdk.module.PackCaller.BalanceOf(&bind.CallOpts{}, sdk.signerAddress, tokenId)
+	return sdk.module.PackCaller.BalanceOf(&bind.CallOpts{}, sdk.main.getSignerAddress(), tokenId)
 }
 
 func (sdk *PackModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error) {
@@ -317,32 +310,6 @@ func (sdk *PackModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, er
 
 func (sdk *PackModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error {
 	panic("implement me")
-}
-
-func (sdk *PackModule) SetPrivateKey(privateKey string) error {
-	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
-		return err
-	} else {
-		sdk.privateKey = pKey
-		sdk.signerAddress = publicAddress
-	}
-	return nil
-}
-
-func (sdk *PackModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-		ctx := context.Background()
-		chainId, _ := sdk.Client.ChainID(ctx)
-		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
-	}
-}
-
-func (sdk *PackModule) getSignerAddress() common.Address {
-	if sdk.signerAddress == common.HexToAddress("0") {
-		return common.HexToAddress(sdk.Address)
-	} else {
-		return sdk.signerAddress
-	}
 }
 
 func (sdk *PackModule) getNewPack(logs []*types.Log) (*big.Int, error) {

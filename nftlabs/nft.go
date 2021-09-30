@@ -210,12 +210,7 @@ func (sdk *NftModule) GetOwned(address string) ([]NftMetadata, error) {
 	panic("implement me")
 }
 
-func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions, sdk ISdk) (Nft, error) {
-	if opt.IpfsGatewayUrl == "" {
-		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
-	}
-
-
+func newNftModule(client *ethclient.Client, address string, main ISdk) (Nft, error) {
 	module, err := abi.NewNFT(common.HexToAddress(address), client)
 	if err != nil {
 		// TODO: return better error
@@ -224,15 +219,14 @@ func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions, 
 
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
-	gw = NewCloudflareGateway(opt.IpfsGatewayUrl)
+	gw = NewCloudflareGateway(main.getOptions().IpfsGatewayUrl)
 
 	return &NftModule{
 		Client:  client,
 		Address: address,
-		Options: opt,
 		gateway: gw,
 		module:  module,
-		main: sdk,
+		main: main,
 	}, nil
 }
 

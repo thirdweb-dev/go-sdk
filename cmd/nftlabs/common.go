@@ -42,28 +42,18 @@ func getNftModule() (nftlabs.Nft, error) {
 }
 
 func getPackModule() (nftlabs.Pack, error) {
-	// TODO: need to reuse these
-	client, err := ethclient.Dial(chainRpcUrl)
-	if err != nil {
-		log.Fatal(err)
+	if nftlabsSdk == nil {
+		initSdk()
 	}
 
 	log.Printf("Creating a pack nftlabs module on chain %v, contract %v\n", chainRpcUrl, packContractAddress)
 
-	// You can mock the nftlabs.Nft interface when writing tests against the SDK
-	var module nftlabs.Pack
-	if caller, err := nftlabs.NewPackSdkModule(client, packContractAddress, &nftlabs.SdkOptions{}); err != nil {
-		log.Println("Failed to create a pack nftlabs module")
+	if caller, err := nftlabsSdk.GetPackModule(packContractAddress); err != nil {
+		log.Println("Failed to create a Pack module")
 		panic(err)
 	} else {
-		module = caller
+		return caller, nil
 	}
-
-	if err := module.SetPrivateKey(privateKey); err != nil {
-		panic(err)
-	}
-
-	return module, nil
 }
 
 func getCollectionModule() (nftlabs.NftCollection, error) {
