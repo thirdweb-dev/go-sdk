@@ -2,6 +2,7 @@
 --
     import "."
 
+
 ## Usage
 
 ```go
@@ -35,6 +36,23 @@ func NewCloudflareGateway(uri string) *CloudflareGateway
 func (gw *CloudflareGateway) Get(uri string) ([]byte, error)
 ```
 
+#### func (*CloudflareGateway) Upload
+
+```go
+func (gw *CloudflareGateway) Upload(data interface{}, contractAddress string, signerAddress string) (string, error)
+```
+
+#### type CollectionMetadata
+
+```go
+type CollectionMetadata struct {
+	NftMetadata
+	Creator string   `json:"creator"`
+	Supply  *big.Int `json:"supply"`
+}
+```
+
+
 #### type CommonModule
 
 ```go
@@ -45,15 +63,26 @@ type CommonModule interface {
 ```
 
 
+#### type CreateCollectionArgs
+
+```go
+type CreateCollectionArgs struct {
+	Supply   *big.Int    `json:"supply"`
+	Metadata interface{} `json:"metadata"`
+}
+```
+
+
 #### type CreatePackArgs
 
 ```go
 type CreatePackArgs struct {
 	AssetContractAddress  string
-	Assets                []PackNftAddition
+	Assets                []PackAssetAddition
 	SecondsUntilOpenStart *big.Int
 	SecondsUntilOpenEnd   *big.Int
 	RewardsPerOpen        *big.Int
+	Metadata              interface{}
 }
 ```
 
@@ -61,80 +90,137 @@ type CreatePackArgs struct {
 #### type Currency
 
 ```go
-type Currency struct {
-	Name     string
-	Symbol   string
-	Decimals uint8
-}
-```
-
-
-#### type CurrencySdk
-
-```go
-type CurrencySdk interface {
-	Get() (Currency, error)
+type Currency interface {
+	Get() (CurrencyMetadata, error)
 	GetValue(value *big.Int) (*CurrencyValue, error)
 	Balance() (CurrencyValue, error)
 	BalanceOf(address string, tokenId string) (CurrencyValue, error)
 	Transfer(to string, amount *big.Int) error
+	Allowance(spender string) (*big.Int, error)
+	SetAllowance(spender string, amount *big.Int) error
+	Mint(amount *big.Int) error
+	Burn(amount *big.Int) error
+	BurnFrom(from string, amount *big.Int) error
+	TransferFrom(from string, to string, amount *big.Int) error
+	GrantRole(role Role, address string) error
+	RevokeRole(role Role, address string) error
+	TotalSupply() (*big.Int, error)
 }
 ```
 
 
-#### type CurrencySdkModule
+#### type CurrencyMetadata
 
 ```go
-type CurrencySdkModule struct {
+type CurrencyMetadata struct {
+	Name     string `json:"name"`
+	Symbol   string `json:"symbol"`
+	Decimals uint8  `json:"decimals"`
+}
+```
+
+
+#### type CurrencyModule
+
+```go
+type CurrencyModule struct {
 	Client  *ethclient.Client
 	Address string
 }
 ```
 
 
-#### func  NewCurrencySdkModule
+#### func (*CurrencyModule) Allowance
 
 ```go
-func NewCurrencySdkModule(client *ethclient.Client, asset string) (*CurrencySdkModule, error)
+func (sdk *CurrencyModule) Allowance(spender string) (*big.Int, error)
 ```
 
-#### func (*CurrencySdkModule) Balance
+#### func (*CurrencyModule) Balance
 
 ```go
-func (c *CurrencySdkModule) Balance() (CurrencyValue, error)
+func (sdk *CurrencyModule) Balance() (CurrencyValue, error)
 ```
 
-#### func (*CurrencySdkModule) BalanceOf
+#### func (*CurrencyModule) BalanceOf
 
 ```go
-func (c *CurrencySdkModule) BalanceOf(address string, tokenId string) (CurrencyValue, error)
+func (sdk *CurrencyModule) BalanceOf(address string, tokenId string) (CurrencyValue, error)
 ```
 
-#### func (*CurrencySdkModule) Get
+#### func (*CurrencyModule) Burn
 
 ```go
-func (c *CurrencySdkModule) Get() (Currency, error)
+func (sdk *CurrencyModule) Burn(amount *big.Int) error
 ```
 
-#### func (*CurrencySdkModule) GetValue
+#### func (*CurrencyModule) BurnFrom
 
 ```go
-func (c *CurrencySdkModule) GetValue(value *big.Int) (*CurrencyValue, error)
+func (sdk *CurrencyModule) BurnFrom(from string, amount *big.Int) error
 ```
 
-#### func (*CurrencySdkModule) Transfer
+#### func (*CurrencyModule) Get
 
 ```go
-func (c *CurrencySdkModule) Transfer(to string, amount *big.Int) error
+func (sdk *CurrencyModule) Get() (CurrencyMetadata, error)
+```
+
+#### func (*CurrencyModule) GetValue
+
+```go
+func (sdk *CurrencyModule) GetValue(value *big.Int) (*CurrencyValue, error)
+```
+
+#### func (*CurrencyModule) GrantRole
+
+```go
+func (sdk *CurrencyModule) GrantRole(role Role, address string) error
+```
+
+#### func (*CurrencyModule) Mint
+
+```go
+func (sdk *CurrencyModule) Mint(amount *big.Int) error
+```
+
+#### func (*CurrencyModule) RevokeRole
+
+```go
+func (sdk *CurrencyModule) RevokeRole(role Role, address string) error
+```
+
+#### func (*CurrencyModule) SetAllowance
+
+```go
+func (sdk *CurrencyModule) SetAllowance(spender string, amount *big.Int) error
+```
+
+#### func (*CurrencyModule) TotalSupply
+
+```go
+func (sdk *CurrencyModule) TotalSupply() (*big.Int, error)
+```
+
+#### func (*CurrencyModule) Transfer
+
+```go
+func (sdk *CurrencyModule) Transfer(to string, amount *big.Int) error
+```
+
+#### func (*CurrencyModule) TransferFrom
+
+```go
+func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int) error
 ```
 
 #### type CurrencyValue
 
 ```go
 type CurrencyValue struct {
-	Currency
-	Value        string
-	DisplayValue uint64
+	CurrencyMetadata
+	Value        *big.Int `json:"value"`
+	DisplayValue string   `json:"displayValue"`
 }
 ```
 
@@ -144,6 +230,20 @@ type CurrencyValue struct {
 ```go
 type Gateway interface {
 	Get(uri string) ([]byte, error)
+	Upload(data interface{}, contractAddress string, signerAddress string) (string, error)
+}
+```
+
+
+#### type ISdk
+
+```go
+type ISdk interface {
+	GetNftModule(address string) (Nft, error)
+	GetMarketModule(address string) (Market, error)
+	GetCurrencyModule(address string) (Currency, error)
+	GetPackModule(address string) (Pack, error)
+	// contains filtered or unexported methods
 }
 ```
 
@@ -152,47 +252,194 @@ type Gateway interface {
 
 ```go
 type Listing struct {
-	Id               *big.Int
-	Seller           common.Address
-	TokenContract    common.Address
-	TokenId          *big.Int
-	TokenMetadata    *NftMetadata
-	Quantity         *big.Int
-	CurrentContract  common.Address
-	CurrencyMetadata *CurrencyValue // TODO: use currency type here
-	Price            *big.Int
-	SaleStart        *time.Time
-	SaleEnd          *time.Time
+	Id               *big.Int       `json:"id"`
+	Seller           common.Address `json:"seller"`
+	TokenContract    common.Address `json:"tokenContract"`
+	TokenId          *big.Int       `json:"tokenId"`
+	TokenMetadata    *NftMetadata   `json:"tokenMetadata"`
+	Quantity         *big.Int       `json:"quantity"`
+	CurrentContract  common.Address `json:"currentContract"`
+	CurrencyMetadata *CurrencyValue `json:"currencyMetadata"`
+	Price            *big.Int       `json:"price"`
+	SaleStart        *time.Time     `json:"saleStart"`
+	SaleEnd          *time.Time     `json:"saleEnd"`
 }
 ```
 
 
-#### type MarketSdk
+#### type ListingFilter
 
 ```go
-type MarketSdk interface {
-	CommonModule
+type ListingFilter struct {
+	Seller        string   `json:"seller"`
+	TokenContract string   `json:"tokenContract"`
+	TokenId       *big.Int `json:"tokenId"`
+}
+```
+
+
+#### type Market
+
+```go
+type Market interface {
 	GetListing(listingId *big.Int) (Listing, error)
-	GetAll() ([]Listing, error)
-	List(
-		assetContract string,
-		tokenId *big.Int,
-		currencyContractAddress string,
-		price *big.Int,
-		quantity *big.Int,
-		secondsUntilStart *big.Int,
-		secondsUntilEnd *big.Int) (Listing, error)
+	GetAll(filter ListingFilter) ([]Listing, error)
+	List(args NewListingArgs) (Listing, error)
 	UnlistAll(listingId *big.Int) error
 	Unlist(listingId *big.Int, quantity *big.Int) error
 	Buy(listingId *big.Int, quantity *big.Int) error
+	GetMarketFeeBps() (*big.Int, error)
+	SetMarketFeeBps(fee *big.Int) error
 }
 ```
 
 
-#### type MarketSdkModule
+#### type MarketModule
 
 ```go
-type MarketSdkModule struct {
+type MarketModule struct {
+	Client  *ethclient.Client
+	Address string
+}
+```
+
+
+#### func (*MarketModule) Buy
+
+```go
+func (sdk *MarketModule) Buy(listingId *big.Int, quantity *big.Int) error
+```
+
+#### func (*MarketModule) GetAll
+
+```go
+func (sdk *MarketModule) GetAll(filter ListingFilter) ([]Listing, error)
+```
+
+#### func (*MarketModule) GetListing
+
+```go
+func (sdk *MarketModule) GetListing(listingId *big.Int) (Listing, error)
+```
+
+#### func (*MarketModule) GetMarketFeeBps
+
+```go
+func (sdk *MarketModule) GetMarketFeeBps() (*big.Int, error)
+```
+
+#### func (*MarketModule) List
+
+```go
+func (sdk *MarketModule) List(args NewListingArgs) (Listing, error)
+```
+TODO: change args to struct
+
+#### func (*MarketModule) SetMarketFeeBps
+
+```go
+func (sdk *MarketModule) SetMarketFeeBps(fee *big.Int) error
+```
+
+#### func (*MarketModule) Unlist
+
+```go
+func (sdk *MarketModule) Unlist(listingId *big.Int, quantity *big.Int) error
+```
+
+#### func (*MarketModule) UnlistAll
+
+```go
+func (sdk *MarketModule) UnlistAll(listingId *big.Int) error
+```
+
+#### type MintCollectionArgs
+
+```go
+type MintCollectionArgs struct {
+	TokenId *big.Int `json:"tokenId"`
+	Amount  *big.Int `json:"amount"`
+}
+```
+
+
+#### type MintNftMetadata
+
+```go
+type MintNftMetadata struct {
+	Name                 string   `json:"name"`
+	Description          string   `json:"description"`
+	Image                string   `json:"image"`
+	ExternalUrl          string   `json:"external_url"`
+	SellerFeeBasisPoints *big.Int `json:"seller_fee_basis_points"`
+	FeeRecipient         string   `json:"fee_recipient"`
+	BackgroundColor      string   `json:"background_color"`
+}
+```
+
+
+#### type NewListingArgs
+
+```go
+type NewListingArgs struct {
+	AssetContractAddress    string   `json:"assetContractAddress"`
+	TokenId                 *big.Int `json:"tokenId"`
+	CurrencyContractAddress string   `json:"currencyContractAddress"`
+	Price                   *big.Int `json:"price"`
+	Quantity                *big.Int `json:"quantity"`
+	SecondsUntilOpenStart   *big.Int `json:"secondsUntilOpenStart"`
+	SecondsUntilOpenEnd     *big.Int `json:"secondsUntilOpenEnd"`
+	RewardsPerOpen          *big.Int `json:"rewardsPerOpen"`
+}
+```
+
+
+#### type Nft
+
+```go
+type Nft interface {
+	Get(tokenId *big.Int) (NftMetadata, error)
+	GetAll() ([]NftMetadata, error)
+	GetOwned(address string) ([]NftMetadata, error)
+	Balance(tokenId *big.Int) (*big.Int, error)
+	BalanceOf(address string) (*big.Int, error)
+	Transfer(to string, tokenId *big.Int) error
+	TotalSupply() (*big.Int, error)
+	SetApproval(operator string, approved bool) error
+	Mint(metadata MintNftMetadata) (NftMetadata, error)
+	MintBatch(meta []interface{}) ([]NftMetadata, error)
+	Burn(tokenId *big.Int) error
+	TransferFrom(from string, to string, tokenId *big.Int) error
+	SetRoyaltyBps(amount *big.Int) error
+	GrantRole(role Role, address string) error
+	RevokeRole(role Role, address string) error
+	// contains filtered or unexported methods
+}
+```
+
+
+#### type NftCollection
+
+```go
+type NftCollection interface {
+	CommonModule
+	Get(tokenId *big.Int) (CollectionMetadata, error)
+	GetAll() ([]CollectionMetadata, error)
+	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
+	Balance(tokenId *big.Int) (*big.Int, error)
+	IsApproved(address string, operator string) (bool, error)
+	SetApproved(operator string, approved bool) error
+	Transfer(to string, tokenId *big.Int, amount *big.Int) error
+	Create(args []CreateCollectionArgs) ([]CollectionMetadata, error)
+	Mint(args MintCollectionArgs) error
+}
+```
+
+
+#### type NftCollectionModule
+
+```go
+type NftCollectionModule struct {
 	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
@@ -200,66 +447,83 @@ type MarketSdkModule struct {
 ```
 
 
-#### func  NewMarketSdkModule
+#### func  NewNftCollectionModule
 
 ```go
-func NewMarketSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*MarketSdkModule, error)
+func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftCollectionModule, error)
 ```
 
-#### func (*MarketSdkModule) Buy
+#### func (*NftCollectionModule) Balance
 
 ```go
-func (sdk *MarketSdkModule) Buy(listingId *big.Int, quantity *big.Int) error
+func (sdk *NftCollectionModule) Balance(tokenId *big.Int) (*big.Int, error)
 ```
 
-#### func (*MarketSdkModule) GetAll
+#### func (*NftCollectionModule) BalanceOf
 
 ```go
-func (sdk *MarketSdkModule) GetAll() ([]Listing, error)
+func (sdk *NftCollectionModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
 ```
 
-#### func (*MarketSdkModule) GetListing
+#### func (*NftCollectionModule) Create
 
 ```go
-func (sdk *MarketSdkModule) GetListing(listingId *big.Int) (Listing, error)
+func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]CollectionMetadata, error)
 ```
 
-#### func (*MarketSdkModule) List
+#### func (*NftCollectionModule) Get
 
 ```go
-func (sdk *MarketSdkModule) List(
-	assetContractAddress string,
-	tokenId *big.Int,
-	currencyContractAddress string,
-	pricePerToken *big.Int,
-	quantity *big.Int,
-	secondsUntilStart *big.Int,
-	secondsUntilEnd *big.Int) (Listing, error)
+func (sdk *NftCollectionModule) Get(tokenId *big.Int) (CollectionMetadata, error)
 ```
 
-#### func (*MarketSdkModule) SetPrivateKey
+#### func (*NftCollectionModule) GetAll
 
 ```go
-func (sdk *MarketSdkModule) SetPrivateKey(privateKey string) error
+func (sdk *NftCollectionModule) GetAll() ([]CollectionMetadata, error)
 ```
 
-#### func (*MarketSdkModule) Unlist
+#### func (*NftCollectionModule) GetAsync
 
 ```go
-func (sdk *MarketSdkModule) Unlist(listingId *big.Int, quantity *big.Int) error
+func (sdk *NftCollectionModule) GetAsync(tokenId *big.Int, ch chan<- CollectionMetadata, wg *sync.WaitGroup)
 ```
 
-#### func (*MarketSdkModule) UnlistAll
+#### func (*NftCollectionModule) IsApproved
 
 ```go
-func (sdk *MarketSdkModule) UnlistAll(listingId *big.Int) error
+func (sdk *NftCollectionModule) IsApproved(address string, operator string) (bool, error)
+```
+
+#### func (*NftCollectionModule) Mint
+
+```go
+func (sdk *NftCollectionModule) Mint(args MintCollectionArgs) error
+```
+
+#### func (*NftCollectionModule) SetApproved
+
+```go
+func (sdk *NftCollectionModule) SetApproved(operator string, approved bool) error
+```
+
+#### func (*NftCollectionModule) SetPrivateKey
+
+```go
+func (sdk *NftCollectionModule) SetPrivateKey(privateKey string) error
+```
+
+#### func (*NftCollectionModule) Transfer
+
+```go
+func (sdk *NftCollectionModule) Transfer(to string, tokenId *big.Int, amount *big.Int) error
 ```
 
 #### type NftMetadata
 
 ```go
 type NftMetadata struct {
-	Id          *big.Int
+	Id          *big.Int    `json:"id"`
 	Uri         string      `json:"external_url"`
 	Name        string      `json:"name"`
 	Description string      `json:"description"`
@@ -269,24 +533,10 @@ type NftMetadata struct {
 ```
 
 
-#### type NftSdk
+#### type NftModule
 
 ```go
-type NftSdk interface {
-	CommonModule
-	Get(tokenId *big.Int) (NftMetadata, error)
-	GetAll() ([]NftMetadata, error)
-	Balance(tokenId *big.Int) (*big.Int, error)
-	BalanceOf(address string) (*big.Int, error)
-	Transfer(to string, tokenId *big.Int) error
-}
-```
-
-
-#### type NftSdkModule
-
-```go
-type NftSdkModule struct {
+type NftModule struct {
 	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
@@ -294,52 +544,100 @@ type NftSdkModule struct {
 ```
 
 
-#### func  NewNftSdkModule
+#### func (*NftModule) Balance
 
 ```go
-func NewNftSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftSdkModule, error)
+func (sdk *NftModule) Balance(tokenId *big.Int) (*big.Int, error)
 ```
 
-#### func (*NftSdkModule) Balance
+#### func (*NftModule) BalanceOf
 
 ```go
-func (sdk *NftSdkModule) Balance(tokenId *big.Int) (*big.Int, error)
+func (sdk *NftModule) BalanceOf(address string) (*big.Int, error)
 ```
 
-#### func (*NftSdkModule) BalanceOf
+#### func (*NftModule) Burn
 
 ```go
-func (sdk *NftSdkModule) BalanceOf(address string) (*big.Int, error)
+func (sdk *NftModule) Burn(tokenId *big.Int) error
 ```
 
-#### func (*NftSdkModule) Get
+#### func (*NftModule) Get
 
 ```go
-func (sdk *NftSdkModule) Get(tokenId *big.Int) (NftMetadata, error)
+func (sdk *NftModule) Get(tokenId *big.Int) (NftMetadata, error)
 ```
 
-#### func (*NftSdkModule) GetAll
+#### func (*NftModule) GetAll
 
 ```go
-func (sdk *NftSdkModule) GetAll() ([]NftMetadata, error)
+func (sdk *NftModule) GetAll() ([]NftMetadata, error)
 ```
 
-#### func (*NftSdkModule) GetAsync
+#### func (*NftModule) GetAsync
 
 ```go
-func (sdk *NftSdkModule) GetAsync(tokenId *big.Int, ch chan<- NftMetadata, errCh chan<- error, wg *sync.WaitGroup)
+func (sdk *NftModule) GetAsync(tokenId *big.Int, ch chan<- NftMetadata, errCh chan<- error, wg *sync.WaitGroup)
 ```
 
-#### func (*NftSdkModule) SetPrivateKey
+#### func (*NftModule) GetOwned
 
 ```go
-func (sdk *NftSdkModule) SetPrivateKey(privateKey string) error
+func (sdk *NftModule) GetOwned(address string) ([]NftMetadata, error)
 ```
 
-#### func (*NftSdkModule) Transfer
+#### func (*NftModule) GrantRole
 
 ```go
-func (sdk *NftSdkModule) Transfer(to string, tokenId *big.Int) error
+func (sdk *NftModule) GrantRole(role Role, address string) error
+```
+
+#### func (*NftModule) Mint
+
+```go
+func (sdk *NftModule) Mint(metadata MintNftMetadata) (NftMetadata, error)
+```
+
+#### func (*NftModule) MintBatch
+
+```go
+func (sdk *NftModule) MintBatch(meta []interface{}) ([]NftMetadata, error)
+```
+
+#### func (*NftModule) RevokeRole
+
+```go
+func (sdk *NftModule) RevokeRole(role Role, address string) error
+```
+
+#### func (*NftModule) SetApproval
+
+```go
+func (sdk *NftModule) SetApproval(operator string, approved bool) error
+```
+
+#### func (*NftModule) SetRoyaltyBps
+
+```go
+func (sdk *NftModule) SetRoyaltyBps(amount *big.Int) error
+```
+
+#### func (*NftModule) TotalSupply
+
+```go
+func (sdk *NftModule) TotalSupply() (*big.Int, error)
+```
+
+#### func (*NftModule) Transfer
+
+```go
+func (sdk *NftModule) Transfer(to string, tokenId *big.Int) error
+```
+
+#### func (*NftModule) TransferFrom
+
+```go
+func (sdk *NftModule) TransferFrom(from string, to string, tokenId *big.Int) error
 ```
 
 #### type NoAddressError
@@ -388,7 +686,33 @@ func (m *NotFoundError) Error() string
 #### type Pack
 
 ```go
-type Pack struct {
+type Pack interface {
+	Open(packId *big.Int) (PackNft, error)
+	Get(tokenId *big.Int) (PackMetadata, error)
+	GetAll() ([]PackMetadata, error)
+	GetNfts(packId *big.Int) ([]PackNft, error)
+	Balance(tokenId *big.Int) (*big.Int, error)
+	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
+	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
+	Create(args CreatePackArgs) (PackMetadata, error)
+}
+```
+
+
+#### type PackAssetAddition
+
+```go
+type PackAssetAddition struct {
+	NftId  *big.Int
+	Supply *big.Int
+}
+```
+
+
+#### type PackMetadata
+
+```go
+type PackMetadata struct {
 	NftMetadata
 	Creator       common.Address
 	CurrentSupply big.Int
@@ -397,6 +721,70 @@ type Pack struct {
 }
 ```
 
+
+#### type PackModule
+
+```go
+type PackModule struct {
+	Client  *ethclient.Client
+	Address string
+}
+```
+
+
+#### func (*PackModule) Balance
+
+```go
+func (sdk *PackModule) Balance(tokenId *big.Int) (*big.Int, error)
+```
+
+#### func (*PackModule) BalanceOf
+
+```go
+func (sdk *PackModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
+```
+
+#### func (*PackModule) Create
+
+```go
+func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error)
+```
+
+#### func (*PackModule) Get
+
+```go
+func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error)
+```
+
+#### func (*PackModule) GetAll
+
+```go
+func (sdk *PackModule) GetAll() ([]PackMetadata, error)
+```
+
+#### func (*PackModule) GetAsync
+
+```go
+func (sdk *PackModule) GetAsync(tokenId *big.Int, ch chan<- PackMetadata, wg *sync.WaitGroup)
+```
+
+#### func (*PackModule) GetNfts
+
+```go
+func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error)
+```
+
+#### func (*PackModule) Open
+
+```go
+func (sdk *PackModule) Open(packId *big.Int) (PackNft, error)
+```
+
+#### func (*PackModule) Transfer
+
+```go
+func (sdk *PackModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error
+```
 
 #### type PackNft
 
@@ -408,130 +796,64 @@ type PackNft struct {
 ```
 
 
-#### type PackNftAddition
+#### type Role
 
 ```go
-type PackNftAddition struct {
-	NftId  *big.Int
-	Supply *big.Int
+type Role string
+```
+
+
+```go
+const (
+	AdminRole  Role = "admin"
+	MinterRole      = "minter"
+)
+```
+
+#### type Sdk
+
+```go
+type Sdk struct {
 }
 ```
 
 
-#### type PackSdk
+#### func  NewSdk
 
 ```go
-type PackSdk interface {
-	CommonModule
-	Open(packId *big.Int) (PackNft, error)
-	Get(tokenId *big.Int) (Pack, error)
-	GetAll() ([]Pack, error)
-	GetNfts(packId *big.Int) ([]PackNft, error)
-	Balance(tokenId *big.Int) (*big.Int, error)
-	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
-	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
-	Create(args CreatePackArgs) (Pack, error)
-}
+func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error)
 ```
 
-
-#### type PackSdkModule
+#### func (*Sdk) GetCurrencyModule
 
 ```go
-type PackSdkModule struct {
-	Client  *ethclient.Client
-	Address string
-	Options *SdkOptions
-}
+func (sdk *Sdk) GetCurrencyModule(address string) (Currency, error)
 ```
 
-
-#### func  NewPackSdkModule
+#### func (*Sdk) GetMarketModule
 
 ```go
-func NewPackSdkModule(client *ethclient.Client, address string, opt *SdkOptions) (*PackSdkModule, error)
+func (sdk *Sdk) GetMarketModule(address string) (Market, error)
 ```
 
-#### func (*PackSdkModule) Balance
+#### func (*Sdk) GetNftModule
 
 ```go
-func (sdk *PackSdkModule) Balance(tokenId *big.Int) (*big.Int, error)
+func (sdk *Sdk) GetNftModule(address string) (Nft, error)
 ```
 
-#### func (*PackSdkModule) BalanceOf
+#### func (*Sdk) GetPackModule
 
 ```go
-func (sdk *PackSdkModule) BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
+func (sdk *Sdk) GetPackModule(address string) (Pack, error)
 ```
-
-#### func (*PackSdkModule) Create
-
-```go
-func (sdk *PackSdkModule) Create(args CreatePackArgs) (Pack, error)
-```
-
-#### func (*PackSdkModule) DeployContract
-
-```go
-func (sdk *PackSdkModule) DeployContract(name string) error
-```
-
-#### func (*PackSdkModule) Get
-
-```go
-func (sdk *PackSdkModule) Get(packId *big.Int) (Pack, error)
-```
-
-#### func (*PackSdkModule) GetAll
-
-```go
-func (sdk *PackSdkModule) GetAll() ([]Pack, error)
-```
-
-#### func (*PackSdkModule) GetAsync
-
-```go
-func (sdk *PackSdkModule) GetAsync(tokenId *big.Int, ch chan<- Pack, wg *sync.WaitGroup)
-```
-
-#### func (*PackSdkModule) GetNfts
-
-```go
-func (sdk *PackSdkModule) GetNfts(packId *big.Int) ([]PackNft, error)
-```
-
-#### func (*PackSdkModule) Open
-
-```go
-func (sdk *PackSdkModule) Open(packId *big.Int) (PackNft, error)
-```
-
-#### func (*PackSdkModule) SetPrivateKey
-
-```go
-func (sdk *PackSdkModule) SetPrivateKey(privateKey string) error
-```
-
-#### func (*PackSdkModule) Transfer
-
-```go
-func (sdk *PackSdkModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) error
-```
-
-#### type SdkModule
-
-```go
-type SdkModule interface {
-	GetSignerAddress() string
-}
-```
-
 
 #### type SdkOptions
 
 ```go
 type SdkOptions struct {
 	IpfsGatewayUrl string
+	PrivateKey     string
 }
 ```
 
