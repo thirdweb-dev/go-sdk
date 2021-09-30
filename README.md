@@ -24,12 +24,6 @@ type CloudflareGateway struct {
 ```
 
 
-#### func  NewCloudflareGateway
-
-```go
-func NewCloudflareGateway(uri string) *CloudflareGateway
-```
-
 #### func (*CloudflareGateway) Get
 
 ```go
@@ -828,6 +822,12 @@ func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error)
 
 ```go
 func (sdk *Sdk) GetCurrencyModule(address string) (Currency, error)
+```
+
+#### func (*Sdk) GetGateway
+
+```go
+func (sdk *Sdk) GetGateway(address string) Gateway
 ```
 
 #### func (*Sdk) GetMarketModule
