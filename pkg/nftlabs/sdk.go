@@ -13,6 +13,7 @@ type ISdk interface {
 	GetMarketModule(address string) (Market, error)
 	GetCurrencyModule(address string) (Currency, error)
 	GetPackModule(address string) (Pack, error)
+	GetNftCollectionModule(address string) (NftCollection, error)
 
 	getSignerAddress() common.Address
 	getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error)
@@ -32,6 +33,7 @@ type Sdk struct {
 	marketModule Market
 	currencyModule Currency
 	packModule Pack
+	nftCollectionModule NftCollection
 
 	gateway Gateway
 }
@@ -121,6 +123,20 @@ func (sdk *Sdk) GetGateway(address string) Gateway {
 
 	sdk.gateway = module
 	return module
+}
+
+func (sdk *Sdk) GetNftCollectionModule(address string) (NftCollection, error) {
+	if sdk.nftCollectionModule != nil {
+		return sdk.nftCollectionModule, nil
+	}
+
+	module, err := newNftCollectionModule(sdk.client, address, sdk)
+	if err != nil {
+		return nil, err
+	}
+
+	sdk.nftCollectionModule = module
+	return module, nil
 }
 
 func (sdk *Sdk) setPrivateKey(privateKey string) error {

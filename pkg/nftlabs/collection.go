@@ -2,7 +2,6 @@ package nftlabs
 
 import (
 	"context"
-	"crypto/ecdsa"
 	"encoding/json"
 	"errors"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -16,7 +15,6 @@ import (
 )
 
 type NftCollection interface {
-	CommonModule
 	Get(tokenId *big.Int) (CollectionMetadata, error)
 	GetAll() ([]CollectionMetadata, error)
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
@@ -31,19 +29,13 @@ type NftCollection interface {
 type NftCollectionModule struct {
 	Client  *ethclient.Client
 	Address string
-	Options *SdkOptions
 	gateway Gateway
 	module  *abi.NFTCollection
 
-	privateKey    *ecdsa.PrivateKey
-	signerAddress common.Address
+	main ISdk
 }
 
-func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOptions) (*NftCollectionModule, error) {
-	if opt.IpfsGatewayUrl == "" {
-		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
-	}
-
+func newNftCollectionModule(client *ethclient.Client, address string, main ISdk) (*NftCollectionModule, error) {
 	module, err := abi.NewNFTCollection(common.HexToAddress(address), client)
 	if err != nil {
 		// TODO: return better error
@@ -52,14 +44,14 @@ func NewNftCollectionModule(client *ethclient.Client, address string, opt *SdkOp
 
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
-	gw = newCloudflareGateway(opt.IpfsGatewayUrl)
+	gw = newCloudflareGateway(main.getOptions().IpfsGatewayUrl)
 
 	return &NftCollectionModule{
 		Client:  client,
 		Address: address,
-		Options: opt,
 		gateway: gw,
 		module:  module,
+		main: main,
 	}, nil
 }
 
@@ -145,7 +137,7 @@ func (sdk *NftCollectionModule) BalanceOf(address string, tokenId *big.Int) (*bi
 }
 
 func (sdk *NftCollectionModule) Balance(tokenId *big.Int) (*big.Int, error) {
-	return sdk.module.BalanceOf(&bind.CallOpts{}, sdk.signerAddress, tokenId)
+	return sdk.module.BalanceOf(&bind.CallOpts{}, sdk.main.getSignerAddress(), tokenId)
 }
 
 func (sdk *NftCollectionModule) IsApproved(address string, operator string) (bool, error) {
@@ -175,8 +167,8 @@ func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]Collectio
 
 	tx, err := sdk.module.NFTCollectionTransactor.CreateNativeNfts(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, uris, supplies)
 
 	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
@@ -234,7 +226,7 @@ func (sdk *NftCollectionModule) getNewCollection(logs []*types.Log) ([]*big.Int,
 }
 
 func (sdk *NftCollectionModule) uploadBatchMetadata(args []CreateCollectionArgs) ([]collectionAssetMetadata, error) {
-	if sdk.signerAddress == common.HexToAddress("0") {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return nil, &NoSignerError{typeName: "collection"}
 	}
 
@@ -248,7 +240,7 @@ func (sdk *NftCollectionModule) uploadBatchMetadata(args []CreateCollectionArgs)
 			log.Printf("Uploading collection meta %v\n", meta.Metadata)
 			defer wg.Done()
 
-			uri, err := sdk.gateway.Upload(meta.Metadata, sdk.Address, sdk.signerAddress.String())
+			uri, err := sdk.gateway.Upload(meta.Metadata, sdk.Address, sdk.main.getSignerAddress().String())
 			if err != nil {
 				// TODO: need better handling, ts sdk does nothing if this fails
 				log.Printf("Failed to upload one of the nft metadata in collection creation")
@@ -275,28 +267,3 @@ func (sdk *NftCollectionModule) Mint(args MintCollectionArgs) error {
 	panic("implement me")
 }
 
-func (sdk *NftCollectionModule) SetPrivateKey(privateKey string) error {
-	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
-		return err
-	} else {
-		sdk.privateKey = pKey
-		sdk.signerAddress = publicAddress
-	}
-	return nil
-}
-
-func (sdk *NftCollectionModule) getSignerAddress() common.Address {
-	if sdk.signerAddress == common.HexToAddress("0") {
-		return common.HexToAddress(sdk.Address)
-	} else {
-		return sdk.signerAddress
-	}
-}
-
-func (sdk *NftCollectionModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-		ctx := context.Background()
-		chainId, _ := sdk.Client.ChainID(ctx)
-		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
-	}
-}
