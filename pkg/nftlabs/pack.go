@@ -136,8 +136,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		From:     sdk.main.getSignerAddress(),
 		Signer:   sdk.main.getSigner(),
 		NoSend:   false,
-		GasLimit: 100000,
-	}, sdk.main.getSignerAddress(), sdk.main.getSignerAddress(), ids, counts, bytes)
+	}, sdk.main.getSignerAddress(), common.HexToAddress(sdk.Address), ids, counts, bytes)
 	if err != nil {
 		return PackMetadata{}, err
 	}
