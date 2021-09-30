@@ -71,7 +71,7 @@ func (sdk *Sdk) GetMarketModule(address string) (Market, error) {
 		return sdk.marketModule, nil
 	}
 
-	module, err := newMarketSdkModule(sdk.client, address, sdk)
+	module, err := newMarketModule(sdk.client, address, sdk)
 	if err != nil {
 		return nil, err
 	}

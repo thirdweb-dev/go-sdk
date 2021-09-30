@@ -35,7 +35,7 @@ type MarketModule struct {
 	main ISdk
 }
 
-func newMarketSdkModule(client *ethclient.Client, address string, main ISdk) (*MarketModule, error) {
+func newMarketModule(client *ethclient.Client, address string, main ISdk) (*MarketModule, error) {
 	module, err := abi.NewMarket(common.HexToAddress(address), client)
 	if err != nil {
 		return nil, err
