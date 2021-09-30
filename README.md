@@ -64,29 +64,6 @@ func main() {
 
 Checkout the sdk usage examples [here](https://github.com/nftlabs/nftlabs-sdk-go/tree/master/examples).
 
-### Getting all NFTs in a contract
-```bash
-$ SAMPLE_NFT_CONTRACT=0xf25C389016B7Ddb1191D4de02e495633Fe34d453
-$ nftlabs nft -a $NFT_ADDRESS getAll 
-```
-
-### Minting a currency (uses gas)
-
-Deploy a Currency through
-the [NFTLabs console dashboard](https://console.nftlabs.co) in order to
-be able to mint your tokens. When you have a
-currency address, pass it to the cli with the `-a` (shorthand for `--address`)
-
-> You need to set a signing key when executing this
-> method in order to sign the transaction
-
-Mint 42 of the currency:
-
-```bash
-// -k sets the signing key
-$ nftlabs -k $PKEY currency -a $CURRENCY_ADDRESS mint 42
-```
-
 ## Getting the CLI
 
 The easiest way to play with the SDK is through the CLI
@@ -120,3 +97,26 @@ Use "nftlabs [command] --help" for more information about a command.
 > Change your chain by setting the `-u` or `--chainRpcUrl` flag
 
 Some examples (you can run right now):
+
+### Getting all NFTs in a contract
+```bash
+$ SAMPLE_NFT_CONTRACT=0xf25C389016B7Ddb1191D4de02e495633Fe34d453
+$ nftlabs nft -a $NFT_ADDRESS getAll 
+```
+
+### Minting a currency (uses gas)
+
+Deploy a Currency through
+the [NFTLabs console dashboard](https://console.nftlabs.co) in order to
+be able to mint your tokens. When you have a
+currency address, pass it to the cli with the `-a` (shorthand for `--address`)
+
+> You need to set a signing key when executing this
+> method in order to sign the transaction
+
+Mint 42 of the currency:
+
+```bash
+// -k sets the signing key
+$ nftlabs -k $PKEY currency -a $CURRENCY_ADDRESS mint 42
+```
