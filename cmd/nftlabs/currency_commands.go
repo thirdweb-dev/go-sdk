@@ -58,7 +58,7 @@ var currencyMintCmd = &cobra.Command{
 		if err := module.Mint(big.NewInt(amount)); err != nil {
 			panic(err)
 		}
-		log.Printf("Minted %d of %v\n", amount, currency.Symbol)
+		fmt.Printf("Minted %d %v\n", amount, currency.Symbol)
 	},
 }
 
