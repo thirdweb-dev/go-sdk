@@ -25,6 +25,8 @@ type Currency interface {
 	GrantRole(role Role, address string) error
 	RevokeRole(role Role, address string) error
 	TotalSupply() (*big.Int, error)
+
+	formatUnits(value *big.Int, units *big.Int) string
 }
 
 type CurrencyModule struct {
@@ -174,6 +176,7 @@ func (sdk *CurrencyModule) Get() (CurrencyMetadata, error) {
 	}, nil
 }
 
+// TODO; test market listing with decimal place; write some basic tests
 func (sdk *CurrencyModule) formatUnits(value *big.Int, units *big.Int) string {
 	if value.Int64() == 0 {
 		return "0"
@@ -184,11 +187,14 @@ func (sdk *CurrencyModule) formatUnits(value *big.Int, units *big.Int) string {
 		unit.Set(units)
 	}
 
-	ten := big.NewInt(10)
-	ten.Exp(ten, unit, big.NewInt(0))
-	v := big.NewInt(0)
-	v.SetString(value.String(), 10)
-	return v.Div(v, ten).String()
+	decimalTransformer := big.NewInt(10)
+	decimalTransformer.Exp(decimalTransformer, unit, big.NewInt(0))
+	transformer := big.NewFloat(0)
+	transformer.SetString(decimalTransformer.String())
+
+	v := big.NewFloat(0)
+	v.SetString(value.String())
+	return v.Quo(v, transformer).String()
 }
 
 func (sdk *CurrencyModule) GetValue(value *big.Int) (*CurrencyValue, error) {
