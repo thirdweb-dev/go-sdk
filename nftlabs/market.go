@@ -306,7 +306,7 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 	} else {
 		// TODO: this is bad, don't want to create an instance of the module every time but idk how else to get it in here
 		// damages testability
-		currency, err := NewCurrencySdkModule(sdk.Client, listingCurrency.Hex())
+		currency, err := newCurrencyModule(sdk.Client, listingCurrency.Hex(), sdk.main)
 		if err != nil {
 			// TODO: return better error
 			return Listing{}, err

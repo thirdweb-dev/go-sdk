@@ -1,9 +1,6 @@
 package nftlabs
 
 import (
-	"context"
-	"crypto/ecdsa"
-	"github.com/ethereum/go-ethereum/core/types"
 	"math/big"
 	"strings"
 
@@ -14,7 +11,6 @@ import (
 )
 
 type Currency interface {
-	CommonModule
 	Get() (CurrencyMetadata, error)
 	GetValue(value *big.Int) (*CurrencyValue, error)
 	Balance() (CurrencyValue, error)
@@ -36,24 +32,37 @@ type CurrencyModule struct {
 	Address string
 	module  *abi.Currency
 
-	privateKey    *ecdsa.PrivateKey
-	rawPrivateKey string
-	signerAddress common.Address
+	main ISdk
 }
+
+func newCurrencyModule(client *ethclient.Client, asset string, main ISdk) (*CurrencyModule, error) {
+	module, err := abi.NewCurrency(common.HexToAddress(asset), client)
+	if err != nil {
+		return nil, err
+	}
+
+	return &CurrencyModule{
+		Client:  client,
+		Address: asset,
+		module:  module,
+		main: main,
+	}, nil
+}
+
 
 func (sdk *CurrencyModule) TotalSupply() (*big.Int, error) {
 	return sdk.module.TotalSupply(&bind.CallOpts{})
 }
 
 func (sdk *CurrencyModule) Allowance(spender string) (*big.Int, error) {
-	return sdk.module.Allowance(&bind.CallOpts{}, sdk.getSignerAddress(), common.HexToAddress(spender))
+	return sdk.module.Allowance(&bind.CallOpts{}, sdk.main.getSignerAddress(), common.HexToAddress(spender))
 }
 
 func (sdk *CurrencyModule) SetAllowance(spender string, amount *big.Int) error {
 	if tx, err := sdk.module.Approve(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, common.HexToAddress(spender), amount); err != nil {
 		return err
 	} else {
@@ -64,9 +73,9 @@ func (sdk *CurrencyModule) SetAllowance(spender string, amount *big.Int) error {
 func (sdk *CurrencyModule) Mint(amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.Mint(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
-	}, sdk.signerAddress, amount); err != nil {
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
+	}, sdk.main.getSignerAddress(), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -76,8 +85,8 @@ func (sdk *CurrencyModule) Mint(amount *big.Int) error {
 func (sdk *CurrencyModule) Burn(amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.Burn(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, amount); err != nil {
 		return err
 	} else {
@@ -88,8 +97,8 @@ func (sdk *CurrencyModule) Burn(amount *big.Int) error {
 func (sdk *CurrencyModule) BurnFrom(from string, amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.BurnFrom(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, common.HexToAddress(from), amount); err != nil {
 		return err
 	} else {
@@ -100,8 +109,8 @@ func (sdk *CurrencyModule) BurnFrom(from string, amount *big.Int) error {
 func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int) error {
 	if tx, err := sdk.module.CurrencyTransactor.TransferFrom(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, common.HexToAddress(from), common.HexToAddress(to), amount); err != nil {
 		return err
 	} else {
@@ -112,8 +121,8 @@ func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int)
 func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 	if tx, err := sdk.module.CurrencyTransactor.GrantRole(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, [32]byte{}, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
 		return err
 	} else {
@@ -124,26 +133,13 @@ func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 func (sdk *CurrencyModule) RevokeRole(role Role, address string) error {
 	if tx, err := sdk.module.CurrencyTransactor.RevokeRole(&bind.TransactOpts{
 		NoSend: false,
-		From:   sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
 	}, [32]byte{}, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
 	}
-}
-
-func NewCurrencySdkModule(client *ethclient.Client, asset string) (*CurrencyModule, error) {
-	module, err := abi.NewCurrency(common.HexToAddress(asset), client)
-	if err != nil {
-		return nil, err
-	}
-
-	return &CurrencyModule{
-		Client:  client,
-		Address: asset,
-		module:  module,
-	}, nil
 }
 
 func (sdk *CurrencyModule) Get() (CurrencyMetadata, error) {
@@ -238,29 +234,3 @@ func (sdk *CurrencyModule) Transfer(to string, amount *big.Int) error {
 	panic("implement me")
 }
 
-func (sdk *CurrencyModule) SetPrivateKey(privateKey string) error {
-	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {
-		return err
-	} else {
-		sdk.rawPrivateKey = privateKey
-		sdk.privateKey = pKey
-		sdk.signerAddress = publicAddress
-	}
-	return nil
-}
-
-func (sdk *CurrencyModule) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-		ctx := context.Background()
-		chainId, _ := sdk.Client.ChainID(ctx)
-		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
-	}
-}
-
-func (sdk *CurrencyModule) getSignerAddress() common.Address {
-	if sdk.signerAddress == common.HexToAddress("0") {
-		return common.HexToAddress(sdk.Address)
-	} else {
-		return sdk.signerAddress
-	}
-}

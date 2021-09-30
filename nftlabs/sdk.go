@@ -11,6 +11,7 @@ import (
 type ISdk interface {
 	GetNftModule(address string) (Nft, error)
 	GetMarketModule(address string) (Market, error)
+	GetCurrencyModule(address string) (Currency, error)
 
 	getSignerAddress() common.Address
 	getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error)
@@ -28,6 +29,7 @@ type Sdk struct {
 
 	nftModule Nft
 	marketModule Market
+	currencyModule Currency
 }
 
 func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error) {
@@ -48,6 +50,21 @@ func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error) {
 
 	return sdk, nil
 }
+
+func (sdk *Sdk) GetCurrencyModule(address string) (Currency, error) {
+	if sdk.currencyModule != nil {
+		return sdk.currencyModule, nil
+	}
+
+	module, err := newCurrencyModule(sdk.client, address, sdk)
+	if err != nil {
+		return nil, err
+	}
+
+	sdk.currencyModule = module
+	return module, nil
+}
+
 
 func (sdk *Sdk) GetMarketModule(address string) (Market, error) {
 	if sdk.marketModule != nil {
