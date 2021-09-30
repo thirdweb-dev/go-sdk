@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/nftlabs/nftlabs-sdk-go/abi"
+	"github.com/nftlabs/nftlabs-sdk-go/internal/abi"
 )
 
 type erc165 interface {
