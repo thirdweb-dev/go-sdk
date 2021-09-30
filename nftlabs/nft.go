@@ -219,7 +219,7 @@ func newNftModule(client *ethclient.Client, address string, main ISdk) (Nft, err
 
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
-	gw = NewCloudflareGateway(main.getOptions().IpfsGatewayUrl)
+	gw = newCloudflareGateway(main.getOptions().IpfsGatewayUrl)
 
 	return &NftModule{
 		Client:  client,

@@ -32,6 +32,8 @@ type Sdk struct {
 	marketModule Market
 	currencyModule Currency
 	packModule Pack
+
+	gateway Gateway
 }
 
 func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error) {
@@ -110,6 +112,16 @@ func (sdk *Sdk) GetPackModule(address string) (Pack, error) {
 	return module, nil
 }
 
+func (sdk *Sdk) GetGateway(address string) Gateway {
+	if sdk.gateway != nil {
+		return sdk.gateway
+	}
+
+	module := newCloudflareGateway(sdk.opt.IpfsGatewayUrl)
+
+	sdk.gateway = module
+	return module
+}
 
 func (sdk *Sdk) setPrivateKey(privateKey string) error {
 	if pKey, publicAddress, err := processPrivateKey(privateKey); err != nil {

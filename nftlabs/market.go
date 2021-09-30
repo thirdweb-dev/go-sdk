@@ -42,7 +42,7 @@ func newMarketModule(client *ethclient.Client, address string, main ISdk) (*Mark
 	}
 
 	// internally we force this gw, but could allow an override for testing
-	gw := NewCloudflareGateway(main.getOptions().IpfsGatewayUrl)
+	gw := newCloudflareGateway(main.getOptions().IpfsGatewayUrl)
 
 	return &MarketModule{
 		Client:  client,

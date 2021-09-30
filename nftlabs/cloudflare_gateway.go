@@ -19,7 +19,7 @@ type CloudflareGateway struct {
 	Url string
 }
 
-func NewCloudflareGateway(uri string) *CloudflareGateway {
+func newCloudflareGateway(uri string) Gateway {
 	return &CloudflareGateway{
 		Url: uri,
 	}
