@@ -32,7 +32,6 @@ type Pack interface {
 type PackModule struct {
 	Client        *ethclient.Client
 	Address       string
-	gateway       Gateway
 	module        *abi.Pack
 
 	main ISdk
@@ -44,14 +43,9 @@ func newPackModule(client *ethclient.Client, address string, main ISdk) (*PackMo
 		return nil, err
 	}
 
-	// internally we force this gw, but could allow an override for testing
-	var gw Gateway
-	gw = newCloudflareGateway(main.getOptions().IpfsGatewayUrl)
-
 	return &PackModule{
 		Client:  client,
 		Address: address,
-		gateway: gw,
 		module:  module,
 		main: main,
 	}, nil
@@ -115,7 +109,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		},
 	}
 
-	uri, err := sdk.gateway.Upload(args.Metadata, sdk.Address, sdk.main.getSignerAddress().String())
+	uri, err := sdk.main.getGateway().Upload(args.Metadata, sdk.Address, sdk.main.getSignerAddress().String())
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -180,7 +174,7 @@ func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
 		return PackMetadata{}, &NotFoundError{identifier: packId, typeName: "pack"}
 	}
 
-	body, err := sdk.gateway.Get(packUri)
+	body, err := sdk.main.getGateway().Get(packUri)
 	if err != nil {
 		return PackMetadata{}, err
 	}

@@ -29,7 +29,6 @@ type Market interface {
 type MarketModule struct {
 	Client  *ethclient.Client
 	Address string
-	gateway Gateway
 	module  *abi.Market
 
 	main ISdk
@@ -41,13 +40,9 @@ func newMarketModule(client *ethclient.Client, address string, main ISdk) (*Mark
 		return nil, err
 	}
 
-	// internally we force this gw, but could allow an override for testing
-	gw := newCloudflareGateway(main.getOptions().IpfsGatewayUrl)
-
 	return &MarketModule{
 		Client:  client,
 		Address: address,
-		gateway: gw,
 		module:  module,
 		main: main,
 	}, nil

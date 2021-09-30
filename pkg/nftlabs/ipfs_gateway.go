@@ -7,25 +7,34 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/big"
 	"mime/multipart"
 	"net/http"
 )
+
+type uploadResponse struct {
+	IpfsHash    string   `json:"ipfsHash"`
+	PinSize     *big.Int `json:"PinSize"`
+	Timestamp   string   `json:"Timestamp"`
+	IsDuplicate bool     `json:"isDuplicate"`
+	IpfsUri     string   `json:"IpfsUri"`
+}
 
 const (
 	nftLabsApiUrl = "https://upload.nftlabs.co"
 )
 
-type CloudflareGateway struct {
+type IpfsGateway struct {
 	Url string
 }
 
-func newCloudflareGateway(uri string) Gateway {
-	return &CloudflareGateway{
+func newIpfsGateway(uri string) Gateway {
+	return &IpfsGateway{
 		Url: uri,
 	}
 }
 
-func (gw *CloudflareGateway) Get(uri string) ([]byte, error) {
+func (gw *IpfsGateway) Get(uri string) ([]byte, error) {
 	gatewayUrl := replaceIpfsWithGateway(uri, gw.Url)
 	resp, err := http.Get(gatewayUrl)
 	if err != nil {
@@ -43,7 +52,7 @@ func (gw *CloudflareGateway) Get(uri string) ([]byte, error) {
 	return body, nil
 }
 
-func (gw *CloudflareGateway) Upload(data interface{}, contractAddress string, signerAddress string) (string, error) {
+func (gw *IpfsGateway) Upload(data interface{}, contractAddress string, signerAddress string) (string, error) {
 	client := &http.Client{}
 	jsonData, err := json.Marshal(data)
 	if err != nil {

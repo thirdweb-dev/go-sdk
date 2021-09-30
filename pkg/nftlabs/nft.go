@@ -46,7 +46,6 @@ type NftModule struct {
 	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
-	gateway Gateway
 	module  *abi.NFT
 
 	main ISdk
@@ -73,7 +72,7 @@ func (sdk *NftModule) MintBatch(meta []interface{}) ([]NftMetadata, error) {
 			log.Printf("Uploading collection meta %v\n", meta)
 			defer wg.Done()
 
-			uri, err := sdk.gateway.Upload(meta, sdk.Address, sdk.main.getSignerAddress().String())
+			uri, err := sdk.main.getGateway().Upload(meta, sdk.Address, sdk.main.getSignerAddress().String())
 			if err != nil {
 				// TODO: need better handling, ts sdk does nothing if this fails
 				log.Printf("Failed to upload one of the nft metadata in collection creation")
@@ -154,7 +153,7 @@ func (sdk *NftModule) mintTo(metadata MintNftMetadata) (NftMetadata, error) {
 			typeName: "Nft",
 		}
 	}
-	uri, err := sdk.gateway.Upload(metadata, "", "")
+	uri, err := sdk.main.getGateway().Upload(metadata, "", "")
 	if err != nil {
 		return NftMetadata{}, err
 	}
@@ -217,14 +216,9 @@ func newNftModule(client *ethclient.Client, address string, main ISdk) (Nft, err
 		return nil, err
 	}
 
-	// internally we force this gw, but could allow an override for testing
-	var gw Gateway
-	gw = newCloudflareGateway(main.getOptions().IpfsGatewayUrl)
-
 	return &NftModule{
 		Client:  client,
 		Address: address,
-		gateway: gw,
 		module:  module,
 		main: main,
 	}, nil
@@ -236,7 +230,7 @@ func (sdk *NftModule) Get(tokenId *big.Int) (NftMetadata, error) {
 		return NftMetadata{}, err
 	}
 
-	body, err := sdk.gateway.Get(tokenUri)
+	body, err := sdk.main.getGateway().Get(tokenUri)
 	metadata := NftMetadata{
 		Id: tokenId,
 	}

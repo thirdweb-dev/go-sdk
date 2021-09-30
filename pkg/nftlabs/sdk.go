@@ -14,11 +14,15 @@ type ISdk interface {
 	GetCurrencyModule(address string) (Currency, error)
 	GetPackModule(address string) (Pack, error)
 	GetNftCollectionModule(address string) (NftCollection, error)
+	GetGateway() (Gateway, error)
+
+	SetGateway(gateway Gateway)
 
 	getSignerAddress() common.Address
 	getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error)
 	getRawPrivateKey() string
 	getOptions() *SdkOptions
+	getGateway() Gateway
 }
 
 type Sdk struct {
@@ -43,9 +47,11 @@ func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error) {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
 
+	defaultGateway := newIpfsGateway(opt.IpfsGatewayUrl)
 	sdk := &Sdk{
 		client: client,
 		opt: opt,
+		gateway: defaultGateway,
 	}
 
 	if opt.PrivateKey != "" {
@@ -114,15 +120,16 @@ func (sdk *Sdk) GetPackModule(address string) (Pack, error) {
 	return module, nil
 }
 
-func (sdk *Sdk) GetGateway(address string) Gateway {
+
+func (sdk *Sdk) GetGateway() (Gateway, error) {
 	if sdk.gateway != nil {
-		return sdk.gateway
+		return sdk.gateway, nil
 	}
 
-	module := newCloudflareGateway(sdk.opt.IpfsGatewayUrl)
+	module := newIpfsGateway(sdk.opt.IpfsGatewayUrl)
 
 	sdk.gateway = module
-	return module
+	return module, nil
 }
 
 func (sdk *Sdk) GetNftCollectionModule(address string) (NftCollection, error) {
@@ -170,3 +177,10 @@ func (sdk *Sdk) getOptions() *SdkOptions {
 	return sdk.opt
 }
 
+func (sdk *Sdk) SetGateway(gateway Gateway) {
+	sdk.gateway = gateway
+}
+
+func (sdk *Sdk) getGateway() Gateway {
+	return sdk.gateway
+}

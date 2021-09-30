@@ -37,7 +37,7 @@ func newErc20SdkModule(client *ethclient.Client, address string, opt *SdkOptions
 
 	// internally we force this gw, but could allow an override for testing
 	var gw Gateway
-	gw = newCloudflareGateway(opt.IpfsGatewayUrl)
+	gw = newIpfsGateway(opt.IpfsGatewayUrl)
 
 	return &erc20Module{
 		Client:  client,

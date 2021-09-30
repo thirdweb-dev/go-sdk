@@ -29,7 +29,6 @@ type NftCollection interface {
 type NftCollectionModule struct {
 	Client  *ethclient.Client
 	Address string
-	gateway Gateway
 	module  *abi.NFTCollection
 
 	main ISdk
@@ -42,14 +41,9 @@ func newNftCollectionModule(client *ethclient.Client, address string, main ISdk)
 		return nil, err
 	}
 
-	// internally we force this gw, but could allow an override for testing
-	var gw Gateway
-	gw = newCloudflareGateway(main.getOptions().IpfsGatewayUrl)
-
 	return &NftCollectionModule{
 		Client:  client,
 		Address: address,
-		gateway: gw,
 		module:  module,
 		main: main,
 	}, nil
@@ -85,7 +79,7 @@ func (sdk *NftCollectionModule) getMetadata(tokenId *big.Int) ([]byte, error) {
 		return nil, err
 	}
 
-	metadata, err := sdk.gateway.Get(uri)
+	metadata, err := sdk.main.getGateway().Get(uri)
 	if err != nil {
 		return nil, err
 	}
@@ -240,7 +234,7 @@ func (sdk *NftCollectionModule) uploadBatchMetadata(args []CreateCollectionArgs)
 			log.Printf("Uploading collection meta %v\n", meta.Metadata)
 			defer wg.Done()
 
-			uri, err := sdk.gateway.Upload(meta.Metadata, sdk.Address, sdk.main.getSignerAddress().String())
+			uri, err := sdk.main.getGateway().Upload(meta.Metadata, sdk.Address, sdk.main.getSignerAddress().String())
 			if err != nil {
 				// TODO: need better handling, ts sdk does nothing if this fails
 				log.Printf("Failed to upload one of the nft metadata in collection creation")
