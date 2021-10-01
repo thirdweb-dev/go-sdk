@@ -19,4 +19,5 @@ type MintNftMetadata struct {
 	SellerFeeBasisPoints *big.Int `json:"seller_fee_basis_points"`
 	FeeRecipient         string   `json:"fee_recipient"`
 	BackgroundColor      string   `json:"background_color"`
+	Attributes  interface{} `json:"attributes"`
 }

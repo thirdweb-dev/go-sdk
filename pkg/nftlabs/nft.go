@@ -39,7 +39,7 @@ type Nft interface {
 	GrantRole(role Role, address string) error
 	RevokeRole(role Role, address string) error
 
-	mintTo(meta MintNftMetadata) (NftMetadata, error)
+	MintTo(meta MintNftMetadata) (NftMetadata, error)
 }
 
 type NftModule struct {
@@ -147,7 +147,7 @@ func (sdk *NftModule) GrantRole(role Role, address string) error {
 	panic("implement me")
 }
 
-func (sdk *NftModule) mintTo(metadata MintNftMetadata) (NftMetadata, error) {
+func (sdk *NftModule) MintTo(metadata MintNftMetadata) (NftMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return NftMetadata{}, &NoSignerError{
 			typeName: "Nft",
@@ -194,7 +194,7 @@ func (sdk *NftModule) Mint(metadata MintNftMetadata) (NftMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return NftMetadata{}, &NoSignerError{typeName: "nft"}
 	}
-	return sdk.mintTo(metadata)
+	return sdk.MintTo(metadata)
 }
 
 func (sdk *NftModule) SetApproval(operator string, approved bool) error {
