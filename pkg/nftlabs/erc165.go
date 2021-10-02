@@ -10,7 +10,7 @@ import (
 )
 
 type erc165 interface {
-	CommonModule
+	commonModule
 }
 
 type erc165Module struct {

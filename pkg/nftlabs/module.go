@@ -16,7 +16,7 @@ var (
 type SigningMethod = func(common.Address, *types.Transaction) (*types.Transaction, error)
 
 // Will likely phase out of the codebase soon. Only used on unwrapped abi interfaces
-type CommonModule interface {
+type commonModule interface {
 	SetPrivateKey(privateKey string) error
 	getSignerAddress() common.Address
 }

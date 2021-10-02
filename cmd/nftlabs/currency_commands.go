@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/nftlabs/nftlabs-sdk-go/pkg/nftlabs"
 	"github.com/spf13/cobra"
 	"log"
 	"math/big"
@@ -102,11 +103,38 @@ var currencyBurnCmd = &cobra.Command{
 	},
 }
 
+var currencyGrantRoleCmd = &cobra.Command{
+	Use: "grantRole [role] [address]",
+	Short: "Grants the role `role` to the wallet at `address`",
+	Args: cobra.ExactArgs(2),
+	ArgAliases: []string{"role, address"},
+	Example: "grantRole admin|minter `address`",
+	Run: func(cmd *cobra.Command, args []string) {
+		role := args[0]
+		address := args[1]
+
+		module, err := getCurrencyModule()
+		if err != nil {
+			panic(err)
+		}
+
+		if r, err := nftlabs.RoleFromString(role); err != nil {
+			panic(err)
+		} else {
+			if err := module.GrantRole(r, address); err != nil {
+				panic(err)
+			}
+		}
+	},
+}
+
 func init() {
 	currencyCmd.AddCommand(currencyTotalSupplyCmd)
 	currencyCmd.AddCommand(currencyMintCmd)
 	currencyCmd.AddCommand(currencyGetCmd)
 	currencyCmd.AddCommand(currencyBurnCmd)
+
+	currencyCmd.AddCommand(currencyGrantRoleCmd)
 
 	currencyCmd.PersistentFlags().StringVarP(&currencyContractAddress, "address", "a", "", "currency contract address")
 }

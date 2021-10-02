@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
@@ -18,11 +19,23 @@ import (
 type Role string
 
 const (
-	AdminRole  Role = "admin"
-	MinterRole      = "minter"
+	AdminRole  Role = "PROTOCOL_ADMIN"
+	MinterRole      = "MINTER_ROLE"
 )
 
+func RoleFromString(str string) (Role, error) {
+	switch str {
+		case "admin":
+			return AdminRole, nil
+		case "minter":
+			return MinterRole, nil
+	default:
+		return "", errors.New(fmt.Sprintf("Role not found %v", str))
+	}
+}
+
 type Nft interface {
+	defaultModule
 	Get(tokenId *big.Int) (NftMetadata, error)
 	GetAll() ([]NftMetadata, error)
 	GetOwned(address string) ([]NftMetadata, error)
@@ -36,24 +49,20 @@ type Nft interface {
 	Burn(tokenId *big.Int) error
 	TransferFrom(from string, to string, tokenId *big.Int) error
 	SetRoyaltyBps(amount *big.Int) error
-	GrantRole(role Role, address string) error
-	RevokeRole(role Role, address string) error
 
 	MintTo(meta MintNftMetadata) (NftMetadata, error)
+
+	getModule() *abi.NFT
 }
 
 type NftModule struct {
+	defaultModuleImpl
 	Client  *ethclient.Client
 	Address string
 	Options *SdkOptions
 	module  *abi.NFT
 
 	main ISdk
-}
-
-// WIP, do not call yet
-func (sdk *NftModule) RevokeRole(role Role, address string) error {
-	panic("implement me")
 }
 
 func (sdk *NftModule) MintBatch(meta []interface{}) ([]NftMetadata, error) {
@@ -161,11 +170,6 @@ func (sdk *NftModule) SetRoyaltyBps(amount *big.Int) error {
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
 	}
-}
-
-// WIP, do not call yet
-func (sdk *NftModule) GrantRole(role Role, address string) error {
-	panic("implement me")
 }
 
 func (sdk *NftModule) MintTo(metadata MintNftMetadata) (NftMetadata, error) {
@@ -439,4 +443,8 @@ func (sdk *NftModule) getNewMintedBatch(logs []*types.Log) (*abi.NFTMintedBatch,
 	}
 
 	return batch, nil
+}
+
+func (sdk *NftModule) getModule() *abi.NFT {
+	return sdk.module
 }

@@ -364,3 +364,4 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 		SaleEnd:          saleEnd,
 	}, nil
 }
+

@@ -1,6 +1,9 @@
 package nftlabs
 
 import (
+	"fmt"
+	"github.com/ethereum/go-ethereum/crypto"
+	"log"
 	"math/big"
 	"strings"
 
@@ -27,6 +30,7 @@ type Currency interface {
 	TotalSupply() (*big.Int, error)
 
 	formatUnits(value *big.Int, units *big.Int) string
+	getModule() *abi.Currency
 }
 
 type CurrencyModule struct {
@@ -35,6 +39,10 @@ type CurrencyModule struct {
 	module  *abi.Currency
 
 	main ISdk
+}
+
+func (sdk *CurrencyModule) getModule() *abi.Currency {
+	return sdk.module
 }
 
 func newCurrencyModule(client *ethclient.Client, asset string, main ISdk) (*CurrencyModule, error) {
@@ -137,6 +145,10 @@ func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int)
 
 // WIP, do not call yet, need to encode role
 func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
+	roleHash := crypto.Keccak256([]byte(fmt.Sprintf("0x%v", role)))
+	r := [32]byte{}
+	copy(r[:], roleHash)
+	log.Printf("Role = %v\n", string(role))
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
@@ -144,7 +156,7 @@ func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 		NoSend: false,
 		From:   sdk.main.getSignerAddress(),
 		Signer: sdk.main.getSigner(),
-	}, [32]byte{}, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
+	}, r, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
