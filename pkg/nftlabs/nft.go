@@ -51,6 +51,7 @@ type NftModule struct {
 	main ISdk
 }
 
+// WIP, do not call yet
 func (sdk *NftModule) RevokeRole(role Role, address string) error {
 	panic("implement me")
 }
@@ -162,6 +163,7 @@ func (sdk *NftModule) SetRoyaltyBps(amount *big.Int) error {
 	}
 }
 
+// WIP, do not call yet
 func (sdk *NftModule) GrantRole(role Role, address string) error {
 	panic("implement me")
 }

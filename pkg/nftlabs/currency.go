@@ -135,6 +135,7 @@ func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int)
 	}
 }
 
+// WIP, do not call yet, need to encode role
 func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
@@ -150,6 +151,7 @@ func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 	}
 }
 
+// WIP, do not call yet, need to encode role
 func (sdk *CurrencyModule) RevokeRole(role Role, address string) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
