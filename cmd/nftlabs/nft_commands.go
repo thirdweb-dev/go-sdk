@@ -73,6 +73,28 @@ var nftMintCmd = &cobra.Command {
 	},
 }
 
+var nftGetOwnedCmd = &cobra.Command {
+	Use: "getOwned [address]",
+	Short: "Get all nfts owned by wallet `address`",
+	Args: cobra.ExactArgs(1),
+	ValidArgs: []string{"address"},
+	Run: func(cmd *cobra.Command, args []string) {
+		module, err := getNftModule()
+		if err != nil {
+			panic(err)
+		}
+
+		allNfts, err := module.GetOwned(args[0])
+		if err != nil {
+			panic(err)
+		}
+		log.Printf("Recieved %d nfts\n", len(allNfts))
+		for _, nft := range allNfts {
+			log.Printf("Got nft with name '%v' and description '%v' and id '%d'\n", nft.Name, nft.Description, nft.Id)
+		}
+	},
+}
+
 func init() {
 	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.Name, nameFlag, "", "name for nft")
 	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.Description, descriptionFlag, "", "description for nft")
@@ -80,6 +102,7 @@ func init() {
 	nftMintCmd.PersistentFlags().Int64Var(&sellerFeeBasisPoints, sellerFeeBasisPointsFlag, 0, "basis points to collect (to feeRecipient) on each sale")
 	_ = nftMintCmd.MarkPersistentFlagRequired(nameFlag)
 	nftCmd.AddCommand(nftMintCmd)
+	nftCmd.AddCommand(nftGetOwnedCmd)
 
 	nftCmd.PersistentFlags().StringVarP(&nftContractAddress, "address", "a", "", "nft contract address")
 	nftCmd.AddCommand(nftGetAllCmd)

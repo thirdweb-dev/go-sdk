@@ -205,7 +205,60 @@ func (sdk *NftModule) TotalSupply() (*big.Int, error) {
 }
 
 func (sdk *NftModule) GetOwned(address string) ([]NftMetadata, error) {
-	panic("implement me")
+	var addressToCheck common.Address
+	if address == "" && sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return nil, &NoSignerError{typeName: "nft"}
+	} else if address != "" {
+		addressToCheck = common.HexToAddress(address)
+	} else {
+		addressToCheck = sdk.main.getSignerAddress()
+	}
+
+	balance, err := sdk.module.BalanceOf(&bind.CallOpts{}, addressToCheck)
+	if err != nil {
+		return nil, err
+	}
+
+	var wg sync.WaitGroup
+	ch := make(chan NftMetadata)
+	errCh := make(chan error)
+
+	defer close(errCh)
+
+	for i := big.NewInt(0); i.Cmp(balance) == -1; i.Add(big.NewInt(1), i) {
+		wg.Add(1)
+		go func(idStr string) {
+			defer wg.Done()
+
+			id := big.NewInt(0)
+			id.SetString(idStr, 10)
+
+			result, err := sdk.module.TokenOfOwnerByIndex(&bind.CallOpts{}, addressToCheck, id)
+			if err != nil {
+				log.Printf("Failed to get token of owner by index for user %v, err = %v, id=%d\n", addressToCheck.String(), err, id)
+				ch <- NftMetadata{}
+				return
+			}
+
+			nft, err := sdk.Get(result)
+			if err != nil {
+				log.Printf("Failed to get token for user %v, err = %v\n", addressToCheck.String(), err)
+				ch <- NftMetadata{}
+			}
+
+			ch <- nft
+		}(i.String())
+	}
+
+	results := make([]NftMetadata, balance.Int64())
+	for i := range results {
+		results[i] = <-ch
+	}
+
+	wg.Wait()
+	close(ch)
+
+	return results, nil
 }
 
 func newNftModule(client *ethclient.Client, address string, main ISdk) (Nft, error) {
