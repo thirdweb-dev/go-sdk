@@ -51,9 +51,6 @@ type NftModule struct {
 	main ISdk
 }
 
-func (sdk *NftModule) setSigner(signer func(address common.Address, transaction *types.Transaction) (*types.Transaction, error)) {
-}
-
 func (sdk *NftModule) RevokeRole(role Role, address string) error {
 	panic("implement me")
 }
@@ -136,11 +133,33 @@ func (sdk *NftModule) Burn(tokenId *big.Int) error {
 }
 
 func (sdk *NftModule) TransferFrom(from string, to string, tokenId *big.Int) error {
-	panic("implement me")
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "nft"}
+	}
+	if tx, err := sdk.module.TransferFrom(&bind.TransactOpts{
+		NoSend: false,
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
+	}, common.HexToAddress(from), common.HexToAddress(to), tokenId); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
 
 func (sdk *NftModule) SetRoyaltyBps(amount *big.Int) error {
-	panic("implement me")
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "nft"}
+	}
+	if tx, err := sdk.module.SetRoyaltyBps(&bind.TransactOpts{
+		NoSend: false,
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
+	}, amount); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
 
 func (sdk *NftModule) GrantRole(role Role, address string) error {
@@ -197,7 +216,18 @@ func (sdk *NftModule) Mint(metadata MintNftMetadata) (NftMetadata, error) {
 }
 
 func (sdk *NftModule) SetApproval(operator string, approved bool) error {
-	panic("implement me")
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "nft"}
+	}
+	if tx, err := sdk.module.SetApprovalForAll(&bind.TransactOpts{
+		NoSend: false,
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
+	}, common.HexToAddress(operator), approved); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
 
 func (sdk *NftModule) TotalSupply() (*big.Int, error) {
