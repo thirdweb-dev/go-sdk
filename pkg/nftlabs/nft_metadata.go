@@ -7,12 +7,12 @@ type NftMetadata struct {
 	Name        string      `json:"name"`
 	Description string      `json:"description"`
 	Image       string      `json:"image"`
-	Attributes  interface{} `json:"attributes"`
+	Properties  interface{} `json:"properties"`
 }
 
 type MintNftMetadata struct {
 	Name                 string   `json:"name"`
 	Description          string   `json:"description"`
 	Image                string   `json:"image"`
-	Attributes  interface{} `json:"attributes"`
+	Properties  interface{} `json:"properties"`
 }
