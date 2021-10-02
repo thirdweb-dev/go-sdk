@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
@@ -15,24 +14,6 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/nftlabs/nftlabs-sdk-go/internal/abi"
 )
-
-type Role string
-
-const (
-	AdminRole  Role = "PROTOCOL_ADMIN"
-	MinterRole      = "MINTER_ROLE"
-)
-
-func RoleFromString(str string) (Role, error) {
-	switch str {
-		case "admin":
-			return AdminRole, nil
-		case "minter":
-			return MinterRole, nil
-	default:
-		return "", errors.New(fmt.Sprintf("Role not found %v", str))
-	}
-}
 
 type Nft interface {
 	defaultModule

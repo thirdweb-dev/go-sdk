@@ -1,12 +1,32 @@
 package nftlabs
 
 import (
+	"errors"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 )
+
+type Role string
+
+const (
+	AdminRole  Role = "PROTOCOL_ADMIN"
+	MinterRole      = "MINTER_ROLE"
+)
+
+func RoleFromString(str string) (Role, error) {
+	switch str {
+	case "admin":
+		return AdminRole, nil
+	case "minter":
+		return MinterRole, nil
+	default:
+		return "", errors.New(fmt.Sprintf("Role not found %v", str))
+	}
+}
+
 
 type defaultModule interface {
 	GrantRole(role Role, address string) error
