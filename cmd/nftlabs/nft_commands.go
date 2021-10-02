@@ -6,7 +6,6 @@ import (
 	"github.com/nftlabs/nftlabs-sdk-go/pkg/nftlabs"
 	"github.com/spf13/cobra"
 	"log"
-	"math/big"
 )
 
 const (
@@ -63,7 +62,6 @@ var nftMintCmd = &cobra.Command {
 			panic(err)
 		}
 
-		nftMetadata.SellerFeeBasisPoints = big.NewInt(sellerFeeBasisPoints)
 		if nft, err := module.Mint(nftMetadata); err != nil {
 			panic(err)
 		} else {
@@ -78,10 +76,7 @@ var nftMintCmd = &cobra.Command {
 func init() {
 	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.Name, nameFlag, "", "name for nft")
 	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.Description, descriptionFlag, "", "description for nft")
-	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.ExternalUrl, externalUrlFlag, "", "external url for nft")
 	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.Image, imageFlag, "", "image for nft")
-	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.FeeRecipient, feeRecipientFlag, "", "fee recipient for nft royalties")
-	nftMintCmd.PersistentFlags().StringVar(&nftMetadata.BackgroundColor, backgroundColorFlag, "", "hex value for background color")
 	nftMintCmd.PersistentFlags().Int64Var(&sellerFeeBasisPoints, sellerFeeBasisPointsFlag, 0, "basis points to collect (to feeRecipient) on each sale")
 	_ = nftMintCmd.MarkPersistentFlagRequired(nameFlag)
 	nftCmd.AddCommand(nftMintCmd)

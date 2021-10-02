@@ -111,10 +111,7 @@ var collectionCreateCmd = &cobra.Command {
 
 func init() {
 	collectionCreateCmd.PersistentFlags().StringVar(&createCollectionNftMetadata.Description, descriptionFlag, "", "description for nft")
-	collectionCreateCmd.PersistentFlags().StringVar(&createCollectionNftMetadata.ExternalUrl, externalUrlFlag, "", "external url for nft")
 	collectionCreateCmd.PersistentFlags().StringVar(&createCollectionNftMetadata.Image, imageFlag, "", "image for nft")
-	collectionCreateCmd.PersistentFlags().StringVar(&createCollectionNftMetadata.FeeRecipient, feeRecipientFlag, "", "fee recipient for nft royalties")
-	collectionCreateCmd.PersistentFlags().StringVar(&createCollectionNftMetadata.BackgroundColor, backgroundColorFlag, "", "hex value for background color")
 	collectionCreateCmd.PersistentFlags().Int64Var(&sellerFeeBasisPoints, sellerFeeBasisPointsFlag, 0, "basis points to collect (to feeRecipient) on each sale")
 
 	collectionCreateCmd.PersistentFlags().Int64Var(&createCollectionSupply, createCollectionSupplyFlag,  0, "number of supply for the collection to create")

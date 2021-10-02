@@ -185,7 +185,6 @@ func (sdk *NftModule) MintTo(metadata MintNftMetadata) (NftMetadata, error) {
 		Id:          tokenId,
 		Image:       metadata.Image,
 		Description: metadata.Description,
-		Uri:         metadata.ExternalUrl,
 		Name:        metadata.Name,
 	}, err
 }
