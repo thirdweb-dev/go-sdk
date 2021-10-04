@@ -22,6 +22,7 @@ type Currency interface {
 	Allowance(spender string) (*big.Int, error)
 	SetAllowance(spender string, amount *big.Int) error
 	Mint(amount *big.Int) error
+	MintTo(to string, amount *big.Int) error
 	Burn(amount *big.Int) error
 	BurnFrom(from string, amount *big.Int) error
 	TransferFrom(from string, to string, amount *big.Int) error
@@ -85,7 +86,7 @@ func (sdk *CurrencyModule) SetAllowance(spender string, amount *big.Int) error {
 
 func (sdk *CurrencyModule) Mint(amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
-		return &NoSignerError{typeName: "nft"}
+		return &NoSignerError{typeName: "currency"}
 	}
 	if tx, err := sdk.module.CurrencyTransactor.Mint(&bind.TransactOpts{
 		NoSend: false,
@@ -297,3 +298,17 @@ func (sdk *CurrencyModule) Transfer(to string, amount *big.Int) error {
 	}
 }
 
+func (sdk *CurrencyModule) MintTo(to string, amount *big.Int) error {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "currency"}
+	}
+	if tx, err := sdk.module.CurrencyTransactor.Mint(&bind.TransactOpts{
+		NoSend: false,
+		From:   sdk.main.getSignerAddress(),
+		Signer: sdk.main.getSigner(),
+	}, common.HexToAddress(to), amount); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
+}
