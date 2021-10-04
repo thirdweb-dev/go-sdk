@@ -26,7 +26,7 @@ type Nft interface {
 	TotalSupply() (*big.Int, error)
 	SetApproval(operator string, approved bool) error
 	Mint(metadata MintNftMetadata) (NftMetadata, error)
-	MintBatch(meta []interface{}) ([]NftMetadata, error)
+	MintBatch(meta []MintNftMetadata) ([]NftMetadata, error)
 	Burn(tokenId *big.Int) error
 	TransferFrom(from string, to string, tokenId *big.Int) error
 	SetRoyaltyBps(amount *big.Int) error
@@ -46,7 +46,7 @@ type NftModule struct {
 	main ISdk
 }
 
-func (sdk *NftModule) MintBatch(meta []interface{}) ([]NftMetadata, error) {
+func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return nil, &NoSignerError{typeName: "nft"}
 	}
