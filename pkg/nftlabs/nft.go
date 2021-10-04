@@ -31,7 +31,7 @@ type Nft interface {
 	TransferFrom(from string, to string, tokenId *big.Int) error
 	SetRoyaltyBps(amount *big.Int) error
 
-	MintTo(meta MintNftMetadata) (NftMetadata, error)
+	MintTo(to string, meta MintNftMetadata) (NftMetadata, error)
 
 	getModule() *abi.NFT
 }
@@ -153,7 +153,7 @@ func (sdk *NftModule) SetRoyaltyBps(amount *big.Int) error {
 	}
 }
 
-func (sdk *NftModule) MintTo(metadata MintNftMetadata) (NftMetadata, error) {
+func (sdk *NftModule) MintTo(to string, metadata MintNftMetadata) (NftMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return NftMetadata{}, &NoSignerError{
 			typeName: "Nft",
@@ -169,7 +169,7 @@ func (sdk *NftModule) MintTo(metadata MintNftMetadata) (NftMetadata, error) {
 		NoSend: false,
 		Signer: sdk.main.getSigner(),
 		From:   sdk.main.getSignerAddress(),
-	}, sdk.main.getSignerAddress(), uri)
+	}, common.HexToAddress(to), uri)
 
 	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
 		// TODO: return clearer error
@@ -200,7 +200,7 @@ func (sdk *NftModule) Mint(metadata MintNftMetadata) (NftMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return NftMetadata{}, &NoSignerError{typeName: "nft"}
 	}
-	return sdk.MintTo(metadata)
+	return sdk.MintTo(sdk.main.getSignerAddress().String(), metadata)
 }
 
 func (sdk *NftModule) SetApproval(operator string, approved bool) error {
