@@ -60,14 +60,11 @@ func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetad
 		return nil, &NoSignerError{typeName: "nft"}
 	}
 
-	var wg sync.WaitGroup
 	ch := make(chan [2]interface{})
 
 	for index, asset := range meta {
-		wg.Add(1)
-		go func(index int, meta interface{}, ch chan<- [2]interface{}, wg *sync.WaitGroup) {
+		go func(index int, meta interface{}, ch chan<- [2]interface{}) {
 			log.Printf("Uploading collection meta %v\n", meta)
-			defer wg.Done()
 			done := false
 			tryCount := 0
 			var err error
@@ -93,14 +90,13 @@ func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetad
 			} else {
 				ch <- callbackMeta
 			}
-		}(index, asset, ch, &wg)
+		}(index, asset, ch)
 	}
 	results := make([]string, len(meta))
 	for range results {
 		value := <-ch
 		results[value[0].(int)] = value[1].(string)
 	}
-	wg.Wait()
 	close(ch)
 
 	tx, err := sdk.module.MintNFTBatch(&bind.TransactOpts{
