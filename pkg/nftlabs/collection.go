@@ -222,13 +222,13 @@ func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]Collectio
 func (sdk *NftCollectionModule) getNewCollection(logs []*types.Log) ([]*big.Int, error) {
 	var tokenIds []*big.Int
 	for _, l := range logs {
-		iterator, err := sdk.module.ParseNativeNfts(*l)
+		iterator, err := sdk.module.ParseNativeTokens(*l)
 		if err != nil {
 			continue
 		}
 
-		if iterator.NftIds != nil {
-			tokenIds = iterator.NftIds
+		if iterator.TokenIds != nil {
+			tokenIds = iterator.TokenIds
 			break
 		}
 	}
