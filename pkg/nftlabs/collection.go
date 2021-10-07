@@ -50,7 +50,7 @@ func newNftCollectionModule(client *ethclient.Client, address string, main ISdk)
 }
 
 func (sdk *NftCollectionModule) Get(tokenId *big.Int) (CollectionMetadata, error) {
-	info, err := sdk.module.NftInfo(&bind.CallOpts{}, tokenId)
+	creator, err := sdk.module.Creator(&bind.CallOpts{}, tokenId)
 	if err != nil {
 		return CollectionMetadata{}, err
 	}
@@ -66,10 +66,15 @@ func (sdk *NftCollectionModule) Get(tokenId *big.Int) (CollectionMetadata, error
 		return CollectionMetadata{}, &UnmarshalError{body: string(body), typeName: "nft", underlyingError: err}
 	}
 
+	supply, err := sdk.module.TotalSupply(&bind.CallOpts{}, tokenId)
+	if err != nil{
+		return CollectionMetadata{}, err
+	}
+
 	return CollectionMetadata{
 		NftMetadata: metadata,
-		Creator:     info.Creator.String(),
-		Supply:      info.Supply,
+		Creator:     creator.String(),
+		Supply:      supply,
 	}, nil
 }
 
