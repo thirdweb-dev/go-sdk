@@ -188,9 +188,14 @@ func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
 		return PackMetadata{}, err
 	}
 
+	supply, err := sdk.module.TotalSupply(&bind.CallOpts{}, packId)
+	if err != nil {
+		return PackMetadata{}, err
+	}
+
 	return PackMetadata{
 		Creator:       packMeta.Creator,
-		CurrentSupply: *packMeta.CurrentSupply,
+		CurrentSupply: supply,
 		OpenStart:     time.Unix(packMeta.OpenStart.Int64(), 0),
 		OpenEnd:       time.Unix(packMeta.OpenEnd.Int64(), 0),
 		NftMetadata:   metadata,
@@ -260,6 +265,11 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 		return nil, err
 	}
 
+	supply, err := sdk.module.TotalSupply(&bind.CallOpts{}, packId)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, i := range result.TokenIds {
 		wg.Add(1)
 
@@ -277,7 +287,7 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 
 			ch <- PackNft{
 				NftMetadata: metadata,
-				Supply:      result.Pack.CurrentSupply,
+				Supply:      supply,
 			}
 		}(i)
 	}
