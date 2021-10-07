@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/ethereum/go-ethereum/core/types"
 	"log"
 	"math/big"
 	"sync"
+
+	"github.com/ethereum/go-ethereum/core/types"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -31,6 +32,7 @@ type Nft interface {
 	TransferFrom(from string, to string, tokenId *big.Int) error
 	SetRoyaltyBps(amount *big.Int) error
 
+	MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetadata, error)
 	MintTo(to string, meta MintNftMetadata) (NftMetadata, error)
 
 	getModule() *abi.NFT
@@ -50,32 +52,54 @@ func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return nil, &NoSignerError{typeName: "nft"}
 	}
+	return sdk.MintBatchTo(sdk.main.getSignerAddress().String(), meta)
+}
+
+func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetadata, error) {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return nil, &NoSignerError{typeName: "nft"}
+	}
 
 	var wg sync.WaitGroup
-	ch := make(chan string)
+	ch := make(chan [2]interface{})
 
-	for _, asset := range meta {
+	for index, asset := range meta {
 		wg.Add(1)
-		go func(meta interface{}) {
+		go func(index int, meta interface{}, ch chan<- [2]interface{}, wg *sync.WaitGroup) {
 			log.Printf("Uploading collection meta %v\n", meta)
 			defer wg.Done()
-
-			uri, err := sdk.main.getGateway().Upload(meta, sdk.Address, sdk.main.getSignerAddress().String())
-			if err != nil {
-				// TODO: need better handling, ts sdk does nothing if this fails
-				log.Printf("Failed to upload one of the nft metadata in collection creation")
-				ch <- ""
-			} else {
-				ch <- uri
+			done := false
+			tryCount := 0
+			var err error
+			uri := ``
+			for !done {
+				uri, err = sdk.main.getGateway().Upload(meta, sdk.Address, sdk.main.getSignerAddress().String())
+				tryCount++
+				if err != nil {
+					if tryCount == 5 {
+						break
+					}
+					continue
+				}
+				done = true
 			}
-		}(asset)
+			callbackMeta := [2]interface{}{
+				0: index,
+				1: uri,
+			}
+			if err != nil {
+				log.Printf("Failed to upload one of the nft metadata in collection creation")
+				ch <- callbackMeta
+			} else {
+				ch <- callbackMeta
+			}
+		}(index, asset, ch, &wg)
 	}
-
 	results := make([]string, len(meta))
-	for i := range results {
-		results[i] = <-ch
+	for range results {
+		value := <-ch
+		results[value[0].(int)] = value[1].(string)
 	}
-
 	wg.Wait()
 	close(ch)
 
@@ -83,7 +107,7 @@ func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
 		From:   sdk.main.getSignerAddress(),
 		NoSend: false,
 		Signer: sdk.main.getSigner(),
-	}, sdk.main.getSignerAddress(), results)
+	}, common.HexToAddress(to), results)
 	if err != nil {
 		return nil, err
 	}
@@ -97,14 +121,21 @@ func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
 		return nil, err
 	}
 
-	_, err = sdk.getNewMintedBatch(receipt.Logs)
+	abiBatch, err := sdk.getNewMintedBatch(receipt.Logs)
 	if err != nil {
 		return nil, err
 	}
-
-	// TODO: process batch and fetch new nfts
-
-	return nil, nil
+	metas := []NftMetadata{}
+	for idx := range meta {
+		metas = append(metas, NftMetadata{
+			Id:          abiBatch.TokenIds[idx],
+			Name:        meta[idx].Name,
+			Description: meta[idx].Description,
+			Image:       meta[idx].Image,
+			Properties:  meta[idx].Properties,
+		})
+	}
+	return metas, nil
 }
 
 func (sdk *NftModule) Burn(tokenId *big.Int) error {
@@ -196,7 +227,7 @@ func (sdk *NftModule) MintTo(to string, metadata MintNftMetadata) (NftMetadata, 
 		Image:       metadata.Image,
 		Description: metadata.Description,
 		Name:        metadata.Name,
-		Properties: metadata.Properties,
+		Properties:  metadata.Properties,
 	}, err
 }
 
@@ -294,7 +325,7 @@ func newNftModule(client *ethclient.Client, address string, main ISdk) (Nft, err
 		Client:  client,
 		Address: address,
 		module:  module,
-		main: main,
+		main:    main,
 	}, nil
 }
 
