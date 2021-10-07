@@ -180,7 +180,7 @@ func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]Collectio
 		supplies[i] = m.Supply
 	}
 
-	tx, err := sdk.module.NFTCollectionTransactor.CreateNativeNfts(&bind.TransactOpts{
+	tx, err := sdk.module.CreateNativeTokens(&bind.TransactOpts{
 		NoSend: false,
 		From:   sdk.main.getSignerAddress(),
 		Signer: sdk.main.getSigner(),
