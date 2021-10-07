@@ -170,6 +170,10 @@ func (sdk *NftModule) MintTo(to string, metadata MintNftMetadata) (NftMetadata, 
 		Signer: sdk.main.getSigner(),
 		From:   sdk.main.getSignerAddress(),
 	}, common.HexToAddress(to), uri)
+	if err != nil {
+		log.Printf("Failed to execute transaction %v\n", tx.Hash().String())
+		return NftMetadata{}, err
+	}
 
 	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
 		// TODO: return clearer error
