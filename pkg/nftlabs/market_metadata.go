@@ -34,6 +34,6 @@ type NewListingArgs struct {
 	Price                   *big.Int `json:"price"`
 	Quantity                *big.Int `json:"quantity"`
 	SecondsUntilOpenStart   *big.Int `json:"secondsUntilOpenStart"`
-	SecondsUntilOpenEnd     *big.Int `json:"secondsUntilOpenEnd"`
-	RewardsPerOpen          *big.Int `json:"rewardsPerOpen"`
+	SecondsUntilOpenEnd *big.Int `json:"secondsUntilOpenEnd"`
+	TokensPerBuyer      *big.Int `json:"tokensPerBuyer"`
 }
