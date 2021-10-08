@@ -7,7 +7,7 @@ import (
 
 type Metadata struct {
 	MetadataUri string
-	MetadataMap map[string]interface{}
+	MetadataMap interface{}
 }
 
 func (arg *Metadata) UnmarshalJSON(data []byte) error {

@@ -16,7 +16,6 @@ import (
 type Currency interface {
 	Balance() (CurrencyValue, error)
 	Get() (CurrencyMetadata, error)
-	GetAll() ([]CurrencyMetadata, error)
 	BalanceOf(address string) (CurrencyValue, error)
 	GetValue(value *big.Int) (CurrencyValue, error)
 	Transfer(to string, amount *big.Int) error
