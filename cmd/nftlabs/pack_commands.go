@@ -14,7 +14,7 @@ const (
 	secondsUntilOpenEndFlag = "secondsUntilOpenEnd"
 	rewardsPerOpenFlag = "rewardsPerOpen"
 	assetSuppliesFlag = "assetSupplies"
-	//descriptionFlag = "description"
+	//nftMetadataFlag = "description"
 	//imageFlag = "image"
 	//externalUrlFlag = "externalUrl"
 	//sellerFeeBasisPointsFlag = "sellerFeeBasisPoints"

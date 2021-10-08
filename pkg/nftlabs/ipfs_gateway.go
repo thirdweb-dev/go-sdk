@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"golang.org/x/sync/errgroup"
 	"io/ioutil"
 	"log"
 	"math/big"
@@ -53,6 +54,10 @@ func (gw *IpfsStorage) Get(uri string) ([]byte, error) {
 }
 
 func (gw *IpfsStorage) Upload(data interface{}, contractAddress string, signerAddress string) (string, error) {
+	if meta, ok := data.(Metadata); ok && meta.MetadataUri != "" {
+		return meta.MetadataUri, nil
+	}
+
 	client := &http.Client{}
 	jsonData, err := json.Marshal(data)
 	if err != nil {
@@ -98,4 +103,35 @@ func (gw *IpfsStorage) Upload(data interface{}, contractAddress string, signerAd
 		}
 		return uploadMeta.IpfsUri, nil
 	}
+}
+
+// UploadBatch uploads a list of arbitrary objects and returns their URIs *in the order they were passed*
+func (gw *IpfsStorage) UploadBatch(data []interface{}, contractAddress string, signerAddress string) ([]string, error) {
+	wg := new(errgroup.Group)
+
+	results := make([]string, len(data))
+	for i, asset := range data {
+		func(meta interface{}, index int) {
+			wg.Go(func() error {
+				if meta, ok := meta.(Metadata); ok && meta.MetadataUri != "" {
+					results[index] = meta.MetadataUri
+				}
+
+				uri, err := gw.Upload(meta, contractAddress, signerAddress)
+				if err != nil {
+					return err
+				} else {
+					results[index] = uri
+					return nil
+				}
+			})
+		}(asset, i)
+	}
+
+	if err := wg.Wait(); err != nil {
+		log.Println("Failed to upload a portion of the metadata, aborting")
+		return nil, err
+	}
+
+	return results, nil
 }

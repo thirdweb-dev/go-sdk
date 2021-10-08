@@ -10,7 +10,7 @@ import (
 type PackMetadata struct {
 	NftMetadata
 	Creator       common.Address
-	CurrentSupply big.Int
+	CurrentSupply *big.Int
 	OpenStart     time.Time
 	OpenEnd       time.Time
 }
