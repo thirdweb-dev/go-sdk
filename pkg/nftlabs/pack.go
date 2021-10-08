@@ -127,11 +127,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 	}
 
 	// TODO: check if whats added to pack is erc721 or erc1155, will do later when we support erc721
-	tx, err := erc155Module.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
-		From:     sdk.main.getSignerAddress(),
-		Signer:   sdk.main.getSigner(),
-		NoSend:   false,
-	}, sdk.main.getSignerAddress(), common.HexToAddress(sdk.Address), ids, counts, bytes)
+	tx, err := erc155Module.module.ERC1155Transactor.SafeBatchTransferFrom(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), common.HexToAddress(sdk.Address), ids, counts, bytes)
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -317,11 +313,7 @@ func (sdk *PackModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) 
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "pack"}
 	}
-	if tx, err := sdk.module.SafeTransferFrom(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId, quantity, nil); err != nil {
+	if tx, err := sdk.module.SafeTransferFrom(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId, quantity, nil); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
