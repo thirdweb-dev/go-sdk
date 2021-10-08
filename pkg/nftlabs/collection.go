@@ -181,11 +181,7 @@ func (sdk *NftCollectionModule) SetApproved(operator string, approved bool) erro
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "NFTCollection"}
 	}
-	if tx, err := sdk.module.SetApprovalForAll(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From: sdk.main.getSignerAddress(),
-	}, common.HexToAddress(operator), approved); err != nil {
+	if tx, err := sdk.module.SetApprovalForAll(sdk.main.getTransactOpts(true), common.HexToAddress(operator), approved); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -196,11 +192,7 @@ func (sdk *NftCollectionModule) Transfer(to string, tokenId *big.Int, amount *bi
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "NFTCollection"}
 	}
-	tx, err := sdk.module.SafeTransferFrom(&bind.TransactOpts{
-		NoSend: false,
-		From: sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId, amount, nil)
+	tx, err := sdk.module.SafeTransferFrom(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId, amount, nil)
 	if err != nil {
 		return err
 	}
@@ -251,11 +243,7 @@ func (sdk *NftCollectionModule) BurnBatchFrom(account string, args []NftCollecti
 		amounts[i] = arg.Amount
 	}
 
-	if tx, err := sdk.module.BurnBatch(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From: sdk.main.getSignerAddress(),
-	}, common.HexToAddress(account), ids, amounts); err != nil {
+	if tx, err := sdk.module.BurnBatch(sdk.main.getTransactOpts(true), common.HexToAddress(account), ids, amounts); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -266,11 +254,7 @@ func (sdk *NftCollectionModule) BurnFrom(account string, args NftCollectionBatch
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "NFTCollection"}
 	}
-	if tx, err := sdk.module.Burn(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From: sdk.main.getSignerAddress(),
-	}, common.HexToAddress(account), args.TokenId, args.Amount); err != nil {
+	if tx, err := sdk.module.Burn(sdk.main.getTransactOpts(true), common.HexToAddress(account), args.TokenId, args.Amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -318,11 +302,7 @@ func (sdk *NftCollectionModule) CreateAndMintBatch(metadataWithSupply []CreateCo
 		supplies[i] = arg.Supply
 	}
 
-	tx, err := sdk.module.CreateNativeTokens(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From: sdk.main.getSignerAddress(),
-	}, uris, supplies);
+	tx, err := sdk.module.CreateNativeTokens(sdk.main.getTransactOpts(true), uris, supplies);
 	if err != nil {
 		return nil, err
 	}
@@ -381,11 +361,7 @@ func (sdk *NftCollectionModule) CreateWithErc20(tokenContract string, tokenAmoun
 		return err
 	}
 
-	if tx, err := sdk.module.WrapERC20(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From: sdk.main.getSignerAddress(),
-	}, common.HexToAddress(tokenContract), tokenAmount, args.Supply, uri); err != nil {
+	if tx, err := sdk.module.WrapERC20(sdk.main.getTransactOpts(true), common.HexToAddress(tokenContract), tokenAmount, args.Supply, uri); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -402,11 +378,7 @@ func (sdk *NftCollectionModule) CreateWithErc721(tokenContract string, tokenAmou
 		return err
 	}
 
-	if tx, err := sdk.module.WrapERC721(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From: sdk.main.getSignerAddress(),
-	}, common.HexToAddress(tokenContract), tokenAmount, uri); err != nil {
+	if tx, err := sdk.module.WrapERC721(sdk.main.getTransactOpts(true), common.HexToAddress(tokenContract), tokenAmount, uri); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -429,11 +401,7 @@ func (sdk *NftCollectionModule) MintBatchTo(toAddress string, args []MintCollect
 		amounts[i] = arg.Amount
 	}
 
-	if tx, err := sdk.module.MintBatch(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From: sdk.main.getSignerAddress(),
-	}, common.HexToAddress(toAddress), ids, amounts, nil); err != nil {
+	if tx, err := sdk.module.MintBatch(sdk.main.getTransactOpts(true), common.HexToAddress(toAddress), ids, amounts, nil); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -445,11 +413,7 @@ func (sdk *NftCollectionModule) MintTo(toAddress string, args MintCollectionArgs
 		return &NoSignerError{typeName: "NFTCollection"}
 	}
 
-	if tx, err := sdk.module.Mint(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From: sdk.main.getSignerAddress(),
-	}, common.HexToAddress(toAddress), args.TokenId, args.Amount, nil); err != nil {
+	if tx, err := sdk.module.Mint(sdk.main.getTransactOpts(true), common.HexToAddress(toAddress), args.TokenId, args.Amount, nil); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)

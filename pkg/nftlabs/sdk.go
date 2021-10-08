@@ -3,6 +3,7 @@ package nftlabs
 import (
 	"context"
 	"crypto/ecdsa"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -23,6 +24,7 @@ type ISdk interface {
 	getRawPrivateKey() string
 	getOptions() *SdkOptions
 	getGateway() Storage
+	getTransactOpts(send bool) *bind.TransactOpts
 }
 
 type Sdk struct {
@@ -183,4 +185,12 @@ func (sdk *Sdk) SetStorage(gateway Storage) {
 
 func (sdk *Sdk) getGateway() Storage {
 	return sdk.gateway
+}
+
+func (sdk *Sdk) getTransactOpts(send bool) *bind.TransactOpts {
+	return &bind.TransactOpts{
+		NoSend: !send,
+		From: sdk.getSignerAddress(),
+		Signer: sdk.getSigner(),
+	}
 }
