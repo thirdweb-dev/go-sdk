@@ -15,16 +15,13 @@ type MintCollectionArgs struct {
 	Amount  *big.Int `json:"amount"`
 }
 
-type collectionAssetMetadata struct {
-	Uri    string
-	Supply *big.Int
-}
-
 type NftCollectionBatchArgs struct {
 	Amount *big.Int `json:"amount"`
 	TokenId *big.Int `json:"tokenId"`
 }
 
+// CreateCollectionArgs to create collections
+// Supply should be non-nil
 type CreateCollectionArgs struct {
 	Metadata Metadata
 	Supply *big.Int

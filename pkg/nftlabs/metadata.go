@@ -6,8 +6,8 @@ import (
 )
 
 type Metadata struct {
-	MetadataUri string
-	MetadataMap interface{}
+	MetadataUri    string
+	MetadataObject interface{}
 }
 
 func (arg *Metadata) UnmarshalJSON(data []byte) error {
@@ -16,14 +16,14 @@ func (arg *Metadata) UnmarshalJSON(data []byte) error {
 		arg.MetadataUri = string(data[1 : len(data)-1])
 		return nil
 	}
-	return json.Unmarshal(data, &arg.MetadataMap)
+	return json.Unmarshal(data, &arg.MetadataObject)
 }
 
 func (arg *Metadata) MarshalJSON() ([]byte, error) {
 	if arg.MetadataUri != "" {
 		return []byte(arg.MetadataUri), nil
-	} else if arg.MetadataMap != nil {
-		return json.Marshal(arg.MetadataMap)
+	} else if arg.MetadataObject != nil {
+		return json.Marshal(arg.MetadataObject)
 	} else  {
 		// TODO: return unrecognized type error
 		return nil, errors.New("Unrecognized type provied to create collection")

@@ -293,7 +293,7 @@ func (sdk *NftCollectionModule) CreateAndMintBatch(metadataWithSupply []CreateCo
 			uris[i] = arg.Metadata.MetadataUri
 			continue
 		}
-		if uri, err := sdk.main.getGateway().Upload(arg.Metadata.MetadataMap, sdk.Address, sdk.main.getSignerAddress().String()); err != nil {
+		if uri, err := sdk.main.getGateway().Upload(arg.Metadata.MetadataObject, sdk.Address, sdk.main.getSignerAddress().String()); err != nil {
 			return nil, err
 		} else {
 			uris[i] = uri
@@ -302,7 +302,8 @@ func (sdk *NftCollectionModule) CreateAndMintBatch(metadataWithSupply []CreateCo
 		supplies[i] = arg.Supply
 	}
 
-	tx, err := sdk.module.CreateNativeTokens(sdk.main.getTransactOpts(true), uris, supplies);
+	log.Printf("uris=%d sup=%\n", uris, supplies)
+	tx, err := sdk.module.CreateNativeTokens(sdk.main.getTransactOpts(true), uris, supplies)
 	if err != nil {
 		return nil, err
 	}

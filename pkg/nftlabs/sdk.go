@@ -192,5 +192,6 @@ func (sdk *Sdk) getTransactOpts(send bool) *bind.TransactOpts {
 		NoSend: !send,
 		From: sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
+
 	}
 }
