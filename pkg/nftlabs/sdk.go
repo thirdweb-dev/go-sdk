@@ -51,10 +51,6 @@ func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error) {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
 	}
 
-	if opt.GasLimit == 0 {
-		opt.GasLimit = 10000 // TODO: what should this be?
-	}
-
 	defaultGateway := newIpfsStorage(opt.IpfsGatewayUrl)
 	sdk := &Sdk{
 		client: client,
