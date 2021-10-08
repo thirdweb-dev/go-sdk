@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"math/big"
 )
 
 type ISdk interface {
@@ -16,6 +17,7 @@ type ISdk interface {
 	GetPackModule(address string) (Pack, error)
 	GetNftCollectionModule(address string) (NftCollection, error)
 	GetStorage() (Storage, error)
+	TransferNativeToken(to string, amount *big.Int) error
 
 	SetStorage(gateway Storage)
 
@@ -47,6 +49,10 @@ type Sdk struct {
 func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error) {
 	if opt.IpfsGatewayUrl == "" {
 		opt.IpfsGatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
+	}
+
+	if opt.GasLimit == 0 {
+		opt.GasLimit = 10000 // TODO: what should this be?
 	}
 
 	defaultGateway := newIpfsStorage(opt.IpfsGatewayUrl)
@@ -192,6 +198,44 @@ func (sdk *Sdk) getTransactOpts(send bool) *bind.TransactOpts {
 		NoSend: !send,
 		From: sdk.getSignerAddress(),
 		Signer: sdk.getSigner(),
-
+		GasPrice: sdk.opt.MaxGasPriceInGwei,
 	}
 }
+
+func (sdk *Sdk) TransferNativeToken(to string, amount *big.Int) error {
+	if sdk.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "SDK"}
+	}
+
+	nonce, err := sdk.client.PendingNonceAt(context.Background(), sdk.getSignerAddress())
+	if err != nil {
+		return err
+	}
+
+	gasLimit := uint64(21000)                // in units
+	gasPrice, err := sdk.client.SuggestGasPrice(context.Background())
+	if err != nil {
+		return err
+	}
+
+	var data []byte
+	tx := types.NewTransaction(nonce, common.HexToAddress(to), amount, gasLimit, gasPrice, data)
+
+	chainID, err := sdk.client.NetworkID(context.Background())
+	if err != nil {
+		return err
+	}
+
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), sdk.privateKey)
+	if err != nil {
+		return err
+	}
+
+	err = sdk.client.SendTransaction(context.Background(), signedTx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
