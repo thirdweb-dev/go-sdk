@@ -108,7 +108,7 @@ var marketplaceListCmd = &cobra.Command{
 		if _, success := tokensPerBuyer.SetString(args[3], 10); !success {
 			panic("Failed to parse tokensPerBuyer")
 		}
-		newMarketplaceListing.RewardsPerOpen = tokensPerBuyer
+		newMarketplaceListing.TokensPerBuyer = tokensPerBuyer
 
 		secondsUntilOpenStart := big.NewInt(0)
 		if _, success := secondsUntilOpenStart.SetString(args[4], 10); !success {

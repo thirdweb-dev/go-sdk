@@ -64,6 +64,12 @@ func (manager *defaultModuleImpl) GrantRole(role Role, address string) error {
 		} else {
 			transaction = tx
 		}
+	} else if m, ok := module.(NftCollection); ok {
+		if tx, err :=  m.getModule().GrantRole(opts, r, adr); err != nil {
+			return err
+		} else {
+			transaction = tx
+		}
 	}
 
 	return waitForTx(manager.sdk.client, transaction.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -91,6 +97,12 @@ func (manager *defaultModuleImpl) RevokeRole(role Role, address string) error {
 			transaction = tx
 		}
 	} else if m, ok := module.(Nft); ok {
+		if tx, err :=  m.getModule().RevokeRole(opts, r, adr); err != nil {
+			return err
+		} else {
+			transaction = tx
+		}
+	} else if m, ok := module.(NftCollection); ok {
 		if tx, err :=  m.getModule().RevokeRole(opts, r, adr); err != nil {
 			return err
 		} else {

@@ -127,11 +127,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 	}
 
 	// TODO: check if whats added to pack is erc721 or erc1155, will do later when we support erc721
-	tx, err := erc155Module.module.ERC1155Transactor.SafeBatchTransferFrom(&bind.TransactOpts{
-		From:     sdk.main.getSignerAddress(),
-		Signer:   sdk.main.getSigner(),
-		NoSend:   false,
-	}, sdk.main.getSignerAddress(), common.HexToAddress(sdk.Address), ids, counts, bytes)
+	tx, err := erc155Module.module.ERC1155Transactor.SafeBatchTransferFrom(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), common.HexToAddress(sdk.Address), ids, counts, bytes)
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -188,9 +184,14 @@ func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
 		return PackMetadata{}, err
 	}
 
+	supply, err := sdk.module.TotalSupply(&bind.CallOpts{}, packId)
+	if err != nil {
+		return PackMetadata{}, err
+	}
+
 	return PackMetadata{
 		Creator:       packMeta.Creator,
-		CurrentSupply: *packMeta.CurrentSupply,
+		CurrentSupply: supply,
 		OpenStart:     time.Unix(packMeta.OpenStart.Int64(), 0),
 		OpenEnd:       time.Unix(packMeta.OpenEnd.Int64(), 0),
 		NftMetadata:   metadata,
@@ -260,6 +261,11 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 		return nil, err
 	}
 
+	supply, err := sdk.module.TotalSupply(&bind.CallOpts{}, packId)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, i := range result.TokenIds {
 		wg.Add(1)
 
@@ -277,7 +283,7 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 
 			ch <- PackNft{
 				NftMetadata: metadata,
-				Supply:      result.Pack.CurrentSupply,
+				Supply:      supply,
 			}
 		}(i)
 	}
@@ -307,11 +313,7 @@ func (sdk *PackModule) Transfer(to string, tokenId *big.Int, quantity *big.Int) 
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "pack"}
 	}
-	if tx, err := sdk.module.SafeTransferFrom(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId, quantity, nil); err != nil {
+	if tx, err := sdk.module.SafeTransferFrom(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId, quantity, nil); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
