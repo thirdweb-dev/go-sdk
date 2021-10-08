@@ -86,10 +86,10 @@ func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetad
 			}
 			if err != nil {
 				log.Printf("Failed to upload one of the nft metadata in collection creation")
-				ch <- callbackMeta
-			} else {
-				ch <- callbackMeta
+
 			}
+			ch <- callbackMeta
+
 		}(index, asset, ch)
 	}
 	results := make([]string, len(meta))
@@ -121,15 +121,15 @@ func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetad
 	if err != nil {
 		return nil, err
 	}
-	metas := []NftMetadata{}
+	metas := make([]NftMetadata, len(meta))
 	for idx := range meta {
-		metas = append(metas, NftMetadata{
+		metas[idx] = NftMetadata{
 			Id:          abiBatch.TokenIds[idx],
 			Name:        meta[idx].Name,
 			Description: meta[idx].Description,
 			Image:       meta[idx].Image,
 			Properties:  meta[idx].Properties,
-		})
+		}
 	}
 	return metas, nil
 }
