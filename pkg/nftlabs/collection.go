@@ -1,7 +1,6 @@
 package nftlabs
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -15,15 +14,37 @@ import (
 )
 
 type NftCollection interface {
+	Balance(tokenId *big.Int) (*big.Int, error)
+	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
+	Burn(args NftCollectionBatchArgs) error
+	BurnBatch(args []NftCollectionBatchArgs) error
+	BurnBatchFrom(account string, args []NftCollectionBatchArgs) error
+	BurnFrom(account string, args NftCollectionBatchArgs) error
+	Create(metadata Metadata) ([]CollectionMetadata, error)
+	CreateAndMint(metadataWithSupply CreateCollectionArgs) (CollectionMetadata, error)
+	CreateAndMintBatch(metadataWithSupply CreateCollectionArgs) ([]CollectionMetadata, error)
+	CreateBatch(metadata []Metadata) ([]CollectionMetadata, error)
+	CreateWithErc20(tokenContract string, tokenAmount *big.Int, args CreateCollectionArgs) error
+	CreateWithErc721(tokenContract string, tokenAmount *big.Int, args CreateCollectionArgs) error
 	Get(tokenId *big.Int) (CollectionMetadata, error)
 	GetAll() ([]CollectionMetadata, error)
-	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
-	Balance(tokenId *big.Int) (*big.Int, error)
+
+	defaultModule
 	IsApproved(address string, operator string) (bool, error)
-	SetApproved(operator string, approved bool) error
-	Transfer(to string, tokenId *big.Int, amount *big.Int) error
-	Create(args []CreateCollectionArgs) ([]CollectionMetadata, error)
+
 	Mint(args MintCollectionArgs) error
+	MintBatch(args []MintCollectionArgs) error
+	MintBatchTo(toAddress string, args []MintCollectionArgs) error
+	MintTo(toAddress string, args MintCollectionArgs) error
+
+	SetApproval(operator string, approved bool) error
+	SetRoyaltyBps(amount *big.Int) error
+
+	Transfer(to string, tokenId *big.Int, amount *big.Int) error
+	TransferBatchFrom(from string, to string, args NftCollectionBatchArgs, amount *big.Int) error
+	TransferFrom(from string, to string, args NftCollectionBatchArgs) error
+
+	getModule() *abi.NFTCollection
 }
 
 type NftCollectionModule struct {
@@ -32,6 +53,10 @@ type NftCollectionModule struct {
 	module  *abi.NFTCollection
 
 	main ISdk
+}
+
+func (sdk *NftCollectionModule) Burn(args NftCollectionBatchArgs) error {
+	panic("implement me")
 }
 
 func newNftCollectionModule(client *ethclient.Client, address string, main ISdk) (*NftCollectionModule, error) {
@@ -47,6 +72,10 @@ func newNftCollectionModule(client *ethclient.Client, address string, main ISdk)
 		module:  module,
 		main: main,
 	}, nil
+}
+
+func (sdk *NftCollectionModule) getModule() *abi.NFTCollection {
+	return sdk.module
 }
 
 func (sdk *NftCollectionModule) Get(tokenId *big.Int) (CollectionMetadata, error) {
@@ -167,57 +196,57 @@ func (sdk *NftCollectionModule) Transfer(to string, tokenId *big.Int, amount *bi
 	return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
 }
 
-func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]CollectionMetadata, error) {
-	assetMeta, err := sdk.uploadBatchMetadata(args)
-	if err != nil {
-		return nil, err
-	}
-
-	uris := make([]string, len(assetMeta))
-	supplies := make([]*big.Int, len(assetMeta))
-	for i, m := range assetMeta {
-		uris[i] = m.Uri
-		supplies[i] = m.Supply
-	}
-
-	tx, err := sdk.module.CreateNativeTokens(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, uris, supplies)
-
-	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
-		// TODO: return clearer error
-		return nil, err
-	}
-
-	receipt, err := sdk.Client.TransactionReceipt(context.Background(), tx.Hash())
-	if err != nil {
-		log.Printf("Failed to lookup transaction receipt with hash %v\n", tx.Hash().String())
-		return nil, err
-	}
-
-	nftIds, err := sdk.getNewCollection(receipt.Logs)
-	if err != nil {
-		return nil, err
-	}
-
-	var wg sync.WaitGroup
-	ch := make(chan CollectionMetadata)
-	defer close(ch)
-	for _, nftId := range nftIds {
-		wg.Add(1)
-		go sdk.GetAsync(nftId, ch, &wg)
-	}
-
-	results := make([]CollectionMetadata, len(nftIds))
-	for i := range results {
-		results[i] = <-ch
-	}
-
-	wg.Wait()
-	return results, nil
-}
+//func (sdk *NftCollectionModule) Create(args []CreateCollectionArgs) ([]CollectionMetadata, error) {
+//	assetMeta, err := sdk.uploadBatchMetadata(args)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	uris := make([]string, len(assetMeta))
+//	supplies := make([]*big.Int, len(assetMeta))
+//	for i, m := range assetMeta {
+//		uris[i] = m.Uri
+//		supplies[i] = m.Supply
+//	}
+//
+//	tx, err := sdk.module.CreateNativeTokens(&bind.TransactOpts{
+//		NoSend: false,
+//		From:   sdk.main.getSignerAddress(),
+//		Signer: sdk.main.getSigner(),
+//	}, uris, supplies)
+//
+//	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
+//		// TODO: return clearer error
+//		return nil, err
+//	}
+//
+//	receipt, err := sdk.Client.TransactionReceipt(context.Background(), tx.Hash())
+//	if err != nil {
+//		log.Printf("Failed to lookup transaction receipt with hash %v\n", tx.Hash().String())
+//		return nil, err
+//	}
+//
+//	nftIds, err := sdk.getNewCollection(receipt.Logs)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	var wg sync.WaitGroup
+//	ch := make(chan CollectionMetadata)
+//	defer close(ch)
+//	for _, nftId := range nftIds {
+//		wg.Add(1)
+//		go sdk.GetAsync(nftId, ch, &wg)
+//	}
+//
+//	results := make([]CollectionMetadata, len(nftIds))
+//	for i := range results {
+//		results[i] = <-ch
+//	}
+//
+//	wg.Wait()
+//	return results, nil
+//}
 
 func (sdk *NftCollectionModule) getNewCollection(logs []*types.Log) ([]*big.Int, error) {
 	var tokenIds []*big.Int
@@ -291,3 +320,74 @@ func (sdk *NftCollectionModule) Mint(args MintCollectionArgs) error {
 	}
 }
 
+func (sdk *NftCollectionModule) BurnBatch(args []NftCollectionBatchArgs) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) BurnBatchFrom(account string, args []NftCollectionBatchArgs) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) BurnFrom(account string, args NftCollectionBatchArgs) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) Create(metadata Metadata) ([]CollectionMetadata, error) {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) CreateAndMint(metadataWithSupply CreateCollectionArgs) (CollectionMetadata, error) {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) CreateAndMintBatch(metadataWithSupply CreateCollectionArgs) ([]CollectionMetadata, error) {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) CreateBatch(metadata []Metadata) ([]CollectionMetadata, error) {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) CreateWithErc20(tokenContract string, tokenAmount *big.Int, args CreateCollectionArgs) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) CreateWithErc721(tokenContract string, tokenAmount *big.Int, args CreateCollectionArgs) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) GrantRole(role Role, address string) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) RevokeRole(role Role, address string) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) MintBatch(args []MintCollectionArgs) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) MintBatchTo(toAddress string, args []MintCollectionArgs) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) MintTo(toAddress string, args MintCollectionArgs) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) SetApproval(operator string, approved bool) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) SetRoyaltyBps(amount *big.Int) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) TransferBatchFrom(from string, to string, args NftCollectionBatchArgs, amount *big.Int) error {
+	panic("implement me")
+}
+
+func (sdk *NftCollectionModule) TransferFrom(from string, to string, args NftCollectionBatchArgs) error {
+	panic("implement me")
+}

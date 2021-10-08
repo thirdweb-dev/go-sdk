@@ -14,10 +14,11 @@ import (
 )
 
 type Currency interface {
-	Get() (CurrencyMetadata, error)
-	GetValue(value *big.Int) (CurrencyValue, error)
 	Balance() (CurrencyValue, error)
+	Get() (CurrencyMetadata, error)
+	GetAll() ([]CurrencyMetadata, error)
 	BalanceOf(address string) (CurrencyValue, error)
+	GetValue(value *big.Int) (CurrencyValue, error)
 	Transfer(to string, amount *big.Int) error
 	Allowance(spender string) (*big.Int, error)
 	SetAllowance(spender string, amount *big.Int) error
