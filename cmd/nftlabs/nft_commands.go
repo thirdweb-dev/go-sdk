@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	nameFlag = "name"
+	nameFlag        = "name"
 	descriptionFlag = "description"
-	imageFlag = "image"
+	imageFlag       = "image"
 	externalUrlFlag = "externalUrl"
 	sellerFeeBasisPointsFlag = "sellerFeeBasisPoints"
 	feeRecipientFlag = "feeRecipient"

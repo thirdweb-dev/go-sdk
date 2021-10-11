@@ -30,11 +30,10 @@ var (
 
 // PackPackState is an auto generated low-level Go binding around an user-defined struct.
 type PackPackState struct {
-	Uri           string
-	Creator       common.Address
-	CurrentSupply *big.Int
-	OpenStart     *big.Int
-	OpenEnd       *big.Int
+	Uri       string
+	Creator   common.Address
+	OpenStart *big.Int
+	OpenEnd   *big.Int
 }
 
 // PackRewards is an auto generated low-level Go binding around an user-defined struct.
@@ -47,7 +46,7 @@ type PackRewards struct {
 
 // PackMetaData contains all meta data concerning the Pack contract.
 var PackMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_controlCenter\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_vrfCoordinator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_linkToken\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_keyHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_fees\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_trustedForwarder\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"packId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"rewardContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"currentSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openEnd\",\"type\":\"uint256\"}],\"indexed\":false,\"internalType\":\"structPack.PackState\",\"name\":\"packState\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amountsPacked\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256\",\"name\":\"rewardsPerOpen\",\"type\":\"uint256\"}],\"indexed\":false,\"internalType\":\"structPack.Rewards\",\"name\":\"rewards\",\"type\":\"tuple\"}],\"name\":\"PackCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"packId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"opener\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"requestId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"rewardContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"rewardIds\",\"type\":\"uint256[]\"}],\"name\":\"PackOpenFulfilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"packId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"opener\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"requestId\",\"type\":\"bytes32\"}],\"name\":\"PackOpenRequest\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"TransferBatch\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferSingle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"value\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"URI\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PAUSER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"accounts\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"}],\"name\":\"balanceOfBatch\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"burnBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_packId\",\"type\":\"uint256\"}],\"name\":\"creator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"currentRequestId\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_packId\",\"type\":\"uint256\"}],\"name\":\"getPack\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"currentSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openEnd\",\"type\":\"uint256\"}],\"internalType\":\"structPack.PackState\",\"name\":\"pack\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_packId\",\"type\":\"uint256\"}],\"name\":\"getPackWithRewards\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"currentSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openEnd\",\"type\":\"uint256\"}],\"internalType\":\"structPack.PackState\",\"name\":\"pack\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amountsPacked\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"isRestrictedTransfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"mint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"mintBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"_ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_values\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_packId\",\"type\":\"uint256\"}],\"name\":\"openPack\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"packs\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"currentSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openEnd\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"randomnessRequests\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"packId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"opener\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"requestId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"randomness\",\"type\":\"uint256\"}],\"name\":\"rawFulfillRandomness\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"rewards\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rewardsPerOpen\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"royaltyBps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeBatchTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_newFees\",\"type\":\"uint256\"}],\"name\":\"setChainlinkFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_URI\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_restrictedTransfer\",\"type\":\"bool\"}],\"name\":\"setRestrictedTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferLink\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"uri\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"vrfFees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"vrfKeyHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_controlCenter\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_vrfCoordinator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_linkToken\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_keyHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_fees\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_trustedForwarder\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"packId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"rewardContract\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"openStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openEnd\",\"type\":\"uint256\"}],\"indexed\":false,\"internalType\":\"structPack.PackState\",\"name\":\"packState\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amountsPacked\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256\",\"name\":\"rewardsPerOpen\",\"type\":\"uint256\"}],\"indexed\":false,\"internalType\":\"structPack.Rewards\",\"name\":\"rewards\",\"type\":\"tuple\"}],\"name\":\"PackCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"packId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"opener\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"requestId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"rewardContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"rewardIds\",\"type\":\"uint256[]\"}],\"name\":\"PackOpenFulfilled\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"packId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"opener\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"requestId\",\"type\":\"bytes32\"}],\"name\":\"PackOpenRequest\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"TransferBatch\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferSingle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"value\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"URI\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PAUSER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"accounts\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"}],\"name\":\"balanceOfBatch\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"burnBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_packId\",\"type\":\"uint256\"}],\"name\":\"creator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"currentRequestId\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_packId\",\"type\":\"uint256\"}],\"name\":\"getPack\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"openStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openEnd\",\"type\":\"uint256\"}],\"internalType\":\"structPack.PackState\",\"name\":\"pack\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_packId\",\"type\":\"uint256\"}],\"name\":\"getPackWithRewards\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"openStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openEnd\",\"type\":\"uint256\"}],\"internalType\":\"structPack.PackState\",\"name\":\"pack\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amountsPacked\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"mint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"mintBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"_ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_values\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_packId\",\"type\":\"uint256\"}],\"name\":\"openPack\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"packs\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"openStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"openEnd\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"randomnessRequests\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"packId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"opener\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"requestId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"randomness\",\"type\":\"uint256\"}],\"name\":\"rawFulfillRandomness\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"rewards\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rewardsPerOpen\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"royaltyBps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeBatchTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_newFees\",\"type\":\"uint256\"}],\"name\":\"setChainlinkFees\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_URI\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_restrictedTransfer\",\"type\":\"bool\"}],\"name\":\"setRestrictedTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"transferLink\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"transfersRestricted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"uri\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"vrfFees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"vrfKeyHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // PackABI is the input ABI used to generate the binding from.
@@ -508,7 +507,7 @@ func (_Pack *PackCallerSession) CurrentRequestId(arg0 *big.Int, arg1 common.Addr
 
 // GetPack is a free data retrieval call binding the contract method 0x895ec54c.
 //
-// Solidity: function getPack(uint256 _packId) view returns((string,address,uint256,uint256,uint256) pack)
+// Solidity: function getPack(uint256 _packId) view returns((string,address,uint256,uint256) pack)
 func (_Pack *PackCaller) GetPack(opts *bind.CallOpts, _packId *big.Int) (PackPackState, error) {
 	var out []interface{}
 	err := _Pack.contract.Call(opts, &out, "getPack", _packId)
@@ -525,21 +524,21 @@ func (_Pack *PackCaller) GetPack(opts *bind.CallOpts, _packId *big.Int) (PackPac
 
 // GetPack is a free data retrieval call binding the contract method 0x895ec54c.
 //
-// Solidity: function getPack(uint256 _packId) view returns((string,address,uint256,uint256,uint256) pack)
+// Solidity: function getPack(uint256 _packId) view returns((string,address,uint256,uint256) pack)
 func (_Pack *PackSession) GetPack(_packId *big.Int) (PackPackState, error) {
 	return _Pack.Contract.GetPack(&_Pack.CallOpts, _packId)
 }
 
 // GetPack is a free data retrieval call binding the contract method 0x895ec54c.
 //
-// Solidity: function getPack(uint256 _packId) view returns((string,address,uint256,uint256,uint256) pack)
+// Solidity: function getPack(uint256 _packId) view returns((string,address,uint256,uint256) pack)
 func (_Pack *PackCallerSession) GetPack(_packId *big.Int) (PackPackState, error) {
 	return _Pack.Contract.GetPack(&_Pack.CallOpts, _packId)
 }
 
 // GetPackWithRewards is a free data retrieval call binding the contract method 0x10e34e67.
 //
-// Solidity: function getPackWithRewards(uint256 _packId) view returns((string,address,uint256,uint256,uint256) pack, address source, uint256[] tokenIds, uint256[] amountsPacked)
+// Solidity: function getPackWithRewards(uint256 _packId) view returns((string,address,uint256,uint256) pack, address source, uint256[] tokenIds, uint256[] amountsPacked)
 func (_Pack *PackCaller) GetPackWithRewards(opts *bind.CallOpts, _packId *big.Int) (struct {
 	Pack          PackPackState
 	Source        common.Address
@@ -570,7 +569,7 @@ func (_Pack *PackCaller) GetPackWithRewards(opts *bind.CallOpts, _packId *big.In
 
 // GetPackWithRewards is a free data retrieval call binding the contract method 0x10e34e67.
 //
-// Solidity: function getPackWithRewards(uint256 _packId) view returns((string,address,uint256,uint256,uint256) pack, address source, uint256[] tokenIds, uint256[] amountsPacked)
+// Solidity: function getPackWithRewards(uint256 _packId) view returns((string,address,uint256,uint256) pack, address source, uint256[] tokenIds, uint256[] amountsPacked)
 func (_Pack *PackSession) GetPackWithRewards(_packId *big.Int) (struct {
 	Pack          PackPackState
 	Source        common.Address
@@ -582,7 +581,7 @@ func (_Pack *PackSession) GetPackWithRewards(_packId *big.Int) (struct {
 
 // GetPackWithRewards is a free data retrieval call binding the contract method 0x10e34e67.
 //
-// Solidity: function getPackWithRewards(uint256 _packId) view returns((string,address,uint256,uint256,uint256) pack, address source, uint256[] tokenIds, uint256[] amountsPacked)
+// Solidity: function getPackWithRewards(uint256 _packId) view returns((string,address,uint256,uint256) pack, address source, uint256[] tokenIds, uint256[] amountsPacked)
 func (_Pack *PackCallerSession) GetPackWithRewards(_packId *big.Int) (struct {
 	Pack          PackPackState
 	Source        common.Address
@@ -747,37 +746,6 @@ func (_Pack *PackCallerSession) IsApprovedForAll(account common.Address, operato
 	return _Pack.Contract.IsApprovedForAll(&_Pack.CallOpts, account, operator)
 }
 
-// IsRestrictedTransfer is a free data retrieval call binding the contract method 0x83661b29.
-//
-// Solidity: function isRestrictedTransfer() view returns(bool)
-func (_Pack *PackCaller) IsRestrictedTransfer(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
-	err := _Pack.contract.Call(opts, &out, "isRestrictedTransfer")
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// IsRestrictedTransfer is a free data retrieval call binding the contract method 0x83661b29.
-//
-// Solidity: function isRestrictedTransfer() view returns(bool)
-func (_Pack *PackSession) IsRestrictedTransfer() (bool, error) {
-	return _Pack.Contract.IsRestrictedTransfer(&_Pack.CallOpts)
-}
-
-// IsRestrictedTransfer is a free data retrieval call binding the contract method 0x83661b29.
-//
-// Solidity: function isRestrictedTransfer() view returns(bool)
-func (_Pack *PackCallerSession) IsRestrictedTransfer() (bool, error) {
-	return _Pack.Contract.IsRestrictedTransfer(&_Pack.CallOpts)
-}
-
 // IsTrustedForwarder is a free data retrieval call binding the contract method 0x572b6c05.
 //
 // Solidity: function isTrustedForwarder(address forwarder) view returns(bool)
@@ -842,23 +810,21 @@ func (_Pack *PackCallerSession) NextTokenId() (*big.Int, error) {
 
 // Packs is a free data retrieval call binding the contract method 0xb84c1392.
 //
-// Solidity: function packs(uint256 ) view returns(string uri, address creator, uint256 currentSupply, uint256 openStart, uint256 openEnd)
+// Solidity: function packs(uint256 ) view returns(string uri, address creator, uint256 openStart, uint256 openEnd)
 func (_Pack *PackCaller) Packs(opts *bind.CallOpts, arg0 *big.Int) (struct {
-	Uri           string
-	Creator       common.Address
-	CurrentSupply *big.Int
-	OpenStart     *big.Int
-	OpenEnd       *big.Int
+	Uri       string
+	Creator   common.Address
+	OpenStart *big.Int
+	OpenEnd   *big.Int
 }, error) {
 	var out []interface{}
 	err := _Pack.contract.Call(opts, &out, "packs", arg0)
 
 	outstruct := new(struct {
-		Uri           string
-		Creator       common.Address
-		CurrentSupply *big.Int
-		OpenStart     *big.Int
-		OpenEnd       *big.Int
+		Uri       string
+		Creator   common.Address
+		OpenStart *big.Int
+		OpenEnd   *big.Int
 	})
 	if err != nil {
 		return *outstruct, err
@@ -866,9 +832,8 @@ func (_Pack *PackCaller) Packs(opts *bind.CallOpts, arg0 *big.Int) (struct {
 
 	outstruct.Uri = *abi.ConvertType(out[0], new(string)).(*string)
 	outstruct.Creator = *abi.ConvertType(out[1], new(common.Address)).(*common.Address)
-	outstruct.CurrentSupply = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
-	outstruct.OpenStart = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
-	outstruct.OpenEnd = *abi.ConvertType(out[4], new(*big.Int)).(**big.Int)
+	outstruct.OpenStart = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
+	outstruct.OpenEnd = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
@@ -876,26 +841,24 @@ func (_Pack *PackCaller) Packs(opts *bind.CallOpts, arg0 *big.Int) (struct {
 
 // Packs is a free data retrieval call binding the contract method 0xb84c1392.
 //
-// Solidity: function packs(uint256 ) view returns(string uri, address creator, uint256 currentSupply, uint256 openStart, uint256 openEnd)
+// Solidity: function packs(uint256 ) view returns(string uri, address creator, uint256 openStart, uint256 openEnd)
 func (_Pack *PackSession) Packs(arg0 *big.Int) (struct {
-	Uri           string
-	Creator       common.Address
-	CurrentSupply *big.Int
-	OpenStart     *big.Int
-	OpenEnd       *big.Int
+	Uri       string
+	Creator   common.Address
+	OpenStart *big.Int
+	OpenEnd   *big.Int
 }, error) {
 	return _Pack.Contract.Packs(&_Pack.CallOpts, arg0)
 }
 
 // Packs is a free data retrieval call binding the contract method 0xb84c1392.
 //
-// Solidity: function packs(uint256 ) view returns(string uri, address creator, uint256 currentSupply, uint256 openStart, uint256 openEnd)
+// Solidity: function packs(uint256 ) view returns(string uri, address creator, uint256 openStart, uint256 openEnd)
 func (_Pack *PackCallerSession) Packs(arg0 *big.Int) (struct {
-	Uri           string
-	Creator       common.Address
-	CurrentSupply *big.Int
-	OpenStart     *big.Int
-	OpenEnd       *big.Int
+	Uri       string
+	Creator   common.Address
+	OpenStart *big.Int
+	OpenEnd   *big.Int
 }, error) {
 	return _Pack.Contract.Packs(&_Pack.CallOpts, arg0)
 }
@@ -1054,13 +1017,13 @@ func (_Pack *PackCallerSession) RoyaltyBps() (*big.Int, error) {
 
 // RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
 //
-// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
-func (_Pack *PackCaller) RoyaltyInfo(opts *bind.CallOpts, tokenId *big.Int, salePrice *big.Int) (struct {
+// Solidity: function royaltyInfo(uint256 , uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_Pack *PackCaller) RoyaltyInfo(opts *bind.CallOpts, arg0 *big.Int, salePrice *big.Int) (struct {
 	Receiver      common.Address
 	RoyaltyAmount *big.Int
 }, error) {
 	var out []interface{}
-	err := _Pack.contract.Call(opts, &out, "royaltyInfo", tokenId, salePrice)
+	err := _Pack.contract.Call(opts, &out, "royaltyInfo", arg0, salePrice)
 
 	outstruct := new(struct {
 		Receiver      common.Address
@@ -1079,27 +1042,27 @@ func (_Pack *PackCaller) RoyaltyInfo(opts *bind.CallOpts, tokenId *big.Int, sale
 
 // RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
 //
-// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
-func (_Pack *PackSession) RoyaltyInfo(tokenId *big.Int, salePrice *big.Int) (struct {
+// Solidity: function royaltyInfo(uint256 , uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_Pack *PackSession) RoyaltyInfo(arg0 *big.Int, salePrice *big.Int) (struct {
 	Receiver      common.Address
 	RoyaltyAmount *big.Int
 }, error) {
-	return _Pack.Contract.RoyaltyInfo(&_Pack.CallOpts, tokenId, salePrice)
+	return _Pack.Contract.RoyaltyInfo(&_Pack.CallOpts, arg0, salePrice)
 }
 
 // RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
 //
-// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
-func (_Pack *PackCallerSession) RoyaltyInfo(tokenId *big.Int, salePrice *big.Int) (struct {
+// Solidity: function royaltyInfo(uint256 , uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_Pack *PackCallerSession) RoyaltyInfo(arg0 *big.Int, salePrice *big.Int) (struct {
 	Receiver      common.Address
 	RoyaltyAmount *big.Int
 }, error) {
-	return _Pack.Contract.RoyaltyInfo(&_Pack.CallOpts, tokenId, salePrice)
+	return _Pack.Contract.RoyaltyInfo(&_Pack.CallOpts, arg0, salePrice)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
-// Solidity: function supportsInterface(bytes4 interfaceId) pure returns(bool)
+// Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
 func (_Pack *PackCaller) SupportsInterface(opts *bind.CallOpts, interfaceId [4]byte) (bool, error) {
 	var out []interface{}
 	err := _Pack.contract.Call(opts, &out, "supportsInterface", interfaceId)
@@ -1116,14 +1079,14 @@ func (_Pack *PackCaller) SupportsInterface(opts *bind.CallOpts, interfaceId [4]b
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
-// Solidity: function supportsInterface(bytes4 interfaceId) pure returns(bool)
+// Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
 func (_Pack *PackSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
 	return _Pack.Contract.SupportsInterface(&_Pack.CallOpts, interfaceId)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
-// Solidity: function supportsInterface(bytes4 interfaceId) pure returns(bool)
+// Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
 func (_Pack *PackCallerSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
 	return _Pack.Contract.SupportsInterface(&_Pack.CallOpts, interfaceId)
 }
@@ -1157,6 +1120,68 @@ func (_Pack *PackSession) TokenURI(_id *big.Int) (string, error) {
 // Solidity: function tokenURI(uint256 _id) view returns(string)
 func (_Pack *PackCallerSession) TokenURI(_id *big.Int) (string, error) {
 	return _Pack.Contract.TokenURI(&_Pack.CallOpts, _id)
+}
+
+// TotalSupply is a free data retrieval call binding the contract method 0xbd85b039.
+//
+// Solidity: function totalSupply(uint256 id) view returns(uint256)
+func (_Pack *PackCaller) TotalSupply(opts *bind.CallOpts, id *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _Pack.contract.Call(opts, &out, "totalSupply", id)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// TotalSupply is a free data retrieval call binding the contract method 0xbd85b039.
+//
+// Solidity: function totalSupply(uint256 id) view returns(uint256)
+func (_Pack *PackSession) TotalSupply(id *big.Int) (*big.Int, error) {
+	return _Pack.Contract.TotalSupply(&_Pack.CallOpts, id)
+}
+
+// TotalSupply is a free data retrieval call binding the contract method 0xbd85b039.
+//
+// Solidity: function totalSupply(uint256 id) view returns(uint256)
+func (_Pack *PackCallerSession) TotalSupply(id *big.Int) (*big.Int, error) {
+	return _Pack.Contract.TotalSupply(&_Pack.CallOpts, id)
+}
+
+// TransfersRestricted is a free data retrieval call binding the contract method 0x8423df79.
+//
+// Solidity: function transfersRestricted() view returns(bool)
+func (_Pack *PackCaller) TransfersRestricted(opts *bind.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _Pack.contract.Call(opts, &out, "transfersRestricted")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// TransfersRestricted is a free data retrieval call binding the contract method 0x8423df79.
+//
+// Solidity: function transfersRestricted() view returns(bool)
+func (_Pack *PackSession) TransfersRestricted() (bool, error) {
+	return _Pack.Contract.TransfersRestricted(&_Pack.CallOpts)
+}
+
+// TransfersRestricted is a free data retrieval call binding the contract method 0x8423df79.
+//
+// Solidity: function transfersRestricted() view returns(bool)
+func (_Pack *PackCallerSession) TransfersRestricted() (bool, error) {
+	return _Pack.Contract.TransfersRestricted(&_Pack.CallOpts)
 }
 
 // Uri is a free data retrieval call binding the contract method 0x0e89341c.
@@ -1317,44 +1342,44 @@ func (_Pack *PackTransactorSession) GrantRole(role [32]byte, account common.Addr
 
 // Mint is a paid mutator transaction binding the contract method 0x731133e9.
 //
-// Solidity: function mint(address to, uint256 id, uint256 amount, bytes data) returns()
-func (_Pack *PackTransactor) Mint(opts *bind.TransactOpts, to common.Address, id *big.Int, amount *big.Int, data []byte) (*types.Transaction, error) {
-	return _Pack.contract.Transact(opts, "mint", to, id, amount, data)
+// Solidity: function mint(address , uint256 , uint256 , bytes ) returns()
+func (_Pack *PackTransactor) Mint(opts *bind.TransactOpts, arg0 common.Address, arg1 *big.Int, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.contract.Transact(opts, "mint", arg0, arg1, arg2, arg3)
 }
 
 // Mint is a paid mutator transaction binding the contract method 0x731133e9.
 //
-// Solidity: function mint(address to, uint256 id, uint256 amount, bytes data) returns()
-func (_Pack *PackSession) Mint(to common.Address, id *big.Int, amount *big.Int, data []byte) (*types.Transaction, error) {
-	return _Pack.Contract.Mint(&_Pack.TransactOpts, to, id, amount, data)
+// Solidity: function mint(address , uint256 , uint256 , bytes ) returns()
+func (_Pack *PackSession) Mint(arg0 common.Address, arg1 *big.Int, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.Contract.Mint(&_Pack.TransactOpts, arg0, arg1, arg2, arg3)
 }
 
 // Mint is a paid mutator transaction binding the contract method 0x731133e9.
 //
-// Solidity: function mint(address to, uint256 id, uint256 amount, bytes data) returns()
-func (_Pack *PackTransactorSession) Mint(to common.Address, id *big.Int, amount *big.Int, data []byte) (*types.Transaction, error) {
-	return _Pack.Contract.Mint(&_Pack.TransactOpts, to, id, amount, data)
+// Solidity: function mint(address , uint256 , uint256 , bytes ) returns()
+func (_Pack *PackTransactorSession) Mint(arg0 common.Address, arg1 *big.Int, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.Contract.Mint(&_Pack.TransactOpts, arg0, arg1, arg2, arg3)
 }
 
 // MintBatch is a paid mutator transaction binding the contract method 0x1f7fdffa.
 //
-// Solidity: function mintBatch(address to, uint256[] ids, uint256[] amounts, bytes data) returns()
-func (_Pack *PackTransactor) MintBatch(opts *bind.TransactOpts, to common.Address, ids []*big.Int, amounts []*big.Int, data []byte) (*types.Transaction, error) {
-	return _Pack.contract.Transact(opts, "mintBatch", to, ids, amounts, data)
+// Solidity: function mintBatch(address , uint256[] , uint256[] , bytes ) returns()
+func (_Pack *PackTransactor) MintBatch(opts *bind.TransactOpts, arg0 common.Address, arg1 []*big.Int, arg2 []*big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.contract.Transact(opts, "mintBatch", arg0, arg1, arg2, arg3)
 }
 
 // MintBatch is a paid mutator transaction binding the contract method 0x1f7fdffa.
 //
-// Solidity: function mintBatch(address to, uint256[] ids, uint256[] amounts, bytes data) returns()
-func (_Pack *PackSession) MintBatch(to common.Address, ids []*big.Int, amounts []*big.Int, data []byte) (*types.Transaction, error) {
-	return _Pack.Contract.MintBatch(&_Pack.TransactOpts, to, ids, amounts, data)
+// Solidity: function mintBatch(address , uint256[] , uint256[] , bytes ) returns()
+func (_Pack *PackSession) MintBatch(arg0 common.Address, arg1 []*big.Int, arg2 []*big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.Contract.MintBatch(&_Pack.TransactOpts, arg0, arg1, arg2, arg3)
 }
 
 // MintBatch is a paid mutator transaction binding the contract method 0x1f7fdffa.
 //
-// Solidity: function mintBatch(address to, uint256[] ids, uint256[] amounts, bytes data) returns()
-func (_Pack *PackTransactorSession) MintBatch(to common.Address, ids []*big.Int, amounts []*big.Int, data []byte) (*types.Transaction, error) {
-	return _Pack.Contract.MintBatch(&_Pack.TransactOpts, to, ids, amounts, data)
+// Solidity: function mintBatch(address , uint256[] , uint256[] , bytes ) returns()
+func (_Pack *PackTransactorSession) MintBatch(arg0 common.Address, arg1 []*big.Int, arg2 []*big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.Contract.MintBatch(&_Pack.TransactOpts, arg0, arg1, arg2, arg3)
 }
 
 // OnERC1155BatchReceived is a paid mutator transaction binding the contract method 0xbc197c81.
@@ -1397,6 +1422,27 @@ func (_Pack *PackSession) OnERC1155Received(arg0 common.Address, arg1 common.Add
 // Solidity: function onERC1155Received(address , address , uint256 , uint256 , bytes ) returns(bytes4)
 func (_Pack *PackTransactorSession) OnERC1155Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 *big.Int, arg4 []byte) (*types.Transaction, error) {
 	return _Pack.Contract.OnERC1155Received(&_Pack.TransactOpts, arg0, arg1, arg2, arg3, arg4)
+}
+
+// OnERC721Received is a paid mutator transaction binding the contract method 0x150b7a02.
+//
+// Solidity: function onERC721Received(address , address , uint256 , bytes ) returns(bytes4)
+func (_Pack *PackTransactor) OnERC721Received(opts *bind.TransactOpts, arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.contract.Transact(opts, "onERC721Received", arg0, arg1, arg2, arg3)
+}
+
+// OnERC721Received is a paid mutator transaction binding the contract method 0x150b7a02.
+//
+// Solidity: function onERC721Received(address , address , uint256 , bytes ) returns(bytes4)
+func (_Pack *PackSession) OnERC721Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.Contract.OnERC721Received(&_Pack.TransactOpts, arg0, arg1, arg2, arg3)
+}
+
+// OnERC721Received is a paid mutator transaction binding the contract method 0x150b7a02.
+//
+// Solidity: function onERC721Received(address , address , uint256 , bytes ) returns(bytes4)
+func (_Pack *PackTransactorSession) OnERC721Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _Pack.Contract.OnERC721Received(&_Pack.TransactOpts, arg0, arg1, arg2, arg3)
 }
 
 // OpenPack is a paid mutator transaction binding the contract method 0x50a88c7e.
@@ -1924,9 +1970,9 @@ type PackPackCreated struct {
 	Raw            types.Log // Blockchain specific contextual infos
 }
 
-// FilterPackCreated is a free log retrieval operation binding the contract event 0x9330e9dfd1e803e5d709edb2ad6657b74cb0fb1f182bd63fdbbcb01a463e8ad0.
+// FilterPackCreated is a free log retrieval operation binding the contract event 0x11f98f1ec0428c3d63f9744a90b9894575c2235c8ef13c38f589ba2768cfd8fc.
 //
-// Solidity: event PackCreated(uint256 indexed packId, address indexed rewardContract, address indexed creator, (string,address,uint256,uint256,uint256) packState, (address,uint256[],uint256[],uint256) rewards)
+// Solidity: event PackCreated(uint256 indexed packId, address indexed rewardContract, address indexed creator, (string,address,uint256,uint256) packState, (address,uint256[],uint256[],uint256) rewards)
 func (_Pack *PackFilterer) FilterPackCreated(opts *bind.FilterOpts, packId []*big.Int, rewardContract []common.Address, creator []common.Address) (*PackPackCreatedIterator, error) {
 
 	var packIdRule []interface{}
@@ -1949,9 +1995,9 @@ func (_Pack *PackFilterer) FilterPackCreated(opts *bind.FilterOpts, packId []*bi
 	return &PackPackCreatedIterator{contract: _Pack.contract, event: "PackCreated", logs: logs, sub: sub}, nil
 }
 
-// WatchPackCreated is a free log subscription operation binding the contract event 0x9330e9dfd1e803e5d709edb2ad6657b74cb0fb1f182bd63fdbbcb01a463e8ad0.
+// WatchPackCreated is a free log subscription operation binding the contract event 0x11f98f1ec0428c3d63f9744a90b9894575c2235c8ef13c38f589ba2768cfd8fc.
 //
-// Solidity: event PackCreated(uint256 indexed packId, address indexed rewardContract, address indexed creator, (string,address,uint256,uint256,uint256) packState, (address,uint256[],uint256[],uint256) rewards)
+// Solidity: event PackCreated(uint256 indexed packId, address indexed rewardContract, address indexed creator, (string,address,uint256,uint256) packState, (address,uint256[],uint256[],uint256) rewards)
 func (_Pack *PackFilterer) WatchPackCreated(opts *bind.WatchOpts, sink chan<- *PackPackCreated, packId []*big.Int, rewardContract []common.Address, creator []common.Address) (event.Subscription, error) {
 
 	var packIdRule []interface{}
@@ -1999,9 +2045,9 @@ func (_Pack *PackFilterer) WatchPackCreated(opts *bind.WatchOpts, sink chan<- *P
 	}), nil
 }
 
-// ParsePackCreated is a log parse operation binding the contract event 0x9330e9dfd1e803e5d709edb2ad6657b74cb0fb1f182bd63fdbbcb01a463e8ad0.
+// ParsePackCreated is a log parse operation binding the contract event 0x11f98f1ec0428c3d63f9744a90b9894575c2235c8ef13c38f589ba2768cfd8fc.
 //
-// Solidity: event PackCreated(uint256 indexed packId, address indexed rewardContract, address indexed creator, (string,address,uint256,uint256,uint256) packState, (address,uint256[],uint256[],uint256) rewards)
+// Solidity: event PackCreated(uint256 indexed packId, address indexed rewardContract, address indexed creator, (string,address,uint256,uint256) packState, (address,uint256[],uint256[],uint256) rewards)
 func (_Pack *PackFilterer) ParsePackCreated(log types.Log) (*PackPackCreated, error) {
 	event := new(PackPackCreated)
 	if err := _Pack.contract.UnpackLog(event, "PackCreated", log); err != nil {

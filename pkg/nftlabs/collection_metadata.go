@@ -1,6 +1,8 @@
 package nftlabs
 
-import "math/big"
+import (
+	"math/big"
+)
 
 type CollectionMetadata struct {
 	NftMetadata
@@ -8,17 +10,19 @@ type CollectionMetadata struct {
 	Supply  *big.Int `json:"supply"`
 }
 
-type CreateCollectionArgs struct {
-	Supply   *big.Int    `json:"supply"`
-	Metadata interface{} `json:"metadata"`
-}
-
 type MintCollectionArgs struct {
 	TokenId *big.Int `json:"tokenId"`
 	Amount  *big.Int `json:"amount"`
 }
 
-type collectionAssetMetadata struct {
-	Uri    string
+type NftCollectionBatchArgs struct {
+	Amount *big.Int `json:"amount"`
+	TokenId *big.Int `json:"tokenId"`
+}
+
+// CreateCollectionArgs to create collections
+// Supply should be non-nil
+type CreateCollectionArgs struct {
+	Metadata Metadata
 	Supply *big.Int
 }

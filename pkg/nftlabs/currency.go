@@ -14,10 +14,10 @@ import (
 )
 
 type Currency interface {
-	Get() (CurrencyMetadata, error)
-	GetValue(value *big.Int) (CurrencyValue, error)
 	Balance() (CurrencyValue, error)
+	Get() (CurrencyMetadata, error)
 	BalanceOf(address string) (CurrencyValue, error)
+	GetValue(value *big.Int) (CurrencyValue, error)
 	Transfer(to string, amount *big.Int) error
 	Allowance(spender string) (*big.Int, error)
 	SetAllowance(spender string, amount *big.Int) error
@@ -73,11 +73,7 @@ func (sdk *CurrencyModule) SetAllowance(spender string, amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.Approve(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, common.HexToAddress(spender), amount); err != nil {
+	if tx, err := sdk.module.Approve(sdk.main.getTransactOpts(true), common.HexToAddress(spender), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -88,11 +84,7 @@ func (sdk *CurrencyModule) Mint(amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "currency"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.Mint(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, sdk.main.getSignerAddress(), amount); err != nil {
+	if tx, err := sdk.module.CurrencyTransactor.Mint(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -103,11 +95,7 @@ func (sdk *CurrencyModule) Burn(amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.Burn(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, amount); err != nil {
+	if tx, err := sdk.module.CurrencyTransactor.Burn(sdk.main.getTransactOpts(true), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -118,11 +106,7 @@ func (sdk *CurrencyModule) BurnFrom(from string, amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.BurnFrom(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, common.HexToAddress(from), amount); err != nil {
+	if tx, err := sdk.module.CurrencyTransactor.BurnFrom(sdk.main.getTransactOpts(true), common.HexToAddress(from), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -133,11 +117,7 @@ func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int)
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.TransferFrom(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, common.HexToAddress(from), common.HexToAddress(to), amount); err != nil {
+	if tx, err := sdk.module.CurrencyTransactor.TransferFrom(sdk.main.getTransactOpts(true), common.HexToAddress(from), common.HexToAddress(to), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -153,11 +133,7 @@ func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.GrantRole(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, r, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
+	if tx, err := sdk.module.CurrencyTransactor.GrantRole(sdk.main.getTransactOpts(true), r, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -169,11 +145,7 @@ func (sdk *CurrencyModule) RevokeRole(role Role, address string) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.RevokeRole(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, [32]byte{}, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
+	if tx, err := sdk.module.CurrencyTransactor.RevokeRole(sdk.main.getTransactOpts(true), [32]byte{}, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -287,11 +259,7 @@ func (sdk *CurrencyModule) Transfer(to string, amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "currency"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.Transfer(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, common.HexToAddress(to), amount); err != nil { // TODO: fill in role in [32]byte
+	if tx, err := sdk.module.CurrencyTransactor.Transfer(sdk.main.getTransactOpts(true), common.HexToAddress(to), amount); err != nil { // TODO: fill in role in [32]byte
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -302,11 +270,7 @@ func (sdk *CurrencyModule) MintTo(to string, amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "currency"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.Mint(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, common.HexToAddress(to), amount); err != nil {
+	if tx, err := sdk.module.CurrencyTransactor.Mint(sdk.main.getTransactOpts(true), common.HexToAddress(to), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)

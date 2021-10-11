@@ -30,7 +30,7 @@ var (
 
 // NFTCollectionMetaData contains all meta data concerning the NFTCollection contract.
 var NFTCollectionMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_controlCenter\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_trustedForwarder\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"redeemer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenAmountReceived\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nftAmountRedeemed\",\"type\":\"uint256\"}],\"name\":\"ERC20Redeemed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenAmount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nftsMinted\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"nftURI\",\"type\":\"string\"}],\"name\":\"ERC20WrappedNfts\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"redeemer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"nftContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nftTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nativeNftTokenId\",\"type\":\"uint256\"}],\"name\":\"ERC721Redeemed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"nftContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nftTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"nativeNftTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"nativeNftURI\",\"type\":\"string\"}],\"name\":\"ERC721WrappedNft\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"string[]\",\"name\":\"nftURIs\",\"type\":\"string[]\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"nftSupplies\",\"type\":\"uint256[]\"}],\"name\":\"NativeNfts\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"NftRoyaltyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"TransferBatch\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferSingle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"value\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"URI\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PAUSER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"accounts\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"}],\"name\":\"balanceOfBatch\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"burnBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string[]\",\"name\":\"_nftURIs\",\"type\":\"string[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_nftSupplies\",\"type\":\"uint256[]\"}],\"name\":\"createNativeNfts\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_pack\",\"type\":\"address\"},{\"internalType\":\"string[]\",\"name\":\"_nftURIs\",\"type\":\"string[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_nftSupplies\",\"type\":\"uint256[]\"},{\"internalType\":\"string\",\"name\":\"_packURI\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilOpenStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilOpenEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nftsPerOpen\",\"type\":\"uint256\"}],\"name\":\"createPackAtomic\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"}],\"name\":\"creator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"erc20WrappedNfts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"shares\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"underlyingTokenAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"erc721WrappedNfts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"nftContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"nftTokenId\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"mint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"mintBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"nftInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"supply\",\"type\":\"uint256\"},{\"internalType\":\"enumNFTCollection.UnderlyingType\",\"name\":\"underlyingType\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nftRoyaltyBps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"redeemERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"}],\"name\":\"redeemERC721\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeBatchTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_URI\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setNftRoyaltyBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"}],\"name\":\"uri\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_numOfNftsToMint\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_nftURI\",\"type\":\"string\"}],\"name\":\"wrapERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nftContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_nftURI\",\"type\":\"string\"}],\"name\":\"wrapERC721\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_controlCenter\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_trustedForwarder\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"redeemer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sourceOfUnderlying\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenAmountReceived\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"sharesRedeemed\",\"type\":\"uint256\"}],\"name\":\"ERC20Redeemed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sourceOfUnderlying\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"totalAmountOfUnderlying\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"shares\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"}],\"name\":\"ERC20WrappedToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"redeemer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sourceOfUnderlying\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenIdOfUnderlying\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ERC721Redeemed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sourceOfUnderlying\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenIdOfUnderlying\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"}],\"name\":\"ERC721WrappedToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"string[]\",\"name\":\"tokenURIs\",\"type\":\"string[]\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"tokenSupplies\",\"type\":\"uint256[]\"}],\"name\":\"NativeTokens\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"TransferBatch\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferSingle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"value\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"URI\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PAUSER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"accounts\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"}],\"name\":\"balanceOfBatch\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"burnBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string[]\",\"name\":\"_nftURIs\",\"type\":\"string[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_nftSupplies\",\"type\":\"uint256[]\"}],\"name\":\"createNativeTokens\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_pack\",\"type\":\"address\"},{\"internalType\":\"string[]\",\"name\":\"_nftURIs\",\"type\":\"string[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_nftSupplies\",\"type\":\"uint256[]\"},{\"internalType\":\"string\",\"name\":\"_packURI\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilOpenStart\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_secondsUntilOpenEnd\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_nftsPerOpen\",\"type\":\"uint256\"}],\"name\":\"createPackAtomic\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"}],\"name\":\"creator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"erc20WrappedTokens\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"shares\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"underlyingTokenAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"erc721WrappedTokens\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"source\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"mint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"mintBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"redeemERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"}],\"name\":\"redeemERC721\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"royaltyBps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeBatchTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_URI\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_restrictedTransfer\",\"type\":\"bool\"}],\"name\":\"setRestrictedTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tokenState\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"enumNFTCollection.UnderlyingType\",\"name\":\"underlyingType\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"transfersRestricted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_nftId\",\"type\":\"uint256\"}],\"name\":\"uri\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_tokenContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_numOfNftsToMint\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_nftURI\",\"type\":\"string\"}],\"name\":\"wrapERC20\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_nftContract\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_nftURI\",\"type\":\"string\"}],\"name\":\"wrapERC721\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // NFTCollectionABI is the input ABI used to generate the binding from.
@@ -272,6 +272,37 @@ func (_NFTCollection *NFTCollectionCallerSession) PAUSERROLE() ([32]byte, error)
 	return _NFTCollection.Contract.PAUSERROLE(&_NFTCollection.CallOpts)
 }
 
+// TRANSFERROLE is a free data retrieval call binding the contract method 0x206b60f9.
+//
+// Solidity: function TRANSFER_ROLE() view returns(bytes32)
+func (_NFTCollection *NFTCollectionCaller) TRANSFERROLE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _NFTCollection.contract.Call(opts, &out, "TRANSFER_ROLE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// TRANSFERROLE is a free data retrieval call binding the contract method 0x206b60f9.
+//
+// Solidity: function TRANSFER_ROLE() view returns(bytes32)
+func (_NFTCollection *NFTCollectionSession) TRANSFERROLE() ([32]byte, error) {
+	return _NFTCollection.Contract.TRANSFERROLE(&_NFTCollection.CallOpts)
+}
+
+// TRANSFERROLE is a free data retrieval call binding the contract method 0x206b60f9.
+//
+// Solidity: function TRANSFER_ROLE() view returns(bytes32)
+func (_NFTCollection *NFTCollectionCallerSession) TRANSFERROLE() ([32]byte, error) {
+	return _NFTCollection.Contract.TRANSFERROLE(&_NFTCollection.CallOpts)
+}
+
 // ContractURI is a free data retrieval call binding the contract method 0xc0e72740.
 //
 // Solidity: function _contractURI() view returns(string)
@@ -427,19 +458,19 @@ func (_NFTCollection *NFTCollectionCallerSession) Creator(_nftId *big.Int) (comm
 	return _NFTCollection.Contract.Creator(&_NFTCollection.CallOpts, _nftId)
 }
 
-// Erc20WrappedNfts is a free data retrieval call binding the contract method 0x1ceb2dc2.
+// Erc20WrappedTokens is a free data retrieval call binding the contract method 0x5cd9913d.
 //
-// Solidity: function erc20WrappedNfts(uint256 ) view returns(address tokenContract, uint256 shares, uint256 underlyingTokenAmount)
-func (_NFTCollection *NFTCollectionCaller) Erc20WrappedNfts(opts *bind.CallOpts, arg0 *big.Int) (struct {
-	TokenContract         common.Address
+// Solidity: function erc20WrappedTokens(uint256 ) view returns(address source, uint256 shares, uint256 underlyingTokenAmount)
+func (_NFTCollection *NFTCollectionCaller) Erc20WrappedTokens(opts *bind.CallOpts, arg0 *big.Int) (struct {
+	Source                common.Address
 	Shares                *big.Int
 	UnderlyingTokenAmount *big.Int
 }, error) {
 	var out []interface{}
-	err := _NFTCollection.contract.Call(opts, &out, "erc20WrappedNfts", arg0)
+	err := _NFTCollection.contract.Call(opts, &out, "erc20WrappedTokens", arg0)
 
 	outstruct := new(struct {
-		TokenContract         common.Address
+		Source                common.Address
 		Shares                *big.Int
 		UnderlyingTokenAmount *big.Int
 	})
@@ -447,7 +478,7 @@ func (_NFTCollection *NFTCollectionCaller) Erc20WrappedNfts(opts *bind.CallOpts,
 		return *outstruct, err
 	}
 
-	outstruct.TokenContract = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	outstruct.Source = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
 	outstruct.Shares = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
 	outstruct.UnderlyingTokenAmount = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
 
@@ -455,71 +486,71 @@ func (_NFTCollection *NFTCollectionCaller) Erc20WrappedNfts(opts *bind.CallOpts,
 
 }
 
-// Erc20WrappedNfts is a free data retrieval call binding the contract method 0x1ceb2dc2.
+// Erc20WrappedTokens is a free data retrieval call binding the contract method 0x5cd9913d.
 //
-// Solidity: function erc20WrappedNfts(uint256 ) view returns(address tokenContract, uint256 shares, uint256 underlyingTokenAmount)
-func (_NFTCollection *NFTCollectionSession) Erc20WrappedNfts(arg0 *big.Int) (struct {
-	TokenContract         common.Address
+// Solidity: function erc20WrappedTokens(uint256 ) view returns(address source, uint256 shares, uint256 underlyingTokenAmount)
+func (_NFTCollection *NFTCollectionSession) Erc20WrappedTokens(arg0 *big.Int) (struct {
+	Source                common.Address
 	Shares                *big.Int
 	UnderlyingTokenAmount *big.Int
 }, error) {
-	return _NFTCollection.Contract.Erc20WrappedNfts(&_NFTCollection.CallOpts, arg0)
+	return _NFTCollection.Contract.Erc20WrappedTokens(&_NFTCollection.CallOpts, arg0)
 }
 
-// Erc20WrappedNfts is a free data retrieval call binding the contract method 0x1ceb2dc2.
+// Erc20WrappedTokens is a free data retrieval call binding the contract method 0x5cd9913d.
 //
-// Solidity: function erc20WrappedNfts(uint256 ) view returns(address tokenContract, uint256 shares, uint256 underlyingTokenAmount)
-func (_NFTCollection *NFTCollectionCallerSession) Erc20WrappedNfts(arg0 *big.Int) (struct {
-	TokenContract         common.Address
+// Solidity: function erc20WrappedTokens(uint256 ) view returns(address source, uint256 shares, uint256 underlyingTokenAmount)
+func (_NFTCollection *NFTCollectionCallerSession) Erc20WrappedTokens(arg0 *big.Int) (struct {
+	Source                common.Address
 	Shares                *big.Int
 	UnderlyingTokenAmount *big.Int
 }, error) {
-	return _NFTCollection.Contract.Erc20WrappedNfts(&_NFTCollection.CallOpts, arg0)
+	return _NFTCollection.Contract.Erc20WrappedTokens(&_NFTCollection.CallOpts, arg0)
 }
 
-// Erc721WrappedNfts is a free data retrieval call binding the contract method 0xddfa3e22.
+// Erc721WrappedTokens is a free data retrieval call binding the contract method 0x367a182b.
 //
-// Solidity: function erc721WrappedNfts(uint256 ) view returns(address nftContract, uint256 nftTokenId)
-func (_NFTCollection *NFTCollectionCaller) Erc721WrappedNfts(opts *bind.CallOpts, arg0 *big.Int) (struct {
-	NftContract common.Address
-	NftTokenId  *big.Int
+// Solidity: function erc721WrappedTokens(uint256 ) view returns(address source, uint256 tokenId)
+func (_NFTCollection *NFTCollectionCaller) Erc721WrappedTokens(opts *bind.CallOpts, arg0 *big.Int) (struct {
+	Source  common.Address
+	TokenId *big.Int
 }, error) {
 	var out []interface{}
-	err := _NFTCollection.contract.Call(opts, &out, "erc721WrappedNfts", arg0)
+	err := _NFTCollection.contract.Call(opts, &out, "erc721WrappedTokens", arg0)
 
 	outstruct := new(struct {
-		NftContract common.Address
-		NftTokenId  *big.Int
+		Source  common.Address
+		TokenId *big.Int
 	})
 	if err != nil {
 		return *outstruct, err
 	}
 
-	outstruct.NftContract = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-	outstruct.NftTokenId = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+	outstruct.Source = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	outstruct.TokenId = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
 
 	return *outstruct, err
 
 }
 
-// Erc721WrappedNfts is a free data retrieval call binding the contract method 0xddfa3e22.
+// Erc721WrappedTokens is a free data retrieval call binding the contract method 0x367a182b.
 //
-// Solidity: function erc721WrappedNfts(uint256 ) view returns(address nftContract, uint256 nftTokenId)
-func (_NFTCollection *NFTCollectionSession) Erc721WrappedNfts(arg0 *big.Int) (struct {
-	NftContract common.Address
-	NftTokenId  *big.Int
+// Solidity: function erc721WrappedTokens(uint256 ) view returns(address source, uint256 tokenId)
+func (_NFTCollection *NFTCollectionSession) Erc721WrappedTokens(arg0 *big.Int) (struct {
+	Source  common.Address
+	TokenId *big.Int
 }, error) {
-	return _NFTCollection.Contract.Erc721WrappedNfts(&_NFTCollection.CallOpts, arg0)
+	return _NFTCollection.Contract.Erc721WrappedTokens(&_NFTCollection.CallOpts, arg0)
 }
 
-// Erc721WrappedNfts is a free data retrieval call binding the contract method 0xddfa3e22.
+// Erc721WrappedTokens is a free data retrieval call binding the contract method 0x367a182b.
 //
-// Solidity: function erc721WrappedNfts(uint256 ) view returns(address nftContract, uint256 nftTokenId)
-func (_NFTCollection *NFTCollectionCallerSession) Erc721WrappedNfts(arg0 *big.Int) (struct {
-	NftContract common.Address
-	NftTokenId  *big.Int
+// Solidity: function erc721WrappedTokens(uint256 ) view returns(address source, uint256 tokenId)
+func (_NFTCollection *NFTCollectionCallerSession) Erc721WrappedTokens(arg0 *big.Int) (struct {
+	Source  common.Address
+	TokenId *big.Int
 }, error) {
-	return _NFTCollection.Contract.Erc721WrappedNfts(&_NFTCollection.CallOpts, arg0)
+	return _NFTCollection.Contract.Erc721WrappedTokens(&_NFTCollection.CallOpts, arg0)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
@@ -739,92 +770,6 @@ func (_NFTCollection *NFTCollectionCallerSession) NextTokenId() (*big.Int, error
 	return _NFTCollection.Contract.NextTokenId(&_NFTCollection.CallOpts)
 }
 
-// NftInfo is a free data retrieval call binding the contract method 0x1f8bc790.
-//
-// Solidity: function nftInfo(uint256 ) view returns(address creator, string uri, uint256 supply, uint8 underlyingType)
-func (_NFTCollection *NFTCollectionCaller) NftInfo(opts *bind.CallOpts, arg0 *big.Int) (struct {
-	Creator        common.Address
-	Uri            string
-	Supply         *big.Int
-	UnderlyingType uint8
-}, error) {
-	var out []interface{}
-	err := _NFTCollection.contract.Call(opts, &out, "nftInfo", arg0)
-
-	outstruct := new(struct {
-		Creator        common.Address
-		Uri            string
-		Supply         *big.Int
-		UnderlyingType uint8
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.Creator = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
-	outstruct.Uri = *abi.ConvertType(out[1], new(string)).(*string)
-	outstruct.Supply = *abi.ConvertType(out[2], new(*big.Int)).(**big.Int)
-	outstruct.UnderlyingType = *abi.ConvertType(out[3], new(uint8)).(*uint8)
-
-	return *outstruct, err
-
-}
-
-// NftInfo is a free data retrieval call binding the contract method 0x1f8bc790.
-//
-// Solidity: function nftInfo(uint256 ) view returns(address creator, string uri, uint256 supply, uint8 underlyingType)
-func (_NFTCollection *NFTCollectionSession) NftInfo(arg0 *big.Int) (struct {
-	Creator        common.Address
-	Uri            string
-	Supply         *big.Int
-	UnderlyingType uint8
-}, error) {
-	return _NFTCollection.Contract.NftInfo(&_NFTCollection.CallOpts, arg0)
-}
-
-// NftInfo is a free data retrieval call binding the contract method 0x1f8bc790.
-//
-// Solidity: function nftInfo(uint256 ) view returns(address creator, string uri, uint256 supply, uint8 underlyingType)
-func (_NFTCollection *NFTCollectionCallerSession) NftInfo(arg0 *big.Int) (struct {
-	Creator        common.Address
-	Uri            string
-	Supply         *big.Int
-	UnderlyingType uint8
-}, error) {
-	return _NFTCollection.Contract.NftInfo(&_NFTCollection.CallOpts, arg0)
-}
-
-// NftRoyaltyBps is a free data retrieval call binding the contract method 0x45d62dbc.
-//
-// Solidity: function nftRoyaltyBps() view returns(uint256)
-func (_NFTCollection *NFTCollectionCaller) NftRoyaltyBps(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _NFTCollection.contract.Call(opts, &out, "nftRoyaltyBps")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// NftRoyaltyBps is a free data retrieval call binding the contract method 0x45d62dbc.
-//
-// Solidity: function nftRoyaltyBps() view returns(uint256)
-func (_NFTCollection *NFTCollectionSession) NftRoyaltyBps() (*big.Int, error) {
-	return _NFTCollection.Contract.NftRoyaltyBps(&_NFTCollection.CallOpts)
-}
-
-// NftRoyaltyBps is a free data retrieval call binding the contract method 0x45d62dbc.
-//
-// Solidity: function nftRoyaltyBps() view returns(uint256)
-func (_NFTCollection *NFTCollectionCallerSession) NftRoyaltyBps() (*big.Int, error) {
-	return _NFTCollection.Contract.NftRoyaltyBps(&_NFTCollection.CallOpts)
-}
-
 // Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
 // Solidity: function paused() view returns(bool)
@@ -856,15 +801,46 @@ func (_NFTCollection *NFTCollectionCallerSession) Paused() (bool, error) {
 	return _NFTCollection.Contract.Paused(&_NFTCollection.CallOpts)
 }
 
+// RoyaltyBps is a free data retrieval call binding the contract method 0xc63adb2b.
+//
+// Solidity: function royaltyBps() view returns(uint256)
+func (_NFTCollection *NFTCollectionCaller) RoyaltyBps(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _NFTCollection.contract.Call(opts, &out, "royaltyBps")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// RoyaltyBps is a free data retrieval call binding the contract method 0xc63adb2b.
+//
+// Solidity: function royaltyBps() view returns(uint256)
+func (_NFTCollection *NFTCollectionSession) RoyaltyBps() (*big.Int, error) {
+	return _NFTCollection.Contract.RoyaltyBps(&_NFTCollection.CallOpts)
+}
+
+// RoyaltyBps is a free data retrieval call binding the contract method 0xc63adb2b.
+//
+// Solidity: function royaltyBps() view returns(uint256)
+func (_NFTCollection *NFTCollectionCallerSession) RoyaltyBps() (*big.Int, error) {
+	return _NFTCollection.Contract.RoyaltyBps(&_NFTCollection.CallOpts)
+}
+
 // RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
 //
-// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
-func (_NFTCollection *NFTCollectionCaller) RoyaltyInfo(opts *bind.CallOpts, tokenId *big.Int, salePrice *big.Int) (struct {
+// Solidity: function royaltyInfo(uint256 , uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_NFTCollection *NFTCollectionCaller) RoyaltyInfo(opts *bind.CallOpts, arg0 *big.Int, salePrice *big.Int) (struct {
 	Receiver      common.Address
 	RoyaltyAmount *big.Int
 }, error) {
 	var out []interface{}
-	err := _NFTCollection.contract.Call(opts, &out, "royaltyInfo", tokenId, salePrice)
+	err := _NFTCollection.contract.Call(opts, &out, "royaltyInfo", arg0, salePrice)
 
 	outstruct := new(struct {
 		Receiver      common.Address
@@ -883,22 +859,22 @@ func (_NFTCollection *NFTCollectionCaller) RoyaltyInfo(opts *bind.CallOpts, toke
 
 // RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
 //
-// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
-func (_NFTCollection *NFTCollectionSession) RoyaltyInfo(tokenId *big.Int, salePrice *big.Int) (struct {
+// Solidity: function royaltyInfo(uint256 , uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_NFTCollection *NFTCollectionSession) RoyaltyInfo(arg0 *big.Int, salePrice *big.Int) (struct {
 	Receiver      common.Address
 	RoyaltyAmount *big.Int
 }, error) {
-	return _NFTCollection.Contract.RoyaltyInfo(&_NFTCollection.CallOpts, tokenId, salePrice)
+	return _NFTCollection.Contract.RoyaltyInfo(&_NFTCollection.CallOpts, arg0, salePrice)
 }
 
 // RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
 //
-// Solidity: function royaltyInfo(uint256 tokenId, uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
-func (_NFTCollection *NFTCollectionCallerSession) RoyaltyInfo(tokenId *big.Int, salePrice *big.Int) (struct {
+// Solidity: function royaltyInfo(uint256 , uint256 salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_NFTCollection *NFTCollectionCallerSession) RoyaltyInfo(arg0 *big.Int, salePrice *big.Int) (struct {
 	Receiver      common.Address
 	RoyaltyAmount *big.Int
 }, error) {
-	return _NFTCollection.Contract.RoyaltyInfo(&_NFTCollection.CallOpts, tokenId, salePrice)
+	return _NFTCollection.Contract.RoyaltyInfo(&_NFTCollection.CallOpts, arg0, salePrice)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
@@ -932,6 +908,56 @@ func (_NFTCollection *NFTCollectionCallerSession) SupportsInterface(interfaceId 
 	return _NFTCollection.Contract.SupportsInterface(&_NFTCollection.CallOpts, interfaceId)
 }
 
+// TokenState is a free data retrieval call binding the contract method 0x9745cc3d.
+//
+// Solidity: function tokenState(uint256 ) view returns(address creator, string uri, uint8 underlyingType)
+func (_NFTCollection *NFTCollectionCaller) TokenState(opts *bind.CallOpts, arg0 *big.Int) (struct {
+	Creator        common.Address
+	Uri            string
+	UnderlyingType uint8
+}, error) {
+	var out []interface{}
+	err := _NFTCollection.contract.Call(opts, &out, "tokenState", arg0)
+
+	outstruct := new(struct {
+		Creator        common.Address
+		Uri            string
+		UnderlyingType uint8
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.Creator = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	outstruct.Uri = *abi.ConvertType(out[1], new(string)).(*string)
+	outstruct.UnderlyingType = *abi.ConvertType(out[2], new(uint8)).(*uint8)
+
+	return *outstruct, err
+
+}
+
+// TokenState is a free data retrieval call binding the contract method 0x9745cc3d.
+//
+// Solidity: function tokenState(uint256 ) view returns(address creator, string uri, uint8 underlyingType)
+func (_NFTCollection *NFTCollectionSession) TokenState(arg0 *big.Int) (struct {
+	Creator        common.Address
+	Uri            string
+	UnderlyingType uint8
+}, error) {
+	return _NFTCollection.Contract.TokenState(&_NFTCollection.CallOpts, arg0)
+}
+
+// TokenState is a free data retrieval call binding the contract method 0x9745cc3d.
+//
+// Solidity: function tokenState(uint256 ) view returns(address creator, string uri, uint8 underlyingType)
+func (_NFTCollection *NFTCollectionCallerSession) TokenState(arg0 *big.Int) (struct {
+	Creator        common.Address
+	Uri            string
+	UnderlyingType uint8
+}, error) {
+	return _NFTCollection.Contract.TokenState(&_NFTCollection.CallOpts, arg0)
+}
+
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
 // Solidity: function tokenURI(uint256 _nftId) view returns(string)
@@ -961,6 +987,68 @@ func (_NFTCollection *NFTCollectionSession) TokenURI(_nftId *big.Int) (string, e
 // Solidity: function tokenURI(uint256 _nftId) view returns(string)
 func (_NFTCollection *NFTCollectionCallerSession) TokenURI(_nftId *big.Int) (string, error) {
 	return _NFTCollection.Contract.TokenURI(&_NFTCollection.CallOpts, _nftId)
+}
+
+// TotalSupply is a free data retrieval call binding the contract method 0xbd85b039.
+//
+// Solidity: function totalSupply(uint256 id) view returns(uint256)
+func (_NFTCollection *NFTCollectionCaller) TotalSupply(opts *bind.CallOpts, id *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _NFTCollection.contract.Call(opts, &out, "totalSupply", id)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// TotalSupply is a free data retrieval call binding the contract method 0xbd85b039.
+//
+// Solidity: function totalSupply(uint256 id) view returns(uint256)
+func (_NFTCollection *NFTCollectionSession) TotalSupply(id *big.Int) (*big.Int, error) {
+	return _NFTCollection.Contract.TotalSupply(&_NFTCollection.CallOpts, id)
+}
+
+// TotalSupply is a free data retrieval call binding the contract method 0xbd85b039.
+//
+// Solidity: function totalSupply(uint256 id) view returns(uint256)
+func (_NFTCollection *NFTCollectionCallerSession) TotalSupply(id *big.Int) (*big.Int, error) {
+	return _NFTCollection.Contract.TotalSupply(&_NFTCollection.CallOpts, id)
+}
+
+// TransfersRestricted is a free data retrieval call binding the contract method 0x8423df79.
+//
+// Solidity: function transfersRestricted() view returns(bool)
+func (_NFTCollection *NFTCollectionCaller) TransfersRestricted(opts *bind.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _NFTCollection.contract.Call(opts, &out, "transfersRestricted")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// TransfersRestricted is a free data retrieval call binding the contract method 0x8423df79.
+//
+// Solidity: function transfersRestricted() view returns(bool)
+func (_NFTCollection *NFTCollectionSession) TransfersRestricted() (bool, error) {
+	return _NFTCollection.Contract.TransfersRestricted(&_NFTCollection.CallOpts)
+}
+
+// TransfersRestricted is a free data retrieval call binding the contract method 0x8423df79.
+//
+// Solidity: function transfersRestricted() view returns(bool)
+func (_NFTCollection *NFTCollectionCallerSession) TransfersRestricted() (bool, error) {
+	return _NFTCollection.Contract.TransfersRestricted(&_NFTCollection.CallOpts)
 }
 
 // Uri is a free data retrieval call binding the contract method 0x0e89341c.
@@ -1036,25 +1124,25 @@ func (_NFTCollection *NFTCollectionTransactorSession) BurnBatch(account common.A
 	return _NFTCollection.Contract.BurnBatch(&_NFTCollection.TransactOpts, account, ids, values)
 }
 
-// CreateNativeNfts is a paid mutator transaction binding the contract method 0x41466a95.
+// CreateNativeTokens is a paid mutator transaction binding the contract method 0x49a13fdf.
 //
-// Solidity: function createNativeNfts(string[] _nftURIs, uint256[] _nftSupplies) returns(uint256[] nftIds)
-func (_NFTCollection *NFTCollectionTransactor) CreateNativeNfts(opts *bind.TransactOpts, _nftURIs []string, _nftSupplies []*big.Int) (*types.Transaction, error) {
-	return _NFTCollection.contract.Transact(opts, "createNativeNfts", _nftURIs, _nftSupplies)
+// Solidity: function createNativeTokens(string[] _nftURIs, uint256[] _nftSupplies) returns(uint256[] nftIds)
+func (_NFTCollection *NFTCollectionTransactor) CreateNativeTokens(opts *bind.TransactOpts, _nftURIs []string, _nftSupplies []*big.Int) (*types.Transaction, error) {
+	return _NFTCollection.contract.Transact(opts, "createNativeTokens", _nftURIs, _nftSupplies)
 }
 
-// CreateNativeNfts is a paid mutator transaction binding the contract method 0x41466a95.
+// CreateNativeTokens is a paid mutator transaction binding the contract method 0x49a13fdf.
 //
-// Solidity: function createNativeNfts(string[] _nftURIs, uint256[] _nftSupplies) returns(uint256[] nftIds)
-func (_NFTCollection *NFTCollectionSession) CreateNativeNfts(_nftURIs []string, _nftSupplies []*big.Int) (*types.Transaction, error) {
-	return _NFTCollection.Contract.CreateNativeNfts(&_NFTCollection.TransactOpts, _nftURIs, _nftSupplies)
+// Solidity: function createNativeTokens(string[] _nftURIs, uint256[] _nftSupplies) returns(uint256[] nftIds)
+func (_NFTCollection *NFTCollectionSession) CreateNativeTokens(_nftURIs []string, _nftSupplies []*big.Int) (*types.Transaction, error) {
+	return _NFTCollection.Contract.CreateNativeTokens(&_NFTCollection.TransactOpts, _nftURIs, _nftSupplies)
 }
 
-// CreateNativeNfts is a paid mutator transaction binding the contract method 0x41466a95.
+// CreateNativeTokens is a paid mutator transaction binding the contract method 0x49a13fdf.
 //
-// Solidity: function createNativeNfts(string[] _nftURIs, uint256[] _nftSupplies) returns(uint256[] nftIds)
-func (_NFTCollection *NFTCollectionTransactorSession) CreateNativeNfts(_nftURIs []string, _nftSupplies []*big.Int) (*types.Transaction, error) {
-	return _NFTCollection.Contract.CreateNativeNfts(&_NFTCollection.TransactOpts, _nftURIs, _nftSupplies)
+// Solidity: function createNativeTokens(string[] _nftURIs, uint256[] _nftSupplies) returns(uint256[] nftIds)
+func (_NFTCollection *NFTCollectionTransactorSession) CreateNativeTokens(_nftURIs []string, _nftSupplies []*big.Int) (*types.Transaction, error) {
+	return _NFTCollection.Contract.CreateNativeTokens(&_NFTCollection.TransactOpts, _nftURIs, _nftSupplies)
 }
 
 // CreatePackAtomic is a paid mutator transaction binding the contract method 0x788f1f5e.
@@ -1139,6 +1227,69 @@ func (_NFTCollection *NFTCollectionSession) MintBatch(to common.Address, ids []*
 // Solidity: function mintBatch(address to, uint256[] ids, uint256[] amounts, bytes data) returns()
 func (_NFTCollection *NFTCollectionTransactorSession) MintBatch(to common.Address, ids []*big.Int, amounts []*big.Int, data []byte) (*types.Transaction, error) {
 	return _NFTCollection.Contract.MintBatch(&_NFTCollection.TransactOpts, to, ids, amounts, data)
+}
+
+// OnERC1155BatchReceived is a paid mutator transaction binding the contract method 0xbc197c81.
+//
+// Solidity: function onERC1155BatchReceived(address , address , uint256[] , uint256[] , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionTransactor) OnERC1155BatchReceived(opts *bind.TransactOpts, arg0 common.Address, arg1 common.Address, arg2 []*big.Int, arg3 []*big.Int, arg4 []byte) (*types.Transaction, error) {
+	return _NFTCollection.contract.Transact(opts, "onERC1155BatchReceived", arg0, arg1, arg2, arg3, arg4)
+}
+
+// OnERC1155BatchReceived is a paid mutator transaction binding the contract method 0xbc197c81.
+//
+// Solidity: function onERC1155BatchReceived(address , address , uint256[] , uint256[] , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionSession) OnERC1155BatchReceived(arg0 common.Address, arg1 common.Address, arg2 []*big.Int, arg3 []*big.Int, arg4 []byte) (*types.Transaction, error) {
+	return _NFTCollection.Contract.OnERC1155BatchReceived(&_NFTCollection.TransactOpts, arg0, arg1, arg2, arg3, arg4)
+}
+
+// OnERC1155BatchReceived is a paid mutator transaction binding the contract method 0xbc197c81.
+//
+// Solidity: function onERC1155BatchReceived(address , address , uint256[] , uint256[] , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionTransactorSession) OnERC1155BatchReceived(arg0 common.Address, arg1 common.Address, arg2 []*big.Int, arg3 []*big.Int, arg4 []byte) (*types.Transaction, error) {
+	return _NFTCollection.Contract.OnERC1155BatchReceived(&_NFTCollection.TransactOpts, arg0, arg1, arg2, arg3, arg4)
+}
+
+// OnERC1155Received is a paid mutator transaction binding the contract method 0xf23a6e61.
+//
+// Solidity: function onERC1155Received(address , address , uint256 , uint256 , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionTransactor) OnERC1155Received(opts *bind.TransactOpts, arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 *big.Int, arg4 []byte) (*types.Transaction, error) {
+	return _NFTCollection.contract.Transact(opts, "onERC1155Received", arg0, arg1, arg2, arg3, arg4)
+}
+
+// OnERC1155Received is a paid mutator transaction binding the contract method 0xf23a6e61.
+//
+// Solidity: function onERC1155Received(address , address , uint256 , uint256 , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionSession) OnERC1155Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 *big.Int, arg4 []byte) (*types.Transaction, error) {
+	return _NFTCollection.Contract.OnERC1155Received(&_NFTCollection.TransactOpts, arg0, arg1, arg2, arg3, arg4)
+}
+
+// OnERC1155Received is a paid mutator transaction binding the contract method 0xf23a6e61.
+//
+// Solidity: function onERC1155Received(address , address , uint256 , uint256 , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionTransactorSession) OnERC1155Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 *big.Int, arg4 []byte) (*types.Transaction, error) {
+	return _NFTCollection.Contract.OnERC1155Received(&_NFTCollection.TransactOpts, arg0, arg1, arg2, arg3, arg4)
+}
+
+// OnERC721Received is a paid mutator transaction binding the contract method 0x150b7a02.
+//
+// Solidity: function onERC721Received(address , address , uint256 , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionTransactor) OnERC721Received(opts *bind.TransactOpts, arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _NFTCollection.contract.Transact(opts, "onERC721Received", arg0, arg1, arg2, arg3)
+}
+
+// OnERC721Received is a paid mutator transaction binding the contract method 0x150b7a02.
+//
+// Solidity: function onERC721Received(address , address , uint256 , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionSession) OnERC721Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _NFTCollection.Contract.OnERC721Received(&_NFTCollection.TransactOpts, arg0, arg1, arg2, arg3)
+}
+
+// OnERC721Received is a paid mutator transaction binding the contract method 0x150b7a02.
+//
+// Solidity: function onERC721Received(address , address , uint256 , bytes ) returns(bytes4)
+func (_NFTCollection *NFTCollectionTransactorSession) OnERC721Received(arg0 common.Address, arg1 common.Address, arg2 *big.Int, arg3 []byte) (*types.Transaction, error) {
+	return _NFTCollection.Contract.OnERC721Received(&_NFTCollection.TransactOpts, arg0, arg1, arg2, arg3)
 }
 
 // Pause is a paid mutator transaction binding the contract method 0x8456cb59.
@@ -1330,25 +1481,46 @@ func (_NFTCollection *NFTCollectionTransactorSession) SetContractURI(_URI string
 	return _NFTCollection.Contract.SetContractURI(&_NFTCollection.TransactOpts, _URI)
 }
 
-// SetNftRoyaltyBps is a paid mutator transaction binding the contract method 0x2f9c131a.
+// SetRestrictedTransfer is a paid mutator transaction binding the contract method 0x8ba448c2.
 //
-// Solidity: function setNftRoyaltyBps(uint256 _royaltyBps) returns()
-func (_NFTCollection *NFTCollectionTransactor) SetNftRoyaltyBps(opts *bind.TransactOpts, _royaltyBps *big.Int) (*types.Transaction, error) {
-	return _NFTCollection.contract.Transact(opts, "setNftRoyaltyBps", _royaltyBps)
+// Solidity: function setRestrictedTransfer(bool _restrictedTransfer) returns()
+func (_NFTCollection *NFTCollectionTransactor) SetRestrictedTransfer(opts *bind.TransactOpts, _restrictedTransfer bool) (*types.Transaction, error) {
+	return _NFTCollection.contract.Transact(opts, "setRestrictedTransfer", _restrictedTransfer)
 }
 
-// SetNftRoyaltyBps is a paid mutator transaction binding the contract method 0x2f9c131a.
+// SetRestrictedTransfer is a paid mutator transaction binding the contract method 0x8ba448c2.
 //
-// Solidity: function setNftRoyaltyBps(uint256 _royaltyBps) returns()
-func (_NFTCollection *NFTCollectionSession) SetNftRoyaltyBps(_royaltyBps *big.Int) (*types.Transaction, error) {
-	return _NFTCollection.Contract.SetNftRoyaltyBps(&_NFTCollection.TransactOpts, _royaltyBps)
+// Solidity: function setRestrictedTransfer(bool _restrictedTransfer) returns()
+func (_NFTCollection *NFTCollectionSession) SetRestrictedTransfer(_restrictedTransfer bool) (*types.Transaction, error) {
+	return _NFTCollection.Contract.SetRestrictedTransfer(&_NFTCollection.TransactOpts, _restrictedTransfer)
 }
 
-// SetNftRoyaltyBps is a paid mutator transaction binding the contract method 0x2f9c131a.
+// SetRestrictedTransfer is a paid mutator transaction binding the contract method 0x8ba448c2.
 //
-// Solidity: function setNftRoyaltyBps(uint256 _royaltyBps) returns()
-func (_NFTCollection *NFTCollectionTransactorSession) SetNftRoyaltyBps(_royaltyBps *big.Int) (*types.Transaction, error) {
-	return _NFTCollection.Contract.SetNftRoyaltyBps(&_NFTCollection.TransactOpts, _royaltyBps)
+// Solidity: function setRestrictedTransfer(bool _restrictedTransfer) returns()
+func (_NFTCollection *NFTCollectionTransactorSession) SetRestrictedTransfer(_restrictedTransfer bool) (*types.Transaction, error) {
+	return _NFTCollection.Contract.SetRestrictedTransfer(&_NFTCollection.TransactOpts, _restrictedTransfer)
+}
+
+// SetRoyaltyBps is a paid mutator transaction binding the contract method 0x1f72d831.
+//
+// Solidity: function setRoyaltyBps(uint256 _royaltyBps) returns()
+func (_NFTCollection *NFTCollectionTransactor) SetRoyaltyBps(opts *bind.TransactOpts, _royaltyBps *big.Int) (*types.Transaction, error) {
+	return _NFTCollection.contract.Transact(opts, "setRoyaltyBps", _royaltyBps)
+}
+
+// SetRoyaltyBps is a paid mutator transaction binding the contract method 0x1f72d831.
+//
+// Solidity: function setRoyaltyBps(uint256 _royaltyBps) returns()
+func (_NFTCollection *NFTCollectionSession) SetRoyaltyBps(_royaltyBps *big.Int) (*types.Transaction, error) {
+	return _NFTCollection.Contract.SetRoyaltyBps(&_NFTCollection.TransactOpts, _royaltyBps)
+}
+
+// SetRoyaltyBps is a paid mutator transaction binding the contract method 0x1f72d831.
+//
+// Solidity: function setRoyaltyBps(uint256 _royaltyBps) returns()
+func (_NFTCollection *NFTCollectionTransactorSession) SetRoyaltyBps(_royaltyBps *big.Int) (*types.Transaction, error) {
+	return _NFTCollection.Contract.SetRoyaltyBps(&_NFTCollection.TransactOpts, _royaltyBps)
 }
 
 // Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
@@ -1638,48 +1810,57 @@ func (it *NFTCollectionERC20RedeemedIterator) Close() error {
 // NFTCollectionERC20Redeemed represents a ERC20Redeemed event raised by the NFTCollection contract.
 type NFTCollectionERC20Redeemed struct {
 	Redeemer            common.Address
-	TokenContract       common.Address
+	TokenId             *big.Int
+	SourceOfUnderlying  common.Address
 	TokenAmountReceived *big.Int
-	NftAmountRedeemed   *big.Int
+	SharesRedeemed      *big.Int
 	Raw                 types.Log // Blockchain specific contextual infos
 }
 
-// FilterERC20Redeemed is a free log retrieval operation binding the contract event 0xb7ca9e3aa58248cbaa6a5f83ca826cc57bf8ecd128fd88da420e294353c652f9.
+// FilterERC20Redeemed is a free log retrieval operation binding the contract event 0xb80333a30b48beb3745280a5e4bb1b8e53f79569e454ec99ba13678dfbe728eb.
 //
-// Solidity: event ERC20Redeemed(address indexed redeemer, address indexed tokenContract, uint256 tokenAmountReceived, uint256 nftAmountRedeemed)
-func (_NFTCollection *NFTCollectionFilterer) FilterERC20Redeemed(opts *bind.FilterOpts, redeemer []common.Address, tokenContract []common.Address) (*NFTCollectionERC20RedeemedIterator, error) {
+// Solidity: event ERC20Redeemed(address indexed redeemer, uint256 indexed tokenId, address indexed sourceOfUnderlying, uint256 tokenAmountReceived, uint256 sharesRedeemed)
+func (_NFTCollection *NFTCollectionFilterer) FilterERC20Redeemed(opts *bind.FilterOpts, redeemer []common.Address, tokenId []*big.Int, sourceOfUnderlying []common.Address) (*NFTCollectionERC20RedeemedIterator, error) {
 
 	var redeemerRule []interface{}
 	for _, redeemerItem := range redeemer {
 		redeemerRule = append(redeemerRule, redeemerItem)
 	}
-	var tokenContractRule []interface{}
-	for _, tokenContractItem := range tokenContract {
-		tokenContractRule = append(tokenContractRule, tokenContractItem)
+	var tokenIdRule []interface{}
+	for _, tokenIdItem := range tokenId {
+		tokenIdRule = append(tokenIdRule, tokenIdItem)
+	}
+	var sourceOfUnderlyingRule []interface{}
+	for _, sourceOfUnderlyingItem := range sourceOfUnderlying {
+		sourceOfUnderlyingRule = append(sourceOfUnderlyingRule, sourceOfUnderlyingItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "ERC20Redeemed", redeemerRule, tokenContractRule)
+	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "ERC20Redeemed", redeemerRule, tokenIdRule, sourceOfUnderlyingRule)
 	if err != nil {
 		return nil, err
 	}
 	return &NFTCollectionERC20RedeemedIterator{contract: _NFTCollection.contract, event: "ERC20Redeemed", logs: logs, sub: sub}, nil
 }
 
-// WatchERC20Redeemed is a free log subscription operation binding the contract event 0xb7ca9e3aa58248cbaa6a5f83ca826cc57bf8ecd128fd88da420e294353c652f9.
+// WatchERC20Redeemed is a free log subscription operation binding the contract event 0xb80333a30b48beb3745280a5e4bb1b8e53f79569e454ec99ba13678dfbe728eb.
 //
-// Solidity: event ERC20Redeemed(address indexed redeemer, address indexed tokenContract, uint256 tokenAmountReceived, uint256 nftAmountRedeemed)
-func (_NFTCollection *NFTCollectionFilterer) WatchERC20Redeemed(opts *bind.WatchOpts, sink chan<- *NFTCollectionERC20Redeemed, redeemer []common.Address, tokenContract []common.Address) (event.Subscription, error) {
+// Solidity: event ERC20Redeemed(address indexed redeemer, uint256 indexed tokenId, address indexed sourceOfUnderlying, uint256 tokenAmountReceived, uint256 sharesRedeemed)
+func (_NFTCollection *NFTCollectionFilterer) WatchERC20Redeemed(opts *bind.WatchOpts, sink chan<- *NFTCollectionERC20Redeemed, redeemer []common.Address, tokenId []*big.Int, sourceOfUnderlying []common.Address) (event.Subscription, error) {
 
 	var redeemerRule []interface{}
 	for _, redeemerItem := range redeemer {
 		redeemerRule = append(redeemerRule, redeemerItem)
 	}
-	var tokenContractRule []interface{}
-	for _, tokenContractItem := range tokenContract {
-		tokenContractRule = append(tokenContractRule, tokenContractItem)
+	var tokenIdRule []interface{}
+	for _, tokenIdItem := range tokenId {
+		tokenIdRule = append(tokenIdRule, tokenIdItem)
+	}
+	var sourceOfUnderlyingRule []interface{}
+	for _, sourceOfUnderlyingItem := range sourceOfUnderlying {
+		sourceOfUnderlyingRule = append(sourceOfUnderlyingRule, sourceOfUnderlyingItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "ERC20Redeemed", redeemerRule, tokenContractRule)
+	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "ERC20Redeemed", redeemerRule, tokenIdRule, sourceOfUnderlyingRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1711,9 +1892,9 @@ func (_NFTCollection *NFTCollectionFilterer) WatchERC20Redeemed(opts *bind.Watch
 	}), nil
 }
 
-// ParseERC20Redeemed is a log parse operation binding the contract event 0xb7ca9e3aa58248cbaa6a5f83ca826cc57bf8ecd128fd88da420e294353c652f9.
+// ParseERC20Redeemed is a log parse operation binding the contract event 0xb80333a30b48beb3745280a5e4bb1b8e53f79569e454ec99ba13678dfbe728eb.
 //
-// Solidity: event ERC20Redeemed(address indexed redeemer, address indexed tokenContract, uint256 tokenAmountReceived, uint256 nftAmountRedeemed)
+// Solidity: event ERC20Redeemed(address indexed redeemer, uint256 indexed tokenId, address indexed sourceOfUnderlying, uint256 tokenAmountReceived, uint256 sharesRedeemed)
 func (_NFTCollection *NFTCollectionFilterer) ParseERC20Redeemed(log types.Log) (*NFTCollectionERC20Redeemed, error) {
 	event := new(NFTCollectionERC20Redeemed)
 	if err := _NFTCollection.contract.UnpackLog(event, "ERC20Redeemed", log); err != nil {
@@ -1723,9 +1904,9 @@ func (_NFTCollection *NFTCollectionFilterer) ParseERC20Redeemed(log types.Log) (
 	return event, nil
 }
 
-// NFTCollectionERC20WrappedNftsIterator is returned from FilterERC20WrappedNfts and is used to iterate over the raw logs and unpacked data for ERC20WrappedNfts events raised by the NFTCollection contract.
-type NFTCollectionERC20WrappedNftsIterator struct {
-	Event *NFTCollectionERC20WrappedNfts // Event containing the contract specifics and raw log
+// NFTCollectionERC20WrappedTokenIterator is returned from FilterERC20WrappedToken and is used to iterate over the raw logs and unpacked data for ERC20WrappedToken events raised by the NFTCollection contract.
+type NFTCollectionERC20WrappedTokenIterator struct {
+	Event *NFTCollectionERC20WrappedToken // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1739,7 +1920,7 @@ type NFTCollectionERC20WrappedNftsIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *NFTCollectionERC20WrappedNftsIterator) Next() bool {
+func (it *NFTCollectionERC20WrappedTokenIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1748,7 +1929,7 @@ func (it *NFTCollectionERC20WrappedNftsIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(NFTCollectionERC20WrappedNfts)
+			it.Event = new(NFTCollectionERC20WrappedToken)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1763,7 +1944,7 @@ func (it *NFTCollectionERC20WrappedNftsIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(NFTCollectionERC20WrappedNfts)
+		it.Event = new(NFTCollectionERC20WrappedToken)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1779,63 +1960,64 @@ func (it *NFTCollectionERC20WrappedNftsIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTCollectionERC20WrappedNftsIterator) Error() error {
+func (it *NFTCollectionERC20WrappedTokenIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *NFTCollectionERC20WrappedNftsIterator) Close() error {
+func (it *NFTCollectionERC20WrappedTokenIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// NFTCollectionERC20WrappedNfts represents a ERC20WrappedNfts event raised by the NFTCollection contract.
-type NFTCollectionERC20WrappedNfts struct {
-	Creator       common.Address
-	TokenContract common.Address
-	TokenAmount   *big.Int
-	NftsMinted    *big.Int
-	NftURI        string
-	Raw           types.Log // Blockchain specific contextual infos
+// NFTCollectionERC20WrappedToken represents a ERC20WrappedToken event raised by the NFTCollection contract.
+type NFTCollectionERC20WrappedToken struct {
+	Creator                 common.Address
+	SourceOfUnderlying      common.Address
+	TotalAmountOfUnderlying *big.Int
+	Shares                  *big.Int
+	TokenId                 *big.Int
+	TokenURI                string
+	Raw                     types.Log // Blockchain specific contextual infos
 }
 
-// FilterERC20WrappedNfts is a free log retrieval operation binding the contract event 0xd8bffec4446d425694f73630f7822315baa62da5311e89f0d83335ef6a3917ba.
+// FilterERC20WrappedToken is a free log retrieval operation binding the contract event 0x53af9a53d4a11cb382035aa13d6d8e24575569953176d87464ba37e7013a6aa4.
 //
-// Solidity: event ERC20WrappedNfts(address indexed creator, address indexed tokenContract, uint256 tokenAmount, uint256 nftsMinted, string nftURI)
-func (_NFTCollection *NFTCollectionFilterer) FilterERC20WrappedNfts(opts *bind.FilterOpts, creator []common.Address, tokenContract []common.Address) (*NFTCollectionERC20WrappedNftsIterator, error) {
+// Solidity: event ERC20WrappedToken(address indexed creator, address indexed sourceOfUnderlying, uint256 totalAmountOfUnderlying, uint256 shares, uint256 tokenId, string tokenURI)
+func (_NFTCollection *NFTCollectionFilterer) FilterERC20WrappedToken(opts *bind.FilterOpts, creator []common.Address, sourceOfUnderlying []common.Address) (*NFTCollectionERC20WrappedTokenIterator, error) {
 
 	var creatorRule []interface{}
 	for _, creatorItem := range creator {
 		creatorRule = append(creatorRule, creatorItem)
 	}
-	var tokenContractRule []interface{}
-	for _, tokenContractItem := range tokenContract {
-		tokenContractRule = append(tokenContractRule, tokenContractItem)
+	var sourceOfUnderlyingRule []interface{}
+	for _, sourceOfUnderlyingItem := range sourceOfUnderlying {
+		sourceOfUnderlyingRule = append(sourceOfUnderlyingRule, sourceOfUnderlyingItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "ERC20WrappedNfts", creatorRule, tokenContractRule)
+	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "ERC20WrappedToken", creatorRule, sourceOfUnderlyingRule)
 	if err != nil {
 		return nil, err
 	}
-	return &NFTCollectionERC20WrappedNftsIterator{contract: _NFTCollection.contract, event: "ERC20WrappedNfts", logs: logs, sub: sub}, nil
+	return &NFTCollectionERC20WrappedTokenIterator{contract: _NFTCollection.contract, event: "ERC20WrappedToken", logs: logs, sub: sub}, nil
 }
 
-// WatchERC20WrappedNfts is a free log subscription operation binding the contract event 0xd8bffec4446d425694f73630f7822315baa62da5311e89f0d83335ef6a3917ba.
+// WatchERC20WrappedToken is a free log subscription operation binding the contract event 0x53af9a53d4a11cb382035aa13d6d8e24575569953176d87464ba37e7013a6aa4.
 //
-// Solidity: event ERC20WrappedNfts(address indexed creator, address indexed tokenContract, uint256 tokenAmount, uint256 nftsMinted, string nftURI)
-func (_NFTCollection *NFTCollectionFilterer) WatchERC20WrappedNfts(opts *bind.WatchOpts, sink chan<- *NFTCollectionERC20WrappedNfts, creator []common.Address, tokenContract []common.Address) (event.Subscription, error) {
+// Solidity: event ERC20WrappedToken(address indexed creator, address indexed sourceOfUnderlying, uint256 totalAmountOfUnderlying, uint256 shares, uint256 tokenId, string tokenURI)
+func (_NFTCollection *NFTCollectionFilterer) WatchERC20WrappedToken(opts *bind.WatchOpts, sink chan<- *NFTCollectionERC20WrappedToken, creator []common.Address, sourceOfUnderlying []common.Address) (event.Subscription, error) {
 
 	var creatorRule []interface{}
 	for _, creatorItem := range creator {
 		creatorRule = append(creatorRule, creatorItem)
 	}
-	var tokenContractRule []interface{}
-	for _, tokenContractItem := range tokenContract {
-		tokenContractRule = append(tokenContractRule, tokenContractItem)
+	var sourceOfUnderlyingRule []interface{}
+	for _, sourceOfUnderlyingItem := range sourceOfUnderlying {
+		sourceOfUnderlyingRule = append(sourceOfUnderlyingRule, sourceOfUnderlyingItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "ERC20WrappedNfts", creatorRule, tokenContractRule)
+	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "ERC20WrappedToken", creatorRule, sourceOfUnderlyingRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1845,8 +2027,8 @@ func (_NFTCollection *NFTCollectionFilterer) WatchERC20WrappedNfts(opts *bind.Wa
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(NFTCollectionERC20WrappedNfts)
-				if err := _NFTCollection.contract.UnpackLog(event, "ERC20WrappedNfts", log); err != nil {
+				event := new(NFTCollectionERC20WrappedToken)
+				if err := _NFTCollection.contract.UnpackLog(event, "ERC20WrappedToken", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1867,12 +2049,12 @@ func (_NFTCollection *NFTCollectionFilterer) WatchERC20WrappedNfts(opts *bind.Wa
 	}), nil
 }
 
-// ParseERC20WrappedNfts is a log parse operation binding the contract event 0xd8bffec4446d425694f73630f7822315baa62da5311e89f0d83335ef6a3917ba.
+// ParseERC20WrappedToken is a log parse operation binding the contract event 0x53af9a53d4a11cb382035aa13d6d8e24575569953176d87464ba37e7013a6aa4.
 //
-// Solidity: event ERC20WrappedNfts(address indexed creator, address indexed tokenContract, uint256 tokenAmount, uint256 nftsMinted, string nftURI)
-func (_NFTCollection *NFTCollectionFilterer) ParseERC20WrappedNfts(log types.Log) (*NFTCollectionERC20WrappedNfts, error) {
-	event := new(NFTCollectionERC20WrappedNfts)
-	if err := _NFTCollection.contract.UnpackLog(event, "ERC20WrappedNfts", log); err != nil {
+// Solidity: event ERC20WrappedToken(address indexed creator, address indexed sourceOfUnderlying, uint256 totalAmountOfUnderlying, uint256 shares, uint256 tokenId, string tokenURI)
+func (_NFTCollection *NFTCollectionFilterer) ParseERC20WrappedToken(log types.Log) (*NFTCollectionERC20WrappedToken, error) {
+	event := new(NFTCollectionERC20WrappedToken)
+	if err := _NFTCollection.contract.UnpackLog(event, "ERC20WrappedToken", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -1948,28 +2130,28 @@ func (it *NFTCollectionERC721RedeemedIterator) Close() error {
 
 // NFTCollectionERC721Redeemed represents a ERC721Redeemed event raised by the NFTCollection contract.
 type NFTCollectionERC721Redeemed struct {
-	Redeemer         common.Address
-	NftContract      common.Address
-	NftTokenId       *big.Int
-	NativeNftTokenId *big.Int
-	Raw              types.Log // Blockchain specific contextual infos
+	Redeemer            common.Address
+	SourceOfUnderlying  common.Address
+	TokenIdOfUnderlying *big.Int
+	TokenId             *big.Int
+	Raw                 types.Log // Blockchain specific contextual infos
 }
 
 // FilterERC721Redeemed is a free log retrieval operation binding the contract event 0xea7b88a04220a2292e142652e8e1a59cc00e7d27d8ad6b11da6cf5870e6ba866.
 //
-// Solidity: event ERC721Redeemed(address indexed redeemer, address indexed nftContract, uint256 nftTokenId, uint256 nativeNftTokenId)
-func (_NFTCollection *NFTCollectionFilterer) FilterERC721Redeemed(opts *bind.FilterOpts, redeemer []common.Address, nftContract []common.Address) (*NFTCollectionERC721RedeemedIterator, error) {
+// Solidity: event ERC721Redeemed(address indexed redeemer, address indexed sourceOfUnderlying, uint256 tokenIdOfUnderlying, uint256 tokenId)
+func (_NFTCollection *NFTCollectionFilterer) FilterERC721Redeemed(opts *bind.FilterOpts, redeemer []common.Address, sourceOfUnderlying []common.Address) (*NFTCollectionERC721RedeemedIterator, error) {
 
 	var redeemerRule []interface{}
 	for _, redeemerItem := range redeemer {
 		redeemerRule = append(redeemerRule, redeemerItem)
 	}
-	var nftContractRule []interface{}
-	for _, nftContractItem := range nftContract {
-		nftContractRule = append(nftContractRule, nftContractItem)
+	var sourceOfUnderlyingRule []interface{}
+	for _, sourceOfUnderlyingItem := range sourceOfUnderlying {
+		sourceOfUnderlyingRule = append(sourceOfUnderlyingRule, sourceOfUnderlyingItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "ERC721Redeemed", redeemerRule, nftContractRule)
+	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "ERC721Redeemed", redeemerRule, sourceOfUnderlyingRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1978,19 +2160,19 @@ func (_NFTCollection *NFTCollectionFilterer) FilterERC721Redeemed(opts *bind.Fil
 
 // WatchERC721Redeemed is a free log subscription operation binding the contract event 0xea7b88a04220a2292e142652e8e1a59cc00e7d27d8ad6b11da6cf5870e6ba866.
 //
-// Solidity: event ERC721Redeemed(address indexed redeemer, address indexed nftContract, uint256 nftTokenId, uint256 nativeNftTokenId)
-func (_NFTCollection *NFTCollectionFilterer) WatchERC721Redeemed(opts *bind.WatchOpts, sink chan<- *NFTCollectionERC721Redeemed, redeemer []common.Address, nftContract []common.Address) (event.Subscription, error) {
+// Solidity: event ERC721Redeemed(address indexed redeemer, address indexed sourceOfUnderlying, uint256 tokenIdOfUnderlying, uint256 tokenId)
+func (_NFTCollection *NFTCollectionFilterer) WatchERC721Redeemed(opts *bind.WatchOpts, sink chan<- *NFTCollectionERC721Redeemed, redeemer []common.Address, sourceOfUnderlying []common.Address) (event.Subscription, error) {
 
 	var redeemerRule []interface{}
 	for _, redeemerItem := range redeemer {
 		redeemerRule = append(redeemerRule, redeemerItem)
 	}
-	var nftContractRule []interface{}
-	for _, nftContractItem := range nftContract {
-		nftContractRule = append(nftContractRule, nftContractItem)
+	var sourceOfUnderlyingRule []interface{}
+	for _, sourceOfUnderlyingItem := range sourceOfUnderlying {
+		sourceOfUnderlyingRule = append(sourceOfUnderlyingRule, sourceOfUnderlyingItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "ERC721Redeemed", redeemerRule, nftContractRule)
+	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "ERC721Redeemed", redeemerRule, sourceOfUnderlyingRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2024,7 +2206,7 @@ func (_NFTCollection *NFTCollectionFilterer) WatchERC721Redeemed(opts *bind.Watc
 
 // ParseERC721Redeemed is a log parse operation binding the contract event 0xea7b88a04220a2292e142652e8e1a59cc00e7d27d8ad6b11da6cf5870e6ba866.
 //
-// Solidity: event ERC721Redeemed(address indexed redeemer, address indexed nftContract, uint256 nftTokenId, uint256 nativeNftTokenId)
+// Solidity: event ERC721Redeemed(address indexed redeemer, address indexed sourceOfUnderlying, uint256 tokenIdOfUnderlying, uint256 tokenId)
 func (_NFTCollection *NFTCollectionFilterer) ParseERC721Redeemed(log types.Log) (*NFTCollectionERC721Redeemed, error) {
 	event := new(NFTCollectionERC721Redeemed)
 	if err := _NFTCollection.contract.UnpackLog(event, "ERC721Redeemed", log); err != nil {
@@ -2034,9 +2216,9 @@ func (_NFTCollection *NFTCollectionFilterer) ParseERC721Redeemed(log types.Log) 
 	return event, nil
 }
 
-// NFTCollectionERC721WrappedNftIterator is returned from FilterERC721WrappedNft and is used to iterate over the raw logs and unpacked data for ERC721WrappedNft events raised by the NFTCollection contract.
-type NFTCollectionERC721WrappedNftIterator struct {
-	Event *NFTCollectionERC721WrappedNft // Event containing the contract specifics and raw log
+// NFTCollectionERC721WrappedTokenIterator is returned from FilterERC721WrappedToken and is used to iterate over the raw logs and unpacked data for ERC721WrappedToken events raised by the NFTCollection contract.
+type NFTCollectionERC721WrappedTokenIterator struct {
+	Event *NFTCollectionERC721WrappedToken // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2050,7 +2232,7 @@ type NFTCollectionERC721WrappedNftIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *NFTCollectionERC721WrappedNftIterator) Next() bool {
+func (it *NFTCollectionERC721WrappedTokenIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2059,7 +2241,7 @@ func (it *NFTCollectionERC721WrappedNftIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(NFTCollectionERC721WrappedNft)
+			it.Event = new(NFTCollectionERC721WrappedToken)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2074,7 +2256,7 @@ func (it *NFTCollectionERC721WrappedNftIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(NFTCollectionERC721WrappedNft)
+		it.Event = new(NFTCollectionERC721WrappedToken)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2090,63 +2272,63 @@ func (it *NFTCollectionERC721WrappedNftIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTCollectionERC721WrappedNftIterator) Error() error {
+func (it *NFTCollectionERC721WrappedTokenIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *NFTCollectionERC721WrappedNftIterator) Close() error {
+func (it *NFTCollectionERC721WrappedTokenIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// NFTCollectionERC721WrappedNft represents a ERC721WrappedNft event raised by the NFTCollection contract.
-type NFTCollectionERC721WrappedNft struct {
-	Creator          common.Address
-	NftContract      common.Address
-	NftTokenId       *big.Int
-	NativeNftTokenId *big.Int
-	NativeNftURI     string
-	Raw              types.Log // Blockchain specific contextual infos
+// NFTCollectionERC721WrappedToken represents a ERC721WrappedToken event raised by the NFTCollection contract.
+type NFTCollectionERC721WrappedToken struct {
+	Creator             common.Address
+	SourceOfUnderlying  common.Address
+	TokenIdOfUnderlying *big.Int
+	TokenId             *big.Int
+	TokenURI            string
+	Raw                 types.Log // Blockchain specific contextual infos
 }
 
-// FilterERC721WrappedNft is a free log retrieval operation binding the contract event 0xdae1779be741094a20f8287fd2c7a4d2d745eeae29c438867017066ae27a1bc4.
+// FilterERC721WrappedToken is a free log retrieval operation binding the contract event 0x797091bed1dcc535a592c3da1115fdb7467204ef9fb70943f0fc855ebe0a30f5.
 //
-// Solidity: event ERC721WrappedNft(address indexed creator, address indexed nftContract, uint256 nftTokenId, uint256 nativeNftTokenId, string nativeNftURI)
-func (_NFTCollection *NFTCollectionFilterer) FilterERC721WrappedNft(opts *bind.FilterOpts, creator []common.Address, nftContract []common.Address) (*NFTCollectionERC721WrappedNftIterator, error) {
+// Solidity: event ERC721WrappedToken(address indexed creator, address indexed sourceOfUnderlying, uint256 tokenIdOfUnderlying, uint256 tokenId, string tokenURI)
+func (_NFTCollection *NFTCollectionFilterer) FilterERC721WrappedToken(opts *bind.FilterOpts, creator []common.Address, sourceOfUnderlying []common.Address) (*NFTCollectionERC721WrappedTokenIterator, error) {
 
 	var creatorRule []interface{}
 	for _, creatorItem := range creator {
 		creatorRule = append(creatorRule, creatorItem)
 	}
-	var nftContractRule []interface{}
-	for _, nftContractItem := range nftContract {
-		nftContractRule = append(nftContractRule, nftContractItem)
+	var sourceOfUnderlyingRule []interface{}
+	for _, sourceOfUnderlyingItem := range sourceOfUnderlying {
+		sourceOfUnderlyingRule = append(sourceOfUnderlyingRule, sourceOfUnderlyingItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "ERC721WrappedNft", creatorRule, nftContractRule)
+	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "ERC721WrappedToken", creatorRule, sourceOfUnderlyingRule)
 	if err != nil {
 		return nil, err
 	}
-	return &NFTCollectionERC721WrappedNftIterator{contract: _NFTCollection.contract, event: "ERC721WrappedNft", logs: logs, sub: sub}, nil
+	return &NFTCollectionERC721WrappedTokenIterator{contract: _NFTCollection.contract, event: "ERC721WrappedToken", logs: logs, sub: sub}, nil
 }
 
-// WatchERC721WrappedNft is a free log subscription operation binding the contract event 0xdae1779be741094a20f8287fd2c7a4d2d745eeae29c438867017066ae27a1bc4.
+// WatchERC721WrappedToken is a free log subscription operation binding the contract event 0x797091bed1dcc535a592c3da1115fdb7467204ef9fb70943f0fc855ebe0a30f5.
 //
-// Solidity: event ERC721WrappedNft(address indexed creator, address indexed nftContract, uint256 nftTokenId, uint256 nativeNftTokenId, string nativeNftURI)
-func (_NFTCollection *NFTCollectionFilterer) WatchERC721WrappedNft(opts *bind.WatchOpts, sink chan<- *NFTCollectionERC721WrappedNft, creator []common.Address, nftContract []common.Address) (event.Subscription, error) {
+// Solidity: event ERC721WrappedToken(address indexed creator, address indexed sourceOfUnderlying, uint256 tokenIdOfUnderlying, uint256 tokenId, string tokenURI)
+func (_NFTCollection *NFTCollectionFilterer) WatchERC721WrappedToken(opts *bind.WatchOpts, sink chan<- *NFTCollectionERC721WrappedToken, creator []common.Address, sourceOfUnderlying []common.Address) (event.Subscription, error) {
 
 	var creatorRule []interface{}
 	for _, creatorItem := range creator {
 		creatorRule = append(creatorRule, creatorItem)
 	}
-	var nftContractRule []interface{}
-	for _, nftContractItem := range nftContract {
-		nftContractRule = append(nftContractRule, nftContractItem)
+	var sourceOfUnderlyingRule []interface{}
+	for _, sourceOfUnderlyingItem := range sourceOfUnderlying {
+		sourceOfUnderlyingRule = append(sourceOfUnderlyingRule, sourceOfUnderlyingItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "ERC721WrappedNft", creatorRule, nftContractRule)
+	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "ERC721WrappedToken", creatorRule, sourceOfUnderlyingRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2156,8 +2338,8 @@ func (_NFTCollection *NFTCollectionFilterer) WatchERC721WrappedNft(opts *bind.Wa
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(NFTCollectionERC721WrappedNft)
-				if err := _NFTCollection.contract.UnpackLog(event, "ERC721WrappedNft", log); err != nil {
+				event := new(NFTCollectionERC721WrappedToken)
+				if err := _NFTCollection.contract.UnpackLog(event, "ERC721WrappedToken", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2178,21 +2360,21 @@ func (_NFTCollection *NFTCollectionFilterer) WatchERC721WrappedNft(opts *bind.Wa
 	}), nil
 }
 
-// ParseERC721WrappedNft is a log parse operation binding the contract event 0xdae1779be741094a20f8287fd2c7a4d2d745eeae29c438867017066ae27a1bc4.
+// ParseERC721WrappedToken is a log parse operation binding the contract event 0x797091bed1dcc535a592c3da1115fdb7467204ef9fb70943f0fc855ebe0a30f5.
 //
-// Solidity: event ERC721WrappedNft(address indexed creator, address indexed nftContract, uint256 nftTokenId, uint256 nativeNftTokenId, string nativeNftURI)
-func (_NFTCollection *NFTCollectionFilterer) ParseERC721WrappedNft(log types.Log) (*NFTCollectionERC721WrappedNft, error) {
-	event := new(NFTCollectionERC721WrappedNft)
-	if err := _NFTCollection.contract.UnpackLog(event, "ERC721WrappedNft", log); err != nil {
+// Solidity: event ERC721WrappedToken(address indexed creator, address indexed sourceOfUnderlying, uint256 tokenIdOfUnderlying, uint256 tokenId, string tokenURI)
+func (_NFTCollection *NFTCollectionFilterer) ParseERC721WrappedToken(log types.Log) (*NFTCollectionERC721WrappedToken, error) {
+	event := new(NFTCollectionERC721WrappedToken)
+	if err := _NFTCollection.contract.UnpackLog(event, "ERC721WrappedToken", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// NFTCollectionNativeNftsIterator is returned from FilterNativeNfts and is used to iterate over the raw logs and unpacked data for NativeNfts events raised by the NFTCollection contract.
-type NFTCollectionNativeNftsIterator struct {
-	Event *NFTCollectionNativeNfts // Event containing the contract specifics and raw log
+// NFTCollectionNativeTokensIterator is returned from FilterNativeTokens and is used to iterate over the raw logs and unpacked data for NativeTokens events raised by the NFTCollection contract.
+type NFTCollectionNativeTokensIterator struct {
+	Event *NFTCollectionNativeTokens // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2206,7 +2388,7 @@ type NFTCollectionNativeNftsIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *NFTCollectionNativeNftsIterator) Next() bool {
+func (it *NFTCollectionNativeTokensIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2215,7 +2397,7 @@ func (it *NFTCollectionNativeNftsIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(NFTCollectionNativeNfts)
+			it.Event = new(NFTCollectionNativeTokens)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2230,7 +2412,7 @@ func (it *NFTCollectionNativeNftsIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(NFTCollectionNativeNfts)
+		it.Event = new(NFTCollectionNativeTokens)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2246,54 +2428,54 @@ func (it *NFTCollectionNativeNftsIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTCollectionNativeNftsIterator) Error() error {
+func (it *NFTCollectionNativeTokensIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *NFTCollectionNativeNftsIterator) Close() error {
+func (it *NFTCollectionNativeTokensIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// NFTCollectionNativeNfts represents a NativeNfts event raised by the NFTCollection contract.
-type NFTCollectionNativeNfts struct {
-	Creator     common.Address
-	NftIds      []*big.Int
-	NftURIs     []string
-	NftSupplies []*big.Int
-	Raw         types.Log // Blockchain specific contextual infos
+// NFTCollectionNativeTokens represents a NativeTokens event raised by the NFTCollection contract.
+type NFTCollectionNativeTokens struct {
+	Creator       common.Address
+	TokenIds      []*big.Int
+	TokenURIs     []string
+	TokenSupplies []*big.Int
+	Raw           types.Log // Blockchain specific contextual infos
 }
 
-// FilterNativeNfts is a free log retrieval operation binding the contract event 0x9ead818be0b43d79a78daaabe6c787d254ac1279ac99d9ff62b6b227804f7b33.
+// FilterNativeTokens is a free log retrieval operation binding the contract event 0xbea5a4b7cf9a3f7d8bf7c987614db5dcfdcd917a2cd5788a210c0ebdccfc5da4.
 //
-// Solidity: event NativeNfts(address indexed creator, uint256[] nftIds, string[] nftURIs, uint256[] nftSupplies)
-func (_NFTCollection *NFTCollectionFilterer) FilterNativeNfts(opts *bind.FilterOpts, creator []common.Address) (*NFTCollectionNativeNftsIterator, error) {
+// Solidity: event NativeTokens(address indexed creator, uint256[] tokenIds, string[] tokenURIs, uint256[] tokenSupplies)
+func (_NFTCollection *NFTCollectionFilterer) FilterNativeTokens(opts *bind.FilterOpts, creator []common.Address) (*NFTCollectionNativeTokensIterator, error) {
 
 	var creatorRule []interface{}
 	for _, creatorItem := range creator {
 		creatorRule = append(creatorRule, creatorItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "NativeNfts", creatorRule)
+	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "NativeTokens", creatorRule)
 	if err != nil {
 		return nil, err
 	}
-	return &NFTCollectionNativeNftsIterator{contract: _NFTCollection.contract, event: "NativeNfts", logs: logs, sub: sub}, nil
+	return &NFTCollectionNativeTokensIterator{contract: _NFTCollection.contract, event: "NativeTokens", logs: logs, sub: sub}, nil
 }
 
-// WatchNativeNfts is a free log subscription operation binding the contract event 0x9ead818be0b43d79a78daaabe6c787d254ac1279ac99d9ff62b6b227804f7b33.
+// WatchNativeTokens is a free log subscription operation binding the contract event 0xbea5a4b7cf9a3f7d8bf7c987614db5dcfdcd917a2cd5788a210c0ebdccfc5da4.
 //
-// Solidity: event NativeNfts(address indexed creator, uint256[] nftIds, string[] nftURIs, uint256[] nftSupplies)
-func (_NFTCollection *NFTCollectionFilterer) WatchNativeNfts(opts *bind.WatchOpts, sink chan<- *NFTCollectionNativeNfts, creator []common.Address) (event.Subscription, error) {
+// Solidity: event NativeTokens(address indexed creator, uint256[] tokenIds, string[] tokenURIs, uint256[] tokenSupplies)
+func (_NFTCollection *NFTCollectionFilterer) WatchNativeTokens(opts *bind.WatchOpts, sink chan<- *NFTCollectionNativeTokens, creator []common.Address) (event.Subscription, error) {
 
 	var creatorRule []interface{}
 	for _, creatorItem := range creator {
 		creatorRule = append(creatorRule, creatorItem)
 	}
 
-	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "NativeNfts", creatorRule)
+	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "NativeTokens", creatorRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2303,8 +2485,8 @@ func (_NFTCollection *NFTCollectionFilterer) WatchNativeNfts(opts *bind.WatchOpt
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(NFTCollectionNativeNfts)
-				if err := _NFTCollection.contract.UnpackLog(event, "NativeNfts", log); err != nil {
+				event := new(NFTCollectionNativeTokens)
+				if err := _NFTCollection.contract.UnpackLog(event, "NativeTokens", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2325,146 +2507,12 @@ func (_NFTCollection *NFTCollectionFilterer) WatchNativeNfts(opts *bind.WatchOpt
 	}), nil
 }
 
-// ParseNativeNfts is a log parse operation binding the contract event 0x9ead818be0b43d79a78daaabe6c787d254ac1279ac99d9ff62b6b227804f7b33.
+// ParseNativeTokens is a log parse operation binding the contract event 0xbea5a4b7cf9a3f7d8bf7c987614db5dcfdcd917a2cd5788a210c0ebdccfc5da4.
 //
-// Solidity: event NativeNfts(address indexed creator, uint256[] nftIds, string[] nftURIs, uint256[] nftSupplies)
-func (_NFTCollection *NFTCollectionFilterer) ParseNativeNfts(log types.Log) (*NFTCollectionNativeNfts, error) {
-	event := new(NFTCollectionNativeNfts)
-	if err := _NFTCollection.contract.UnpackLog(event, "NativeNfts", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// NFTCollectionNftRoyaltyUpdatedIterator is returned from FilterNftRoyaltyUpdated and is used to iterate over the raw logs and unpacked data for NftRoyaltyUpdated events raised by the NFTCollection contract.
-type NFTCollectionNftRoyaltyUpdatedIterator struct {
-	Event *NFTCollectionNftRoyaltyUpdated // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *NFTCollectionNftRoyaltyUpdatedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(NFTCollectionNftRoyaltyUpdated)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(NFTCollectionNftRoyaltyUpdated)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTCollectionNftRoyaltyUpdatedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *NFTCollectionNftRoyaltyUpdatedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// NFTCollectionNftRoyaltyUpdated represents a NftRoyaltyUpdated event raised by the NFTCollection contract.
-type NFTCollectionNftRoyaltyUpdated struct {
-	RoyaltyBps *big.Int
-	Raw        types.Log // Blockchain specific contextual infos
-}
-
-// FilterNftRoyaltyUpdated is a free log retrieval operation binding the contract event 0xfe0145b1017176fc94d0dfab7c8631a2f2c4b287fc395f4b3e8bfec35e150dac.
-//
-// Solidity: event NftRoyaltyUpdated(uint256 royaltyBps)
-func (_NFTCollection *NFTCollectionFilterer) FilterNftRoyaltyUpdated(opts *bind.FilterOpts) (*NFTCollectionNftRoyaltyUpdatedIterator, error) {
-
-	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "NftRoyaltyUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return &NFTCollectionNftRoyaltyUpdatedIterator{contract: _NFTCollection.contract, event: "NftRoyaltyUpdated", logs: logs, sub: sub}, nil
-}
-
-// WatchNftRoyaltyUpdated is a free log subscription operation binding the contract event 0xfe0145b1017176fc94d0dfab7c8631a2f2c4b287fc395f4b3e8bfec35e150dac.
-//
-// Solidity: event NftRoyaltyUpdated(uint256 royaltyBps)
-func (_NFTCollection *NFTCollectionFilterer) WatchNftRoyaltyUpdated(opts *bind.WatchOpts, sink chan<- *NFTCollectionNftRoyaltyUpdated) (event.Subscription, error) {
-
-	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "NftRoyaltyUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(NFTCollectionNftRoyaltyUpdated)
-				if err := _NFTCollection.contract.UnpackLog(event, "NftRoyaltyUpdated", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseNftRoyaltyUpdated is a log parse operation binding the contract event 0xfe0145b1017176fc94d0dfab7c8631a2f2c4b287fc395f4b3e8bfec35e150dac.
-//
-// Solidity: event NftRoyaltyUpdated(uint256 royaltyBps)
-func (_NFTCollection *NFTCollectionFilterer) ParseNftRoyaltyUpdated(log types.Log) (*NFTCollectionNftRoyaltyUpdated, error) {
-	event := new(NFTCollectionNftRoyaltyUpdated)
-	if err := _NFTCollection.contract.UnpackLog(event, "NftRoyaltyUpdated", log); err != nil {
+// Solidity: event NativeTokens(address indexed creator, uint256[] tokenIds, string[] tokenURIs, uint256[] tokenSupplies)
+func (_NFTCollection *NFTCollectionFilterer) ParseNativeTokens(log types.Log) (*NFTCollectionNativeTokens, error) {
+	event := new(NFTCollectionNativeTokens)
+	if err := _NFTCollection.contract.UnpackLog(event, "NativeTokens", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -3085,6 +3133,140 @@ func (_NFTCollection *NFTCollectionFilterer) WatchRoleRevoked(opts *bind.WatchOp
 func (_NFTCollection *NFTCollectionFilterer) ParseRoleRevoked(log types.Log) (*NFTCollectionRoleRevoked, error) {
 	event := new(NFTCollectionRoleRevoked)
 	if err := _NFTCollection.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// NFTCollectionRoyaltyUpdatedIterator is returned from FilterRoyaltyUpdated and is used to iterate over the raw logs and unpacked data for RoyaltyUpdated events raised by the NFTCollection contract.
+type NFTCollectionRoyaltyUpdatedIterator struct {
+	Event *NFTCollectionRoyaltyUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NFTCollectionRoyaltyUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NFTCollectionRoyaltyUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NFTCollectionRoyaltyUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NFTCollectionRoyaltyUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NFTCollectionRoyaltyUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NFTCollectionRoyaltyUpdated represents a RoyaltyUpdated event raised by the NFTCollection contract.
+type NFTCollectionRoyaltyUpdated struct {
+	RoyaltyBps *big.Int
+	Raw        types.Log // Blockchain specific contextual infos
+}
+
+// FilterRoyaltyUpdated is a free log retrieval operation binding the contract event 0x244ea8d7627f5a08f4299862bd5a45752842c183aee5b0fb0d1e4887bfa605b3.
+//
+// Solidity: event RoyaltyUpdated(uint256 royaltyBps)
+func (_NFTCollection *NFTCollectionFilterer) FilterRoyaltyUpdated(opts *bind.FilterOpts) (*NFTCollectionRoyaltyUpdatedIterator, error) {
+
+	logs, sub, err := _NFTCollection.contract.FilterLogs(opts, "RoyaltyUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &NFTCollectionRoyaltyUpdatedIterator{contract: _NFTCollection.contract, event: "RoyaltyUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchRoyaltyUpdated is a free log subscription operation binding the contract event 0x244ea8d7627f5a08f4299862bd5a45752842c183aee5b0fb0d1e4887bfa605b3.
+//
+// Solidity: event RoyaltyUpdated(uint256 royaltyBps)
+func (_NFTCollection *NFTCollectionFilterer) WatchRoyaltyUpdated(opts *bind.WatchOpts, sink chan<- *NFTCollectionRoyaltyUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _NFTCollection.contract.WatchLogs(opts, "RoyaltyUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NFTCollectionRoyaltyUpdated)
+				if err := _NFTCollection.contract.UnpackLog(event, "RoyaltyUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseRoyaltyUpdated is a log parse operation binding the contract event 0x244ea8d7627f5a08f4299862bd5a45752842c183aee5b0fb0d1e4887bfa605b3.
+//
+// Solidity: event RoyaltyUpdated(uint256 royaltyBps)
+func (_NFTCollection *NFTCollectionFilterer) ParseRoyaltyUpdated(log types.Log) (*NFTCollectionRoyaltyUpdated, error) {
+	event := new(NFTCollectionRoyaltyUpdated)
+	if err := _NFTCollection.contract.UnpackLog(event, "RoyaltyUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

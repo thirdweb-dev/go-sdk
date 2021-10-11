@@ -99,11 +99,7 @@ func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetad
 	}
 	close(ch)
 
-	tx, err := sdk.module.MintNFTBatch(&bind.TransactOpts{
-		From:   sdk.main.getSignerAddress(),
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-	}, common.HexToAddress(to), results)
+	tx, err := sdk.module.MintNFTBatch(sdk.main.getTransactOpts(true), common.HexToAddress(to), results)
 	if err != nil {
 		return nil, err
 	}
@@ -141,11 +137,7 @@ func (sdk *NftModule) Burn(tokenId *big.Int) error {
 		}
 	}
 
-	_, err := sdk.module.Burn(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, tokenId)
+	_, err := sdk.module.Burn(sdk.main.getTransactOpts(true), tokenId)
 
 	return err
 }
@@ -154,11 +146,7 @@ func (sdk *NftModule) TransferFrom(from string, to string, tokenId *big.Int) err
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.TransferFrom(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, common.HexToAddress(from), common.HexToAddress(to), tokenId); err != nil {
+	if tx, err := sdk.module.TransferFrom(sdk.main.getTransactOpts(true), common.HexToAddress(from), common.HexToAddress(to), tokenId); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -169,11 +157,7 @@ func (sdk *NftModule) SetRoyaltyBps(amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.SetRoyaltyBps(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, amount); err != nil {
+	if tx, err := sdk.module.SetRoyaltyBps(sdk.main.getTransactOpts(true), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -192,11 +176,7 @@ func (sdk *NftModule) MintTo(to string, metadata MintNftMetadata) (NftMetadata, 
 	}
 	log.Printf("Got back uri = %v\n", uri)
 
-	tx, err := sdk.module.NFTTransactor.MintNFT(&bind.TransactOpts{
-		NoSend: false,
-		Signer: sdk.main.getSigner(),
-		From:   sdk.main.getSignerAddress(),
-	}, common.HexToAddress(to), uri)
+	tx, err := sdk.module.NFTTransactor.MintNFT(sdk.main.getTransactOpts(true), common.HexToAddress(to), uri)
 	if err != nil {
 		log.Printf("Failed to execute transaction %v\n", tx.Hash().String())
 		return NftMetadata{}, err
@@ -238,11 +218,7 @@ func (sdk *NftModule) SetApproval(operator string, approved bool) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "nft"}
 	}
-	if tx, err := sdk.module.SetApprovalForAll(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, common.HexToAddress(operator), approved); err != nil {
+	if tx, err := sdk.module.SetApprovalForAll(sdk.main.getTransactOpts(true), common.HexToAddress(operator), approved); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
@@ -406,11 +382,7 @@ func (sdk *NftModule) Transfer(to string, tokenId *big.Int) error {
 	}
 
 	// TODO: allow you to pass transact opts
-	_, err := sdk.module.NFTTransactor.SafeTransferFrom(&bind.TransactOpts{
-		NoSend: false,
-		From:   sdk.main.getSignerAddress(),
-		Signer: sdk.main.getSigner(),
-	}, sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId)
+	_, err := sdk.module.NFTTransactor.SafeTransferFrom(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), common.HexToAddress(to), tokenId)
 
 	return err
 }

@@ -219,7 +219,7 @@ func (sdk *MarketModule) listErc721(args NewListingArgs) (Listing, error) {
 		Signer:  sdk.main.getSigner(),
 		From:    sdk.main.getSignerAddress(),
 		Context: context.Background(),
-	}, packAddress, args.TokenId, currencyAddress, args.Price, args.Quantity, args.RewardsPerOpen, args.SecondsUntilOpenStart, args.SecondsUntilOpenEnd)
+	}, packAddress, args.TokenId, currencyAddress, args.Price, args.Quantity, args.TokensPerBuyer, args.SecondsUntilOpenStart, args.SecondsUntilOpenEnd)
 	if err != nil {
 		return Listing{}, err
 	}
