@@ -21,6 +21,7 @@ type Currency interface {
 	Transfer(to string, amount *big.Int) error
 	Allowance(spender string) (*big.Int, error)
 	SetAllowance(spender string, amount *big.Int) error
+	AllowanceOf(owner string, spender string) (*big.Int, error)
 	Mint(amount *big.Int) error
 	MintTo(to string, amount *big.Int) error
 	Burn(amount *big.Int) error
@@ -40,6 +41,10 @@ type CurrencyModule struct {
 	module  *abi.Currency
 
 	main ISdk
+}
+
+func (sdk *CurrencyModule) AllowanceOf(owner string, spender string) (*big.Int, error) {
+	return sdk.module.Allowance(&bind.CallOpts{}, common.HexToAddress(owner), common.HexToAddress(spender))
 }
 
 func (sdk *CurrencyModule) getModule() *abi.Currency {
