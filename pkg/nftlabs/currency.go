@@ -30,6 +30,7 @@ type Currency interface {
 	GrantRole(role Role, address string) error
 	RevokeRole(role Role, address string) error
 	TotalSupply() (*big.Int, error)
+	SetRestrictedTransfer(restricted bool) error
 
 	formatUnits(value *big.Int, units *big.Int) string
 	getModule() *abi.Currency
@@ -276,6 +277,18 @@ func (sdk *CurrencyModule) MintTo(to string, amount *big.Int) error {
 		return &NoSignerError{typeName: "currency"}
 	}
 	if tx, err := sdk.module.CurrencyTransactor.Mint(sdk.main.getTransactOpts(true), common.HexToAddress(to), amount); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
+}
+
+// SetRestrictedTransfer will disable all transfers if set to true
+func (sdk *CurrencyModule) SetRestrictedTransfer(restricted bool) error {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "currency"}
+	}
+	if tx, err := sdk.module.CurrencyTransactor.SetRestrictedTransfer(sdk.main.getTransactOpts(true), restricted); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)

@@ -41,6 +41,7 @@ type NftCollection interface {
 
 	SetApproval(operator string, approved bool) error
 	SetRoyaltyBps(amount *big.Int) error
+	SetRestrictedTransfer(restricted bool) error
 
 	Transfer(to string, tokenId *big.Int, amount *big.Int) error
 	TransferBatchFrom(from string, to string, args []NftCollectionBatchArgs, amount *big.Int) error
@@ -501,4 +502,16 @@ func (sdk *NftCollectionModule) getMintedNativeTokens(logs []*types.Log) ([]*big
 
 	return tokenIds, nil
 
+}
+
+// SetRestrictedTransfer will disable all transfers if set to true
+func (sdk *NftCollectionModule) SetRestrictedTransfer(restricted bool) error {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "collection"}
+	}
+	if tx, err := sdk.module.SetRestrictedTransfer(sdk.main.getTransactOpts(true), restricted); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }

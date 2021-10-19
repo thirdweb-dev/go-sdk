@@ -27,6 +27,7 @@ type Pack interface {
 	BalanceOf(address string, tokenId *big.Int) (*big.Int, error)
 	Transfer(to string, tokenId *big.Int, quantity *big.Int) error
 	Create(args CreatePackArgs) (PackMetadata, error)
+	SetRestrictedTransfer(restricted bool) error
 }
 
 type PackModule struct {
@@ -339,4 +340,16 @@ func (sdk *PackModule) getNewPack(logs []*types.Log) (*big.Int, error) {
 	}
 
 	return packId, nil
+}
+
+// SetRestrictedTransfer will disable all transfers if set to true
+func (sdk *PackModule) SetRestrictedTransfer(restricted bool) error {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "pack"}
+	}
+	if tx, err := sdk.module.SetRestrictedTransfer(sdk.main.getTransactOpts(true), restricted); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }

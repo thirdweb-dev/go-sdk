@@ -30,6 +30,7 @@ type Nft interface {
 	Burn(tokenId *big.Int) error
 	TransferFrom(from string, to string, tokenId *big.Int) error
 	SetRoyaltyBps(amount *big.Int) error
+	SetRestrictedTransfer(restricted bool) error
 
 	MintTo(to string, meta MintNftMetadata) (NftMetadata, error)
 
@@ -404,4 +405,16 @@ func (sdk *NftModule) getNewMintedBatch(logs []*types.Log) (*abi.NFTMintedBatch,
 
 func (sdk *NftModule) getModule() *abi.NFT {
 	return sdk.module
+}
+
+// SetRestrictedTransfer will disable all transfers if set to true
+func (sdk *NftModule) SetRestrictedTransfer(restricted bool) error {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return &NoSignerError{typeName: "nft"}
+	}
+	if tx, err := sdk.module.SetRestrictedTransfer(sdk.main.getTransactOpts(true), restricted); err != nil {
+		return err
+	} else {
+		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
+	}
 }
