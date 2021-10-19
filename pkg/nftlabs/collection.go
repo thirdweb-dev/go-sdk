@@ -303,7 +303,7 @@ func (sdk *NftCollectionModule) CreateAndMintBatch(metadataWithSupply []CreateCo
 	}
 
 	log.Printf("uris=%v sup=%v\n", uris, supplies)
-	tx, err := sdk.module.CreateNativeTokens(sdk.main.getTransactOpts(true), uris, supplies)
+	tx, err := sdk.module.CreateNativeTokens(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), uris, supplies, nil)
 	if err != nil {
 		return nil, err
 	}

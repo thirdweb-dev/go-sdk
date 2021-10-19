@@ -193,7 +193,6 @@ func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
 		Creator:       packMeta.Creator,
 		CurrentSupply: supply,
 		OpenStart:     time.Unix(packMeta.OpenStart.Int64(), 0),
-		OpenEnd:       time.Unix(packMeta.OpenEnd.Int64(), 0),
 		NftMetadata:   metadata,
 	}, nil
 }

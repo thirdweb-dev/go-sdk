@@ -12,7 +12,6 @@ type PackMetadata struct {
 	Creator       common.Address
 	CurrentSupply *big.Int
 	OpenStart     time.Time
-	OpenEnd       time.Time
 }
 
 type PackNft struct {
