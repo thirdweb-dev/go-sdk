@@ -116,6 +116,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		return PackMetadata{}, err
 	}
 
+	// TODO: figure out how to serialize this data correctly
 	bytes, err := arguments.Pack(
 		uri,
 		args.SecondsUntilOpenStart,

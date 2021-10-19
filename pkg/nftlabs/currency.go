@@ -265,7 +265,7 @@ func (sdk *CurrencyModule) Transfer(to string, amount *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return &NoSignerError{typeName: "currency"}
 	}
-	if tx, err := sdk.module.CurrencyTransactor.Transfer(sdk.main.getTransactOpts(true), common.HexToAddress(to), amount); err != nil { // TODO: fill in role in [32]byte
+	if tx, err := sdk.module.CurrencyTransactor.Transfer(sdk.main.getTransactOpts(true), common.HexToAddress(to), amount); err != nil {
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)

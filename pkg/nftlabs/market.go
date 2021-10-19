@@ -78,7 +78,6 @@ func (sdk *MarketModule) GetAll(filter ListingFilter) ([]Listing, error) {
 	hasFilter := filter.TokenContract != "" || filter.TokenId != nil || filter.Seller != ""
 
 	if !hasFilter {
-		// TODO: fetch all
 		result, err := sdk.module.GetAllListings(&bind.CallOpts{})
 		if err != nil {
 			return nil, err
@@ -151,7 +150,6 @@ func (sdk *MarketModule) GetAll(filter ListingFilter) ([]Listing, error) {
 	return availableListings, nil
 }
 
-// TODO: change args to struct
 func (sdk *MarketModule) List(args NewListingArgs) (Listing, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return Listing{}, &NoSignerError{typeName: "nft"}
