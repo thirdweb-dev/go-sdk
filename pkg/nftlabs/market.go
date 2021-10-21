@@ -3,6 +3,7 @@ package nftlabs
 import (
 	"context"
 	"log"
+	"math"
 	"math/big"
 	"strings"
 	"time"
@@ -333,7 +334,6 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 	}
 
 	var saleStart *time.Time
-	// TODO: should I be doing Int64() here ??? is there data loss ???
 	if listing.SaleStart.Int64() > 0 {
 		time.Unix(listing.SaleStart.Int64()*1000, 0)
 	} else {
@@ -341,8 +341,7 @@ func (sdk *MarketModule) transformResultToListing(listing abi.MarketListing) (Li
 	}
 
 	var saleEnd *time.Time
-	// TODO: should I be doing Int64() here ??? is there data loss ???
-	if listing.SaleEnd.Int64() > 0 && listing.SaleEnd.Int64() < big.MaxExp-1 {
+	if listing.SaleEnd.Int64() > 0 && listing.SaleEnd.Int64() < math.MaxInt64 - 1 {
 		time.Unix(listing.SaleEnd.Int64()*1000, 0)
 	} else {
 		saleEnd = nil
