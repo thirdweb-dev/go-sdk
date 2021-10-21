@@ -48,7 +48,6 @@ type NftModule struct {
 	main ISdk
 }
 
-// Do not use, method still WIP
 func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
 		return nil, &NoSignerError{typeName: "nft"}
