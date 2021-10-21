@@ -1,9 +1,6 @@
 package nftlabs
 
 import (
-	"fmt"
-	"github.com/ethereum/go-ethereum/crypto"
-	"log"
 	"math/big"
 	"strings"
 
@@ -37,6 +34,7 @@ type Currency interface {
 }
 
 type CurrencyModule struct {
+	defaultModuleImpl
 	Client  *ethclient.Client
 	Address string
 	module  *abi.Currency
@@ -124,34 +122,6 @@ func (sdk *CurrencyModule) TransferFrom(from string, to string, amount *big.Int)
 		return &NoSignerError{typeName: "nft"}
 	}
 	if tx, err := sdk.module.CurrencyTransactor.TransferFrom(sdk.main.getTransactOpts(true), common.HexToAddress(from), common.HexToAddress(to), amount); err != nil {
-		return err
-	} else {
-		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
-	}
-}
-
-// WIP, do not call yet, need to encode role
-func (sdk *CurrencyModule) GrantRole(role Role, address string) error {
-	roleHash := crypto.Keccak256([]byte(fmt.Sprintf("0x%v", role)))
-	r := [32]byte{}
-	copy(r[:], roleHash)
-	log.Printf("Role = %v\n", string(role))
-	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
-		return &NoSignerError{typeName: "nft"}
-	}
-	if tx, err := sdk.module.CurrencyTransactor.GrantRole(sdk.main.getTransactOpts(true), r, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
-		return err
-	} else {
-		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
-	}
-}
-
-// WIP, do not call yet, need to encode role
-func (sdk *CurrencyModule) RevokeRole(role Role, address string) error {
-	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
-		return &NoSignerError{typeName: "nft"}
-	}
-	if tx, err := sdk.module.CurrencyTransactor.RevokeRole(sdk.main.getTransactOpts(true), [32]byte{}, common.HexToAddress(address)); err != nil { // TODO: fill in role in [32]byte
 		return err
 	} else {
 		return waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts)
