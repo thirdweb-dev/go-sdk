@@ -113,11 +113,17 @@ func (gw *IpfsStorage) UploadBatch(data []interface{}, contractAddress string, s
 	for i, asset := range data {
 		func(meta interface{}, index int) {
 			wg.Go(func() error {
-				if meta, ok := meta.(Metadata); ok && meta.MetadataUri != "" {
-					results[index] = meta.MetadataUri
+				toUpload := meta
+				if meta, ok := meta.(Metadata); ok {
+					if meta.MetadataUri != "" {
+						 results[index] = meta.MetadataUri
+						 return nil
+					} else {
+						toUpload = meta.MetadataObject
+					}
 				}
 
-				uri, err := gw.Upload(meta, contractAddress, signerAddress)
+				uri, err := gw.Upload(toUpload, contractAddress, signerAddress)
 				if err != nil {
 					return err
 				} else {
