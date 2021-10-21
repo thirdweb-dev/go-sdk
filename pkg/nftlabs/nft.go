@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/ethereum/go-ethereum/core/types"
+	"golang.org/x/sync/errgroup"
 	"log"
 	"math/big"
 	"sync"
@@ -53,35 +54,17 @@ func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
 		return nil, &NoSignerError{typeName: "nft"}
 	}
 
-	var wg sync.WaitGroup
-	ch := make(chan string)
-
-	for _, asset := range meta {
-		wg.Add(1)
-		go func(meta interface{}) {
-			log.Printf("Uploading collection meta %v\n", meta)
-			defer wg.Done()
-
-			uri, err := sdk.main.getGateway().Upload(meta, sdk.Address, sdk.main.getSignerAddress().String())
-			if err != nil {
-				// TODO: need better handling, ts sdk does nothing if this fails
-				log.Printf("Failed to upload one of the nft metadata in collection creation")
-				ch <- ""
-			} else {
-				ch <- uri
-			}
-		}(asset)
+	storage, err := sdk.main.GetStorage()
+	if err != nil {
+		return nil, err
 	}
 
-	results := make([]string, len(meta))
-	for i := range results {
-		results[i] = <-ch
+	out := make([]interface{}, len(meta))
+	for i, m := range meta {
+		out[i] = m
 	}
-
-	wg.Wait()
-	close(ch)
-
-	tx, err := sdk.module.MintNFTBatch(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), results)
+	uris, err := storage.UploadBatch(out, sdk.Address, sdk.main.getSignerAddress().String())
+	tx, err := sdk.module.MintNFTBatch(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), uris)
 	if err != nil {
 		return nil, err
 	}
@@ -95,14 +78,32 @@ func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
 		return nil, err
 	}
 
-	_, err = sdk.getNewMintedBatch(receipt.Logs)
+	batch, err := sdk.getNewMintedBatch(receipt.Logs)
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO: process batch and fetch new nfts
+	wg := new(errgroup.Group)
+	results := make([]NftMetadata, len(batch.TokenIds))
+	for i, id := range batch.TokenIds {
+		func(index int, id *big.Int) {
+			wg.Go(func() error {
+				uri, err := sdk.Get(id)
+				if err != nil {
+					return err
+				} else {
+					results[index] = uri
+					return nil
+				}
+			})
+		}(i, id)
+	}
 
-	return nil, nil
+	if err := wg.Wait(); err != nil {
+		log.Println("Failed to get the newly minted batch")
+		return nil, err
+	}
+	return results, nil
 }
 
 func (sdk *NftModule) Burn(tokenId *big.Int) error {
