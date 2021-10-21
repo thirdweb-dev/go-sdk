@@ -118,6 +118,7 @@ func (sdk *NftCollectionModule) Get(tokenId *big.Int) (CollectionMetadata, error
 
 func (sdk *NftCollectionModule) getMetadata(tokenId *big.Int) ([]byte, error) {
 	uri, err := sdk.module.Uri(&bind.CallOpts{}, tokenId)
+	log.Printf("Got uri = %v for token = %d\n", uri, tokenId)
 	if err != nil {
 		return nil, err
 	}

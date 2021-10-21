@@ -89,7 +89,7 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		counts = append(counts, addition.Supply)
 	}
 
-	erc155Module, err := newErc1155Module(sdk.Client, args.AssetContractAddress, sdk.main.getOptions())
+	erc1155Module, err := newErc1155Module(sdk.Client, args.AssetContractAddress, sdk.main.getOptions())
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -107,9 +107,6 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		{
 			Type: uint256Ty,
 		},
-		{
-			Type: uint256Ty,
-		},
 	}
 
 	uri, err := sdk.main.getGateway().Upload(args.Metadata, sdk.Address, sdk.main.getSignerAddress().String())
@@ -117,11 +114,12 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 		return PackMetadata{}, err
 	}
 
+	log.Printf("Creating pack with uri = %v\n", uri)
+
 	// TODO: figure out how to serialize this data correctly
 	bytes, err := arguments.Pack(
 		uri,
 		args.SecondsUntilOpenStart,
-		args.SecondsUntilOpenEnd,
 		args.RewardsPerOpen,
 	)
 	if err != nil {
@@ -130,7 +128,10 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 	}
 
 	// TODO: check if whats added to pack is erc721 or erc1155, will do later when we support erc721
-	tx, err := erc155Module.module.ERC1155Transactor.SafeBatchTransferFrom(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), common.HexToAddress(sdk.Address), ids, counts, bytes)
+	log.Printf("Transferring to %v\n", sdk.Address)
+	tx, err := erc1155Module.module.SafeBatchTransferFrom(sdk.main.getTransactOpts(true),
+		sdk.main.getSignerAddress(), common.HexToAddress("0x54ec360704b2e9E4e6499a732b78094D6d78e37B"), ids, counts,
+		bytes)
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -150,31 +151,40 @@ func (sdk *PackModule) Create(args CreatePackArgs) (PackMetadata, error) {
 	if newListing, err := sdk.getNewPack(receipt.Logs); err != nil {
 		return PackMetadata{}, err
 	} else {
-		log.Printf("Getting pack with id %v\n", newListing)
 		return sdk.Get(newListing)
 	}
 }
 
 func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
-	packMeta, err := sdk.module.PackCaller.GetPack(&bind.CallOpts{}, packId)
+	state, err := sdk.module.PackCaller.GetPack(&bind.CallOpts{}, packId)
 	if err != nil {
+		log.Printf("Got err = %v\n", err)
 		return PackMetadata{}, err
 	}
 
-	if packMeta.Uri == "" {
-		return PackMetadata{}, &NotFoundError{identifier: packId, typeName: "pack metadata"}
+	log.Printf("Got state = %v\n", state)
+
+	var tokenMetadataUri string
+	if packUri, err := sdk.module.PackCaller.Uri(&bind.CallOpts{}, packId); err != nil {
+		erc1155Module, err := newErc1155Module(sdk.Client, sdk.Address, sdk.main.getOptions())
+		if err != nil {
+			return PackMetadata{}, err
+		}
+		if uri, err := erc1155Module.module.Uri(&bind.CallOpts{}, packId); err != nil {
+			return PackMetadata{}, err
+		} else {
+			tokenMetadataUri = uri
+		}
+	} else {
+		tokenMetadataUri = packUri
 	}
 
-	packUri, err := sdk.module.PackCaller.TokenURI(&bind.CallOpts{}, packId)
-	if err != nil {
-		return PackMetadata{}, err
-	}
-
-	if packUri == "" {
+	log.Printf("Got uri = %v\n", tokenMetadataUri)
+	if tokenMetadataUri == "" {
 		return PackMetadata{}, &NotFoundError{identifier: packId, typeName: "pack"}
 	}
 
-	body, err := sdk.main.getGateway().Get(packUri)
+	body, err := sdk.main.getGateway().Get(tokenMetadataUri)
 	if err != nil {
 		return PackMetadata{}, err
 	}
@@ -193,9 +203,9 @@ func (sdk *PackModule) Get(packId *big.Int) (PackMetadata, error) {
 	}
 
 	return PackMetadata{
-		Creator:       packMeta.Creator,
+		Creator:       state.Creator,
 		CurrentSupply: supply,
-		OpenStart:     time.Unix(packMeta.OpenStart.Int64(), 0),
+		OpenStart:     time.Unix(state.OpenStart.Int64(), 0),
 		NftMetadata:   metadata,
 	}, nil
 }
@@ -223,26 +233,26 @@ func (sdk *PackModule) GetAll() ([]PackMetadata, error) {
 		return nil, err
 	}
 
-	var wg sync.WaitGroup
-
-	ch := make(chan PackMetadata)
-	defer close(ch)
-
-	count := maxId.Int64()
-	for i := int64(0); i < count; i++ {
-		id := new(big.Int)
-		id.SetInt64(i)
-
-		wg.Add(1)
-		go sdk.GetAsync(id, ch, &wg)
+	wg := new(errgroup.Group)
+	packs := make([]PackMetadata, maxId.Int64() + 1)
+	for i := big.NewInt(0); i.Cmp(maxId) == -1; i.Add(i, big.NewInt(1)) {
+		id := big.NewInt(0)
+		id.SetString(i.String(), 10)
+		func (id *big.Int) {
+			wg.Go(func() error {
+				log.Printf("Calling get with id = %d\n", id)
+				metadata, err := sdk.Get(id)
+				if err != nil {
+					return err
+				}
+				packs[i.Int64()] = metadata
+				return nil
+			})
+		}(id)
 	}
-
-	packs := make([]PackMetadata, count)
-	for i := range packs {
-		packs[i] = <-ch
+	if err := wg.Wait(); err != nil {
+		return nil, err
 	}
-
-	wg.Wait()
 	return packs, nil
 }
 
@@ -255,7 +265,7 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	wg := new(errgroup.Group)
 
 	// TODO: I hate instantiating the module here, could move to New function because it shares the same address as the pack contract
-	nftModule, err := newNftModule(sdk.Client, sdk.Address, sdk.main)
+	collectionModule, err := newNftCollectionModule(sdk.Client, result.Source.String(), sdk.main)
 	if err != nil {
 		return nil, err
 	}
@@ -269,14 +279,14 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 	for index, id := range result.TokenIds {
 		func (index int, id *big.Int) {
 			wg.Go(func() error {
-				metadata, err := nftModule.Get(id)
+				metadata, err := collectionModule.Get(id)
 				if err != nil {
-					log.Printf("Failed to get metdata for nft %d in pack %d\n", id, packId)
+					log.Printf("Failed to get metadata for nft %d in pack %d\n", id, packId)
 					return err
 				}
 
 				packNfts[index] = PackNft{
-					NftMetadata: metadata,
+					NftMetadata: metadata.NftMetadata,
 					Supply:      supply,
 				}
 				return nil
