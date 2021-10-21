@@ -53,6 +53,8 @@ func (gw *IpfsStorage) Get(uri string) ([]byte, error) {
 	return body, nil
 }
 
+// Upload method can be used to upload a generic payload to IPFS. NftLabs provides a default proxy
+// in the SDK. You can override this with the ISdk.SetStorage
 func (gw *IpfsStorage) Upload(data interface{}, contractAddress string, signerAddress string) (string, error) {
 	if meta, ok := data.(Metadata); ok && meta.MetadataUri != "" {
 		return meta.MetadataUri, nil
@@ -84,21 +86,27 @@ func (gw *IpfsStorage) Upload(data interface{}, contractAddress string, signerAd
 		return "", err
 	} else {
 		if result.StatusCode != http.StatusOK {
-			//TODO: return better error
-			return "", errors.New(fmt.Sprintf("HTTP request failed, status code %v", result.StatusCode))
+			return "", &FailedToUploadError{
+				statusCode:      result.StatusCode,
+				Payload:         data,
+			}
 		}
 
 		var uploadMeta uploadResponse
 		bodyBytes, err := ioutil.ReadAll(result.Body)
 		if err != nil {
-			return "", err
+			return "", &FailedToUploadError{
+				statusCode:      result.StatusCode,
+				Payload:         data,
+				UnderlyingError: err,
+			}
 		}
 
 		if err := json.Unmarshal(bodyBytes, &uploadMeta); err != nil {
 			return "", &UnmarshalError{
 				body:            string(bodyBytes),
 				typeName:        "UploadResponse",
-				underlyingError: err,
+				UnderlyingError: err,
 			}
 		}
 		return uploadMeta.IpfsUri, nil

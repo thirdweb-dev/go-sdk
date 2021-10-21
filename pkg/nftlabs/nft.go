@@ -287,7 +287,7 @@ func (sdk *NftModule) Get(tokenId *big.Int) (NftMetadata, error) {
 		Id: tokenId,
 	}
 	if err := json.Unmarshal(body, &metadata); err != nil {
-		return NftMetadata{}, &UnmarshalError{body: string(body), typeName: "nft", underlyingError: err}
+		return NftMetadata{}, &UnmarshalError{body: string(body), typeName: "nft", UnderlyingError: err}
 	}
 
 	return metadata, nil

@@ -14,7 +14,7 @@ func (m *NotFoundError) Error() string {
 type UnmarshalError struct {
 	body            string
 	typeName        string
-	underlyingError error
+	UnderlyingError error
 }
 
 func (m *UnmarshalError) Error() string {
@@ -45,4 +45,14 @@ type UnsupportedFunctionError struct {
 
 func (m *UnsupportedFunctionError) Error() string {
 	return fmt.Sprintf("The method you're executing in the %v module is not supported yet. %v", m.typeName, m.body)
+}
+
+type FailedToUploadError struct {
+	statusCode int
+	Payload interface{}
+	UnderlyingError error
+}
+
+func (m *FailedToUploadError) Error() string {
+	return fmt.Sprintf("Failed to upload, status code = %d", m.statusCode)
 }

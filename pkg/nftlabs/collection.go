@@ -101,7 +101,7 @@ func (sdk *NftCollectionModule) Get(tokenId *big.Int) (CollectionMetadata, error
 		Id: tokenId,
 	}
 	if err := json.Unmarshal(body, &metadata); err != nil {
-		return CollectionMetadata{}, &UnmarshalError{body: string(body), typeName: "nft", underlyingError: err}
+		return CollectionMetadata{}, &UnmarshalError{body: string(body), typeName: "nft", UnderlyingError: err}
 	}
 
 	supply, err := sdk.module.TotalSupply(&bind.CallOpts{}, tokenId)
