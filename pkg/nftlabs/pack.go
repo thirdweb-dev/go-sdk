@@ -7,6 +7,7 @@ import (
 	"fmt"
 	ethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/core/types"
+	"golang.org/x/sync/errgroup"
 	"log"
 	"math/big"
 	"sync"
@@ -251,10 +252,7 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 		return nil, err
 	}
 
-	var wg sync.WaitGroup
-
-	ch := make(chan PackNft)
-	defer close(ch)
+	wg := new(errgroup.Group)
 
 	// TODO: I hate instantiating the module here, could move to New function because it shares the same address as the pack contract
 	nftModule, err := newNftModule(sdk.Client, sdk.Address, sdk.main)
@@ -267,34 +265,28 @@ func (sdk *PackModule) GetNfts(packId *big.Int) ([]PackNft, error) {
 		return nil, err
 	}
 
-	for _, i := range result.TokenIds {
-		wg.Add(1)
-
-		go func(id *big.Int) {
-			defer wg.Done()
-
-			metadata, err := nftModule.Get(id)
-			if err != nil {
-				// TODO (IMPORTANT): what to do in this case?? ts-sdk moves on I think...
-				log.Printf("Failed to get metdata for nft %d in pack %d\n", id, packId)
-
-				ch <- PackNft{}
-				return
-			}
-
-			ch <- PackNft{
-				NftMetadata: metadata,
-				Supply:      supply,
-			}
-		}(i)
-	}
-
 	packNfts := make([]PackNft, len(result.TokenIds))
-	for i := range packNfts {
-		packNfts[i] = <-ch
+	for index, id := range result.TokenIds {
+		func (index int, id *big.Int) {
+			wg.Go(func() error {
+				metadata, err := nftModule.Get(id)
+				if err != nil {
+					log.Printf("Failed to get metdata for nft %d in pack %d\n", id, packId)
+					return err
+				}
+
+				packNfts[index] = PackNft{
+					NftMetadata: metadata,
+					Supply:      supply,
+				}
+				return nil
+			})
+		}(index, id)
 	}
 
-	wg.Wait()
+	if err := wg.Wait(); err != nil {
+		return nil, err
+	}
 	return packNfts, nil
 }
 
