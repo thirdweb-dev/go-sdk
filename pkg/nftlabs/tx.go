@@ -3,10 +3,11 @@ package nftlabs
 import (
 	"context"
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/ethclient"
 	"log"
 	"time"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 func waitForTx(client *ethclient.Client, hash common.Hash, wait time.Duration, maxAttempts uint8) error {
@@ -20,7 +21,7 @@ func waitForTx(client *ethclient.Client, hash common.Hash, wait time.Duration, m
 
 		if _, isPending, err := client.TransactionByHash(context.Background(), hash); err != nil {
 			syncError = err
-			log.Printf("Failed to get tx, err = %v\n", err)
+			log.Printf("Failed to get tx %v, err = %v\n", hash.String(), err)
 			attempts += 1
 			time.Sleep(wait)
 			continue
