@@ -222,7 +222,7 @@ func (sdk *Sdk) TransferNativeToken(to string, amount *big.Int) error {
 		return err
 	}
 
-	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), sdk.privateKey)
+	signedTx, err := types.SignTx(tx, types.LatestSignerForChainID(chainID), sdk.privateKey)
 	if err != nil {
 		return err
 	}
