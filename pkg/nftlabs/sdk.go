@@ -3,11 +3,13 @@ package nftlabs
 import (
 	"context"
 	"crypto/ecdsa"
+	"log"
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"math/big"
 )
 
 type ISdk interface {
@@ -31,16 +33,16 @@ type ISdk interface {
 
 type Sdk struct {
 	client *ethclient.Client
-	opt *SdkOptions
+	opt    *SdkOptions
 
 	privateKey    *ecdsa.PrivateKey
 	rawPrivateKey string
 	signerAddress common.Address
 
-	nftModule Nft
-	marketModule Market
-	currencyModule Currency
-	packModule Pack
+	nftModule           Nft
+	marketModule        Market
+	currencyModule      Currency
+	packModule          Pack
 	nftCollectionModule NftCollection
 
 	gateway Storage
@@ -53,8 +55,8 @@ func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error) {
 
 	defaultGateway := newIpfsStorage(opt.IpfsGatewayUrl)
 	sdk := &Sdk{
-		client: client,
-		opt: opt,
+		client:  client,
+		opt:     opt,
 		gateway: defaultGateway,
 	}
 
@@ -80,7 +82,6 @@ func (sdk *Sdk) GetCurrencyModule(address string) (Currency, error) {
 	sdk.currencyModule = module
 	return module, nil
 }
-
 
 func (sdk *Sdk) GetMarketModule(address string) (Market, error) {
 	if sdk.marketModule != nil {
@@ -124,7 +125,6 @@ func (sdk *Sdk) GetPackModule(address string) (Pack, error) {
 	return module, nil
 }
 
-
 func (sdk *Sdk) GetStorage() (Storage, error) {
 	if sdk.gateway != nil {
 		return sdk.gateway, nil
@@ -165,7 +165,7 @@ func (sdk *Sdk) getSigner() func(address common.Address, transaction *types.Tran
 	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		ctx := context.Background()
 		chainId, _ := sdk.client.ChainID(ctx)
-		return types.SignTx(transaction, types.NewEIP155Signer(chainId), sdk.privateKey)
+		return types.SignTx(transaction, types.LatestSignerForChainID(chainId), sdk.privateKey)
 	}
 }
 
@@ -190,11 +190,12 @@ func (sdk *Sdk) getGateway() Storage {
 }
 
 func (sdk *Sdk) getTransactOpts(send bool) *bind.TransactOpts {
+	log.Println(sdk.getSignerAddress())
 	return &bind.TransactOpts{
-		NoSend: !send,
-		From: sdk.getSignerAddress(),
-		Signer: sdk.getSigner(),
-		GasPrice: sdk.opt.MaxGasPriceInGwei,
+		NoSend:   !send,
+		From:     sdk.getSignerAddress(),
+		Signer:   sdk.getSigner(),
+		GasPrice: sdk.getOptions().MaxGasPriceInGwei,
 	}
 }
 
@@ -208,7 +209,7 @@ func (sdk *Sdk) TransferNativeToken(to string, amount *big.Int) error {
 		return err
 	}
 
-	gasLimit := uint64(21000)                // in units
+	gasLimit := uint64(21000) // in units
 	gasPrice, err := sdk.client.SuggestGasPrice(context.Background())
 	if err != nil {
 		return err
@@ -234,4 +235,3 @@ func (sdk *Sdk) TransferNativeToken(to string, amount *big.Int) error {
 
 	return nil
 }
-
