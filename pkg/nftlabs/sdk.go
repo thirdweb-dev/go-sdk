@@ -3,7 +3,6 @@ package nftlabs
 import (
 	"context"
 	"crypto/ecdsa"
-	"log"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -190,12 +189,22 @@ func (sdk *Sdk) getGateway() Storage {
 }
 
 func (sdk *Sdk) getTransactOpts(send bool) *bind.TransactOpts {
-	log.Println(sdk.getSignerAddress())
+	var tipCap, feeCap *big.Int
+
+	block, err := sdk.client.BlockByNumber(context.Background(), nil)
+	if err == nil && block.BaseFee() != nil {
+		tipCap, _ = big.NewInt(0).SetString("2500000000", 10)
+		baseFee := big.NewInt(0).Mul(block.BaseFee(), big.NewInt(2))
+		feeCap = big.NewInt(0).Mul(baseFee, tipCap)
+	}
+
 	return &bind.TransactOpts{
-		NoSend:   !send,
-		From:     sdk.getSignerAddress(),
-		Signer:   sdk.getSigner(),
-		GasPrice: sdk.getOptions().MaxGasPriceInGwei,
+		NoSend:    !send,
+		From:      sdk.getSignerAddress(),
+		Signer:    sdk.getSigner(),
+		GasPrice:  sdk.opt.MaxGasPriceInGwei,
+		GasTipCap: tipCap,
+		GasFeeCap: feeCap,
 	}
 }
 
