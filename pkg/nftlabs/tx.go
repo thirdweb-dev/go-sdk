@@ -19,7 +19,7 @@ func waitForTx(client *ethclient.Client, hash common.Hash, wait time.Duration, m
 			return syncError
 		}
 
-		if _, isPending, err := client.TransactionByHash(context.Background(), hash); err != nil {
+		if tx, isPending, err := client.TransactionByHash(context.Background(), hash); err != nil {
 			syncError = err
 			log.Printf("Failed to get tx %v, err = %v\n", hash.String(), err)
 			attempts += 1
@@ -31,6 +31,7 @@ func waitForTx(client *ethclient.Client, hash common.Hash, wait time.Duration, m
 				time.Sleep(wait)
 				continue
 			}
+			log.Printf("Transaction with hash %v mined successfully\n", tx.Hash())
 			break
 		}
 	}
