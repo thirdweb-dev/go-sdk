@@ -195,7 +195,7 @@ func (sdk *Sdk) getTransactOpts(send bool) *bind.TransactOpts {
 	if err == nil && block.BaseFee() != nil {
 		tipCap, _ = big.NewInt(0).SetString("2500000000", 10)
 		baseFee := big.NewInt(0).Mul(block.BaseFee(), big.NewInt(2))
-		feeCap = big.NewInt(0).Mul(baseFee, tipCap)
+		feeCap = big.NewInt(0).Add(baseFee, tipCap)
 	}
 
 	return &bind.TransactOpts{
