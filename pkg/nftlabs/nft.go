@@ -153,7 +153,7 @@ func (sdk *NftModule) MintTo(to string, metadata MintNftMetadata) (NftMetadata, 
 
 	tx, err := sdk.module.NFTTransactor.MintNFT(sdk.main.getTransactOpts(true), common.HexToAddress(to), uri)
 	if err != nil {
-		log.Printf("Failed to execute transaction %v\n", tx.Hash().String())
+		log.Printf("Failed to execute transaction %v\n", err)
 		return NftMetadata{}, err
 	}
 
