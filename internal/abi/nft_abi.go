@@ -28,9 +28,20 @@ var (
 	_ = event.NewSubscription
 )
 
+// ISignatureMint721MintRequest is an auto generated low-level Go binding around an user-defined struct.
+type ISignatureMint721MintRequest struct {
+	To                     common.Address
+	Uri                    string
+	Price                  *big.Int
+	Currency               common.Address
+	ValidityStartTimestamp *big.Int
+	ValidityEndTimestamp   *big.Int
+	Uid                    [32]byte
+}
+
 // NFTMetaData contains all meta data concerning the NFT contract.
 var NFTMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_controlCenter\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_trustedForwarder\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"}],\"name\":\"Minted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"string[]\",\"name\":\"tokenURI\",\"type\":\"string[]\"}],\"name\":\"MintedBatch\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"transferable\",\"type\":\"bool\"}],\"name\":\"RestrictedTransferUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"PAUSER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"creator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"mint\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"mintNFT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"string[]\",\"name\":\"_uris\",\"type\":\"string[]\"}],\"name\":\"mintNFTBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"data\",\"type\":\"bytes[]\"}],\"name\":\"multicall\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"nftURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"royaltyBps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_URI\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_restrictedTransfer\",\"type\":\"bool\"}],\"name\":\"setRestrictedTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"transfersRestricted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_contractURI\",\"type\":\"string\"},{\"internalType\":\"addresspayable\",\"name\":\"_controlCenter\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_trustedForwarder\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_nativeTokenWrapper\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"_royaltyBps\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"_feeBps\",\"type\":\"uint128\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"signer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"mintedTo\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenIdMinted\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"validityStartTimestamp\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"validityEndTimestamp\",\"type\":\"uint128\"},{\"internalType\":\"bytes32\",\"name\":\"uid\",\"type\":\"bytes32\"}],\"indexed\":false,\"internalType\":\"structISignatureMint721.MintRequest\",\"name\":\"mintRequest\",\"type\":\"tuple\"}],\"name\":\"MintWithSignature\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"prevOwner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"NewOwner\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"NewSaleRecipient\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newFeeBps\",\"type\":\"uint256\"}],\"name\":\"PrimarySalesFeeUpdates\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newRoyaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"mintedTo\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenIdMinted\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"}],\"name\":\"TokenMinted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"restricted\",\"type\":\"bool\"}],\"name\":\"TransfersRestricted\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANSFER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"defaultSaleRecipient\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeBps\",\"outputs\":[{\"internalType\":\"uint120\",\"name\":\"\",\"type\":\"uint120\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"mintTo\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"validityStartTimestamp\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"validityEndTimestamp\",\"type\":\"uint128\"},{\"internalType\":\"bytes32\",\"name\":\"uid\",\"type\":\"bytes32\"}],\"internalType\":\"structISignatureMint721.MintRequest\",\"name\":\"_req\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"mintWithSignature\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenIdMinted\",\"type\":\"uint256\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"data\",\"type\":\"bytes[]\"}],\"name\":\"multicall\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nativeTokenWrapper\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenIdToMint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"royaltyBps\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"}],\"name\":\"setDefaultSaleRecipient\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feeBps\",\"type\":\"uint256\"}],\"name\":\"setFeeBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"setOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_restrictedTransfer\",\"type\":\"bool\"}],\"name\":\"setRestrictedTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"transfersRestricted\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"validityStartTimestamp\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"validityEndTimestamp\",\"type\":\"uint128\"},{\"internalType\":\"bytes32\",\"name\":\"uid\",\"type\":\"bytes32\"}],\"internalType\":\"structISignatureMint721.MintRequest\",\"name\":\"_req\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"verify\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // NFTABI is the input ABI used to generate the binding from.
@@ -241,37 +252,6 @@ func (_NFT *NFTCallerSession) MINTERROLE() ([32]byte, error) {
 	return _NFT.Contract.MINTERROLE(&_NFT.CallOpts)
 }
 
-// PAUSERROLE is a free data retrieval call binding the contract method 0xe63ab1e9.
-//
-// Solidity: function PAUSER_ROLE() view returns(bytes32)
-func (_NFT *NFTCaller) PAUSERROLE(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _NFT.contract.Call(opts, &out, "PAUSER_ROLE")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// PAUSERROLE is a free data retrieval call binding the contract method 0xe63ab1e9.
-//
-// Solidity: function PAUSER_ROLE() view returns(bytes32)
-func (_NFT *NFTSession) PAUSERROLE() ([32]byte, error) {
-	return _NFT.Contract.PAUSERROLE(&_NFT.CallOpts)
-}
-
-// PAUSERROLE is a free data retrieval call binding the contract method 0xe63ab1e9.
-//
-// Solidity: function PAUSER_ROLE() view returns(bytes32)
-func (_NFT *NFTCallerSession) PAUSERROLE() ([32]byte, error) {
-	return _NFT.Contract.PAUSERROLE(&_NFT.CallOpts)
-}
-
 // TRANSFERROLE is a free data retrieval call binding the contract method 0x206b60f9.
 //
 // Solidity: function TRANSFER_ROLE() view returns(bytes32)
@@ -301,37 +281,6 @@ func (_NFT *NFTSession) TRANSFERROLE() ([32]byte, error) {
 // Solidity: function TRANSFER_ROLE() view returns(bytes32)
 func (_NFT *NFTCallerSession) TRANSFERROLE() ([32]byte, error) {
 	return _NFT.Contract.TRANSFERROLE(&_NFT.CallOpts)
-}
-
-// ContractURI is a free data retrieval call binding the contract method 0xc0e72740.
-//
-// Solidity: function _contractURI() view returns(string)
-func (_NFT *NFTCaller) ContractURI(opts *bind.CallOpts) (string, error) {
-	var out []interface{}
-	err := _NFT.contract.Call(opts, &out, "_contractURI")
-
-	if err != nil {
-		return *new(string), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(string)).(*string)
-
-	return out0, err
-
-}
-
-// ContractURI is a free data retrieval call binding the contract method 0xc0e72740.
-//
-// Solidity: function _contractURI() view returns(string)
-func (_NFT *NFTSession) ContractURI() (string, error) {
-	return _NFT.Contract.ContractURI(&_NFT.CallOpts)
-}
-
-// ContractURI is a free data retrieval call binding the contract method 0xc0e72740.
-//
-// Solidity: function _contractURI() view returns(string)
-func (_NFT *NFTCallerSession) ContractURI() (string, error) {
-	return _NFT.Contract.ContractURI(&_NFT.CallOpts)
 }
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
@@ -396,12 +345,12 @@ func (_NFT *NFTCallerSession) InternalContractURI() (string, error) {
 	return _NFT.Contract.InternalContractURI(&_NFT.CallOpts)
 }
 
-// Creator is a free data retrieval call binding the contract method 0x510b5158.
+// DefaultSaleRecipient is a free data retrieval call binding the contract method 0x246b436b.
 //
-// Solidity: function creator(uint256 ) view returns(address)
-func (_NFT *NFTCaller) Creator(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
+// Solidity: function defaultSaleRecipient() view returns(address)
+func (_NFT *NFTCaller) DefaultSaleRecipient(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _NFT.contract.Call(opts, &out, "creator", arg0)
+	err := _NFT.contract.Call(opts, &out, "defaultSaleRecipient")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -413,18 +362,49 @@ func (_NFT *NFTCaller) Creator(opts *bind.CallOpts, arg0 *big.Int) (common.Addre
 
 }
 
-// Creator is a free data retrieval call binding the contract method 0x510b5158.
+// DefaultSaleRecipient is a free data retrieval call binding the contract method 0x246b436b.
 //
-// Solidity: function creator(uint256 ) view returns(address)
-func (_NFT *NFTSession) Creator(arg0 *big.Int) (common.Address, error) {
-	return _NFT.Contract.Creator(&_NFT.CallOpts, arg0)
+// Solidity: function defaultSaleRecipient() view returns(address)
+func (_NFT *NFTSession) DefaultSaleRecipient() (common.Address, error) {
+	return _NFT.Contract.DefaultSaleRecipient(&_NFT.CallOpts)
 }
 
-// Creator is a free data retrieval call binding the contract method 0x510b5158.
+// DefaultSaleRecipient is a free data retrieval call binding the contract method 0x246b436b.
 //
-// Solidity: function creator(uint256 ) view returns(address)
-func (_NFT *NFTCallerSession) Creator(arg0 *big.Int) (common.Address, error) {
-	return _NFT.Contract.Creator(&_NFT.CallOpts, arg0)
+// Solidity: function defaultSaleRecipient() view returns(address)
+func (_NFT *NFTCallerSession) DefaultSaleRecipient() (common.Address, error) {
+	return _NFT.Contract.DefaultSaleRecipient(&_NFT.CallOpts)
+}
+
+// FeeBps is a free data retrieval call binding the contract method 0x24a9d853.
+//
+// Solidity: function feeBps() view returns(uint120)
+func (_NFT *NFTCaller) FeeBps(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(opts, &out, "feeBps")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// FeeBps is a free data retrieval call binding the contract method 0x24a9d853.
+//
+// Solidity: function feeBps() view returns(uint120)
+func (_NFT *NFTSession) FeeBps() (*big.Int, error) {
+	return _NFT.Contract.FeeBps(&_NFT.CallOpts)
+}
+
+// FeeBps is a free data retrieval call binding the contract method 0x24a9d853.
+//
+// Solidity: function feeBps() view returns(uint120)
+func (_NFT *NFTCallerSession) FeeBps() (*big.Int, error) {
+	return _NFT.Contract.FeeBps(&_NFT.CallOpts)
 }
 
 // GetApproved is a free data retrieval call binding the contract method 0x081812fc.
@@ -644,35 +624,6 @@ func (_NFT *NFTCallerSession) IsTrustedForwarder(forwarder common.Address) (bool
 	return _NFT.Contract.IsTrustedForwarder(&_NFT.CallOpts, forwarder)
 }
 
-// Mint is a free data retrieval call binding the contract method 0x6a627842.
-//
-// Solidity: function mint(address ) pure returns()
-func (_NFT *NFTCaller) Mint(opts *bind.CallOpts, arg0 common.Address) error {
-	var out []interface{}
-	err := _NFT.contract.Call(opts, &out, "mint", arg0)
-
-	if err != nil {
-		return err
-	}
-
-	return err
-
-}
-
-// Mint is a free data retrieval call binding the contract method 0x6a627842.
-//
-// Solidity: function mint(address ) pure returns()
-func (_NFT *NFTSession) Mint(arg0 common.Address) error {
-	return _NFT.Contract.Mint(&_NFT.CallOpts, arg0)
-}
-
-// Mint is a free data retrieval call binding the contract method 0x6a627842.
-//
-// Solidity: function mint(address ) pure returns()
-func (_NFT *NFTCallerSession) Mint(arg0 common.Address) error {
-	return _NFT.Contract.Mint(&_NFT.CallOpts, arg0)
-}
-
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
 //
 // Solidity: function name() view returns(string)
@@ -704,12 +655,43 @@ func (_NFT *NFTCallerSession) Name() (string, error) {
 	return _NFT.Contract.Name(&_NFT.CallOpts)
 }
 
-// NextTokenId is a free data retrieval call binding the contract method 0x75794a3c.
+// NativeTokenWrapper is a free data retrieval call binding the contract method 0xf9ea29cb.
 //
-// Solidity: function nextTokenId() view returns(uint256)
-func (_NFT *NFTCaller) NextTokenId(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function nativeTokenWrapper() view returns(address)
+func (_NFT *NFTCaller) NativeTokenWrapper(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _NFT.contract.Call(opts, &out, "nextTokenId")
+	err := _NFT.contract.Call(opts, &out, "nativeTokenWrapper")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// NativeTokenWrapper is a free data retrieval call binding the contract method 0xf9ea29cb.
+//
+// Solidity: function nativeTokenWrapper() view returns(address)
+func (_NFT *NFTSession) NativeTokenWrapper() (common.Address, error) {
+	return _NFT.Contract.NativeTokenWrapper(&_NFT.CallOpts)
+}
+
+// NativeTokenWrapper is a free data retrieval call binding the contract method 0xf9ea29cb.
+//
+// Solidity: function nativeTokenWrapper() view returns(address)
+func (_NFT *NFTCallerSession) NativeTokenWrapper() (common.Address, error) {
+	return _NFT.Contract.NativeTokenWrapper(&_NFT.CallOpts)
+}
+
+// NextTokenIdToMint is a free data retrieval call binding the contract method 0x3b1475a7.
+//
+// Solidity: function nextTokenIdToMint() view returns(uint256)
+func (_NFT *NFTCaller) NextTokenIdToMint(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(opts, &out, "nextTokenIdToMint")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -721,49 +703,49 @@ func (_NFT *NFTCaller) NextTokenId(opts *bind.CallOpts) (*big.Int, error) {
 
 }
 
-// NextTokenId is a free data retrieval call binding the contract method 0x75794a3c.
+// NextTokenIdToMint is a free data retrieval call binding the contract method 0x3b1475a7.
 //
-// Solidity: function nextTokenId() view returns(uint256)
-func (_NFT *NFTSession) NextTokenId() (*big.Int, error) {
-	return _NFT.Contract.NextTokenId(&_NFT.CallOpts)
+// Solidity: function nextTokenIdToMint() view returns(uint256)
+func (_NFT *NFTSession) NextTokenIdToMint() (*big.Int, error) {
+	return _NFT.Contract.NextTokenIdToMint(&_NFT.CallOpts)
 }
 
-// NextTokenId is a free data retrieval call binding the contract method 0x75794a3c.
+// NextTokenIdToMint is a free data retrieval call binding the contract method 0x3b1475a7.
 //
-// Solidity: function nextTokenId() view returns(uint256)
-func (_NFT *NFTCallerSession) NextTokenId() (*big.Int, error) {
-	return _NFT.Contract.NextTokenId(&_NFT.CallOpts)
+// Solidity: function nextTokenIdToMint() view returns(uint256)
+func (_NFT *NFTCallerSession) NextTokenIdToMint() (*big.Int, error) {
+	return _NFT.Contract.NextTokenIdToMint(&_NFT.CallOpts)
 }
 
-// NftURI is a free data retrieval call binding the contract method 0xefe47687.
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
-// Solidity: function nftURI(uint256 ) view returns(string)
-func (_NFT *NFTCaller) NftURI(opts *bind.CallOpts, arg0 *big.Int) (string, error) {
+// Solidity: function owner() view returns(address)
+func (_NFT *NFTCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _NFT.contract.Call(opts, &out, "nftURI", arg0)
+	err := _NFT.contract.Call(opts, &out, "owner")
 
 	if err != nil {
-		return *new(string), err
+		return *new(common.Address), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
 
 	return out0, err
 
 }
 
-// NftURI is a free data retrieval call binding the contract method 0xefe47687.
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
-// Solidity: function nftURI(uint256 ) view returns(string)
-func (_NFT *NFTSession) NftURI(arg0 *big.Int) (string, error) {
-	return _NFT.Contract.NftURI(&_NFT.CallOpts, arg0)
+// Solidity: function owner() view returns(address)
+func (_NFT *NFTSession) Owner() (common.Address, error) {
+	return _NFT.Contract.Owner(&_NFT.CallOpts)
 }
 
-// NftURI is a free data retrieval call binding the contract method 0xefe47687.
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
-// Solidity: function nftURI(uint256 ) view returns(string)
-func (_NFT *NFTCallerSession) NftURI(arg0 *big.Int) (string, error) {
-	return _NFT.Contract.NftURI(&_NFT.CallOpts, arg0)
+// Solidity: function owner() view returns(address)
+func (_NFT *NFTCallerSession) Owner() (common.Address, error) {
+	return _NFT.Contract.Owner(&_NFT.CallOpts)
 }
 
 // OwnerOf is a free data retrieval call binding the contract method 0x6352211e.
@@ -797,49 +779,18 @@ func (_NFT *NFTCallerSession) OwnerOf(tokenId *big.Int) (common.Address, error) 
 	return _NFT.Contract.OwnerOf(&_NFT.CallOpts, tokenId)
 }
 
-// Paused is a free data retrieval call binding the contract method 0x5c975abb.
-//
-// Solidity: function paused() view returns(bool)
-func (_NFT *NFTCaller) Paused(opts *bind.CallOpts) (bool, error) {
-	var out []interface{}
-	err := _NFT.contract.Call(opts, &out, "paused")
-
-	if err != nil {
-		return *new(bool), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
-
-	return out0, err
-
-}
-
-// Paused is a free data retrieval call binding the contract method 0x5c975abb.
-//
-// Solidity: function paused() view returns(bool)
-func (_NFT *NFTSession) Paused() (bool, error) {
-	return _NFT.Contract.Paused(&_NFT.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0x5c975abb.
-//
-// Solidity: function paused() view returns(bool)
-func (_NFT *NFTCallerSession) Paused() (bool, error) {
-	return _NFT.Contract.Paused(&_NFT.CallOpts)
-}
-
 // RoyaltyBps is a free data retrieval call binding the contract method 0xc63adb2b.
 //
-// Solidity: function royaltyBps() view returns(uint256)
-func (_NFT *NFTCaller) RoyaltyBps(opts *bind.CallOpts) (*big.Int, error) {
+// Solidity: function royaltyBps() view returns(uint64)
+func (_NFT *NFTCaller) RoyaltyBps(opts *bind.CallOpts) (uint64, error) {
 	var out []interface{}
 	err := _NFT.contract.Call(opts, &out, "royaltyBps")
 
 	if err != nil {
-		return *new(*big.Int), err
+		return *new(uint64), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
 
 	return out0, err
 
@@ -847,15 +798,15 @@ func (_NFT *NFTCaller) RoyaltyBps(opts *bind.CallOpts) (*big.Int, error) {
 
 // RoyaltyBps is a free data retrieval call binding the contract method 0xc63adb2b.
 //
-// Solidity: function royaltyBps() view returns(uint256)
-func (_NFT *NFTSession) RoyaltyBps() (*big.Int, error) {
+// Solidity: function royaltyBps() view returns(uint64)
+func (_NFT *NFTSession) RoyaltyBps() (uint64, error) {
 	return _NFT.Contract.RoyaltyBps(&_NFT.CallOpts)
 }
 
 // RoyaltyBps is a free data retrieval call binding the contract method 0xc63adb2b.
 //
-// Solidity: function royaltyBps() view returns(uint256)
-func (_NFT *NFTCallerSession) RoyaltyBps() (*big.Int, error) {
+// Solidity: function royaltyBps() view returns(uint64)
+func (_NFT *NFTCallerSession) RoyaltyBps() (uint64, error) {
 	return _NFT.Contract.RoyaltyBps(&_NFT.CallOpts)
 }
 
@@ -1030,10 +981,10 @@ func (_NFT *NFTCallerSession) TokenOfOwnerByIndex(owner common.Address, index *b
 
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
-// Solidity: function tokenURI(uint256 tokenId) view returns(string)
-func (_NFT *NFTCaller) TokenURI(opts *bind.CallOpts, tokenId *big.Int) (string, error) {
+// Solidity: function tokenURI(uint256 _tokenId) view returns(string)
+func (_NFT *NFTCaller) TokenURI(opts *bind.CallOpts, _tokenId *big.Int) (string, error) {
 	var out []interface{}
-	err := _NFT.contract.Call(opts, &out, "tokenURI", tokenId)
+	err := _NFT.contract.Call(opts, &out, "tokenURI", _tokenId)
 
 	if err != nil {
 		return *new(string), err
@@ -1047,16 +998,16 @@ func (_NFT *NFTCaller) TokenURI(opts *bind.CallOpts, tokenId *big.Int) (string, 
 
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
-// Solidity: function tokenURI(uint256 tokenId) view returns(string)
-func (_NFT *NFTSession) TokenURI(tokenId *big.Int) (string, error) {
-	return _NFT.Contract.TokenURI(&_NFT.CallOpts, tokenId)
+// Solidity: function tokenURI(uint256 _tokenId) view returns(string)
+func (_NFT *NFTSession) TokenURI(_tokenId *big.Int) (string, error) {
+	return _NFT.Contract.TokenURI(&_NFT.CallOpts, _tokenId)
 }
 
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
-// Solidity: function tokenURI(uint256 tokenId) view returns(string)
-func (_NFT *NFTCallerSession) TokenURI(tokenId *big.Int) (string, error) {
-	return _NFT.Contract.TokenURI(&_NFT.CallOpts, tokenId)
+// Solidity: function tokenURI(uint256 _tokenId) view returns(string)
+func (_NFT *NFTCallerSession) TokenURI(_tokenId *big.Int) (string, error) {
+	return _NFT.Contract.TokenURI(&_NFT.CallOpts, _tokenId)
 }
 
 // TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
@@ -1119,6 +1070,38 @@ func (_NFT *NFTSession) TransfersRestricted() (bool, error) {
 // Solidity: function transfersRestricted() view returns(bool)
 func (_NFT *NFTCallerSession) TransfersRestricted() (bool, error) {
 	return _NFT.Contract.TransfersRestricted(&_NFT.CallOpts)
+}
+
+// Verify is a free data retrieval call binding the contract method 0xb4e9c513.
+//
+// Solidity: function verify((address,string,uint256,address,uint128,uint128,bytes32) _req, bytes _signature) view returns(bool, address)
+func (_NFT *NFTCaller) Verify(opts *bind.CallOpts, _req ISignatureMint721MintRequest, _signature []byte) (bool, common.Address, error) {
+	var out []interface{}
+	err := _NFT.contract.Call(opts, &out, "verify", _req, _signature)
+
+	if err != nil {
+		return *new(bool), *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+	out1 := *abi.ConvertType(out[1], new(common.Address)).(*common.Address)
+
+	return out0, out1, err
+
+}
+
+// Verify is a free data retrieval call binding the contract method 0xb4e9c513.
+//
+// Solidity: function verify((address,string,uint256,address,uint128,uint128,bytes32) _req, bytes _signature) view returns(bool, address)
+func (_NFT *NFTSession) Verify(_req ISignatureMint721MintRequest, _signature []byte) (bool, common.Address, error) {
+	return _NFT.Contract.Verify(&_NFT.CallOpts, _req, _signature)
+}
+
+// Verify is a free data retrieval call binding the contract method 0xb4e9c513.
+//
+// Solidity: function verify((address,string,uint256,address,uint128,uint128,bytes32) _req, bytes _signature) view returns(bool, address)
+func (_NFT *NFTCallerSession) Verify(_req ISignatureMint721MintRequest, _signature []byte) (bool, common.Address, error) {
+	return _NFT.Contract.Verify(&_NFT.CallOpts, _req, _signature)
 }
 
 // Approve is a paid mutator transaction binding the contract method 0x095ea7b3.
@@ -1184,46 +1167,46 @@ func (_NFT *NFTTransactorSession) GrantRole(role [32]byte, account common.Addres
 	return _NFT.Contract.GrantRole(&_NFT.TransactOpts, role, account)
 }
 
-// MintNFT is a paid mutator transaction binding the contract method 0xeacabe14.
+// MintTo is a paid mutator transaction binding the contract method 0x0075a317.
 //
-// Solidity: function mintNFT(address _to, string _uri) returns()
-func (_NFT *NFTTransactor) MintNFT(opts *bind.TransactOpts, _to common.Address, _uri string) (*types.Transaction, error) {
-	return _NFT.contract.Transact(opts, "mintNFT", _to, _uri)
+// Solidity: function mintTo(address _to, string _uri) returns(uint256)
+func (_NFT *NFTTransactor) MintTo(opts *bind.TransactOpts, _to common.Address, _uri string) (*types.Transaction, error) {
+	return _NFT.contract.Transact(opts, "mintTo", _to, _uri)
 }
 
-// MintNFT is a paid mutator transaction binding the contract method 0xeacabe14.
+// MintTo is a paid mutator transaction binding the contract method 0x0075a317.
 //
-// Solidity: function mintNFT(address _to, string _uri) returns()
-func (_NFT *NFTSession) MintNFT(_to common.Address, _uri string) (*types.Transaction, error) {
-	return _NFT.Contract.MintNFT(&_NFT.TransactOpts, _to, _uri)
+// Solidity: function mintTo(address _to, string _uri) returns(uint256)
+func (_NFT *NFTSession) MintTo(_to common.Address, _uri string) (*types.Transaction, error) {
+	return _NFT.Contract.MintTo(&_NFT.TransactOpts, _to, _uri)
 }
 
-// MintNFT is a paid mutator transaction binding the contract method 0xeacabe14.
+// MintTo is a paid mutator transaction binding the contract method 0x0075a317.
 //
-// Solidity: function mintNFT(address _to, string _uri) returns()
-func (_NFT *NFTTransactorSession) MintNFT(_to common.Address, _uri string) (*types.Transaction, error) {
-	return _NFT.Contract.MintNFT(&_NFT.TransactOpts, _to, _uri)
+// Solidity: function mintTo(address _to, string _uri) returns(uint256)
+func (_NFT *NFTTransactorSession) MintTo(_to common.Address, _uri string) (*types.Transaction, error) {
+	return _NFT.Contract.MintTo(&_NFT.TransactOpts, _to, _uri)
 }
 
-// MintNFTBatch is a paid mutator transaction binding the contract method 0x49a33a2f.
+// MintWithSignature is a paid mutator transaction binding the contract method 0x35aacc2d.
 //
-// Solidity: function mintNFTBatch(address _to, string[] _uris) returns()
-func (_NFT *NFTTransactor) MintNFTBatch(opts *bind.TransactOpts, _to common.Address, _uris []string) (*types.Transaction, error) {
-	return _NFT.contract.Transact(opts, "mintNFTBatch", _to, _uris)
+// Solidity: function mintWithSignature((address,string,uint256,address,uint128,uint128,bytes32) _req, bytes _signature) payable returns(uint256 tokenIdMinted)
+func (_NFT *NFTTransactor) MintWithSignature(opts *bind.TransactOpts, _req ISignatureMint721MintRequest, _signature []byte) (*types.Transaction, error) {
+	return _NFT.contract.Transact(opts, "mintWithSignature", _req, _signature)
 }
 
-// MintNFTBatch is a paid mutator transaction binding the contract method 0x49a33a2f.
+// MintWithSignature is a paid mutator transaction binding the contract method 0x35aacc2d.
 //
-// Solidity: function mintNFTBatch(address _to, string[] _uris) returns()
-func (_NFT *NFTSession) MintNFTBatch(_to common.Address, _uris []string) (*types.Transaction, error) {
-	return _NFT.Contract.MintNFTBatch(&_NFT.TransactOpts, _to, _uris)
+// Solidity: function mintWithSignature((address,string,uint256,address,uint128,uint128,bytes32) _req, bytes _signature) payable returns(uint256 tokenIdMinted)
+func (_NFT *NFTSession) MintWithSignature(_req ISignatureMint721MintRequest, _signature []byte) (*types.Transaction, error) {
+	return _NFT.Contract.MintWithSignature(&_NFT.TransactOpts, _req, _signature)
 }
 
-// MintNFTBatch is a paid mutator transaction binding the contract method 0x49a33a2f.
+// MintWithSignature is a paid mutator transaction binding the contract method 0x35aacc2d.
 //
-// Solidity: function mintNFTBatch(address _to, string[] _uris) returns()
-func (_NFT *NFTTransactorSession) MintNFTBatch(_to common.Address, _uris []string) (*types.Transaction, error) {
-	return _NFT.Contract.MintNFTBatch(&_NFT.TransactOpts, _to, _uris)
+// Solidity: function mintWithSignature((address,string,uint256,address,uint128,uint128,bytes32) _req, bytes _signature) payable returns(uint256 tokenIdMinted)
+func (_NFT *NFTTransactorSession) MintWithSignature(_req ISignatureMint721MintRequest, _signature []byte) (*types.Transaction, error) {
+	return _NFT.Contract.MintWithSignature(&_NFT.TransactOpts, _req, _signature)
 }
 
 // Multicall is a paid mutator transaction binding the contract method 0xac9650d8.
@@ -1245,27 +1228,6 @@ func (_NFT *NFTSession) Multicall(data [][]byte) (*types.Transaction, error) {
 // Solidity: function multicall(bytes[] data) returns(bytes[] results)
 func (_NFT *NFTTransactorSession) Multicall(data [][]byte) (*types.Transaction, error) {
 	return _NFT.Contract.Multicall(&_NFT.TransactOpts, data)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
-//
-// Solidity: function pause() returns()
-func (_NFT *NFTTransactor) Pause(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _NFT.contract.Transact(opts, "pause")
-}
-
-// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
-//
-// Solidity: function pause() returns()
-func (_NFT *NFTSession) Pause() (*types.Transaction, error) {
-	return _NFT.Contract.Pause(&_NFT.TransactOpts)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
-//
-// Solidity: function pause() returns()
-func (_NFT *NFTTransactorSession) Pause() (*types.Transaction, error) {
-	return _NFT.Contract.Pause(&_NFT.TransactOpts)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
@@ -1375,23 +1337,86 @@ func (_NFT *NFTTransactorSession) SetApprovalForAll(operator common.Address, app
 
 // SetContractURI is a paid mutator transaction binding the contract method 0x938e3d7b.
 //
-// Solidity: function setContractURI(string _URI) returns()
-func (_NFT *NFTTransactor) SetContractURI(opts *bind.TransactOpts, _URI string) (*types.Transaction, error) {
-	return _NFT.contract.Transact(opts, "setContractURI", _URI)
+// Solidity: function setContractURI(string _uri) returns()
+func (_NFT *NFTTransactor) SetContractURI(opts *bind.TransactOpts, _uri string) (*types.Transaction, error) {
+	return _NFT.contract.Transact(opts, "setContractURI", _uri)
 }
 
 // SetContractURI is a paid mutator transaction binding the contract method 0x938e3d7b.
 //
-// Solidity: function setContractURI(string _URI) returns()
-func (_NFT *NFTSession) SetContractURI(_URI string) (*types.Transaction, error) {
-	return _NFT.Contract.SetContractURI(&_NFT.TransactOpts, _URI)
+// Solidity: function setContractURI(string _uri) returns()
+func (_NFT *NFTSession) SetContractURI(_uri string) (*types.Transaction, error) {
+	return _NFT.Contract.SetContractURI(&_NFT.TransactOpts, _uri)
 }
 
 // SetContractURI is a paid mutator transaction binding the contract method 0x938e3d7b.
 //
-// Solidity: function setContractURI(string _URI) returns()
-func (_NFT *NFTTransactorSession) SetContractURI(_URI string) (*types.Transaction, error) {
-	return _NFT.Contract.SetContractURI(&_NFT.TransactOpts, _URI)
+// Solidity: function setContractURI(string _uri) returns()
+func (_NFT *NFTTransactorSession) SetContractURI(_uri string) (*types.Transaction, error) {
+	return _NFT.Contract.SetContractURI(&_NFT.TransactOpts, _uri)
+}
+
+// SetDefaultSaleRecipient is a paid mutator transaction binding the contract method 0x1490ee76.
+//
+// Solidity: function setDefaultSaleRecipient(address _saleRecipient) returns()
+func (_NFT *NFTTransactor) SetDefaultSaleRecipient(opts *bind.TransactOpts, _saleRecipient common.Address) (*types.Transaction, error) {
+	return _NFT.contract.Transact(opts, "setDefaultSaleRecipient", _saleRecipient)
+}
+
+// SetDefaultSaleRecipient is a paid mutator transaction binding the contract method 0x1490ee76.
+//
+// Solidity: function setDefaultSaleRecipient(address _saleRecipient) returns()
+func (_NFT *NFTSession) SetDefaultSaleRecipient(_saleRecipient common.Address) (*types.Transaction, error) {
+	return _NFT.Contract.SetDefaultSaleRecipient(&_NFT.TransactOpts, _saleRecipient)
+}
+
+// SetDefaultSaleRecipient is a paid mutator transaction binding the contract method 0x1490ee76.
+//
+// Solidity: function setDefaultSaleRecipient(address _saleRecipient) returns()
+func (_NFT *NFTTransactorSession) SetDefaultSaleRecipient(_saleRecipient common.Address) (*types.Transaction, error) {
+	return _NFT.Contract.SetDefaultSaleRecipient(&_NFT.TransactOpts, _saleRecipient)
+}
+
+// SetFeeBps is a paid mutator transaction binding the contract method 0x72c27b62.
+//
+// Solidity: function setFeeBps(uint256 _feeBps) returns()
+func (_NFT *NFTTransactor) SetFeeBps(opts *bind.TransactOpts, _feeBps *big.Int) (*types.Transaction, error) {
+	return _NFT.contract.Transact(opts, "setFeeBps", _feeBps)
+}
+
+// SetFeeBps is a paid mutator transaction binding the contract method 0x72c27b62.
+//
+// Solidity: function setFeeBps(uint256 _feeBps) returns()
+func (_NFT *NFTSession) SetFeeBps(_feeBps *big.Int) (*types.Transaction, error) {
+	return _NFT.Contract.SetFeeBps(&_NFT.TransactOpts, _feeBps)
+}
+
+// SetFeeBps is a paid mutator transaction binding the contract method 0x72c27b62.
+//
+// Solidity: function setFeeBps(uint256 _feeBps) returns()
+func (_NFT *NFTTransactorSession) SetFeeBps(_feeBps *big.Int) (*types.Transaction, error) {
+	return _NFT.Contract.SetFeeBps(&_NFT.TransactOpts, _feeBps)
+}
+
+// SetOwner is a paid mutator transaction binding the contract method 0x13af4035.
+//
+// Solidity: function setOwner(address _newOwner) returns()
+func (_NFT *NFTTransactor) SetOwner(opts *bind.TransactOpts, _newOwner common.Address) (*types.Transaction, error) {
+	return _NFT.contract.Transact(opts, "setOwner", _newOwner)
+}
+
+// SetOwner is a paid mutator transaction binding the contract method 0x13af4035.
+//
+// Solidity: function setOwner(address _newOwner) returns()
+func (_NFT *NFTSession) SetOwner(_newOwner common.Address) (*types.Transaction, error) {
+	return _NFT.Contract.SetOwner(&_NFT.TransactOpts, _newOwner)
+}
+
+// SetOwner is a paid mutator transaction binding the contract method 0x13af4035.
+//
+// Solidity: function setOwner(address _newOwner) returns()
+func (_NFT *NFTTransactorSession) SetOwner(_newOwner common.Address) (*types.Transaction, error) {
+	return _NFT.Contract.SetOwner(&_NFT.TransactOpts, _newOwner)
 }
 
 // SetRestrictedTransfer is a paid mutator transaction binding the contract method 0x8ba448c2.
@@ -1455,27 +1480,6 @@ func (_NFT *NFTSession) TransferFrom(from common.Address, to common.Address, tok
 // Solidity: function transferFrom(address from, address to, uint256 tokenId) returns()
 func (_NFT *NFTTransactorSession) TransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
 	return _NFT.Contract.TransferFrom(&_NFT.TransactOpts, from, to, tokenId)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
-//
-// Solidity: function unpause() returns()
-func (_NFT *NFTTransactor) Unpause(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _NFT.contract.Transact(opts, "unpause")
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
-//
-// Solidity: function unpause() returns()
-func (_NFT *NFTSession) Unpause() (*types.Transaction, error) {
-	return _NFT.Contract.Unpause(&_NFT.TransactOpts)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
-//
-// Solidity: function unpause() returns()
-func (_NFT *NFTTransactorSession) Unpause() (*types.Transaction, error) {
-	return _NFT.Contract.Unpause(&_NFT.TransactOpts)
 }
 
 // NFTApprovalIterator is returned from FilterApproval and is used to iterate over the raw logs and unpacked data for Approval events raised by the NFT contract.
@@ -1794,9 +1798,9 @@ func (_NFT *NFTFilterer) ParseApprovalForAll(log types.Log) (*NFTApprovalForAll,
 	return event, nil
 }
 
-// NFTMintedIterator is returned from FilterMinted and is used to iterate over the raw logs and unpacked data for Minted events raised by the NFT contract.
-type NFTMintedIterator struct {
-	Event *NFTMinted // Event containing the contract specifics and raw log
+// NFTMintWithSignatureIterator is returned from FilterMintWithSignature and is used to iterate over the raw logs and unpacked data for MintWithSignature events raised by the NFT contract.
+type NFTMintWithSignatureIterator struct {
+	Event *NFTMintWithSignature // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1810,7 +1814,7 @@ type NFTMintedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *NFTMintedIterator) Next() bool {
+func (it *NFTMintWithSignatureIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1819,7 +1823,7 @@ func (it *NFTMintedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(NFTMinted)
+			it.Event = new(NFTMintWithSignature)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1834,7 +1838,7 @@ func (it *NFTMintedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(NFTMinted)
+		it.Event = new(NFTMintWithSignature)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1850,62 +1854,70 @@ func (it *NFTMintedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTMintedIterator) Error() error {
+func (it *NFTMintWithSignatureIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *NFTMintedIterator) Close() error {
+func (it *NFTMintWithSignatureIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// NFTMinted represents a Minted event raised by the NFT contract.
-type NFTMinted struct {
-	Creator  common.Address
-	To       common.Address
-	TokenId  *big.Int
-	TokenURI string
-	Raw      types.Log // Blockchain specific contextual infos
+// NFTMintWithSignature represents a MintWithSignature event raised by the NFT contract.
+type NFTMintWithSignature struct {
+	Signer        common.Address
+	MintedTo      common.Address
+	TokenIdMinted *big.Int
+	MintRequest   ISignatureMint721MintRequest
+	Raw           types.Log // Blockchain specific contextual infos
 }
 
-// FilterMinted is a free log retrieval operation binding the contract event 0xafe8c5a4c36942a61550534b714a0076ab46ef8ef23e361572aad8b7ca2ac27d.
+// FilterMintWithSignature is a free log retrieval operation binding the contract event 0x98a5555b76348ffb11b66617e8beae36a962a5b5d546454bf2e81f551ee65b17.
 //
-// Solidity: event Minted(address indexed creator, address indexed to, uint256 tokenId, string tokenURI)
-func (_NFT *NFTFilterer) FilterMinted(opts *bind.FilterOpts, creator []common.Address, to []common.Address) (*NFTMintedIterator, error) {
+// Solidity: event MintWithSignature(address indexed signer, address indexed mintedTo, uint256 indexed tokenIdMinted, (address,string,uint256,address,uint128,uint128,bytes32) mintRequest)
+func (_NFT *NFTFilterer) FilterMintWithSignature(opts *bind.FilterOpts, signer []common.Address, mintedTo []common.Address, tokenIdMinted []*big.Int) (*NFTMintWithSignatureIterator, error) {
 
-	var creatorRule []interface{}
-	for _, creatorItem := range creator {
-		creatorRule = append(creatorRule, creatorItem)
+	var signerRule []interface{}
+	for _, signerItem := range signer {
+		signerRule = append(signerRule, signerItem)
 	}
-	var toRule []interface{}
-	for _, toItem := range to {
-		toRule = append(toRule, toItem)
+	var mintedToRule []interface{}
+	for _, mintedToItem := range mintedTo {
+		mintedToRule = append(mintedToRule, mintedToItem)
+	}
+	var tokenIdMintedRule []interface{}
+	for _, tokenIdMintedItem := range tokenIdMinted {
+		tokenIdMintedRule = append(tokenIdMintedRule, tokenIdMintedItem)
 	}
 
-	logs, sub, err := _NFT.contract.FilterLogs(opts, "Minted", creatorRule, toRule)
+	logs, sub, err := _NFT.contract.FilterLogs(opts, "MintWithSignature", signerRule, mintedToRule, tokenIdMintedRule)
 	if err != nil {
 		return nil, err
 	}
-	return &NFTMintedIterator{contract: _NFT.contract, event: "Minted", logs: logs, sub: sub}, nil
+	return &NFTMintWithSignatureIterator{contract: _NFT.contract, event: "MintWithSignature", logs: logs, sub: sub}, nil
 }
 
-// WatchMinted is a free log subscription operation binding the contract event 0xafe8c5a4c36942a61550534b714a0076ab46ef8ef23e361572aad8b7ca2ac27d.
+// WatchMintWithSignature is a free log subscription operation binding the contract event 0x98a5555b76348ffb11b66617e8beae36a962a5b5d546454bf2e81f551ee65b17.
 //
-// Solidity: event Minted(address indexed creator, address indexed to, uint256 tokenId, string tokenURI)
-func (_NFT *NFTFilterer) WatchMinted(opts *bind.WatchOpts, sink chan<- *NFTMinted, creator []common.Address, to []common.Address) (event.Subscription, error) {
+// Solidity: event MintWithSignature(address indexed signer, address indexed mintedTo, uint256 indexed tokenIdMinted, (address,string,uint256,address,uint128,uint128,bytes32) mintRequest)
+func (_NFT *NFTFilterer) WatchMintWithSignature(opts *bind.WatchOpts, sink chan<- *NFTMintWithSignature, signer []common.Address, mintedTo []common.Address, tokenIdMinted []*big.Int) (event.Subscription, error) {
 
-	var creatorRule []interface{}
-	for _, creatorItem := range creator {
-		creatorRule = append(creatorRule, creatorItem)
+	var signerRule []interface{}
+	for _, signerItem := range signer {
+		signerRule = append(signerRule, signerItem)
 	}
-	var toRule []interface{}
-	for _, toItem := range to {
-		toRule = append(toRule, toItem)
+	var mintedToRule []interface{}
+	for _, mintedToItem := range mintedTo {
+		mintedToRule = append(mintedToRule, mintedToItem)
+	}
+	var tokenIdMintedRule []interface{}
+	for _, tokenIdMintedItem := range tokenIdMinted {
+		tokenIdMintedRule = append(tokenIdMintedRule, tokenIdMintedItem)
 	}
 
-	logs, sub, err := _NFT.contract.WatchLogs(opts, "Minted", creatorRule, toRule)
+	logs, sub, err := _NFT.contract.WatchLogs(opts, "MintWithSignature", signerRule, mintedToRule, tokenIdMintedRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1915,8 +1927,8 @@ func (_NFT *NFTFilterer) WatchMinted(opts *bind.WatchOpts, sink chan<- *NFTMinte
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(NFTMinted)
-				if err := _NFT.contract.UnpackLog(event, "Minted", log); err != nil {
+				event := new(NFTMintWithSignature)
+				if err := _NFT.contract.UnpackLog(event, "MintWithSignature", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1937,21 +1949,21 @@ func (_NFT *NFTFilterer) WatchMinted(opts *bind.WatchOpts, sink chan<- *NFTMinte
 	}), nil
 }
 
-// ParseMinted is a log parse operation binding the contract event 0xafe8c5a4c36942a61550534b714a0076ab46ef8ef23e361572aad8b7ca2ac27d.
+// ParseMintWithSignature is a log parse operation binding the contract event 0x98a5555b76348ffb11b66617e8beae36a962a5b5d546454bf2e81f551ee65b17.
 //
-// Solidity: event Minted(address indexed creator, address indexed to, uint256 tokenId, string tokenURI)
-func (_NFT *NFTFilterer) ParseMinted(log types.Log) (*NFTMinted, error) {
-	event := new(NFTMinted)
-	if err := _NFT.contract.UnpackLog(event, "Minted", log); err != nil {
+// Solidity: event MintWithSignature(address indexed signer, address indexed mintedTo, uint256 indexed tokenIdMinted, (address,string,uint256,address,uint128,uint128,bytes32) mintRequest)
+func (_NFT *NFTFilterer) ParseMintWithSignature(log types.Log) (*NFTMintWithSignature, error) {
+	event := new(NFTMintWithSignature)
+	if err := _NFT.contract.UnpackLog(event, "MintWithSignature", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// NFTMintedBatchIterator is returned from FilterMintedBatch and is used to iterate over the raw logs and unpacked data for MintedBatch events raised by the NFT contract.
-type NFTMintedBatchIterator struct {
-	Event *NFTMintedBatch // Event containing the contract specifics and raw log
+// NFTNewOwnerIterator is returned from FilterNewOwner and is used to iterate over the raw logs and unpacked data for NewOwner events raised by the NFT contract.
+type NFTNewOwnerIterator struct {
+	Event *NFTNewOwner // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1965,7 +1977,7 @@ type NFTMintedBatchIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *NFTMintedBatchIterator) Next() bool {
+func (it *NFTNewOwnerIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1974,7 +1986,7 @@ func (it *NFTMintedBatchIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(NFTMintedBatch)
+			it.Event = new(NFTNewOwner)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1989,7 +2001,7 @@ func (it *NFTMintedBatchIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(NFTMintedBatch)
+		it.Event = new(NFTNewOwner)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2005,62 +2017,42 @@ func (it *NFTMintedBatchIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTMintedBatchIterator) Error() error {
+func (it *NFTNewOwnerIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *NFTMintedBatchIterator) Close() error {
+func (it *NFTNewOwnerIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// NFTMintedBatch represents a MintedBatch event raised by the NFT contract.
-type NFTMintedBatch struct {
-	Creator  common.Address
-	To       common.Address
-	TokenIds []*big.Int
-	TokenURI []string
-	Raw      types.Log // Blockchain specific contextual infos
+// NFTNewOwner represents a NewOwner event raised by the NFT contract.
+type NFTNewOwner struct {
+	PrevOwner common.Address
+	NewOwner  common.Address
+	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterMintedBatch is a free log retrieval operation binding the contract event 0x2a7af4d3b262c3e3d51c600cdf7a940c9aba3fedcc85148aeda266cc4c4a2f33.
+// FilterNewOwner is a free log retrieval operation binding the contract event 0x70aea8d848e8a90fb7661b227dc522eb6395c3dac71b63cb59edd5c9899b2364.
 //
-// Solidity: event MintedBatch(address indexed creator, address indexed to, uint256[] tokenIds, string[] tokenURI)
-func (_NFT *NFTFilterer) FilterMintedBatch(opts *bind.FilterOpts, creator []common.Address, to []common.Address) (*NFTMintedBatchIterator, error) {
+// Solidity: event NewOwner(address prevOwner, address newOwner)
+func (_NFT *NFTFilterer) FilterNewOwner(opts *bind.FilterOpts) (*NFTNewOwnerIterator, error) {
 
-	var creatorRule []interface{}
-	for _, creatorItem := range creator {
-		creatorRule = append(creatorRule, creatorItem)
-	}
-	var toRule []interface{}
-	for _, toItem := range to {
-		toRule = append(toRule, toItem)
-	}
-
-	logs, sub, err := _NFT.contract.FilterLogs(opts, "MintedBatch", creatorRule, toRule)
+	logs, sub, err := _NFT.contract.FilterLogs(opts, "NewOwner")
 	if err != nil {
 		return nil, err
 	}
-	return &NFTMintedBatchIterator{contract: _NFT.contract, event: "MintedBatch", logs: logs, sub: sub}, nil
+	return &NFTNewOwnerIterator{contract: _NFT.contract, event: "NewOwner", logs: logs, sub: sub}, nil
 }
 
-// WatchMintedBatch is a free log subscription operation binding the contract event 0x2a7af4d3b262c3e3d51c600cdf7a940c9aba3fedcc85148aeda266cc4c4a2f33.
+// WatchNewOwner is a free log subscription operation binding the contract event 0x70aea8d848e8a90fb7661b227dc522eb6395c3dac71b63cb59edd5c9899b2364.
 //
-// Solidity: event MintedBatch(address indexed creator, address indexed to, uint256[] tokenIds, string[] tokenURI)
-func (_NFT *NFTFilterer) WatchMintedBatch(opts *bind.WatchOpts, sink chan<- *NFTMintedBatch, creator []common.Address, to []common.Address) (event.Subscription, error) {
+// Solidity: event NewOwner(address prevOwner, address newOwner)
+func (_NFT *NFTFilterer) WatchNewOwner(opts *bind.WatchOpts, sink chan<- *NFTNewOwner) (event.Subscription, error) {
 
-	var creatorRule []interface{}
-	for _, creatorItem := range creator {
-		creatorRule = append(creatorRule, creatorItem)
-	}
-	var toRule []interface{}
-	for _, toItem := range to {
-		toRule = append(toRule, toItem)
-	}
-
-	logs, sub, err := _NFT.contract.WatchLogs(opts, "MintedBatch", creatorRule, toRule)
+	logs, sub, err := _NFT.contract.WatchLogs(opts, "NewOwner")
 	if err != nil {
 		return nil, err
 	}
@@ -2070,8 +2062,8 @@ func (_NFT *NFTFilterer) WatchMintedBatch(opts *bind.WatchOpts, sink chan<- *NFT
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(NFTMintedBatch)
-				if err := _NFT.contract.UnpackLog(event, "MintedBatch", log); err != nil {
+				event := new(NFTNewOwner)
+				if err := _NFT.contract.UnpackLog(event, "NewOwner", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2092,21 +2084,21 @@ func (_NFT *NFTFilterer) WatchMintedBatch(opts *bind.WatchOpts, sink chan<- *NFT
 	}), nil
 }
 
-// ParseMintedBatch is a log parse operation binding the contract event 0x2a7af4d3b262c3e3d51c600cdf7a940c9aba3fedcc85148aeda266cc4c4a2f33.
+// ParseNewOwner is a log parse operation binding the contract event 0x70aea8d848e8a90fb7661b227dc522eb6395c3dac71b63cb59edd5c9899b2364.
 //
-// Solidity: event MintedBatch(address indexed creator, address indexed to, uint256[] tokenIds, string[] tokenURI)
-func (_NFT *NFTFilterer) ParseMintedBatch(log types.Log) (*NFTMintedBatch, error) {
-	event := new(NFTMintedBatch)
-	if err := _NFT.contract.UnpackLog(event, "MintedBatch", log); err != nil {
+// Solidity: event NewOwner(address prevOwner, address newOwner)
+func (_NFT *NFTFilterer) ParseNewOwner(log types.Log) (*NFTNewOwner, error) {
+	event := new(NFTNewOwner)
+	if err := _NFT.contract.UnpackLog(event, "NewOwner", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// NFTPausedIterator is returned from FilterPaused and is used to iterate over the raw logs and unpacked data for Paused events raised by the NFT contract.
-type NFTPausedIterator struct {
-	Event *NFTPaused // Event containing the contract specifics and raw log
+// NFTNewSaleRecipientIterator is returned from FilterNewSaleRecipient and is used to iterate over the raw logs and unpacked data for NewSaleRecipient events raised by the NFT contract.
+type NFTNewSaleRecipientIterator struct {
+	Event *NFTNewSaleRecipient // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2120,7 +2112,7 @@ type NFTPausedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *NFTPausedIterator) Next() bool {
+func (it *NFTNewSaleRecipientIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2129,7 +2121,7 @@ func (it *NFTPausedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(NFTPaused)
+			it.Event = new(NFTNewSaleRecipient)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2144,7 +2136,7 @@ func (it *NFTPausedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(NFTPaused)
+		it.Event = new(NFTNewSaleRecipient)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2160,41 +2152,51 @@ func (it *NFTPausedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTPausedIterator) Error() error {
+func (it *NFTNewSaleRecipientIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *NFTPausedIterator) Close() error {
+func (it *NFTNewSaleRecipientIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// NFTPaused represents a Paused event raised by the NFT contract.
-type NFTPaused struct {
-	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
+// NFTNewSaleRecipient represents a NewSaleRecipient event raised by the NFT contract.
+type NFTNewSaleRecipient struct {
+	Recipient common.Address
+	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterPaused is a free log retrieval operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
+// FilterNewSaleRecipient is a free log retrieval operation binding the contract event 0x7469c47fe13b9fc961c218a4b283151f80fc15e3a95e1d1b95aeace021f3d0cc.
 //
-// Solidity: event Paused(address account)
-func (_NFT *NFTFilterer) FilterPaused(opts *bind.FilterOpts) (*NFTPausedIterator, error) {
+// Solidity: event NewSaleRecipient(address indexed recipient)
+func (_NFT *NFTFilterer) FilterNewSaleRecipient(opts *bind.FilterOpts, recipient []common.Address) (*NFTNewSaleRecipientIterator, error) {
 
-	logs, sub, err := _NFT.contract.FilterLogs(opts, "Paused")
+	var recipientRule []interface{}
+	for _, recipientItem := range recipient {
+		recipientRule = append(recipientRule, recipientItem)
+	}
+
+	logs, sub, err := _NFT.contract.FilterLogs(opts, "NewSaleRecipient", recipientRule)
 	if err != nil {
 		return nil, err
 	}
-	return &NFTPausedIterator{contract: _NFT.contract, event: "Paused", logs: logs, sub: sub}, nil
+	return &NFTNewSaleRecipientIterator{contract: _NFT.contract, event: "NewSaleRecipient", logs: logs, sub: sub}, nil
 }
 
-// WatchPaused is a free log subscription operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
+// WatchNewSaleRecipient is a free log subscription operation binding the contract event 0x7469c47fe13b9fc961c218a4b283151f80fc15e3a95e1d1b95aeace021f3d0cc.
 //
-// Solidity: event Paused(address account)
-func (_NFT *NFTFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *NFTPaused) (event.Subscription, error) {
+// Solidity: event NewSaleRecipient(address indexed recipient)
+func (_NFT *NFTFilterer) WatchNewSaleRecipient(opts *bind.WatchOpts, sink chan<- *NFTNewSaleRecipient, recipient []common.Address) (event.Subscription, error) {
 
-	logs, sub, err := _NFT.contract.WatchLogs(opts, "Paused")
+	var recipientRule []interface{}
+	for _, recipientItem := range recipient {
+		recipientRule = append(recipientRule, recipientItem)
+	}
+
+	logs, sub, err := _NFT.contract.WatchLogs(opts, "NewSaleRecipient", recipientRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2204,8 +2206,8 @@ func (_NFT *NFTFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *NFTPause
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(NFTPaused)
-				if err := _NFT.contract.UnpackLog(event, "Paused", log); err != nil {
+				event := new(NFTNewSaleRecipient)
+				if err := _NFT.contract.UnpackLog(event, "NewSaleRecipient", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2226,21 +2228,21 @@ func (_NFT *NFTFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *NFTPause
 	}), nil
 }
 
-// ParsePaused is a log parse operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
+// ParseNewSaleRecipient is a log parse operation binding the contract event 0x7469c47fe13b9fc961c218a4b283151f80fc15e3a95e1d1b95aeace021f3d0cc.
 //
-// Solidity: event Paused(address account)
-func (_NFT *NFTFilterer) ParsePaused(log types.Log) (*NFTPaused, error) {
-	event := new(NFTPaused)
-	if err := _NFT.contract.UnpackLog(event, "Paused", log); err != nil {
+// Solidity: event NewSaleRecipient(address indexed recipient)
+func (_NFT *NFTFilterer) ParseNewSaleRecipient(log types.Log) (*NFTNewSaleRecipient, error) {
+	event := new(NFTNewSaleRecipient)
+	if err := _NFT.contract.UnpackLog(event, "NewSaleRecipient", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// NFTRestrictedTransferUpdatedIterator is returned from FilterRestrictedTransferUpdated and is used to iterate over the raw logs and unpacked data for RestrictedTransferUpdated events raised by the NFT contract.
-type NFTRestrictedTransferUpdatedIterator struct {
-	Event *NFTRestrictedTransferUpdated // Event containing the contract specifics and raw log
+// NFTPrimarySalesFeeUpdatesIterator is returned from FilterPrimarySalesFeeUpdates and is used to iterate over the raw logs and unpacked data for PrimarySalesFeeUpdates events raised by the NFT contract.
+type NFTPrimarySalesFeeUpdatesIterator struct {
+	Event *NFTPrimarySalesFeeUpdates // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2254,7 +2256,7 @@ type NFTRestrictedTransferUpdatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *NFTRestrictedTransferUpdatedIterator) Next() bool {
+func (it *NFTPrimarySalesFeeUpdatesIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2263,7 +2265,7 @@ func (it *NFTRestrictedTransferUpdatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(NFTRestrictedTransferUpdated)
+			it.Event = new(NFTPrimarySalesFeeUpdates)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2278,7 +2280,7 @@ func (it *NFTRestrictedTransferUpdatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(NFTRestrictedTransferUpdated)
+		it.Event = new(NFTPrimarySalesFeeUpdates)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2294,41 +2296,41 @@ func (it *NFTRestrictedTransferUpdatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTRestrictedTransferUpdatedIterator) Error() error {
+func (it *NFTPrimarySalesFeeUpdatesIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *NFTRestrictedTransferUpdatedIterator) Close() error {
+func (it *NFTPrimarySalesFeeUpdatesIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// NFTRestrictedTransferUpdated represents a RestrictedTransferUpdated event raised by the NFT contract.
-type NFTRestrictedTransferUpdated struct {
-	Transferable bool
-	Raw          types.Log // Blockchain specific contextual infos
+// NFTPrimarySalesFeeUpdates represents a PrimarySalesFeeUpdates event raised by the NFT contract.
+type NFTPrimarySalesFeeUpdates struct {
+	NewFeeBps *big.Int
+	Raw       types.Log // Blockchain specific contextual infos
 }
 
-// FilterRestrictedTransferUpdated is a free log retrieval operation binding the contract event 0xfb4ba02cee22486df888d7ffb97c6100ec3193781e025cb9a4bc6fc358d626cc.
+// FilterPrimarySalesFeeUpdates is a free log retrieval operation binding the contract event 0x2440645f96173394eb0d508ef9d0c95e3ddc41c6a10ef86e547fc738df9ecce2.
 //
-// Solidity: event RestrictedTransferUpdated(bool transferable)
-func (_NFT *NFTFilterer) FilterRestrictedTransferUpdated(opts *bind.FilterOpts) (*NFTRestrictedTransferUpdatedIterator, error) {
+// Solidity: event PrimarySalesFeeUpdates(uint256 newFeeBps)
+func (_NFT *NFTFilterer) FilterPrimarySalesFeeUpdates(opts *bind.FilterOpts) (*NFTPrimarySalesFeeUpdatesIterator, error) {
 
-	logs, sub, err := _NFT.contract.FilterLogs(opts, "RestrictedTransferUpdated")
+	logs, sub, err := _NFT.contract.FilterLogs(opts, "PrimarySalesFeeUpdates")
 	if err != nil {
 		return nil, err
 	}
-	return &NFTRestrictedTransferUpdatedIterator{contract: _NFT.contract, event: "RestrictedTransferUpdated", logs: logs, sub: sub}, nil
+	return &NFTPrimarySalesFeeUpdatesIterator{contract: _NFT.contract, event: "PrimarySalesFeeUpdates", logs: logs, sub: sub}, nil
 }
 
-// WatchRestrictedTransferUpdated is a free log subscription operation binding the contract event 0xfb4ba02cee22486df888d7ffb97c6100ec3193781e025cb9a4bc6fc358d626cc.
+// WatchPrimarySalesFeeUpdates is a free log subscription operation binding the contract event 0x2440645f96173394eb0d508ef9d0c95e3ddc41c6a10ef86e547fc738df9ecce2.
 //
-// Solidity: event RestrictedTransferUpdated(bool transferable)
-func (_NFT *NFTFilterer) WatchRestrictedTransferUpdated(opts *bind.WatchOpts, sink chan<- *NFTRestrictedTransferUpdated) (event.Subscription, error) {
+// Solidity: event PrimarySalesFeeUpdates(uint256 newFeeBps)
+func (_NFT *NFTFilterer) WatchPrimarySalesFeeUpdates(opts *bind.WatchOpts, sink chan<- *NFTPrimarySalesFeeUpdates) (event.Subscription, error) {
 
-	logs, sub, err := _NFT.contract.WatchLogs(opts, "RestrictedTransferUpdated")
+	logs, sub, err := _NFT.contract.WatchLogs(opts, "PrimarySalesFeeUpdates")
 	if err != nil {
 		return nil, err
 	}
@@ -2338,8 +2340,8 @@ func (_NFT *NFTFilterer) WatchRestrictedTransferUpdated(opts *bind.WatchOpts, si
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(NFTRestrictedTransferUpdated)
-				if err := _NFT.contract.UnpackLog(event, "RestrictedTransferUpdated", log); err != nil {
+				event := new(NFTPrimarySalesFeeUpdates)
+				if err := _NFT.contract.UnpackLog(event, "PrimarySalesFeeUpdates", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2360,12 +2362,12 @@ func (_NFT *NFTFilterer) WatchRestrictedTransferUpdated(opts *bind.WatchOpts, si
 	}), nil
 }
 
-// ParseRestrictedTransferUpdated is a log parse operation binding the contract event 0xfb4ba02cee22486df888d7ffb97c6100ec3193781e025cb9a4bc6fc358d626cc.
+// ParsePrimarySalesFeeUpdates is a log parse operation binding the contract event 0x2440645f96173394eb0d508ef9d0c95e3ddc41c6a10ef86e547fc738df9ecce2.
 //
-// Solidity: event RestrictedTransferUpdated(bool transferable)
-func (_NFT *NFTFilterer) ParseRestrictedTransferUpdated(log types.Log) (*NFTRestrictedTransferUpdated, error) {
-	event := new(NFTRestrictedTransferUpdated)
-	if err := _NFT.contract.UnpackLog(event, "RestrictedTransferUpdated", log); err != nil {
+// Solidity: event PrimarySalesFeeUpdates(uint256 newFeeBps)
+func (_NFT *NFTFilterer) ParsePrimarySalesFeeUpdates(log types.Log) (*NFTPrimarySalesFeeUpdates, error) {
+	event := new(NFTPrimarySalesFeeUpdates)
+	if err := _NFT.contract.UnpackLog(event, "PrimarySalesFeeUpdates", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2927,13 +2929,13 @@ func (it *NFTRoyaltyUpdatedIterator) Close() error {
 
 // NFTRoyaltyUpdated represents a RoyaltyUpdated event raised by the NFT contract.
 type NFTRoyaltyUpdated struct {
-	RoyaltyBps *big.Int
-	Raw        types.Log // Blockchain specific contextual infos
+	NewRoyaltyBps *big.Int
+	Raw           types.Log // Blockchain specific contextual infos
 }
 
 // FilterRoyaltyUpdated is a free log retrieval operation binding the contract event 0x244ea8d7627f5a08f4299862bd5a45752842c183aee5b0fb0d1e4887bfa605b3.
 //
-// Solidity: event RoyaltyUpdated(uint256 royaltyBps)
+// Solidity: event RoyaltyUpdated(uint256 newRoyaltyBps)
 func (_NFT *NFTFilterer) FilterRoyaltyUpdated(opts *bind.FilterOpts) (*NFTRoyaltyUpdatedIterator, error) {
 
 	logs, sub, err := _NFT.contract.FilterLogs(opts, "RoyaltyUpdated")
@@ -2945,7 +2947,7 @@ func (_NFT *NFTFilterer) FilterRoyaltyUpdated(opts *bind.FilterOpts) (*NFTRoyalt
 
 // WatchRoyaltyUpdated is a free log subscription operation binding the contract event 0x244ea8d7627f5a08f4299862bd5a45752842c183aee5b0fb0d1e4887bfa605b3.
 //
-// Solidity: event RoyaltyUpdated(uint256 royaltyBps)
+// Solidity: event RoyaltyUpdated(uint256 newRoyaltyBps)
 func (_NFT *NFTFilterer) WatchRoyaltyUpdated(opts *bind.WatchOpts, sink chan<- *NFTRoyaltyUpdated) (event.Subscription, error) {
 
 	logs, sub, err := _NFT.contract.WatchLogs(opts, "RoyaltyUpdated")
@@ -2982,10 +2984,164 @@ func (_NFT *NFTFilterer) WatchRoyaltyUpdated(opts *bind.WatchOpts, sink chan<- *
 
 // ParseRoyaltyUpdated is a log parse operation binding the contract event 0x244ea8d7627f5a08f4299862bd5a45752842c183aee5b0fb0d1e4887bfa605b3.
 //
-// Solidity: event RoyaltyUpdated(uint256 royaltyBps)
+// Solidity: event RoyaltyUpdated(uint256 newRoyaltyBps)
 func (_NFT *NFTFilterer) ParseRoyaltyUpdated(log types.Log) (*NFTRoyaltyUpdated, error) {
 	event := new(NFTRoyaltyUpdated)
 	if err := _NFT.contract.UnpackLog(event, "RoyaltyUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// NFTTokenMintedIterator is returned from FilterTokenMinted and is used to iterate over the raw logs and unpacked data for TokenMinted events raised by the NFT contract.
+type NFTTokenMintedIterator struct {
+	Event *NFTTokenMinted // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *NFTTokenMintedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(NFTTokenMinted)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(NFTTokenMinted)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *NFTTokenMintedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *NFTTokenMintedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// NFTTokenMinted represents a TokenMinted event raised by the NFT contract.
+type NFTTokenMinted struct {
+	MintedTo      common.Address
+	TokenIdMinted *big.Int
+	Uri           string
+	Raw           types.Log // Blockchain specific contextual infos
+}
+
+// FilterTokenMinted is a free log retrieval operation binding the contract event 0xdf92894dc4675a7333caa5903b69cf5d8e8ec0d3f361c88207b6688e525703bb.
+//
+// Solidity: event TokenMinted(address indexed mintedTo, uint256 indexed tokenIdMinted, string uri)
+func (_NFT *NFTFilterer) FilterTokenMinted(opts *bind.FilterOpts, mintedTo []common.Address, tokenIdMinted []*big.Int) (*NFTTokenMintedIterator, error) {
+
+	var mintedToRule []interface{}
+	for _, mintedToItem := range mintedTo {
+		mintedToRule = append(mintedToRule, mintedToItem)
+	}
+	var tokenIdMintedRule []interface{}
+	for _, tokenIdMintedItem := range tokenIdMinted {
+		tokenIdMintedRule = append(tokenIdMintedRule, tokenIdMintedItem)
+	}
+
+	logs, sub, err := _NFT.contract.FilterLogs(opts, "TokenMinted", mintedToRule, tokenIdMintedRule)
+	if err != nil {
+		return nil, err
+	}
+	return &NFTTokenMintedIterator{contract: _NFT.contract, event: "TokenMinted", logs: logs, sub: sub}, nil
+}
+
+// WatchTokenMinted is a free log subscription operation binding the contract event 0xdf92894dc4675a7333caa5903b69cf5d8e8ec0d3f361c88207b6688e525703bb.
+//
+// Solidity: event TokenMinted(address indexed mintedTo, uint256 indexed tokenIdMinted, string uri)
+func (_NFT *NFTFilterer) WatchTokenMinted(opts *bind.WatchOpts, sink chan<- *NFTTokenMinted, mintedTo []common.Address, tokenIdMinted []*big.Int) (event.Subscription, error) {
+
+	var mintedToRule []interface{}
+	for _, mintedToItem := range mintedTo {
+		mintedToRule = append(mintedToRule, mintedToItem)
+	}
+	var tokenIdMintedRule []interface{}
+	for _, tokenIdMintedItem := range tokenIdMinted {
+		tokenIdMintedRule = append(tokenIdMintedRule, tokenIdMintedItem)
+	}
+
+	logs, sub, err := _NFT.contract.WatchLogs(opts, "TokenMinted", mintedToRule, tokenIdMintedRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(NFTTokenMinted)
+				if err := _NFT.contract.UnpackLog(event, "TokenMinted", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTokenMinted is a log parse operation binding the contract event 0xdf92894dc4675a7333caa5903b69cf5d8e8ec0d3f361c88207b6688e525703bb.
+//
+// Solidity: event TokenMinted(address indexed mintedTo, uint256 indexed tokenIdMinted, string uri)
+func (_NFT *NFTFilterer) ParseTokenMinted(log types.Log) (*NFTTokenMinted, error) {
+	event := new(NFTTokenMinted)
+	if err := _NFT.contract.UnpackLog(event, "TokenMinted", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -3154,9 +3310,9 @@ func (_NFT *NFTFilterer) ParseTransfer(log types.Log) (*NFTTransfer, error) {
 	return event, nil
 }
 
-// NFTUnpausedIterator is returned from FilterUnpaused and is used to iterate over the raw logs and unpacked data for Unpaused events raised by the NFT contract.
-type NFTUnpausedIterator struct {
-	Event *NFTUnpaused // Event containing the contract specifics and raw log
+// NFTTransfersRestrictedIterator is returned from FilterTransfersRestricted and is used to iterate over the raw logs and unpacked data for TransfersRestricted events raised by the NFT contract.
+type NFTTransfersRestrictedIterator struct {
+	Event *NFTTransfersRestricted // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -3170,7 +3326,7 @@ type NFTUnpausedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *NFTUnpausedIterator) Next() bool {
+func (it *NFTTransfersRestrictedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -3179,7 +3335,7 @@ func (it *NFTUnpausedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(NFTUnpaused)
+			it.Event = new(NFTTransfersRestricted)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -3194,7 +3350,7 @@ func (it *NFTUnpausedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(NFTUnpaused)
+		it.Event = new(NFTTransfersRestricted)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -3210,41 +3366,41 @@ func (it *NFTUnpausedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *NFTUnpausedIterator) Error() error {
+func (it *NFTTransfersRestrictedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *NFTUnpausedIterator) Close() error {
+func (it *NFTTransfersRestrictedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// NFTUnpaused represents a Unpaused event raised by the NFT contract.
-type NFTUnpaused struct {
-	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
+// NFTTransfersRestricted represents a TransfersRestricted event raised by the NFT contract.
+type NFTTransfersRestricted struct {
+	Restricted bool
+	Raw        types.Log // Blockchain specific contextual infos
 }
 
-// FilterUnpaused is a free log retrieval operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+// FilterTransfersRestricted is a free log retrieval operation binding the contract event 0x2ebd4f59eaa9d49c5dcd06a0afa8b39bf09928fbd60111acee2f986fa485d098.
 //
-// Solidity: event Unpaused(address account)
-func (_NFT *NFTFilterer) FilterUnpaused(opts *bind.FilterOpts) (*NFTUnpausedIterator, error) {
+// Solidity: event TransfersRestricted(bool restricted)
+func (_NFT *NFTFilterer) FilterTransfersRestricted(opts *bind.FilterOpts) (*NFTTransfersRestrictedIterator, error) {
 
-	logs, sub, err := _NFT.contract.FilterLogs(opts, "Unpaused")
+	logs, sub, err := _NFT.contract.FilterLogs(opts, "TransfersRestricted")
 	if err != nil {
 		return nil, err
 	}
-	return &NFTUnpausedIterator{contract: _NFT.contract, event: "Unpaused", logs: logs, sub: sub}, nil
+	return &NFTTransfersRestrictedIterator{contract: _NFT.contract, event: "TransfersRestricted", logs: logs, sub: sub}, nil
 }
 
-// WatchUnpaused is a free log subscription operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+// WatchTransfersRestricted is a free log subscription operation binding the contract event 0x2ebd4f59eaa9d49c5dcd06a0afa8b39bf09928fbd60111acee2f986fa485d098.
 //
-// Solidity: event Unpaused(address account)
-func (_NFT *NFTFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *NFTUnpaused) (event.Subscription, error) {
+// Solidity: event TransfersRestricted(bool restricted)
+func (_NFT *NFTFilterer) WatchTransfersRestricted(opts *bind.WatchOpts, sink chan<- *NFTTransfersRestricted) (event.Subscription, error) {
 
-	logs, sub, err := _NFT.contract.WatchLogs(opts, "Unpaused")
+	logs, sub, err := _NFT.contract.WatchLogs(opts, "TransfersRestricted")
 	if err != nil {
 		return nil, err
 	}
@@ -3254,8 +3410,8 @@ func (_NFT *NFTFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *NFTUnp
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(NFTUnpaused)
-				if err := _NFT.contract.UnpackLog(event, "Unpaused", log); err != nil {
+				event := new(NFTTransfersRestricted)
+				if err := _NFT.contract.UnpackLog(event, "TransfersRestricted", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -3276,12 +3432,12 @@ func (_NFT *NFTFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *NFTUnp
 	}), nil
 }
 
-// ParseUnpaused is a log parse operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
+// ParseTransfersRestricted is a log parse operation binding the contract event 0x2ebd4f59eaa9d49c5dcd06a0afa8b39bf09928fbd60111acee2f986fa485d098.
 //
-// Solidity: event Unpaused(address account)
-func (_NFT *NFTFilterer) ParseUnpaused(log types.Log) (*NFTUnpaused, error) {
-	event := new(NFTUnpaused)
-	if err := _NFT.contract.UnpackLog(event, "Unpaused", log); err != nil {
+// Solidity: event TransfersRestricted(bool restricted)
+func (_NFT *NFTFilterer) ParseTransfersRestricted(log types.Log) (*NFTTransfersRestricted, error) {
+	event := new(NFTTransfersRestricted)
+	if err := _NFT.contract.UnpackLog(event, "TransfersRestricted", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

@@ -198,11 +198,18 @@ func (sdk *Sdk) getTransactOpts(send bool) *bind.TransactOpts {
 		feeCap = big.NewInt(0).Add(baseFee, tipCap)
 	}
 
+	if sdk.opt.MaxGasPriceInGwei != nil {
+		return &bind.TransactOpts{
+			NoSend:    !send,
+			From:      sdk.getSignerAddress(),
+			Signer:    sdk.getSigner(),
+			GasPrice:  sdk.opt.MaxGasPriceInGwei,
+		}
+	}
 	return &bind.TransactOpts{
 		NoSend:    !send,
 		From:      sdk.getSignerAddress(),
 		Signer:    sdk.getSigner(),
-		GasPrice:  sdk.opt.MaxGasPriceInGwei,
 		GasTipCap: tipCap,
 		GasFeeCap: feeCap,
 	}
