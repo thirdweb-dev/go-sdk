@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/ethereum/go-ethereum/core/types"
+	"golang.org/x/sync/errgroup"
 	"log"
 	"math/big"
 	"sync"
@@ -44,10 +45,76 @@ type NftModule struct {
 	Options *SdkOptions
 	module  *abi.NFT
 
+	oldModule  *abi.OldNFT
+
+	shouldCheckVersion bool
+	isOldModule bool
+
 	main ISdk
 }
 
+func (sdk *NftModule) v1MintBatch(meta []MintNftMetadata) ([] NftMetadata, error) {
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return nil, &NoSignerError{typeName: "nft"}
+	}
+
+	storage, err := sdk.main.GetStorage()
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]interface{}, len(meta))
+	for i, m := range meta {
+		out[i] = m
+	}
+	uris, err := storage.UploadBatch(out, sdk.Address, sdk.main.getSignerAddress().String())
+	tx, err := sdk.oldModule.MintNFTBatch(sdk.main.getTransactOpts(true), sdk.main.getSignerAddress(), uris)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
+		return nil, err
+	}
+
+	receipt, err := sdk.Client.TransactionReceipt(context.Background(), tx.Hash())
+	if err != nil {
+		return nil, err
+	}
+
+	batch, err := sdk.getNewMintedBatch(receipt.Logs)
+	if err != nil {
+		return nil, err
+	}
+
+	wg := new(errgroup.Group)
+	results := make([]NftMetadata, len(batch.TokenIds))
+	for i, id := range batch.TokenIds {
+		func(index int, id *big.Int) {
+			wg.Go(func() error {
+				uri, err := sdk.Get(id)
+				if err != nil {
+					return err
+				} else {
+					results[index] = uri
+					return nil
+				}
+			})
+		}(i, id)
+	}
+
+	if err := wg.Wait(); err != nil {
+		log.Println("Failed to get the newly minted batch")
+		return nil, err
+	}
+	return results, nil
+}
+
 func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
+	if sdk.isV1() {
+		return sdk.v1MintBatch(meta)
+	}
+
 	// TODO: Update this method to perform a multi-call to mintTo
 	panic("This method is currently a WIP")
 }
@@ -215,12 +282,38 @@ func newNftModule(client *ethclient.Client, address string, main ISdk) (Nft, err
 		return nil, err
 	}
 
+	oldModule, err := abi.NewOldNFT(common.HexToAddress(address), client)
+	if err != nil {
+		// TODO: return better error
+		return nil, err
+	}
+
 	return &NftModule{
 		Client:  client,
 		Address: address,
 		module:  module,
 		main: main,
+		oldModule: oldModule,
+		isOldModule: false,
+		shouldCheckVersion: true,
 	}, nil
+}
+
+func (sdk *NftModule) isV1() (result bool) {
+	if !sdk.shouldCheckVersion {
+		return sdk.isOldModule
+	}
+
+	_, err := sdk.module.NextTokenIdToMint(&bind.CallOpts{})
+	if err != nil {
+		sdk.isOldModule = true
+		result = true
+	} else {
+		result = false
+	}
+
+	sdk.shouldCheckVersion = false
+	return result
 }
 
 func (sdk *NftModule) Get(tokenId *big.Int) (NftMetadata, error) {
@@ -330,9 +423,25 @@ func (sdk *NftModule) getNewMintedNft(logs []*types.Log) (*big.Int, error) {
 	return tokenId, nil
 }
 
-func (sdk *NftModule) getNewMintedBatch(logs []*types.Log) (interface{}, error) {
-	// TODO: Update this method to perform a multi-call to mintTo
-	panic("This method is currently a WIP")
+func (sdk *NftModule) getNewMintedBatch(logs []*types.Log) (*abi.OldNFTMintedBatch, error) {
+	var batch *abi.OldNFTMintedBatch
+	for _, l := range logs {
+		iterator, err := sdk.oldModule.ParseMintedBatch(*l)
+		if err != nil {
+			continue
+		}
+
+		if iterator.TokenIds != nil {
+			batch = iterator
+			break
+		}
+	}
+
+	if batch == nil {
+		return nil, errors.New("Could not find Minted batch event for transaction")
+	}
+
+	return batch, nil
 }
 
 func (sdk *NftModule) getModule() *abi.NFT {
