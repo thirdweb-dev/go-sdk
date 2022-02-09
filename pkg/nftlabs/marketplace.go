@@ -91,14 +91,14 @@ func (sdk *MarketplaceModule) GetAll(filter ListingFilter) ([]Listing, error) {
 		listings = append(listings, listing)
 	}
 
-	if hasFilter {
-		for _, listing := range listings {
-			if listing.Quantity.Cmp(zero) == 0 {
-				continue
-			}
-			if !sdk.isStillValidDirectListing(listing) {
-				continue
-			}
+	for _, listing := range listings {
+		if listing.Quantity.Cmp(zero) == 0 {
+			continue
+		}
+		if !sdk.isStillValidDirectListing(listing) {
+			continue
+		}
+		if hasFilter {
 			if filter.TokenContract != "" && common.HexToAddress(filter.TokenContract) != listing.AssetContract {
 				continue
 			}
@@ -108,8 +108,8 @@ func (sdk *MarketplaceModule) GetAll(filter ListingFilter) ([]Listing, error) {
 			if filter.Seller != "" && common.HexToAddress(filter.Seller) != listing.TokenOwner {
 				continue
 			}
-			filteredListings = append(filteredListings, listing)
 		}
+		filteredListings = append(filteredListings, listing)
 	}
 
 	for _, listing := range filteredListings {

@@ -83,7 +83,7 @@ func (sdk *Sdk) GetMarketModule(address string) (Market, error) {
 
 
 func (sdk *Sdk) GetMarketplaceModule(address string) (Marketplace, error) {
-	module, err := newMarketModule(sdk.client, address, sdk)
+	module, err := newMarketplaceModule(sdk.client, address, sdk)
 	if err != nil {
 		return nil, err
 	}
