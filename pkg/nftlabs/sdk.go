@@ -14,6 +14,7 @@ import (
 type ISdk interface {
 	GetNftModule(address string) (Nft, error)
 	GetMarketModule(address string) (Market, error)
+	GetMarketplaceModule(address string) (Marketplace, error)
 	GetCurrencyModule(address string) (Currency, error)
 	GetPackModule(address string) (Pack, error)
 	GetNftCollectionModule(address string) (NftCollection, error)
@@ -37,12 +38,6 @@ type Sdk struct {
 	privateKey    *ecdsa.PrivateKey
 	rawPrivateKey string
 	signerAddress common.Address
-
-	nftModule           Nft
-	marketModule        Market
-	currencyModule      Currency
-	packModule          Pack
-	nftCollectionModule NftCollection
 
 	gateway Storage
 }
@@ -69,58 +64,48 @@ func NewSdk(client *ethclient.Client, opt *SdkOptions) (*Sdk, error) {
 }
 
 func (sdk *Sdk) GetCurrencyModule(address string) (Currency, error) {
-	if sdk.currencyModule != nil {
-		return sdk.currencyModule, nil
-	}
-
 	module, err := newCurrencyModule(sdk.client, address, sdk)
 	if err != nil {
 		return nil, err
 	}
 
-	sdk.currencyModule = module
 	return module, nil
 }
 
 func (sdk *Sdk) GetMarketModule(address string) (Market, error) {
-	if sdk.marketModule != nil {
-		return sdk.marketModule, nil
-	}
-
 	module, err := newMarketModule(sdk.client, address, sdk)
 	if err != nil {
 		return nil, err
 	}
 
-	sdk.marketModule = module
+	return module, nil
+}
+
+
+func (sdk *Sdk) GetMarketplaceModule(address string) (Marketplace, error) {
+	module, err := newMarketModule(sdk.client, address, sdk)
+	if err != nil {
+		return nil, err
+	}
+
 	return module, nil
 }
 
 func (sdk *Sdk) GetNftModule(address string) (Nft, error) {
-	if sdk.nftModule != nil {
-		return sdk.nftModule, nil
-	}
-
 	module, err := newNftModule(sdk.client, address, sdk)
 	if err != nil {
 		return nil, err
 	}
 
-	sdk.nftModule = module
 	return module, nil
 }
 
 func (sdk *Sdk) GetPackModule(address string) (Pack, error) {
-	if sdk.packModule != nil {
-		return sdk.packModule, nil
-	}
-
 	module, err := newPackModule(sdk.client, address, sdk)
 	if err != nil {
 		return nil, err
 	}
 
-	sdk.packModule = module
 	return module, nil
 }
 
@@ -136,16 +121,11 @@ func (sdk *Sdk) GetStorage() (Storage, error) {
 }
 
 func (sdk *Sdk) GetNftCollectionModule(address string) (NftCollection, error) {
-	if sdk.nftCollectionModule != nil {
-		return sdk.nftCollectionModule, nil
-	}
-
 	module, err := newNftCollectionModule(sdk.client, address, sdk)
 	if err != nil {
 		return nil, err
 	}
 
-	sdk.nftCollectionModule = module
 	return module, nil
 }
 
