@@ -28,6 +28,7 @@ type Nft interface {
 	SetApproval(operator string, approved bool) error
 	Mint(metadata MintNftMetadata) (NftMetadata, error)
 	MintBatch(meta []MintNftMetadata) ([]NftMetadata, error)
+	MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetadata, error)
 	Burn(tokenId *big.Int) error
 	TransferFrom(from string, to string, tokenId *big.Int) error
 	SetRoyaltyBps(amount *big.Int) error
@@ -115,9 +116,91 @@ func (sdk *NftModule) MintBatch(meta []MintNftMetadata) ([]NftMetadata, error) {
 		return sdk.v1MintBatch(meta)
 	}
 
-	// TODO: Update this method to perform a multi-call to mintTo
-	panic("This method is currently a WIP")
+	return sdk.MintBatchTo(sdk.main.getSignerAddress().String(), meta)
 }
+
+func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetadata, error) {
+	if sdk.isV1() {
+		return sdk.v1MintBatch(meta)
+	}
+
+	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
+		return nil, &NoSignerError{typeName: "nft"}
+	}
+
+	storage, err := sdk.main.GetStorage()
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]interface{}, len(meta))
+	for i, m := range meta {
+		out[i] = m
+	}
+
+	data := make([][]byte, 0)
+	uris, err := storage.UploadBatch(out, sdk.Address, sdk.main.getSignerAddress().String())
+	if err != nil {
+		return nil, err
+	}
+
+	for _, uri := range uris {
+		tx, err := sdk.module.NFTTransactor.MintTo(sdk.main.getTransactOpts(false), common.HexToAddress(to), uri)
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, tx.Data())
+	}
+
+	if tx, err := sdk.module.Multicall(sdk.main.getTransactOpts(true), data); err != nil {
+		return nil, err
+	} else {
+		if err := waitForTx(sdk.Client, tx.Hash(), txWaitTimeBetweenAttempts, txMaxAttempts); err != nil {
+			// TODO: return clearer error
+			return nil, err
+		}
+
+		receipt, err := sdk.Client.TransactionReceipt(context.Background(), tx.Hash())
+		if err != nil {
+			log.Printf("Failed to lookup transaction receipt with hash %v\n", tx.Hash().String())
+			return nil, err
+		}
+
+		tokenIds := make([]*big.Int, 0)
+		
+		for _, log := range receipt.Logs {
+			if m, err := sdk.module.ParseTokenMinted(*log); err != nil {
+				continue
+			} else {
+				tokenIds = append(tokenIds, m.TokenIdMinted)
+			}
+		}
+
+	wg := new(errgroup.Group)
+	results := make([]NftMetadata, len(tokenIds))
+	for i, id := range tokenIds {
+		func(index int, id *big.Int) {
+			wg.Go(func() error {
+				uri, err := sdk.Get(id)
+				if err != nil {
+					return err
+				} else {
+					results[index] = uri
+					return nil
+				}
+			})
+		}(i, id)
+	}
+
+	if err := wg.Wait(); err != nil {
+		log.Println("Failed to get the newly minted batch")
+		return nil, err
+	}
+	
+		return results, nil
+	}
+}
+
 
 func (sdk *NftModule) Burn(tokenId *big.Int) error {
 	if sdk.main.getSignerAddress() == common.HexToAddress("0") {
