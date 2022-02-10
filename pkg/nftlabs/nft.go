@@ -167,7 +167,7 @@ func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetad
 		}
 
 		tokenIds := make([]*big.Int, 0)
-		
+
 		for _, log := range receipt.Logs {
 			if m, err := sdk.module.ParseTokenMinted(*log); err != nil {
 				continue
@@ -176,27 +176,27 @@ func (sdk *NftModule) MintBatchTo(to string, meta []MintNftMetadata) ([]NftMetad
 			}
 		}
 
-	wg := new(errgroup.Group)
-	results := make([]NftMetadata, len(tokenIds))
-	for i, id := range tokenIds {
-		func(index int, id *big.Int) {
-			wg.Go(func() error {
-				uri, err := sdk.Get(id)
-				if err != nil {
-					return err
-				} else {
-					results[index] = uri
-					return nil
-				}
-			})
-		}(i, id)
-	}
+		wg := new(errgroup.Group)
+		results := make([]NftMetadata, len(tokenIds))
+		for i, id := range tokenIds {
+			func(index int, id *big.Int) {
+				wg.Go(func() error {
+					uri, err := sdk.Get(id)
+					if err != nil {
+						return err
+					} else {
+						results[index] = uri
+						return nil
+					}
+				})
+			}(i, id)
+		}
 
-	if err := wg.Wait(); err != nil {
-		log.Println("Failed to get the newly minted batch")
-		return nil, err
-	}
-	
+		if err := wg.Wait(); err != nil {
+			log.Println("Failed to get the newly minted batch")
+			return nil, err
+		}
+
 		return results, nil
 	}
 }
