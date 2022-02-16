@@ -14,6 +14,8 @@ abigen --alias contractURI=internalContractURI --pkg abi --abi ../nftlabs-protoc
 
 abigen --alias contractURI=internalContractURI --pkg abi --abi ../nftlabs-protocols/abi/Market.json  --out internal/abi/market_abi.go --type Market 
 
+abigen --alias contractURI=internalContractURI --pkg abi --abi ../nftlabs-protocols/abi/Marketplace.json  --out internal/abi/marketplace_abi.go --type Marketplace
+
 abigen --alias contractURI=internalContractURI --pkg abi --abi ../nftlabs-protocols/abi/SignatureMint721.json --out internal/abi/nft_abi.go --type NFT
 
 abigen --alias contractURI=internalContractURI --pkg abi --abi ../nftlabs-protocols/abi/NFTCollection.json --out internal/abi/nft_collection_abi.go --type NFTCollection
