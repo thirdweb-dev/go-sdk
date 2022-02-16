@@ -1,11 +1,11 @@
-# NFTLabs Go SDK
+# Thirdweb Go SDK
 
-[![Go Reference](https://pkg.go.dev/badge/golang.org/x/example.svg)](https://pkg.go.dev/github.com/nftlabs/nftlabs-sdk-go/pkg/nftlabs)
+[![Go Reference](https://pkg.go.dev/badge/golang.org/x/example.svg)](https://pkg.go.dev/github.com/thirdweb-dev/go-sdk/pkg/nftlabs)
 
-This repository allows you to interact with NFTLabs Ethereum protocols.
+This repository allows you to interact with thirdweb Ethereum protocols.
 
-The Go SDK allows you to query and transact with any NFTLabs contract
-deployed through the [NFTLabs Console](https://console.nftlabs.co)
+The Go SDK allows you to query and transact with any thirdweb contract
+deployed through the [thirdweb Dashboard](https://thirdweb.com)
 
 ## Project Structure
 
@@ -14,7 +14,7 @@ The SDK is up of modules:
 - **NFT**: Mint and manage NFTs that you can list directly to a marketplace,
 or transfer out to a user/managing wallet
 - **Currency**: Create your own ERC20 coin that you can
-use throughout the NFTLabs protocols equip with all the standard methods (mint, transfer, burn, etc)
+use throughout the protocols equip with all the standard methods (mint, transfer, burn, etc)
 - **Marketplace**: List NFTs, Collections, or even Packs of any set of digital assets
 for sale with automated royalty collection
 - **Collection**: A collection is a form of ERC1155 token that can contain a group
@@ -23,7 +23,7 @@ transfer out to another wallet)
 - **Pack**: Packs are a special form of ERC1155 asset that can contain many
 digital assets with a fixed opening window
 
-You can use the NFTLabs SDK to interact with all these modules in a straightforward
+You can use the thirdweb SDK to interact with all these modules in a straightforward
 and easy to use interface.
 
 Interacting with the modules is easy:
@@ -32,7 +32,7 @@ package examples
 
 import (
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/nftlabs/nftlabs-sdk-go/pkg/nftlabs"
+	"github.com/thirdweb/go-sdk/pkg/nftlabs"
 	"log"
 	"math/big"
 )
@@ -62,7 +62,7 @@ func main() {
 
 ## Examples
 
-Checkout the sdk usage examples [here](https://github.com/nftlabs/nftlabs-sdk-go/tree/master/examples) and our CLI example [here](https://github.com/nftlabs/nftlabs-sdk-go/tree/master/cmd/nftlabs)
+Checkout the sdk usage examples [here](https://github.com/thirdweb-dev/go-sdk/tree/master/examples) and our CLI example [here](https://github.com/thirdweb-dev/go-sdk/tree/master/cmd/nftlabs)
 
 ## Getting the CLI
 
@@ -71,7 +71,7 @@ The easiest way to play with the SDK is through the CLI
 You can pull the CLI like this:
 
 ```bash
-$ go install github.com/nftlabs/nftlabs-sdk-go/cmd/nftlabs 
+$ go install github.com/thirdweb-dev/go-sdk/cmd/nftlabs
 $ nftlabs
  CLI for the nftlabs-protocols go SDK
 
@@ -107,7 +107,7 @@ $ nftlabs nft -a $NFT_ADDRESS getAll
 ### Minting a currency (uses gas)
 
 Deploy a Currency through
-the [NFTLabs console dashboard](https://console.nftlabs.co) in order to
+the [thirdweb dashboard](https://thirdweb.com) in order to
 be able to mint your tokens. When you have a
 currency address, pass it to the cli with the `-a` (shorthand for `--address`)
 
