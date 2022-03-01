@@ -32,7 +32,7 @@ package examples
 
 import (
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb/go-sdk/pkg/nftlabs"
+	"github.com/thirdweb-dev/go-sdk/pkg/nftlabs"
 	"log"
 	"math/big"
 )
