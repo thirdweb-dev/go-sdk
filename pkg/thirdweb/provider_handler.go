@@ -15,6 +15,7 @@ import (
 type ProviderHandler struct {
 	provider      *ethclient.Client
 	privateKey    *ecdsa.PrivateKey
+	rawPrivateKey string
 	signerAddress common.Address
 }
 
@@ -52,6 +53,10 @@ func (handler *ProviderHandler) GetSignerAddress() common.Address {
 	return handler.signerAddress
 }
 
+func (handler *ProviderHandler) GetRawPrivateKey() string {
+	return handler.rawPrivateKey
+}
+
 func (handler *ProviderHandler) GetChainID() (*big.Int, error) {
 	return handler.provider.ChainID(context.Background())
 }
@@ -69,6 +74,7 @@ func (handler *ProviderHandler) updateAccount(privateKey string) error {
 	} else {
 		handler.privateKey = key
 		handler.signerAddress = publicAddress
+		handler.rawPrivateKey = privateKey
 		return nil
 	}
 }
