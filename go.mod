@@ -1,4 +1,4 @@
-module github.com/nftlabs/nftlabs-sdk-go
+module github.com/thirdweb-dev/go-sdk
 
 go 1.16
 
