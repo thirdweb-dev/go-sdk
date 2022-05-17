@@ -1,7 +1,6 @@
 package thirdweb
 
 import (
-	"encoding/json"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -21,13 +20,13 @@ func NewERC721(contractWrapper *ContractWrapper[*abi.TokenERC721], storage Stora
 	}
 }
 
-func (self *ERC721) Get(tokenId int) (*NFTMetadataOwner, error) {
+func (erc721 *ERC721) Get(tokenId int) (*NFTMetadataOwner, error) {
 	owner := "0x0000000000000000000000000000000000000000"
-	if address, err := self.OwnerOf(tokenId); err == nil {
+	if address, err := erc721.OwnerOf(tokenId); err == nil {
 		owner = address
 	}
 
-	if metadata, err := self.getTokenMetadata(tokenId); err != nil {
+	if metadata, err := erc721.getTokenMetadata(tokenId); err != nil {
 		return nil, err
 	} else {
 		metadataOwner := &NFTMetadataOwner{
@@ -38,14 +37,14 @@ func (self *ERC721) Get(tokenId int) (*NFTMetadataOwner, error) {
 	}
 }
 
-func (self *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
-	if totalCount, err := self.GetTotalCount(); err != nil {
+func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
+	if totalCount, err := erc721.GetTotalCount(); err != nil {
 		return nil, err
 	} else {
 		nfts := []*NFTMetadataOwner{}
 
 		for i := 0; i < int(totalCount.Int64()); i++ {
-			if nft, err := self.Get(i); err == nil {
+			if nft, err := erc721.Get(i); err == nil {
 				nfts = append(nfts, nft)
 			}
 		}
@@ -54,18 +53,18 @@ func (self *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 	}
 }
 
-func (self *ERC721) GetTotalCount() (*big.Int, error) {
-	return self.contractWrapper.abi.TokenERC721Caller.NextTokenIdToMint(&bind.CallOpts{})
+func (erc721 *ERC721) GetTotalCount() (*big.Int, error) {
+	return erc721.contractWrapper.abi.TokenERC721Caller.NextTokenIdToMint(&bind.CallOpts{})
 }
 
-func (self *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
-	if tokenIds, err := self.GetOwnedTokenIDs(address); err != nil {
+func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
+	if tokenIds, err := erc721.GetOwnedTokenIDs(address); err != nil {
 		return nil, err
 	} else {
 		nfts := []*NFTMetadataOwner{}
 
 		for _, tokenId := range tokenIds {
-			if nft, err := self.Get(int(tokenId.Int64())); err == nil {
+			if nft, err := erc721.Get(int(tokenId.Int64())); err == nil {
 				nfts = append(nfts, nft)
 			}
 		}
@@ -74,18 +73,18 @@ func (self *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
 	}
 }
 
-func (self *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
+func (erc721 *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
 	if address != "" {
-		address = self.contractWrapper.GetSignerAddress().String()
+		address = erc721.contractWrapper.GetSignerAddress().String()
 	}
 
-	if balance, err := self.contractWrapper.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address)); err != nil {
+	if balance, err := erc721.contractWrapper.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address)); err != nil {
 		return nil, err
 	} else {
 		tokenIds := []*big.Int{}
 
 		for i := 0; i < int(balance.Int64()); i++ {
-			if tokenId, err := self.contractWrapper.abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
+			if tokenId, err := erc721.contractWrapper.abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
 				tokenIds = append(tokenIds, tokenId)
 			}
 		}
@@ -94,79 +93,64 @@ func (self *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
 	}
 }
 
-func (self *ERC721) OwnerOf(tokenId int) (string, error) {
-	if address, err := self.contractWrapper.abi.TokenERC721Caller.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
+func (erc721 *ERC721) OwnerOf(tokenId int) (string, error) {
+	if address, err := erc721.contractWrapper.abi.TokenERC721Caller.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return "", err
 	} else {
 		return address.String(), nil
 	}
 }
 
-func (self *ERC721) TotalSupply() (*big.Int, error) {
-	return self.contractWrapper.abi.TokenERC721Caller.TotalSupply(&bind.CallOpts{})
+func (erc721 *ERC721) TotalSupply() (*big.Int, error) {
+	return erc721.contractWrapper.abi.TokenERC721Caller.TotalSupply(&bind.CallOpts{})
 }
 
-func (self *ERC721) Balance() (*big.Int, error) {
-	return self.BalanceOf(self.contractWrapper.GetSignerAddress().String())
+func (erc721 *ERC721) Balance() (*big.Int, error) {
+	return erc721.BalanceOf(erc721.contractWrapper.GetSignerAddress().String())
 }
 
-func (self *ERC721) BalanceOf(address string) (*big.Int, error) {
-	return self.contractWrapper.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
+func (erc721 *ERC721) BalanceOf(address string) (*big.Int, error) {
+	return erc721.contractWrapper.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
 }
 
-func (self *ERC721) IsApproved(address string, operator string) (bool, error) {
-	return self.contractWrapper.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
+func (erc721 *ERC721) IsApproved(address string, operator string) (bool, error) {
+	return erc721.contractWrapper.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
 }
 
-func (self *ERC721) Transfer(to string, tokenId int) error {
-	if tx, err := self.contractWrapper.abi.SafeTransferFrom(self.contractWrapper.getTxOptions(), self.contractWrapper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
+func (erc721 *ERC721) Transfer(to string, tokenId int) error {
+	if tx, err := erc721.contractWrapper.abi.SafeTransferFrom(erc721.contractWrapper.getTxOptions(), erc721.contractWrapper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
 		return err
 	} else {
-		return self.contractWrapper.awaitTx(tx.Hash())
+		return erc721.contractWrapper.awaitTx(tx.Hash())
 	}
 }
 
-func (self *ERC721) Burn(tokenId int) error {
-	if tx, err := self.contractWrapper.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
+func (erc721 *ERC721) Burn(tokenId int) error {
+	if tx, err := erc721.contractWrapper.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return err
 	} else {
-		return self.contractWrapper.awaitTx(tx.Hash())
+		return erc721.contractWrapper.awaitTx(tx.Hash())
 	}
 }
 
-func (self *ERC721) SetApprovalForAll(operator string, approved bool) error {
-	if tx, err := self.contractWrapper.abi.SetApprovalForAll(self.contractWrapper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
+func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) error {
+	if tx, err := erc721.contractWrapper.abi.SetApprovalForAll(erc721.contractWrapper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
 		return err
 	} else {
-		return self.contractWrapper.awaitTx(tx.Hash())
+		return erc721.contractWrapper.awaitTx(tx.Hash())
 	}
 }
 
-func (self *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
-	if uri, err := self.contractWrapper.abi.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
+func (erc721 *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
+	if uri, err := erc721.contractWrapper.abi.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, &NotFoundError{
 			tokenId,
 		}
 	} else {
-		if nft, err := fetchTokenMetadata(tokenId, uri, self.storage); err != nil {
+		if nft, err := fetchTokenMetadata(tokenId, uri, erc721.storage); err != nil {
 			return nil, err
 		} else {
 			return nft, nil
 		}
-	}
-}
-
-func fetchTokenMetadata(tokenId int, uri string, storage Storage) (*NFTMetadata, error) {
-	if body, err := storage.Get(uri); err != nil {
-		return nil, err
-	} else {
-		metadata := &NFTMetadata{
-			Id: big.NewInt(int64(tokenId)),
-		}
-		if err := json.Unmarshal(body, &metadata); err != nil {
-			return nil, &UnmarshalError{body: string(body), typeName: "nft", UnderlyingError: err}
-		}
-
-		return metadata, nil
 	}
 }

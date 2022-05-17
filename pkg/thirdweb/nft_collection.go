@@ -25,3 +25,58 @@ func NewNFTCollection(provider *ethclient.Client, address common.Address, privat
 		}
 	}
 }
+
+func (nft *NFTCollection) Mint(metadata *NFTMetadataInput) error {
+	address := nft.contractWrapper.GetSignerAddress().String()
+	return nft.MintTo(address, metadata)
+}
+
+func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) error {
+	uri, err := uploadOrExtractUri(metadata, nft.storage)
+	if err != nil {
+		return err
+	}
+
+	tx, err := nft.contractWrapper.abi.MintTo(
+		nft.contractWrapper.getTxOptions(),
+		common.HexToAddress(address),
+		uri,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nft.contractWrapper.awaitTx(tx.Hash())
+}
+
+func (nft *NFTCollection) MintBatch(metadatas []*NFTMetadataInput) error {
+	address := nft.contractWrapper.GetSignerAddress().String()
+	return nft.MintBatchTo(address, metadatas)
+}
+
+func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) error {
+	uris, err := uploadOrExtractUris(metadatas, nft.storage)
+	if err != nil {
+		return err
+	}
+
+	encoded := [][]byte{}
+	for _, uri := range uris {
+		tx, err := nft.contractWrapper.abi.MintTo(
+			nft.contractWrapper.getTxOptions(),
+			common.HexToAddress(address), uri,
+		)
+		if err != nil {
+			return err
+		}
+
+		encoded = append(encoded, tx.Data())
+	}
+
+	tx, err := nft.contractWrapper.abi.Multicall(nft.contractWrapper.getTxOptions(), encoded)
+	if err != nil {
+		return err
+	}
+
+	return nft.contractWrapper.awaitTx(tx.Hash())
+}
