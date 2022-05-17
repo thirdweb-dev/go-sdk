@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"math/big"
 
-	"../../internal/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
 type ERC721 struct {

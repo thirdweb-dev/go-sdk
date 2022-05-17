@@ -12,7 +12,7 @@ type ThirdwebSDK struct {
 
 func NewThirdwebSDK(provider *ethclient.Client, privateKey string, gatewayUrl string) (*ThirdwebSDK, error) {
 	if gatewayUrl == "" {
-		gatewayUrl = "https://cloudflare-ipfs.com/ipfs/"
+		gatewayUrl = "https://gateway.ipfscdn.io/ipfs/"
 	}
 
 	if handler, err := NewProviderHandler(provider, privateKey); err != nil {
