@@ -118,6 +118,30 @@ func (self *ERC721) IsApproved(address string, operator string) (bool, error) {
 	return self.contractWrapper.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
 }
 
+func (self *ERC721) Transfer(to string, tokenId int) error {
+	if tx, err := self.contractWrapper.abi.SafeTransferFrom(self.contractWrapper.getTxOptions(), self.contractWrapper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
+		return err
+	} else {
+		return self.contractWrapper.awaitTx(tx.Hash())
+	}
+}
+
+func (self *ERC721) Burn(tokenId int) error {
+	if tx, err := self.contractWrapper.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
+		return err
+	} else {
+		return self.contractWrapper.awaitTx(tx.Hash())
+	}
+}
+
+func (self *ERC721) SetApprovalForAll(operator string, approved bool) error {
+	if tx, err := self.contractWrapper.abi.SetApprovalForAll(self.contractWrapper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
+		return err
+	} else {
+		return self.contractWrapper.awaitTx(tx.Hash())
+	}
+}
+
 func (self *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
 	if uri, err := self.contractWrapper.abi.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, &NotFoundError{
