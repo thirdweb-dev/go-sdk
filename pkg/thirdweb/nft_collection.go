@@ -8,6 +8,7 @@ import (
 )
 
 type NFTCollection struct {
+	*ContractWrapper[*abi.TokenERC721]
 	*ERC721
 }
 
@@ -18,11 +19,15 @@ func NewNFTCollection(provider *ethclient.Client, address common.Address, privat
 		if contractWrapper, err := NewContractWrapper(erc721, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			erc721 := NewERC721(contractWrapper, storage)
-			nftCollection := &NFTCollection{
-				erc721,
+			if erc721, err := NewERC721(provider, address, privateKey, storage); err != nil {
+				return nil, err
+			} else {
+				nftCollection := &NFTCollection{
+					contractWrapper,
+					erc721,
+				}
+				return nftCollection, nil
 			}
-			return nftCollection, nil
 		}
 	}
 }

@@ -28,9 +28,17 @@ func NewThirdwebSDK(provider *ethclient.Client, privateKey string, gatewayUrl st
 }
 
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error) {
-	if collection, err := NewNFTCollection(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+	if contract, err := NewNFTCollection(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
 		return nil, err
 	} else {
-		return collection, nil
+		return contract, nil
+	}
+}
+
+func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
+	if contract, err := NewNFTDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+		return nil, err
+	} else {
+		return contract, nil
 	}
 }

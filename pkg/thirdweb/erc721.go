@@ -6,6 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
@@ -14,10 +15,16 @@ type ERC721 struct {
 	storage         Storage
 }
 
-func NewERC721(contractWrapper *ContractWrapper[*abi.TokenERC721], storage Storage) *ERC721 {
-	return &ERC721{
-		contractWrapper,
-		storage,
+func NewERC721(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*ERC721, error) {
+	if erc721, err := abi.NewTokenERC721(address, provider); err != nil {
+		return nil, err
+	} else if contractWrapper, err := NewContractWrapper(erc721, provider, privateKey); err != nil {
+		return nil, err
+	} else {
+		return &ERC721{
+			contractWrapper,
+			storage,
+		}, nil
 	}
 }
 

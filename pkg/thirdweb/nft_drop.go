@@ -7,21 +7,26 @@ import (
 )
 
 type NFTDrop struct {
-	*DropERC721
+	*ContractWrapper[*abi.DropERC721]
+	*ERC721
 }
 
 func NewNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*NFTDrop, error) {
-	if dropErc721, err := abi.NewDropERC721(address, provider); err != nil {
+	if dropAbi, err := abi.NewDropERC721(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := NewContractWrapper(dropErc721, provider, privateKey); err != nil {
+		if contractWrapper, err := NewContractWrapper(dropAbi, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			erc721 := NewDropERC721(contractWrapper, storage)
-			nftDrop := &NFTDrop{
-				erc721,
+			if erc721, err := NewERC721(provider, address, privateKey, storage); err != nil {
+				return nil, err
+			} else {
+				nftCollection := &NFTDrop{
+					contractWrapper,
+					erc721,
+				}
+				return nftCollection, nil
 			}
-			return nftDrop, nil
 		}
 	}
 }
