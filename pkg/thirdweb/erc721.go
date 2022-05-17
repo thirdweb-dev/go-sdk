@@ -5,6 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
@@ -117,25 +118,25 @@ func (erc721 *ERC721) IsApproved(address string, operator string) (bool, error) 
 	return erc721.contractWrapper.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
 }
 
-func (erc721 *ERC721) Transfer(to string, tokenId int) error {
+func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, error) {
 	if tx, err := erc721.contractWrapper.abi.SafeTransferFrom(erc721.contractWrapper.getTxOptions(), erc721.contractWrapper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
-		return err
+		return nil, err
 	} else {
 		return erc721.contractWrapper.awaitTx(tx.Hash())
 	}
 }
 
-func (erc721 *ERC721) Burn(tokenId int) error {
+func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
 	if tx, err := erc721.contractWrapper.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
-		return err
+		return nil, err
 	} else {
 		return erc721.contractWrapper.awaitTx(tx.Hash())
 	}
 }
 
-func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) error {
+func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error) {
 	if tx, err := erc721.contractWrapper.abi.SetApprovalForAll(erc721.contractWrapper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
-		return err
+		return nil, err
 	} else {
 		return erc721.contractWrapper.awaitTx(tx.Hash())
 	}

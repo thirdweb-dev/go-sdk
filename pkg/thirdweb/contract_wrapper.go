@@ -9,6 +9,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
@@ -58,7 +59,7 @@ func (wrapper *ContractWrapper[TContractABI]) getTxOptions() *bind.TransactOpts 
 	}
 }
 
-func (wrapper *ContractWrapper[TContractABI]) awaitTx(hash common.Hash) error {
+func (wrapper *ContractWrapper[TContractABI]) awaitTx(hash common.Hash) (*types.Transaction, error) {
 	provider := wrapper.GetProvider()
 	wait := txWaitTimeBetweenAttempts
 	maxAttempts := uint8(txMaxAttempts)
@@ -68,7 +69,7 @@ func (wrapper *ContractWrapper[TContractABI]) awaitTx(hash common.Hash) error {
 	for {
 		if attempts >= maxAttempts {
 			fmt.Println("Retry attempts to get tx exhausted, tx might have failed")
-			return syncError
+			return nil, syncError
 		}
 
 		if tx, isPending, err := provider.TransactionByHash(context.Background(), hash); err != nil {
@@ -84,9 +85,7 @@ func (wrapper *ContractWrapper[TContractABI]) awaitTx(hash common.Hash) error {
 				continue
 			}
 			log.Printf("Transaction with hash %v mined successfully\n", tx.Hash())
-			break
+			return tx, nil
 		}
 	}
-
-	return nil
 }

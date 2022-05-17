@@ -4,6 +4,7 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
@@ -28,15 +29,15 @@ func NewEdition(provider *ethclient.Client, address common.Address, privateKey s
 	}
 }
 
-func (edition *Edition) Mint(metadata *EditionMetadataInput) error {
+func (edition *Edition) Mint(metadata *EditionMetadataInput) (*types.Transaction, error) {
 	address := edition.contractWrapper.GetSignerAddress().String()
 	return edition.MintTo(address, metadata)
 }
 
-func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetadataInput) error {
+func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadataWithSupply.Metadata, edition.storage)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
@@ -48,21 +49,21 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 		big.NewInt(int64(metadataWithSupply.Supply)),
 	)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	return edition.contractWrapper.awaitTx((tx.Hash()))
 }
 
-func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) error {
+func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error) {
 	address := edition.contractWrapper.GetSignerAddress().String()
 	return edition.MintAdditionalSupplyTo(address, tokenId, additionalSupply)
 }
 
-func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) error {
+func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) (*types.Transaction, error) {
 	metadata, err := edition.getTokenMetadata(tokenId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	tx, err := edition.contractWrapper.abi.MintTo(
@@ -73,13 +74,13 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 		big.NewInt(int64(additionalSupply)),
 	)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	return edition.contractWrapper.awaitTx(tx.Hash())
 }
 
-func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) error {
+func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
 	metadatas := []*NFTMetadataInput{}
 	for _, metadataWithSupply := range metadatasWithSupply {
 		metadatas = append(metadatas, metadataWithSupply.Metadata)
@@ -92,7 +93,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 
 	uris, err := uploadOrExtractUris(metadatas, edition.storage)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	encoded := [][]byte{}
@@ -106,7 +107,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 			big.NewInt(int64(supplies[index])),
 		)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		encoded = append(encoded, tx.Data())
@@ -114,7 +115,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 
 	tx, err := edition.contractWrapper.abi.Multicall(edition.contractWrapper.getTxOptions(), encoded)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	return edition.contractWrapper.awaitTx(tx.Hash())

@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/nftlabs/nftlabs-sdk-go/pkg/nftlabs"
 	"github.com/spf13/cobra"
-	"log"
 )
 
 const (

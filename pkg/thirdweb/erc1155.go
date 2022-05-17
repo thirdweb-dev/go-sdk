@@ -5,6 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
@@ -108,7 +109,7 @@ func (erc1155 *ERC1155) IsApproved(address string, operator string) (bool, error
 	return erc1155.contractWrapper.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
 }
 
-func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) error {
+func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Transaction, error) {
 	if tx, err := erc1155.contractWrapper.abi.SafeTransferFrom(
 		erc1155.contractWrapper.getTxOptions(),
 		erc1155.contractWrapper.GetSignerAddress(),
@@ -117,13 +118,13 @@ func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) error {
 		big.NewInt(int64(amount)),
 		[]byte{},
 	); err != nil {
-		return err
+		return nil, err
 	} else {
 		return erc1155.contractWrapper.awaitTx(tx.Hash())
 	}
 }
 
-func (erc1155 *ERC1155) Burn(tokenId int, amount int) error {
+func (erc1155 *ERC1155) Burn(tokenId int, amount int) (*types.Transaction, error) {
 	address := erc1155.contractWrapper.GetSignerAddress()
 	if tx, err := erc1155.contractWrapper.abi.Burn(
 		erc1155.contractWrapper.getTxOptions(),
@@ -131,19 +132,19 @@ func (erc1155 *ERC1155) Burn(tokenId int, amount int) error {
 		big.NewInt(int64(tokenId)),
 		big.NewInt(int64(amount)),
 	); err != nil {
-		return err
+		return nil, err
 	} else {
 		return erc1155.contractWrapper.awaitTx(tx.Hash())
 	}
 }
 
-func (erc1155 *ERC1155) SetApprovalForAll(operator string, approved bool) error {
+func (erc1155 *ERC1155) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error) {
 	if tx, err := erc1155.contractWrapper.abi.SetApprovalForAll(
 		erc1155.contractWrapper.getTxOptions(),
 		common.HexToAddress(operator),
 		approved,
 	); err != nil {
-		return err
+		return nil, err
 	} else {
 		return erc1155.contractWrapper.awaitTx(tx.Hash())
 	}
