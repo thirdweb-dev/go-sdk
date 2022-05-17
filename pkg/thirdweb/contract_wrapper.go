@@ -17,7 +17,7 @@ type BaseContract struct {
 }
 
 type ContractWrapper[TContractABI any] struct {
-	abi *TContractABI
+	abi TContractABI
 	*ProviderHandler
 }
 
@@ -26,7 +26,7 @@ const (
 	txMaxAttempts             = 20
 )
 
-func NewContractWrapper[TContractABI any](abi *TContractABI, provider *ethclient.Client, privateKey string) (*ContractWrapper[TContractABI], error) {
+func NewContractWrapper[TContractABI any](abi TContractABI, provider *ethclient.Client, privateKey string) (*ContractWrapper[TContractABI], error) {
 	if handler, err := NewProviderHandler(provider, privateKey); err != nil {
 		return nil, err
 	} else {

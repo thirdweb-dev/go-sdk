@@ -17,6 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build
-        run: go build ./pkg/nftlabs
+        run: go build ./pkg/thirdweb
       - name: Test
-        run: go test ./pkg/nftlabs
+        run: go test ./pkg/thirdweb
