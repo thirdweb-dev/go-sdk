@@ -4,6 +4,11 @@ import (
 	"math/big"
 )
 
+type SDKOptions struct {
+	PrivateKey string
+	GatewayUrl string
+}
+
 type Metadata struct {
 	MetadataUri    string
 	MetadataObject interface{}
