@@ -64,40 +64,6 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 	}
 }
 
-func fetchNFTsByTokenId(erc721 *ERC721, tokenIds []*big.Int) ([]*NFTMetadataOwner, error) {
-	total := len(tokenIds)
-
-	ch := make(chan *NFTResult)
-	// fetch all nfts in parallel
-	for i := 0; i < total; i++ {
-		go func(id int) {
-			if nft, err := erc721.Get(id); err == nil {
-				ch <- &NFTResult{nft, nil}
-			} else {
-				fmt.Println(err)
-				ch <- &NFTResult{nil, err}
-			}
-		}(i)
-	}
-	// wait for all goroutines to emit
-	results := make([]*NFTResult, total)
-	for i := range results {
-		results[i] = <-ch
-	}
-	// filter out errors
-	nfts := []*NFTMetadataOwner{}
-	for _, res := range results {
-		if res.nft != nil {
-			nfts = append(nfts, res.nft)
-		}
-	}
-	// Sort by ID
-	sort.SliceStable(nfts, func(i, j int) bool {
-		return nfts[i].Metadata.Id.Cmp(nfts[j].Metadata.Id) < 0
-	})
-	return nfts, nil
-}
-
 func (erc721 *ERC721) GetTotalCount() (*big.Int, error) {
 	return erc721.contractWrapper.abi.NextTokenIdToMint(&bind.CallOpts{})
 }
@@ -180,9 +146,7 @@ func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.
 
 func (erc721 *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
 	if uri, err := erc721.contractWrapper.abi.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
-		return nil, &NotFoundError{
-			tokenId,
-		}
+		return nil, err
 	} else {
 		if nft, err := fetchTokenMetadata(tokenId, uri, erc721.storage); err != nil {
 			return nil, err
@@ -190,4 +154,38 @@ func (erc721 *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
 			return nft, nil
 		}
 	}
+}
+
+func fetchNFTsByTokenId(erc721 *ERC721, tokenIds []*big.Int) ([]*NFTMetadataOwner, error) {
+	total := len(tokenIds)
+
+	ch := make(chan *NFTResult)
+	// fetch all nfts in parallel
+	for i := 0; i < total; i++ {
+		go func(id int) {
+			if nft, err := erc721.Get(id); err == nil {
+				ch <- &NFTResult{nft, nil}
+			} else {
+				fmt.Println(err)
+				ch <- &NFTResult{nil, err}
+			}
+		}(i)
+	}
+	// wait for all goroutines to emit
+	results := make([]*NFTResult, total)
+	for i := range results {
+		results[i] = <-ch
+	}
+	// filter out errors
+	nfts := []*NFTMetadataOwner{}
+	for _, res := range results {
+		if res.nft != nil {
+			nfts = append(nfts, res.nft)
+		}
+	}
+	// Sort by ID
+	sort.SliceStable(nfts, func(i, j int) bool {
+		return nfts[i].Metadata.Id.Cmp(nfts[j].Metadata.Id) < 0
+	})
+	return nfts, nil
 }
