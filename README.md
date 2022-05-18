@@ -27,11 +27,11 @@ import (
 )
 
 func main() {
-	// Add your own RPC URL here or use a public one
-	rpcUrl := "https://rpc-mumbai.maticvigil.com"
-
-	// Now you can create a new instance of the SDK to use
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, nil)
+	// Creates a new read only SDK instance to read data from your contracts
+	// you can pass either
+	// - a chain name (rinkeby, mumbai, mainnet, polygon, etc)
+	// - your own rpc URL
+	sdk, _ := thirdweb.NewThirdwebSDK("polygon", nil)
 }
 
 main()
@@ -49,8 +49,7 @@ import (
 )
 
 func main() {
-	rpcUrl := "https://rpc-mumbai.maticvigil.com"
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, nil)
+	sdk, _ := thirdweb.NewThirdwebSDK("mumbai", nil)
 
 	// Add your NFT Collection contract address here
 	address := "0x..."
@@ -66,9 +65,11 @@ main()
 
 ### Signing Transactions
 
+In order to execute transactions on your contract, the SDK needs to know the wallet that is performing those transactions. For that it needs the private key of the wallet you want to execute transactions from.
+
 > :warning: Never commit private keys to file tracking history, or your account could be compromised.
 
-Meanwhile, if you want to use write functions as well and connect a signer, you can use the following setup:
+To connect your wallet to the SDK, you can use the following setup:
 
 ```go
 import (
@@ -76,20 +77,15 @@ import (
 )
 
 func main() {
-	rpcUrl := "https://rpc-mumbai.maticvigil.com"
-
-	// Add your private key (make sure it isnt directly written in this file)
-	privateKey := "..."
-
-	// Instantiate the SDK with your privateKey
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, &thirdweb.SDKOptions{
+	// Instantiate the SDK with your privateKey (ideally from an env variable)
+	sdk, _ := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
 		PrivateKey: privateKey,
 	})
-	
+
 	address := "0x..."
 	nft, _ := sdk.GetNFTCollection(address)
 
-	// Now you can use any of the read-only SDK contract functions
+	// Now you can execute transactions using the SDK contract functions
 	tx, _ = nft.Mint(
 		&thirdweb.NFTMetadataInput{
 			Name:        "Test NFT",
@@ -100,5 +96,3 @@ func main() {
 
 main()
 ```
-
-
