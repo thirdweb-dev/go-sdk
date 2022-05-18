@@ -106,3 +106,45 @@ type NativeToken struct {
 	decimals int
 	wrapper  *WrappedToken
 }
+
+// Contract Metadata
+
+type NFTCollectionContractMetadata struct {
+	Name                   string
+	Description            string
+	Image                  string
+	ExternalLink           string
+	SellerFeeBasisPoints   int
+	FeeRecipient           string
+	Symbol                 string
+	PlatformFeeBasisPoints int
+	PlatformFeeRecipient   string
+	TrustedForwarder       string
+}
+
+type EditionContractMetadata struct {
+	Name                   string
+	Description            string
+	Image                  string
+	ExternalLink           string
+	SellerFeeBasisPoints   int
+	FeeRecipient           string
+	Symbol                 string
+	PlatformFeeBasisPoints int
+	PlatformFeeRecipient   string
+	TrustedForwarder       string
+}
+
+type NFTDropContractMetadata struct {
+	Name                   string
+	Description            string
+	Image                  string
+	ExternalLink           string
+	SellerFeeBasisPoints   int
+	FeeRecipient           string
+	Symbol                 string
+	PrimarySaleRecipient   string
+	PlatformFeeBasisPoints int
+	PlatformFeeRecipient   string
+	TrustedForwarder       string
+}
