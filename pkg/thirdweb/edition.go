@@ -17,7 +17,7 @@ func NewEdition(provider *ethclient.Client, address common.Address, privateKey s
 	if erc1155, err := abi.NewTokenERC1155(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := NewContractWrapper(erc1155, provider, privateKey); err != nil {
+		if contractWrapper, err := NewContractWrapper(erc1155, address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
 			erc1155 := NewERC1155(contractWrapper, storage)

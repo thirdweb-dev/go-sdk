@@ -16,7 +16,7 @@ func NewNFTCollection(provider *ethclient.Client, address common.Address, privat
 	if erc721, err := abi.NewTokenERC721(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := NewContractWrapper(erc721, provider, privateKey); err != nil {
+		if contractWrapper, err := NewContractWrapper(erc721, address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
 			if erc721, err := NewERC721(provider, address, privateKey, storage); err != nil {

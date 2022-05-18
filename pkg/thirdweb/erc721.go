@@ -18,7 +18,7 @@ type ERC721 struct {
 func NewERC721(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*ERC721, error) {
 	if erc721, err := abi.NewTokenERC721(address, provider); err != nil {
 		return nil, err
-	} else if contractWrapper, err := NewContractWrapper(erc721, provider, privateKey); err != nil {
+	} else if contractWrapper, err := NewContractWrapper(erc721, address, provider, privateKey); err != nil {
 		return nil, err
 	} else {
 		return &ERC721{

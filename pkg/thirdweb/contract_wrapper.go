@@ -13,12 +13,9 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-type BaseContract struct {
-	contract *bind.BoundContract
-}
-
 type ContractWrapper[TContractABI any] struct {
-	abi TContractABI
+	abi     TContractABI
+	address common.Address
 	*ProviderHandler
 }
 
@@ -27,16 +24,21 @@ const (
 	txMaxAttempts             = 20
 )
 
-func NewContractWrapper[TContractABI any](abi TContractABI, provider *ethclient.Client, privateKey string) (*ContractWrapper[TContractABI], error) {
+func NewContractWrapper[TContractABI any](abi TContractABI, address common.Address, provider *ethclient.Client, privateKey string) (*ContractWrapper[TContractABI], error) {
 	if handler, err := NewProviderHandler(provider, privateKey); err != nil {
 		return nil, err
 	} else {
 		wrapper := &ContractWrapper[TContractABI]{
 			abi,
+			address,
 			handler,
 		}
 		return wrapper, nil
 	}
+}
+
+func (wrapper *ContractWrapper[TContractABI]) getAddress() common.Address {
+	return wrapper.address
 }
 
 func (wrapper *ContractWrapper[TContractABI]) getTxOptions() *bind.TransactOpts {

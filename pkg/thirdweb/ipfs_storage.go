@@ -11,14 +11,16 @@ import (
 	"mime/multipart"
 	"net/http"
 	"strings"
-
-	"golang.org/x/sync/errgroup"
 )
 
+type BaseUriWithUris struct {
+	baseUri string
+	uris    []string
+}
 type Storage interface {
 	Get(uri string) ([]byte, error)
-	Upload(data interface{}, contractAddress string, signerAddress string) (string, error)
-	UploadBatch(data []interface{}, contractAddress string, signerAddress string) ([]string, error)
+	Upload(data any, contractAddress string, signerAddress string) (string, error)
+	UploadBatch(data []any, contractAddress string, signerAddress string) (*BaseUriWithUris, error)
 }
 
 type uploadResponse struct {
@@ -63,42 +65,65 @@ func (gw *IpfsStorage) Get(uri string) ([]byte, error) {
 
 // Upload method can be used to upload a generic payload to IPFS. NftLabs provides a default proxy
 // in the SDK. You can override this with the ISdk.SetStorage
-func (gw *IpfsStorage) Upload(data interface{}, contractAddress string, signerAddress string) (string, error) {
-	if data == nil {
-		return "", nil
-	}
-
-	if meta, ok := data.(Metadata); ok && meta.MetadataUri != "" {
-		return meta.MetadataUri, nil
-	}
-
-	client := &http.Client{}
-	jsonData, err := json.Marshal(data)
+func (ipfs *IpfsStorage) Upload(data any, contractAddress string, signerAddress string) (string, error) {
+	baseUriWithUris, err := ipfs.UploadBatch([]any{data}, contractAddress, signerAddress)
 	if err != nil {
 		return "", err
 	}
 
+	baseUri := baseUriWithUris.baseUri + "0"
+	return baseUri, nil
+}
+
+// UploadBatch uploads a list of arbitrary objects and returns their URIs *in the order they were passed*
+func (ipfs *IpfsStorage) UploadBatch(data []any, contractAddress string, signerAddress string) (*BaseUriWithUris, error) {
+	baseUriWithUris, err := ipfs.uploadBatchWithCid(data, contractAddress, signerAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return baseUriWithUris, nil
+}
+
+func (ipfs *IpfsStorage) uploadBatchWithCid(
+	data []any,
+	contractAddress string,
+	signerAddress string,
+) (*BaseUriWithUris, error) {
+	client := &http.Client{}
+	fileNames := []string{}
+
 	body := &bytes.Buffer{}
 	mp := multipart.NewWriter(body)
-	if err := mp.WriteField("file", string(jsonData)); err != nil {
-		return "", err
+	for i, asset := range data {
+		jsonData, err := json.Marshal(asset)
+		if err != nil {
+			return nil, err
+		}
+
+		fileName := fmt.Sprintf("%v", i)
+		fileNames = append(fileNames, fileName)
+		if err := mp.WriteField(fileName, string(jsonData)); err != nil {
+			return nil, err
+		}
 	}
 
 	_ = mp.Close()
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("%v/upload", nftLabsApiUrl), body)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
+
 	req.Header.Set("X-App-Name", fmt.Sprintf("CONSOLE-GO-SDK-%v", contractAddress))
 	req.Header.Set("X-Public-Address", signerAddress)
 	req.Header.Set("Content-Type", mp.FormDataContentType())
 
 	if result, err := client.Do(req); err != nil {
-		return "", err
+		return nil, err
 	} else {
 		if result.StatusCode != http.StatusOK {
-			return "", &FailedToUploadError{
+			return nil, &FailedToUploadError{
 				statusCode: result.StatusCode,
 				Payload:    data,
 			}
@@ -107,7 +132,7 @@ func (gw *IpfsStorage) Upload(data interface{}, contractAddress string, signerAd
 		var uploadMeta uploadResponse
 		bodyBytes, err := ioutil.ReadAll(result.Body)
 		if err != nil {
-			return "", &FailedToUploadError{
+			return nil, &FailedToUploadError{
 				statusCode:      result.StatusCode,
 				Payload:         data,
 				UnderlyingError: err,
@@ -115,51 +140,26 @@ func (gw *IpfsStorage) Upload(data interface{}, contractAddress string, signerAd
 		}
 
 		if err := json.Unmarshal(bodyBytes, &uploadMeta); err != nil {
-			return "", &UnmarshalError{
+			return nil, &UnmarshalError{
 				body:            string(bodyBytes),
 				typeName:        "UploadResponse",
 				UnderlyingError: err,
 			}
 		}
-		return uploadMeta.IpfsUri, nil
+
+		baseUri := "ipfs://" + uploadMeta.IpfsHash + "/"
+
+		uris := []string{}
+		for _, fileName := range fileNames {
+			uri := baseUri + fileName
+			uris = append(uris, uri)
+		}
+
+		return &BaseUriWithUris{
+			baseUri: baseUri,
+			uris:    uris,
+		}, nil
 	}
-}
-
-// UploadBatch uploads a list of arbitrary objects and returns their URIs *in the order they were passed*
-func (gw *IpfsStorage) UploadBatch(data []interface{}, contractAddress string, signerAddress string) ([]string, error) {
-	wg := new(errgroup.Group)
-
-	results := make([]string, len(data))
-	for i, asset := range data {
-		func(meta interface{}, index int) {
-			wg.Go(func() error {
-				toUpload := meta
-				if meta, ok := meta.(Metadata); ok {
-					if meta.MetadataUri != "" {
-						results[index] = meta.MetadataUri
-						return nil
-					} else {
-						toUpload = meta.MetadataObject
-					}
-				}
-
-				uri, err := gw.Upload(toUpload, contractAddress, signerAddress)
-				if err != nil {
-					return err
-				} else {
-					results[index] = uri
-					return nil
-				}
-			})
-		}(asset, i)
-	}
-
-	if err := wg.Wait(); err != nil {
-		log.Println("Failed to upload a portion of the metadata, aborting")
-		return nil, err
-	}
-
-	return results, nil
 }
 
 func replaceIpfsPrefixWithGateway(ipfsUrl string, gatewayUrl string) string {

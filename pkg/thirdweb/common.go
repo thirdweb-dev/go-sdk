@@ -40,7 +40,12 @@ func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage Storage) ([]stri
 		data = append(data, metadata)
 	}
 
-	return storage.UploadBatch(data, "", "")
+	baseUriWithUris, err := storage.UploadBatch(data, "", "")
+	if err != nil {
+		return nil, err
+	}
+
+	return baseUriWithUris.uris, nil
 }
 
 // TOKEN
@@ -119,14 +124,13 @@ func approveErc20Allowance(
 		return err
 	}
 
-	erc20, err := NewContractWrapper(abi, provider, "")
+	erc20, err := NewContractWrapper(abi, common.HexToAddress(currencyAddress), provider, "")
 	if err != nil {
 		return err
 	}
 
 	owner := contractToApprove.GetSignerAddress()
-	// TODO: Fix
-	spender := contractToApprove.GetSignerAddress()
+	spender := contractToApprove.getAddress()
 	allowance, err := erc20.abi.Allowance(&bind.CallOpts{}, owner, spender)
 	if err != nil {
 		return err
