@@ -83,9 +83,13 @@ func (erc1155 *ERC1155) GetOwned(address string) ([]*EditionMetadataOwner, error
 		return nil, err
 	}
 
-	metadatas := []*EditionMetadataOwner{}
+	metadataOwners := []*EditionMetadataOwner{}
+	metadatas, err := fetchEditionsByTokenId(erc1155, ids)
+	if err != nil {
+		return nil, err
+	}
 	for index, balance := range balances {
-		metadata, err := erc1155.Get(int(ids[index].Int64()))
+		metadata := metadatas[index]
 		if err == nil {
 			metadataOwner := &EditionMetadataOwner{
 				Metadata:      metadata.Metadata,
@@ -93,11 +97,11 @@ func (erc1155 *ERC1155) GetOwned(address string) ([]*EditionMetadataOwner, error
 				Owner:         address,
 				QuantityOwned: int(balance.Int64()),
 			}
-			metadatas = append(metadatas, metadataOwner)
+			metadataOwners = append(metadataOwners, metadataOwner)
 		}
 	}
 
-	return metadatas, nil
+	return metadataOwners, nil
 }
 
 func (erc1155 *ERC1155) GetTotalSupply(tokenId int) (*big.Int, error) {
