@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"fmt"
 	"math/big"
 	"sort"
 
@@ -55,37 +56,46 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 	if totalCount, err := erc721.GetTotalCount(); err != nil {
 		return nil, err
 	} else {
-
-		total := int(totalCount.Int64())
-		ch := make(chan *NFTResult)
-		// fetch all nfts in parallel
-		for i := 0; i < total; i++ {
-			go func(id int) {
-				if nft, err := erc721.Get(id); err == nil {
-					ch <- &NFTResult{nft, nil}
-				} else {
-					ch <- &NFTResult{nil, err}
-				}
-			}(i)
+		tokenIds := []*big.Int{}
+		for i := 0; i < int(totalCount.Int64()); i++ {
+			tokenIds = append(tokenIds, big.NewInt(int64(i)))
 		}
-		// wait for all goroutines to emit
-		results := make([]*NFTResult, total)
-		for i := range results {
-			results[i] = <- ch
-		}
-		// filter out errors
-		nfts := []*NFTMetadataOwner{}
-		for _, res := range results {
-			if(res.nft != nil) {
-				nfts = append(nfts, res.nft)
-			}
-		}
-		// Sort by ID
-		sort.SliceStable(nfts, func(i, j int) bool {
-			return nfts[i].Metadata.Id.Cmp(nfts[j].Metadata.Id) < 0
-		})
-		return nfts, nil
+		return fetchNFtsByTokenId(erc721, tokenIds)
 	}
+}
+
+func fetchNFtsByTokenId(erc721 *ERC721, tokenIds []*big.Int) ([]*NFTMetadataOwner, error) {
+	total := len(tokenIds)
+	
+	ch := make(chan *NFTResult)
+	// fetch all nfts in parallel
+	for i := 0; i < total; i++ {
+		go func(id int) {
+			if nft, err := erc721.Get(id); err == nil {
+				ch <- &NFTResult{nft, nil}
+			} else {
+				fmt.Println(err)
+				ch <- &NFTResult{nil, err}
+			}
+		}(i)
+	}
+	// wait for all goroutines to emit
+	results := make([]*NFTResult, total)
+	for i := range results {
+		results[i] = <- ch
+	}
+	// filter out errors
+	nfts := []*NFTMetadataOwner{}
+	for _, res := range results {
+		if(res.nft != nil) {
+			nfts = append(nfts, res.nft)
+		}
+	}
+	// Sort by ID
+	sort.SliceStable(nfts, func(i, j int) bool {
+		return nfts[i].Metadata.Id.Cmp(nfts[j].Metadata.Id) < 0
+	})
+	return nfts, nil
 }
 
 func (erc721 *ERC721) GetTotalCount() (*big.Int, error) {
@@ -96,20 +106,12 @@ func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
 	if tokenIds, err := erc721.GetOwnedTokenIDs(address); err != nil {
 		return nil, err
 	} else {
-		nfts := []*NFTMetadataOwner{}
-
-		for _, tokenId := range tokenIds {
-			if nft, err := erc721.Get(int(tokenId.Int64())); err == nil {
-				nfts = append(nfts, nft)
-			}
-		}
-
-		return nfts, nil
+		return fetchNFtsByTokenId(erc721, tokenIds)
 	}
 }
 
 func (erc721 *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
-	if address != "" {
+	if address == "" {
 		address = erc721.contractWrapper.GetSignerAddress().String()
 	}
 
