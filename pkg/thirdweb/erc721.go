@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"math/big"
+	"sort"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -13,6 +14,11 @@ import (
 type ERC721 struct {
 	contractWrapper *ContractWrapper[*abi.TokenERC721]
 	storage         Storage
+}
+
+type NFTResult struct {
+	nft *NFTMetadataOwner
+	err error
 }
 
 func NewERC721(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*ERC721, error) {
@@ -49,14 +55,35 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 	if totalCount, err := erc721.GetTotalCount(); err != nil {
 		return nil, err
 	} else {
-		nfts := []*NFTMetadataOwner{}
 
-		for i := 0; i < int(totalCount.Int64()); i++ {
-			if nft, err := erc721.Get(i); err == nil {
-				nfts = append(nfts, nft)
+		total := int(totalCount.Int64())
+		ch := make(chan *NFTResult)
+		// fetch all nfts in parallel
+		for i := 0; i < total; i++ {
+			go func(id int) {
+				if nft, err := erc721.Get(id); err == nil {
+					ch <- &NFTResult{nft, nil}
+				} else {
+					ch <- &NFTResult{nil, err}
+				}
+			}(i)
+		}
+		// wait for all goroutines to emit
+		results := make([]*NFTResult, total)
+		for i := range results {
+			results[i] = <- ch
+		}
+		// filter out errors
+		nfts := []*NFTMetadataOwner{}
+		for _, res := range results {
+			if(res.nft != nil) {
+				nfts = append(nfts, res.nft)
 			}
 		}
-
+		// Sort by ID
+		sort.SliceStable(nfts, func(i, j int) bool {
+			return nfts[i].Metadata.Id.Cmp(nfts[j].Metadata.Id) < 0
+		})
 		return nfts, nil
 	}
 }
