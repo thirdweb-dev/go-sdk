@@ -1,7 +1,9 @@
 package thirdweb
 
 import (
+	"fmt"
 	"math/big"
+	"sort"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -12,6 +14,11 @@ import (
 type ERC1155 struct {
 	contractWrapper *ContractWrapper[*abi.TokenERC1155]
 	storage         Storage
+}
+
+type EditionResult struct {
+	nft *EditionMetadata
+	err error
 }
 
 func NewERC1155(contractWrapper *ContractWrapper[*abi.TokenERC1155], storage Storage) *ERC1155 {
@@ -39,16 +46,14 @@ func (erc1155 *ERC1155) Get(tokenId int) (*EditionMetadata, error) {
 }
 
 func (erc1155 *ERC1155) GetAll() ([]*EditionMetadata, error) {
-	if maxId, err := erc1155.GetTotalCount(); err != nil {
+	if totalCount, err := erc1155.GetTotalCount(); err != nil {
 		return nil, err
 	} else {
-		metadatas := []*EditionMetadata{}
-		for i := 0; i < int(maxId.Int64()); i++ {
-			if metadata, err := erc1155.Get(i); err == nil {
-				metadatas = append(metadatas, metadata)
-			}
+		tokenIds := []*big.Int{}
+		for i := 0; i < int(totalCount.Int64()); i++ {
+			tokenIds = append(tokenIds, big.NewInt(int64(i)))
 		}
-		return metadatas, nil
+		return fetchEditionsByTokenId(erc1155, tokenIds)
 	}
 }
 
@@ -74,6 +79,9 @@ func (erc1155 *ERC1155) GetOwned(address string) ([]*EditionMetadataOwner, error
 	}
 
 	balances, err := erc1155.contractWrapper.abi.BalanceOfBatch(&bind.CallOpts{}, owners, ids)
+	if err != nil {
+		return nil, err
+	}
 
 	metadatas := []*EditionMetadataOwner{}
 	for index, balance := range balances {
@@ -165,4 +173,38 @@ func (erc1155 *ERC1155) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
 			return nft, nil
 		}
 	}
+}
+
+func fetchEditionsByTokenId(erc1155 *ERC1155, tokenIds []*big.Int) ([]*EditionMetadata, error) {
+	total := len(tokenIds)
+
+	ch := make(chan *EditionResult)
+	// fetch all nfts in parallel
+	for i := 0; i < total; i++ {
+		go func(id int) {
+			if nft, err := erc1155.Get(id); err == nil {
+				ch <- &EditionResult{nft, nil}
+			} else {
+				fmt.Println(err)
+				ch <- &EditionResult{nil, err}
+			}
+		}(i)
+	}
+	// wait for all goroutines to emit
+	results := make([]*EditionResult, total)
+	for i := range results {
+		results[i] = <-ch
+	}
+	// filter out errors
+	nfts := []*EditionMetadata{}
+	for _, res := range results {
+		if res.nft != nil {
+			nfts = append(nfts, res.nft)
+		}
+	}
+	// Sort by ID
+	sort.SliceStable(nfts, func(i, j int) bool {
+		return nfts[i].Metadata.Id.Cmp(nfts[j].Metadata.Id) < 0
+	})
+	return nfts, nil
 }

@@ -37,7 +37,7 @@ var editionGetAllCmd = &cobra.Command{
 		}
 		log.Printf("Recieved %d nfts\n", len(allNfts))
 		for _, nft := range allNfts {
-			log.Printf("Got nft with name '%v' and description '%v' and id '%d'\n", nft.Metadata.Name, nft.Metadata.Description, nft.Metadata.Id)
+			log.Printf("Got nft with name '%v' and supply '%v' and id '%d'\n", nft.Metadata.Name, nft.Supply, nft.Metadata.Id)
 		}
 	},
 }
@@ -57,7 +57,7 @@ var editionGetOwnedCmd = &cobra.Command{
 		}
 		log.Printf("Recieved %d nfts\n", len(allNfts))
 		for _, nft := range allNfts {
-			log.Printf("Got nft with name '%v' and description '%v' and id '%d'\n", nft.Metadata.Name, nft.Metadata.Description, nft.Metadata.Id)
+			log.Printf("Got nft with name '%v' and supply '%v' and id '%d'\n", nft.Metadata.Name, nft.Supply, nft.Metadata.Id)
 		}
 	},
 }
