@@ -35,6 +35,14 @@ func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
 	}
 }
 
+func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
+	if contract, err := NewEdition(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
 	if contract, err := NewNFTDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
 		return nil, err

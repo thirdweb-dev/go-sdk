@@ -36,7 +36,22 @@ func getNftCollection() (*thirdweb.NFTCollection, error) {
 		return nil, err
 	} else {
 		return contract, nil
-	}	
+	}
+}
+
+func getEdition() (*thirdweb.Edition, error) {
+	if thirdwebSDK == nil {
+		initSdk()
+	}
+
+	log.Printf("Obtaining a Edition on chain %v, contract %v\n", chainRpcUrl, editionAddress)
+
+	if contract, err := thirdwebSDK.GetEdition(editionAddress); err != nil {
+		log.Println("Failed to create an Edition object")
+		return nil, err
+	} else {
+		return contract, nil
+	}
 }
 
 func getNftDrop() (*thirdweb.NFTDrop, error) {
@@ -51,7 +66,5 @@ func getNftDrop() (*thirdweb.NFTDrop, error) {
 		return nil, err
 	} else {
 		return contract, nil
-	}	
+	}
 }
-
-
