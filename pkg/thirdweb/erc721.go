@@ -60,13 +60,13 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 		for i := 0; i < int(totalCount.Int64()); i++ {
 			tokenIds = append(tokenIds, big.NewInt(int64(i)))
 		}
-		return fetchNFtsByTokenId(erc721, tokenIds)
+		return fetchNFTsByTokenId(erc721, tokenIds)
 	}
 }
 
-func fetchNFtsByTokenId(erc721 *ERC721, tokenIds []*big.Int) ([]*NFTMetadataOwner, error) {
+func fetchNFTsByTokenId(erc721 *ERC721, tokenIds []*big.Int) ([]*NFTMetadataOwner, error) {
 	total := len(tokenIds)
-	
+
 	ch := make(chan *NFTResult)
 	// fetch all nfts in parallel
 	for i := 0; i < total; i++ {
@@ -82,12 +82,12 @@ func fetchNFtsByTokenId(erc721 *ERC721, tokenIds []*big.Int) ([]*NFTMetadataOwne
 	// wait for all goroutines to emit
 	results := make([]*NFTResult, total)
 	for i := range results {
-		results[i] = <- ch
+		results[i] = <-ch
 	}
 	// filter out errors
 	nfts := []*NFTMetadataOwner{}
 	for _, res := range results {
-		if(res.nft != nil) {
+		if res.nft != nil {
 			nfts = append(nfts, res.nft)
 		}
 	}
@@ -106,7 +106,7 @@ func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
 	if tokenIds, err := erc721.GetOwnedTokenIDs(address); err != nil {
 		return nil, err
 	} else {
-		return fetchNFtsByTokenId(erc721, tokenIds)
+		return fetchNFTsByTokenId(erc721, tokenIds)
 	}
 }
 
