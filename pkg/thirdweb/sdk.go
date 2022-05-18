@@ -1,6 +1,9 @@
 package thirdweb
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
@@ -10,8 +13,13 @@ type ThirdwebSDK struct {
 	storage Storage
 }
 
-func NewThirdwebSDK(rpcUrl string, options *SDKOptions) (*ThirdwebSDK, error) {
-	provider, err := ethclient.Dial(rpcUrl)
+func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK, error) {
+	rpc, err := getDefaultRpcUrl(rpcUrlOrChainName)
+	if err != nil {
+		return nil, err
+	}
+
+	provider, err := ethclient.Dial(rpc)
 	if err != nil {
 		return nil, err
 	}
@@ -69,4 +77,29 @@ func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
 	} else {
 		return contract, nil
 	}
+}
+
+func getDefaultRpcUrl(rpcUrlorName string) (string, error) {
+	switch rpcUrlorName {
+    case "mumbai":
+		return "https://polygon-mumbai.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+    case "rinkeby":
+        return "https://eth-rinkeby.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+    case "goerli":
+        return "https://eth-goerli.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+	case "polygon":
+        return "https://polygon-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+	case "mainnet":
+        return "https://eth-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+	case "fantom":
+        return "https://rpc.ftm.tools", nil
+	case "avalanche":
+        return "https://rpc.ankr.com/avalanche", nil
+	default:
+		if strings.HasPrefix(rpcUrlorName, "http") {
+			return rpcUrlorName, nil
+		} else {
+			return "", fmt.Errorf("invalid rpc url or chain name: %s", rpcUrlorName)
+		}
+    }
 }

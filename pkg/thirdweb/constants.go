@@ -7,6 +7,7 @@ const DEFAULT_IPFS_GATEWAY_URL = "https://gateway.ipfscdn.io/ipfs/"
 const DEFAULT_MERKLE_ROOT = "0x0000000000000000000000000000000000000000000000000000000000000000"
 
 type ChainID int
+type ChainName string
 
 const (
 	MAINNET   ChainID = 1

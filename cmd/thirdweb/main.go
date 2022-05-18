@@ -26,10 +26,10 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVarP(&privateKey, "privateKey", "k", "", "private key used to sign transactions")
-	rootCmd.PersistentFlags().StringVarP(&chainRpcUrl, "chainRpcUrl", "u", "https://rpc-mumbai.maticvigil.com", "chain url where all rpc requests will be sent")
+	rootCmd.PersistentFlags().StringVarP(&chainRpcUrl, "chainRpcUrl", "u", "mumbai", "chain url where all rpc requests will be sent")
 	_ = viper.BindPFlag("privateKey", rootCmd.PersistentFlags().Lookup("privateKey"))
 	_ = viper.BindPFlag("chainRpcUrl", rootCmd.PersistentFlags().Lookup("chainRpcUrl"))
-	viper.SetDefault("chainRpcUrl", "https://rpc-mumbai.maticvigil.com")
+	viper.SetDefault("chainRpcUrl", "mumbai")
 
 	rootCmd.AddCommand(nftCmd)
 	rootCmd.AddCommand(editionCmd)
