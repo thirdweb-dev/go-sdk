@@ -30,8 +30,11 @@ func main() {
 	// Add your own RPC URL here or use a public one
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
 
+	// Instantiate a new provider to pass into the SDK
+	provider, _ := ethclient.Dial(chainRpcUrl)
+
 	// Now you can create a new instance of the SDK to use
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl)
+	sdk, _ := thirdweb.NewThirdwebSDK(provider, "", "")
 }
 ```
 
@@ -42,7 +45,8 @@ Once you instantiate the SDK, you can use it to access your thirdweb contracts. 
 ```go
 func main() {
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl)
+	provider, _ := ethclient.Dial(chainRpcUrl)
+	sdk, _ := thirdweb.NewThirdwebSDK(provider, "", "")
 
 	// Add your NFT Collection contract address here
 	address := "0x..."
@@ -62,10 +66,13 @@ Meanwhile, if you want to use write functions as well and connect a signer, you 
 ```go
 func main() {
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
-	privateKey := "..."
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, privateKey)
+	provider, _ := ethclient.Dial(chainRpcUrl)
 
-	// Add your NFT Collection contract address here
+	// Add your private key (make sure it isnt directly written in this file)
+	privateKey := "..."
+
+	// Instantiate the SDK with your privateKey
+	sdk, _ := thirdweb.NewThirdwebSDK(provider, privateKey, "")
 	address := "0x..."
 	nft, _ := sdk.GetNFTCollection(address)
 
