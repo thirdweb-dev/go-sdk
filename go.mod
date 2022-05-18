@@ -4,10 +4,8 @@ go 1.18
 
 require (
 	github.com/ethereum/go-ethereum v1.10.17
-	github.com/nftlabs/nftlabs-sdk-go v1.1.1
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.11.0
-	golang.org/x/sync v0.0.0-20220513210516-0976fa681c29
 )
 
 require (
@@ -37,6 +35,7 @@ require (
 	github.com/tklauser/numcpus v0.5.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20220516162934-403b01795ae8 // indirect
+	golang.org/x/sync v0.0.0-20220513210516-0976fa681c29 // indirect
 	golang.org/x/sys v0.0.0-20220513210249-45d2b4557a2a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
