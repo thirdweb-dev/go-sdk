@@ -23,7 +23,7 @@ test-edition:
 
 test-nft-drop:
 	./bin/thirdweb nftdrop getAll -a 0x3B6c493757fD7f19681aa3004E573B5d4BE62b19
-	./bin/thirdweb nftdrop mint -a 0x3B6c493757fD7f19681aa3004E573B5d4BE62b19 -k 4916d58e7ece81883cc5dd9ac8ce292460be4c5e6b0b92495c3d00f85fdb7a74
+	./bin/thirdweb nftdrop claim -a 0x3B6c493757fD7f19681aa3004E573B5d4BE62b19 -k 4916d58e7ece81883cc5dd9ac8ce292460be4c5e6b0b92495c3d00f85fdb7a74
 
 test:
 	make cmd

@@ -31,7 +31,7 @@ func main() {
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
 
 	// Now you can create a new instance of the SDK to use
-	sdk := thirdweb.NewThirdwebSDK(rpcUrl)
+	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl)
 }
 ```
 
@@ -42,14 +42,14 @@ Once you instantiate the SDK, you can use it to access your thirdweb contracts. 
 ```go
 func main() {
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
-	sdk := thirdweb.NewThirdwebSDK(rpcUrl)
+	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl)
 
 	// Add your NFT Collection contract address here
 	address := "0x..."
-	nft := sdk.GetNFTCollection(address)
+	nft, _ := sdk.GetNFTCollection(address)
 
 	// Now you can use any of the read-only SDK contract functions
-	nfts = nft.GetAll()
+	nfts, _ = nft.GetAll()
 }
 ```
 
@@ -63,14 +63,14 @@ Meanwhile, if you want to use write functions as well and connect a signer, you 
 func main() {
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
 	privateKey := "..."
-	sdk := thirdweb.NewThirdwebSDK(rpcUrl, privateKey)
+	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, privateKey)
 
 	// Add your NFT Collection contract address here
 	address := "0x..."
-	nft := sdk.GetNFTCollection(address)
+	nft, _ := sdk.GetNFTCollection(address)
 
 	// Now you can use any of the read-only SDK contract functions
-	tx, err = nft.Mint(
+	tx, _ = nft.Mint(
 		&thirdweb.NFTMetadataInput{
 			Name:        "Test NFT",
 			Description: "Minted with the thirdweb Go SDK",

@@ -53,7 +53,6 @@ var nftDropClaimCmd = &cobra.Command{
 		if tx, err := nftDrop.Claim(1); err != nil {
 			panic(err)
 		} else {
-			// TODO return the minted token ID
 			log.Printf("Claimed nft successfully")
 
 			result, _ := json.Marshal(&tx)
