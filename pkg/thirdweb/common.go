@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"math"
 	"math/big"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -51,7 +52,9 @@ func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage Storage) ([]stri
 // TOKEN
 
 func isNativeToken(tokenAddress string) bool {
-	return tokenAddress == "0x0000000000000000000000000000000000000000"
+	isZero := tokenAddress == "0x0000000000000000000000000000000000000000"
+	isNative := strings.ToLower(tokenAddress) == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+	return isZero || isNative
 }
 
 func parseUnits(value float64, decimals int) *big.Int {
@@ -59,8 +62,13 @@ func parseUnits(value float64, decimals int) *big.Int {
 }
 
 func formatUnits(value *big.Int, decimals int) float64 {
+	// Importantly copy value to a new variable so big.Div doesn't mutate it
+	bigNumber := big.NewInt(value.Int64())
+
 	divisor := big.NewInt(int64(math.Pow10(decimals)))
-	return float64(value.Div(divisor, value).Int64())
+
+	// Cast big number values to floats for float division
+	return float64(bigNumber.Int64()) / float64(divisor.Int64())
 }
 
 func fetchCurrencyMetadata(provider *ethclient.Client, asset string) (*Currency, error) {
@@ -85,6 +93,7 @@ func fetchCurrencyMetadata(provider *ethclient.Client, asset string) (*Currency,
 		name, err := abi.Name(&bind.CallOpts{})
 		symbol, err := abi.Symbol(&bind.CallOpts{})
 		decimals, err := abi.Decimals(&bind.CallOpts{})
+
 		currency := &Currency{
 			name,
 			symbol,
@@ -102,6 +111,7 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 	}
 
 	displayValue := formatUnits(price, metadata.decimals)
+
 	currencyValue := &CurrencyValue{
 		metadata.name,
 		metadata.symbol,

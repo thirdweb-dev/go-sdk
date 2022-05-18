@@ -10,18 +10,38 @@ type ThirdwebSDK struct {
 	storage Storage
 }
 
-func NewThirdwebSDK(provider *ethclient.Client, privateKey string, gatewayUrl string) (*ThirdwebSDK, error) {
-	if gatewayUrl == "" {
-		gatewayUrl = "https://gateway.ipfscdn.io/ipfs/"
+func NewThirdwebSDK(rpcUrl string, options *SDKOptions) (*ThirdwebSDK, error) {
+	provider, err := ethclient.Dial(rpcUrl)
+	if err != nil {
+		return nil, err
 	}
 
-	if handler, err := NewProviderHandler(provider, privateKey); err != nil {
-		return nil, err
-	} else {
-		storage := NewIpfsStorage(gatewayUrl)
+	if options == nil {
+		handler, err := NewProviderHandler(provider, "")
+		if err != nil {
+			return nil, err
+		}
+
+		storage := NewIpfsStorage(DEFAULT_IPFS_GATEWAY_URL)
 		sdk := &ThirdwebSDK{
-			handler,
-			storage,
+			handler, storage,
+		}
+		return sdk, nil
+	} else {
+		gatewayUrl := options.GatewayUrl
+		if gatewayUrl == "" {
+			gatewayUrl = DEFAULT_IPFS_GATEWAY_URL
+		}
+
+		handler, err := NewProviderHandler(provider, options.PrivateKey)
+		if err != nil {
+			return nil, err
+		}
+
+		storage := NewIpfsStorage(gatewayUrl)
+
+		sdk := &ThirdwebSDK{
+			handler, storage,
 		}
 		return sdk, nil
 	}

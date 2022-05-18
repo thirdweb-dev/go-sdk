@@ -31,8 +31,10 @@ func main() {
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
 
 	// Now you can create a new instance of the SDK to use
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl)
+	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, nil)
 }
+
+main()
 ```
 
 ### Working With Contracts
@@ -40,9 +42,15 @@ func main() {
 Once you instantiate the SDK, you can use it to access your thirdweb contracts. You can use SDK's contract getter functions like `GetNFTCollection`, `GetEdition`, and `GetNFTDrop`, to get the respective SDK contract instances. To use an NFT Collection contract for example, you can do the following.
 
 ```go
+import (
+	"fmt"
+
+	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
+)
+
 func main() {
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl)
+	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, nil)
 
 	// Add your NFT Collection contract address here
 	address := "0x..."
@@ -50,7 +58,10 @@ func main() {
 
 	// Now you can use any of the read-only SDK contract functions
 	nfts, _ = nft.GetAll()
+	fmt.Println(len(nfts))
 }
+
+main()
 ```
 
 ### Signing Transactions
@@ -60,12 +71,21 @@ func main() {
 Meanwhile, if you want to use write functions as well and connect a signer, you can use the following setup:
 
 ```go
+import (
+	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
+)
+
 func main() {
 	rpcUrl := "https://rpc-mumbai.maticvigil.com"
-	privateKey := "..."
-	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, privateKey)
 
-	// Add your NFT Collection contract address here
+	// Add your private key (make sure it isnt directly written in this file)
+	privateKey := "..."
+
+	// Instantiate the SDK with your privateKey
+	sdk, _ := thirdweb.NewThirdwebSDK(rpcUrl, &thirdweb.SDKOptions{
+		PrivateKey: privateKey,
+	})
+	
 	address := "0x..."
 	nft, _ := sdk.GetNFTCollection(address)
 
@@ -77,6 +97,8 @@ func main() {
 		}
 	)
 }
+
+main()
 ```
 
 

@@ -12,18 +12,20 @@ cmd: FORCE
 	cd cmd/thirdweb && go build -o ../../bin/thirdweb && cd -
 
 test-nft-collection:
-	./bin/thirdweb nft getAll -a 0x4a945C93b79998d55E4F6103D000478B5D03aB92
-	./bin/thirdweb nft getOwned -a 0x4a945C93b79998d55E4F6103D000478B5D03aB92 -k 4916d58e7ece81883cc5dd9ac8ce292460be4c5e6b0b92495c3d00f85fdb7a74
-	./bin/thirdweb nft mint -a 0x4a945C93b79998d55E4F6103D000478B5D03aB92 -k 4916d58e7ece81883cc5dd9ac8ce292460be4c5e6b0b92495c3d00f85fdb7a74
+	./bin/thirdweb nft getAll -a ${GO_NFT_COLLECTION} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb nft getOwned -a ${GO_NFT_COLLECTION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test-edition:
-	./bin/thirdweb edition getAll -a 0x543B4DC47C4DB12c4Cb8611f604D6c338e3D4B2E
-	./bin/thirdweb edition getOwned -a 0x543B4DC47C4DB12c4Cb8611f604D6c338e3D4B2E -k 4916d58e7ece81883cc5dd9ac8ce292460be4c5e6b0b92495c3d00f85fdb7a74
-	./bin/thirdweb edition mint -a 0x543B4DC47C4DB12c4Cb8611f604D6c338e3D4B2E -k 4916d58e7ece81883cc5dd9ac8ce292460be4c5e6b0b92495c3d00f85fdb7a74
+	./bin/thirdweb edition getAll -a ${GO_EDITION} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb edition getOwned -a ${GO_EDITION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test-nft-drop:
-	./bin/thirdweb nftdrop getAll -a 0x3B6c493757fD7f19681aa3004E573B5d4BE62b19
-	./bin/thirdweb nftdrop claim -a 0x3B6c493757fD7f19681aa3004E573B5d4BE62b19 -k 4916d58e7ece81883cc5dd9ac8ce292460be4c5e6b0b92495c3d00f85fdb7a74
+	./bin/thirdweb nftdrop getAll -a ${GO_NFT_DROP} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb nftdrop claim -a ${GO_NFT_DROP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+
+test-write:
+	./bin/thirdweb nft mint -a ${GO_NFT_COLLECTION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb edition mint -a ${GO_EDITION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test:
 	make cmd
