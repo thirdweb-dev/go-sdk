@@ -89,7 +89,7 @@ var editionMintCmd = &cobra.Command{
 }
 
 func init() {
-	editionCmd.PersistentFlags().StringVarP(&editionAddress, "address", "a", "", "edition contract address")
+	editionCmd.PersistentFlags().StringVarP(&editionAddress, "address", "a", "", "nft contract address")
 	editionCmd.AddCommand(editionGetAllCmd)
 	editionCmd.AddCommand(editionGetOwnedCmd)
 	editionCmd.AddCommand(editionMintCmd)
