@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	privateKey string
+	privateKey  string
 	chainRpcUrl string
 
 	rootCmd = &cobra.Command{
@@ -32,6 +32,7 @@ func init() {
 	viper.SetDefault("chainRpcUrl", "https://rpc-mumbai.maticvigil.com")
 
 	rootCmd.AddCommand(nftCmd)
+	rootCmd.AddCommand(editionCmd)
 	rootCmd.AddCommand(nftDropCmd)
 }
 

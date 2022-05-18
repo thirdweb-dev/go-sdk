@@ -16,14 +16,14 @@ var (
 var nftCmd = &cobra.Command{
 	Use:   "nft [command]",
 	Short: "Interact with an nft contract",
-	Args: cobra.MinimumNArgs(1),
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("Please input a command to run")
 	},
 }
 
-var nftGetAllCmd = &cobra.Command {
-	Use: "getAll",
+var nftGetAllCmd = &cobra.Command{
+	Use:   "getAll",
 	Short: "Get all available nfts in a contract `ADDRESS`",
 	Run: func(cmd *cobra.Command, args []string) {
 		nftCollection, err := getNftCollection()
@@ -42,8 +42,8 @@ var nftGetAllCmd = &cobra.Command {
 	},
 }
 
-var nftGetOwnedCmd = &cobra.Command {
-	Use: "getOwned",
+var nftGetOwnedCmd = &cobra.Command{
+	Use:   "getOwned",
 	Short: "Get owned nfts in a contract `ADDRESS`",
 	Run: func(cmd *cobra.Command, args []string) {
 		nftCollection, err := getNftCollection()
@@ -62,8 +62,8 @@ var nftGetOwnedCmd = &cobra.Command {
 	},
 }
 
-var nftMintCmd = &cobra.Command {
-	Use: "mint",
+var nftMintCmd = &cobra.Command{
+	Use:   "mint",
 	Short: "Get all available nfts in a contract",
 	Run: func(cmd *cobra.Command, args []string) {
 		nftCollection, err := getNftCollection()
@@ -72,7 +72,7 @@ var nftMintCmd = &cobra.Command {
 		}
 
 		if tx, err := nftCollection.Mint(&thirdweb.NFTMetadataInput{
-			Name: "Test NFT From Go",
+			Name: "NFT Test",
 		}); err != nil {
 			panic(err)
 		} else {

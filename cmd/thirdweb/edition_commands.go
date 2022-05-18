@@ -14,8 +14,8 @@ var (
 )
 
 var editionCmd = &cobra.Command{
-	Use:   "nft [command]",
-	Short: "Interact with an nft contract",
+	Use:   "edition [command]",
+	Short: "Interact with an edition contract",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("Please input a command to run")
@@ -73,9 +73,9 @@ var editionMintCmd = &cobra.Command{
 
 		if tx, err := edition.Mint(&thirdweb.EditionMetadataInput{
 			Metadata: &thirdweb.NFTMetadataInput{
-				Name: "Test NFT From Go",
+				Name: "Edition Test",
 			},
-			Supply: 10,
+			Supply: 1,
 		}); err != nil {
 			panic(err)
 		} else {
@@ -89,8 +89,8 @@ var editionMintCmd = &cobra.Command{
 }
 
 func init() {
-	nftCmd.PersistentFlags().StringVarP(&editionAddress, "address", "a", "", "nft contract address")
-	nftCmd.AddCommand(nftGetAllCmd)
-	nftCmd.AddCommand(nftGetOwnedCmd)
-	nftCmd.AddCommand(nftMintCmd)
+	editionCmd.PersistentFlags().StringVarP(&editionAddress, "address", "a", "", "edition contract address")
+	editionCmd.AddCommand(editionGetAllCmd)
+	editionCmd.AddCommand(editionGetOwnedCmd)
+	editionCmd.AddCommand(editionMintCmd)
 }

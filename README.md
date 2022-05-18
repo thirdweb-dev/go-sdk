@@ -1,122 +1,82 @@
-# Thirdweb Go SDK
+<p align="center">
+<br />
+<a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/typescript-sdk/blob/main/logo.svg?raw=true" width="200" alt=""/></a>
+<br />
+</p>
+<h1 align="center">Thirdweb Go SDK</h1>
+<p align="center">
+<a href="https://discord.gg/thirdweb"><img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/></a>
 
-[![Go Reference](https://pkg.go.dev/badge/golang.org/x/example.svg)](https://pkg.go.dev/github.com/thirdweb-dev/go-sdk/pkg/nftlabs)
+# Installation
 
-This repository allows you to interact with thirdweb Ethereum protocols.
+```bash
+go get github.com/thirdweb-dev/go-sdk
+```
 
-The Go SDK allows you to query and transact with any thirdweb contract
-deployed through the [thirdweb Dashboard](https://thirdweb.com)
+## Getting Started
 
-## Project Structure
+To start using this SDK, you just need to pass in a provider configuration.
 
-The SDK is up of modules:
+### Instantiating the SDK
 
-- **NFT**: Mint and manage NFTs that you can list directly to a marketplace,
-or transfer out to a user/managing wallet
-- **Currency**: Create your own ERC20 coin that you can
-use throughout the protocols equip with all the standard methods (mint, transfer, burn, etc)
-- **Marketplace**: List NFTs, Collections, or even Packs of any set of digital assets
-for sale with automated royalty collection
-- **Collection**: A collection is a form of ERC1155 token that can contain a group
-of digital assets. Collections are listable directly into a Marketplace (or
-transfer out to another wallet)
-- **Pack**: Packs are a special form of ERC1155 asset that can contain many
-digital assets with a fixed opening window
+Once you have all the necessary dependencies, you can follow the following setup steps to get started with SDK read-only functions:
 
-You can use the thirdweb SDK to interact with all these modules in a straightforward
-and easy to use interface.
-
-Interacting with the modules is easy:
 ```go
-package examples
-
 import (
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb/go-sdk/pkg/nftlabs"
-	"log"
-	"math/big"
+	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
 )
 
 func main() {
-	nftContractAddress := ""
-	chainRpcUrl := "https://rpc-mumbai.maticvigil.com" // change this
+	// Add your own RPC URL here or use a public one
+	rpcUrl := "https://rpc-mumbai.maticvigil.com"
 
-	client, err := ethclient.Dial(chainRpcUrl)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Now you can create a new instance of the SDK to use
+	sdk := thirdweb.NewThirdwebSDK(rpcUrl)
+}
+```
 
-	sdk, err := nftlabs.NewSdk(client, &nftlabs.SdkOptions{PrivateKey: "// TODO"})
-	if err != nil {
-		log.Fatal(err)
-	}
+### Working With Contracts
 
-	// You can get Pack/Marketplace/Collection/Currency contracts the same way
-	nftModule, err := sdk.GetNftModule(nftContractAddress)
-	if err != nil {
-		log.Fatal(err)
-	}
+Once you instantiate the SDK, you can use it to access your thirdweb contracts. You can use SDK's contract getter functions like `GetNFTCollection`, `GetEdition`, and `GetNFTDrop`, to get the respective SDK contract instances. To use an NFT Collection contract for example, you can do the following.
+
+```go
+func main() {
+	rpcUrl := "https://rpc-mumbai.maticvigil.com"
+	sdk := thirdweb.NewThirdwebSDK(rpcUrl)
+
+	// Add your NFT Collection contract address here
+	address := "0x..."
+	nft := sdk.GetNFTCollection(address)
+
+	// Now you can use any of the read-only SDK contract functions
+	nfts = nft.GetAll()
+}
+```
+
+### Signing Transactions
+
+> :warning: Never commit private keys to file tracking history, or your account could be compromised. Make sure to add `.env` to your `.gitignore` file.
+
+Meanwhile, if you want to use write functions as well and connect a signer, you can use the following setup:
+
+```go
+func main() {
+	rpcUrl := "https://rpc-mumbai.maticvigil.com"
+	privateKey := "..."
+	sdk := thirdweb.NewThirdwebSDK(rpcUrl, privateKey)
+
+	// Add your NFT Collection contract address here
+	address := "0x..."
+	nft := sdk.GetNFTCollection(address)
+
+	// Now you can use any of the read-only SDK contract functions
+	tx, err = nft.Mint(
+		&thirdweb.NFTMetadataInput{
+			Name:        "Test NFT",
+			Description: "Minted with the thirdweb Go SDK",
+		}
+	)
 }
 ```
 
 
-## Examples
-
-Checkout the sdk usage examples [here](https://github.com/thirdweb-dev/go-sdk/tree/master/examples) and our CLI example [here](https://github.com/thirdweb-dev/go-sdk/tree/master/cmd/nftlabs)
-
-## Getting the CLI
-
-The easiest way to play with the SDK is through the CLI
-
-You can pull the CLI like this:
-
-```bash
-$ go install github.com/thirdweb-dev/go-sdk/cmd/nftlabs
-$ nftlabs
- CLI for the nftlabs-protocols go SDK
-
-Usage:
-  nftlabs [command]
-
-Available Commands:
-  collection  Interact with a collection contract
-  currency    Interact with a currency contract
-  help        Help about any command
-  marketplace Interact with a marketplace contract
-  nft         Interact with an nft contract
-  pack        Interact with a pack contract
-
-Flags:
-  -u, --chainRpcUrl string   chain url where all rpc requests will be sent (default "https://rpc-mumbai.maticvigil.com")
-  -h, --help                 help for nftlabs
-  -k, --privateKey string    private key used to sign transactions
-
-Use "nftlabs [command] --help" for more information about a command.
-```
-
-> Change your chain by setting the `-u` or `--chainRpcUrl` flag
-
-Some examples (you can run right now):
-
-### Getting all NFTs in a contract
-```bash
-$ SAMPLE_NFT_CONTRACT=0xf25C389016B7Ddb1191D4de02e495633Fe34d453
-$ nftlabs nft -a $NFT_ADDRESS getAll 
-```
-
-### Minting a currency (uses gas)
-
-Deploy a Currency through
-the [thirdweb dashboard](https://thirdweb.com) in order to
-be able to mint your tokens. When you have a
-currency address, pass it to the cli with the `-a` (shorthand for `--address`)
-
-> You need to set a signing key when executing this
-> method in order to sign the transaction
-
-Mint 42 of the currency:
-
-```bash
-// -k sets the signing key
-$ nftlabs -k $PKEY currency -a $CURRENCY_ADDRESS mint 42
-```
