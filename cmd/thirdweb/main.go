@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"log"
 )
 
 var (
@@ -31,6 +32,7 @@ func init() {
 	viper.SetDefault("chainRpcUrl", "https://rpc-mumbai.maticvigil.com")
 
 	rootCmd.AddCommand(nftCmd)
+	rootCmd.AddCommand(nftDropCmd)
 }
 
 func initConfig() {

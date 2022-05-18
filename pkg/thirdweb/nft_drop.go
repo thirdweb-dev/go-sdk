@@ -5,29 +5,35 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
 type NFTDrop struct {
-	*DropERC721
+	contractWrapper *ContractWrapper[*abi.DropERC721]
+	*ERC721
 	claimConditions *NFTDropClaimConditions
 }
 
 func NewNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*NFTDrop, error) {
-	if dropErc721, err := abi.NewDropERC721(address, provider); err != nil {
+	if dropAbi, err := abi.NewDropERC721(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := NewContractWrapper(dropErc721, provider, privateKey); err != nil {
+		if contractWrapper, err := NewContractWrapper(dropAbi, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			erc721 := NewDropERC721(contractWrapper, storage)
-			claimConditions := NewNFTDropClaimConditions(contractWrapper, storage)
-			nftDrop := &NFTDrop{
-				erc721,
-				claimConditions,
+			if erc721, err := NewERC721(provider, address, privateKey, storage); err != nil {
+				return nil, err
+			} else {
+				claimConditions := NewNFTDropClaimConditions(contractWrapper, storage)
+				nftCollection := &NFTDrop{
+					contractWrapper,
+					erc721,
+					claimConditions,
+				}
+				return nftCollection, nil
 			}
-			return nftDrop, nil
 		}
 	}
 }
@@ -68,15 +74,15 @@ func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 	return nfts, nil
 }
 
-func (drop *NFTDrop) Claim(quantity int) error {
+func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error) {
 	address := drop.contractWrapper.GetSignerAddress().String()
 	return drop.ClaimTo(address, quantity)
 }
 
-func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) error {
+func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Transaction, error) {
 	claimVerification, err := drop.prepareClaim(quantity)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	tx, err := drop.contractWrapper.abi.Claim(
@@ -89,7 +95,7 @@ func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) error {
 		big.NewInt(int64(claimVerification.maxQuantityPerTransaction)),
 	)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	return drop.contractWrapper.awaitTx(tx.Hash())

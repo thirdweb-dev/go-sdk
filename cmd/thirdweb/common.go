@@ -39,4 +39,19 @@ func getNftCollection() (*thirdweb.NFTCollection, error) {
 	}	
 }
 
+func getNftDrop() (*thirdweb.NFTDrop, error) {
+	if thirdwebSDK == nil {
+		initSdk()
+	}
+
+	log.Printf("Obtaining a NFT Collection on chain %v, contract %v\n", chainRpcUrl, nftDropContractAddress)
+
+	if contract, err := thirdwebSDK.GetNFTDrop(nftDropContractAddress); err != nil {
+		log.Println("Failed to create an NFT collection object")
+		return nil, err
+	} else {
+		return contract, nil
+	}	
+}
+
 
