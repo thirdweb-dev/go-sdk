@@ -55,7 +55,7 @@ func main() {
 
 ### Signing Transactions
 
-> :warning: Never commit private keys to file tracking history, or your account could be compromised. Make sure to add `.env` to your `.gitignore` file.
+> :warning: Never commit private keys to file tracking history, or your account could be compromised.
 
 Meanwhile, if you want to use write functions as well and connect a signer, you can use the following setup:
 
