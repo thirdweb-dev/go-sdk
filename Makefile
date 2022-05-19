@@ -1,4 +1,4 @@
-.PHONY: abi test docs
+.PHONY: abi test docs publish
 
 abi:
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC20.json --out internal/abi/token_erc20.go --type TokenERC20
@@ -55,5 +55,12 @@ test:
 	make test-drop-read
 	make test-drop-write
 	make test-storage
+
+publish:
+	# Publish following https://go.dev/doc/modules/publishing
+	go mod tidy
+	git tag $(TAG)
+	git push origin $(TAG)
+	GOPROXY=proxy.golang.org go list -m github.com/thirdweb-dev/go-sdk@$(TAG)
 
 FORCE: ;
