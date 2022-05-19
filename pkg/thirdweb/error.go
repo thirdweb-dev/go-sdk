@@ -2,56 +2,56 @@ package thirdweb
 
 import "fmt"
 
-type NotFoundError struct {
+type notFoundError struct {
 	identifier interface{}
 }
 
-func (m *NotFoundError) Error() string {
+func (m *notFoundError) Error() string {
 	return fmt.Sprintf("Could not find with id %v", m.identifier)
 }
 
-type UnmarshalError struct {
+type unmarshalError struct {
 	body            string
 	typeName        string
 	UnderlyingError error
 }
 
-func (m *UnmarshalError) Error() string {
+func (m *unmarshalError) Error() string {
 	return fmt.Sprintf("Could not unmarshal %v with body %v", m.typeName, m.body)
 }
 
-type NoSignerError struct {
+type noSignerError struct {
 	typeName string
 	Err      error
 }
 
-func (m *NoSignerError) Error() string {
+func (m *noSignerError) Error() string {
 	return fmt.Sprintf("Could not proceed with transaction in %v module, missing SigningMethod", m.typeName)
 }
 
-type NoAddressError struct {
+type noAddressError struct {
 	typeName string
 }
 
-func (m *NoAddressError) Error() string {
+func (m *noAddressError) Error() string {
 	return fmt.Sprintf("Could not proceed with transaction in %v module, missing or invalid signer address", m.typeName)
 }
 
-type UnsupportedFunctionError struct {
+type unsupportedFunctionError struct {
 	typeName string
 	body     string
 }
 
-func (m *UnsupportedFunctionError) Error() string {
+func (m *unsupportedFunctionError) Error() string {
 	return fmt.Sprintf("The method you're executing in the %v module is not supported yet. %v", m.typeName, m.body)
 }
 
-type FailedToUploadError struct {
+type failedToUploadError struct {
 	statusCode      int
 	Payload         interface{}
 	UnderlyingError error
 }
 
-func (m *FailedToUploadError) Error() string {
+func (m *failedToUploadError) Error() string {
 	return fmt.Sprintf("Failed to upload, status code = %d", m.statusCode)
 }

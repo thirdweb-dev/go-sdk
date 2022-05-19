@@ -2,13 +2,13 @@ package thirdweb
 
 import "errors"
 
-const DEFAULT_IPFS_GATEWAY_URL = "https://gateway.ipfscdn.io/ipfs/"
+const defaultIpfsGatewayUrl = "https://gateway.ipfscdn.io/ipfs/"
 
-const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co"
+const twIpfsServerUrl = "https://upload.nftlabs.co"
 
-const PINATA_IPFS_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS"
+const pinataIpfsUrl = "https://api.pinata.cloud/pinning/pinFileToIPFS"
 
-const DEFAULT_MERKLE_ROOT = "0x0000000000000000000000000000000000000000000000000000000000000000"
+const defaultMerkleRoot = "0x0000000000000000000000000000000000000000000000000000000000000000"
 
 type ChainID int
 type ChainName string

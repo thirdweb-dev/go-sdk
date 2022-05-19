@@ -12,8 +12,8 @@ import (
 )
 
 type ERC1155 struct {
-	contractWrapper *ContractWrapper[*abi.TokenERC1155]
-	storage         Storage
+	contractWrapper *contractWrapper[*abi.TokenERC1155]
+	storage         storage
 }
 
 type EditionResult struct {
@@ -21,7 +21,7 @@ type EditionResult struct {
 	err error
 }
 
-func NewERC1155(contractWrapper *ContractWrapper[*abi.TokenERC1155], storage Storage) *ERC1155 {
+func newERC1155(contractWrapper *contractWrapper[*abi.TokenERC1155], storage storage) *ERC1155 {
 	return &ERC1155{
 		contractWrapper,
 		storage,
@@ -167,7 +167,7 @@ func (erc1155 *ERC1155) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
 		&bind.CallOpts{},
 		big.NewInt(int64(tokenId)),
 	); err != nil {
-		return nil, &NotFoundError{
+		return nil, &notFoundError{
 			tokenId,
 		}
 	} else {

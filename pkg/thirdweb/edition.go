@@ -13,14 +13,14 @@ type Edition struct {
 	*ERC1155
 }
 
-func NewEdition(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*Edition, error) {
+func newEdition(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Edition, error) {
 	if erc1155, err := abi.NewTokenERC1155(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := NewContractWrapper(erc1155, address, provider, privateKey); err != nil {
+		if contractWrapper, err := newContractWrapper(erc1155, address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			erc1155 := NewERC1155(contractWrapper, storage)
+			erc1155 := newERC1155(contractWrapper, storage)
 			edition := &Edition{
 				erc1155,
 			}

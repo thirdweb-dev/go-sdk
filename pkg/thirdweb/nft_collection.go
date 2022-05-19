@@ -7,22 +7,22 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
-type nftCollection struct {
-	contractWrapper *ContractWrapper[*abi.TokenERC721]
+type NFTCollection struct {
+	contractWrapper *contractWrapper[*abi.TokenERC721]
 	*ERC721
 }
 
-func newNFTCollection(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*nftCollection, error) {
+func newNFTCollection(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*NFTCollection, error) {
 	if erc721, err := abi.NewTokenERC721(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := NewContractWrapper(erc721, address, provider, privateKey); err != nil {
+		if contractWrapper, err := newContractWrapper(erc721, address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			if erc721, err := NewERC721(provider, address, privateKey, storage); err != nil {
+			if erc721, err := newERC721(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
-				nftCollection := &nftCollection{
+				nftCollection := &NFTCollection{
 					contractWrapper,
 					erc721,
 				}
@@ -32,12 +32,12 @@ func newNFTCollection(provider *ethclient.Client, address common.Address, privat
 	}
 }
 
-func (nft *nftCollection) Mint(metadata *NFTMetadataInput) (*types.Transaction, error) {
+func (nft *NFTCollection) Mint(metadata *NFTMetadataInput) (*types.Transaction, error) {
 	address := nft.contractWrapper.GetSignerAddress().String()
 	return nft.MintTo(address, metadata)
 }
 
-func (nft *nftCollection) MintTo(address string, metadata *NFTMetadataInput) (*types.Transaction, error) {
+func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadata, nft.storage)
 	if err != nil {
 		return nil, err
@@ -55,12 +55,12 @@ func (nft *nftCollection) MintTo(address string, metadata *NFTMetadataInput) (*t
 	return nft.contractWrapper.awaitTx(tx.Hash())
 }
 
-func (nft *nftCollection) MintBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error) {
+func (nft *NFTCollection) MintBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	address := nft.contractWrapper.GetSignerAddress().String()
 	return nft.MintBatchTo(address, metadatas)
 }
 
-func (nft *nftCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
+func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	uris, err := uploadOrExtractUris(metadatas, nft.storage)
 	if err != nil {
 		return nil, err

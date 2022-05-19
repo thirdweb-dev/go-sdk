@@ -13,8 +13,8 @@ import (
 )
 
 type ERC721 struct {
-	contractWrapper *ContractWrapper[*abi.TokenERC721]
-	storage         Storage
+	contractWrapper *contractWrapper[*abi.TokenERC721]
+	storage         storage
 }
 
 type NFTResult struct {
@@ -22,10 +22,10 @@ type NFTResult struct {
 	err error
 }
 
-func NewERC721(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*ERC721, error) {
+func newERC721(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*ERC721, error) {
 	if erc721, err := abi.NewTokenERC721(address, provider); err != nil {
 		return nil, err
-	} else if contractWrapper, err := NewContractWrapper(erc721, address, provider, privateKey); err != nil {
+	} else if contractWrapper, err := newContractWrapper(erc721, address, provider, privateKey); err != nil {
 		return nil, err
 	} else {
 		return &ERC721{

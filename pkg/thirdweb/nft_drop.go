@@ -11,22 +11,22 @@ import (
 )
 
 type NFTDrop struct {
-	contractWrapper *ContractWrapper[*abi.DropERC721]
+	contractWrapper *contractWrapper[*abi.DropERC721]
 	*ERC721
-	claimConditions *NFTDropClaimConditions
+	claimConditions *nftDropClaimConditions
 }
 
-func NewNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*NFTDrop, error) {
+func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*NFTDrop, error) {
 	if dropAbi, err := abi.NewDropERC721(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := NewContractWrapper(dropAbi, address, provider, privateKey); err != nil {
+		if contractWrapper, err := newContractWrapper(dropAbi, address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			if erc721, err := NewERC721(provider, address, privateKey, storage); err != nil {
+			if erc721, err := newERC721(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
-				claimConditions := NewNFTDropClaimConditions(contractWrapper, storage)
+				claimConditions := newNFTDropClaimConditions(contractWrapper, storage)
 				nftCollection := &NFTDrop{
 					contractWrapper,
 					erc721,

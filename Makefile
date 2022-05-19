@@ -1,4 +1,4 @@
-.PHONY: abi test 
+.PHONY: abi test docs
 
 abi:
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC20.json --out internal/abi/token_erc20.go --type TokenERC20

@@ -9,18 +9,14 @@ import "github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
 ## Index
 
 - [Constants](<#constants>)
-- [type BaseUriWithUris](<#type-baseuriwithuris>)
 - [type ChainID](<#type-chainid>)
 - [type ChainName](<#type-chainname>)
 - [type ClaimCondition](<#type-claimcondition>)
 - [type ClaimConditionOutput](<#type-claimconditionoutput>)
 - [type ClaimVerification](<#type-claimverification>)
-- [type ContractWrapper](<#type-contractwrapper>)
-  - [func NewContractWrapper[TContractABI any](abi TContractABI, address common.Address, provider *ethclient.Client, privateKey string) (*ContractWrapper[TContractABI], error)](<#func-newcontractwrapper>)
 - [type Currency](<#type-currency>)
 - [type CurrencyValue](<#type-currencyvalue>)
 - [type ERC1155](<#type-erc1155>)
-  - [func NewERC1155(contractWrapper *ContractWrapper[*abi.TokenERC1155], storage Storage) *ERC1155](<#func-newerc1155>)
   - [func (erc1155 *ERC1155) Balance(tokenId int) (*big.Int, error)](<#func-erc1155-balance>)
   - [func (erc1155 *ERC1155) BalanceOf(address string, tokenId int) (*big.Int, error)](<#func-erc1155-balanceof>)
   - [func (erc1155 *ERC1155) Burn(tokenId int, amount int) (*types.Transaction, error)](<#func-erc1155-burn>)
@@ -33,7 +29,6 @@ import "github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
   - [func (erc1155 *ERC1155) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error)](<#func-erc1155-setapprovalforall>)
   - [func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Transaction, error)](<#func-erc1155-transfer>)
 - [type ERC721](<#type-erc721>)
-  - [func NewERC721(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*ERC721, error)](<#func-newerc721>)
   - [func (erc721 *ERC721) Balance() (*big.Int, error)](<#func-erc721-balance>)
   - [func (erc721 *ERC721) BalanceOf(address string) (*big.Int, error)](<#func-erc721-balanceof>)
   - [func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error)](<#func-erc721-burn>)
@@ -48,7 +43,6 @@ import "github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
   - [func (erc721 *ERC721) TotalSupply() (*big.Int, error)](<#func-erc721-totalsupply>)
   - [func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, error)](<#func-erc721-transfer>)
 - [type Edition](<#type-edition>)
-  - [func NewEdition(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*Edition, error)](<#func-newedition>)
   - [func (edition *Edition) Mint(metadata *EditionMetadataInput) (*types.Transaction, error)](<#func-edition-mint>)
   - [func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error)](<#func-edition-mintadditionalsupply>)
   - [func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) (*types.Transaction, error)](<#func-edition-mintadditionalsupplyto>)
@@ -58,60 +52,29 @@ import "github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
 - [type EditionMetadataInput](<#type-editionmetadatainput>)
 - [type EditionMetadataOwner](<#type-editionmetadataowner>)
 - [type EditionResult](<#type-editionresult>)
-- [type FailedToUploadError](<#type-failedtouploaderror>)
-  - [func (m *FailedToUploadError) Error() string](<#func-failedtouploaderror-error>)
-- [type IpfsStorage](<#type-ipfsstorage>)
-  - [func (gw *IpfsStorage) Get(uri string) ([]byte, error)](<#func-ipfsstorage-get>)
-  - [func (ipfs *IpfsStorage) Upload(data any, contractAddress string, signerAddress string) (string, error)](<#func-ipfsstorage-upload>)
-  - [func (ipfs *IpfsStorage) UploadBatch(data []any, contractAddress string, signerAddress string) (*BaseUriWithUris, error)](<#func-ipfsstorage-uploadbatch>)
 - [type Metadata](<#type-metadata>)
 - [type NFTCollection](<#type-nftcollection>)
-  - [func NewNFTCollection(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*NFTCollection, error)](<#func-newnftcollection>)
   - [func (nft *NFTCollection) Mint(metadata *NFTMetadataInput) (*types.Transaction, error)](<#func-nftcollection-mint>)
   - [func (nft *NFTCollection) MintBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)](<#func-nftcollection-mintbatch>)
   - [func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) (*types.Transaction, error)](<#func-nftcollection-mintbatchto>)
   - [func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*types.Transaction, error)](<#func-nftcollection-mintto>)
 - [type NFTDrop](<#type-nftdrop>)
-  - [func NewNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*NFTDrop, error)](<#func-newnftdrop>)
   - [func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error)](<#func-nftdrop-claim>)
   - [func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Transaction, error)](<#func-nftdrop-claimto>)
   - [func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)](<#func-nftdrop-createbatch>)
   - [func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error)](<#func-nftdrop-getallclaimed>)
   - [func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error)](<#func-nftdrop-getallunclaimed>)
-- [type NFTDropClaimConditions](<#type-nftdropclaimconditions>)
-  - [func NewNFTDropClaimConditions(contractWrapper *ContractWrapper[*abi.DropERC721], storage Storage) *NFTDropClaimConditions](<#func-newnftdropclaimconditions>)
-  - [func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error)](<#func-nftdropclaimconditions-getactive>)
 - [type NFTMetadata](<#type-nftmetadata>)
 - [type NFTMetadataInput](<#type-nftmetadatainput>)
 - [type NFTMetadataOwner](<#type-nftmetadataowner>)
 - [type NFTResult](<#type-nftresult>)
 - [type NativeToken](<#type-nativetoken>)
-- [type NoAddressError](<#type-noaddresserror>)
-  - [func (m *NoAddressError) Error() string](<#func-noaddresserror-error>)
-- [type NoSignerError](<#type-nosignererror>)
-  - [func (m *NoSignerError) Error() string](<#func-nosignererror-error>)
-- [type NotFoundError](<#type-notfounderror>)
-  - [func (m *NotFoundError) Error() string](<#func-notfounderror-error>)
-- [type ProviderHandler](<#type-providerhandler>)
-  - [func NewProviderHandler(provider *ethclient.Client, privateKey string) (*ProviderHandler, error)](<#func-newproviderhandler>)
-  - [func (handler *ProviderHandler) GetChainID() (*big.Int, error)](<#func-providerhandler-getchainid>)
-  - [func (handler *ProviderHandler) GetProvider() *ethclient.Client](<#func-providerhandler-getprovider>)
-  - [func (handler *ProviderHandler) GetRawPrivateKey() string](<#func-providerhandler-getrawprivatekey>)
-  - [func (handler *ProviderHandler) GetSignerAddress() common.Address](<#func-providerhandler-getsigneraddress>)
-  - [func (handler *ProviderHandler) UpdatePrivateKey(privateKey string) error](<#func-providerhandler-updateprivatekey>)
-  - [func (handler *ProviderHandler) UpdateProvider(provider *ethclient.Client)](<#func-providerhandler-updateprovider>)
 - [type SDKOptions](<#type-sdkoptions>)
-- [type Storage](<#type-storage>)
-  - [func NewIpfsStorage(uri string) Storage](<#func-newipfsstorage>)
 - [type ThirdwebSDK](<#type-thirdwebsdk>)
   - [func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK, error)](<#func-newthirdwebsdk>)
   - [func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error)](<#func-thirdwebsdk-getedition>)
   - [func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)](<#func-thirdwebsdk-getnftcollection>)
   - [func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error)](<#func-thirdwebsdk-getnftdrop>)
-- [type UnmarshalError](<#type-unmarshalerror>)
-  - [func (m *UnmarshalError) Error() string](<#func-unmarshalerror-error>)
-- [type UnsupportedFunctionError](<#type-unsupportedfunctionerror>)
-  - [func (m *UnsupportedFunctionError) Error() string](<#func-unsupportedfunctionerror-error>)
 - [type WrappedToken](<#type-wrappedtoken>)
 
 
@@ -143,14 +106,6 @@ const PINATA_IPFS_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS"
 
 ```go
 const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co"
-```
-
-## type [BaseUriWithUris](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/ipfs_storage.go#L16-L19>)
-
-```go
-type BaseUriWithUris struct {
-    // contains filtered or unexported fields
-}
 ```
 
 ## type [ChainID](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/constants.go#L13>)
@@ -189,21 +144,6 @@ type ClaimVerification struct {
 }
 ```
 
-## type [ContractWrapper](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/contract_wrapper.go#L16-L20>)
-
-```go
-type ContractWrapper[TContractABI any] struct {
-    *ProviderHandler
-    // contains filtered or unexported fields
-}
-```
-
-### func [NewContractWrapper](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/contract_wrapper.go#L27>)
-
-```go
-func NewContractWrapper[TContractABI any](abi TContractABI, address common.Address, provider *ethclient.Client, privateKey string) (*ContractWrapper[TContractABI], error)
-```
-
 ## type [Currency](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L88-L92>)
 
 ```go
@@ -226,12 +166,6 @@ type CurrencyValue struct {
 type ERC1155 struct {
     // contains filtered or unexported fields
 }
-```
-
-### func [NewERC1155](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L24>)
-
-```go
-func NewERC1155(contractWrapper *ContractWrapper[*abi.TokenERC1155], storage Storage) *ERC1155
 ```
 
 ### func \(\*ERC1155\) [Balance](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L111>)
@@ -306,12 +240,6 @@ func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Tra
 type ERC721 struct {
     // contains filtered or unexported fields
 }
-```
-
-### func [NewERC721](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L25>)
-
-```go
-func NewERC721(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*ERC721, error)
 ```
 
 ### func \(\*ERC721\) [Balance](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L111>)
@@ -400,12 +328,6 @@ type Edition struct {
 }
 ```
 
-### func [NewEdition](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L16>)
-
-```go
-func NewEdition(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*Edition, error)
-```
-
 ### func \(\*Edition\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L32>)
 
 ```go
@@ -473,52 +395,6 @@ type EditionResult struct {
 }
 ```
 
-## type [FailedToUploadError](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L49-L53>)
-
-```go
-type FailedToUploadError struct {
-    Payload         interface{}
-    UnderlyingError error
-    // contains filtered or unexported fields
-}
-```
-
-### func \(\*FailedToUploadError\) [Error](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L55>)
-
-```go
-func (m *FailedToUploadError) Error() string
-```
-
-## type [IpfsStorage](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/ipfs_storage.go#L34-L36>)
-
-```go
-type IpfsStorage struct {
-    Url string
-}
-```
-
-### func \(\*IpfsStorage\) [Get](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/ipfs_storage.go#L44>)
-
-```go
-func (gw *IpfsStorage) Get(uri string) ([]byte, error)
-```
-
-### func \(\*IpfsStorage\) [Upload](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/ipfs_storage.go#L64>)
-
-```go
-func (ipfs *IpfsStorage) Upload(data any, contractAddress string, signerAddress string) (string, error)
-```
-
-Upload method can be used to upload a generic payload to IPFS\. NftLabs provides a default proxy in the SDK\. You can override this with the ISdk\.SetStorage
-
-### func \(\*IpfsStorage\) [UploadBatch](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/ipfs_storage.go#L75>)
-
-```go
-func (ipfs *IpfsStorage) UploadBatch(data []any, contractAddress string, signerAddress string) (*BaseUriWithUris, error)
-```
-
-UploadBatch uploads a list of arbitrary objects and returns their URIs \*in the order they were passed\*
-
 ## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L12-L15>)
 
 ```go
@@ -535,12 +411,6 @@ type NFTCollection struct {
     *ERC721
     // contains filtered or unexported fields
 }
-```
-
-### func [NewNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L15>)
-
-```go
-func NewNFTCollection(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*NFTCollection, error)
 ```
 
 ### func \(\*NFTCollection\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L35>)
@@ -576,12 +446,6 @@ type NFTDrop struct {
 }
 ```
 
-### func [NewNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L19>)
-
-```go
-func NewNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage Storage) (*NFTDrop, error)
-```
-
 ### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L104>)
 
 ```go
@@ -610,26 +474,6 @@ func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error)
 
 ```go
 func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error)
-```
-
-## type [NFTDropClaimConditions](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop_claim_conditions.go#L8-L11>)
-
-```go
-type NFTDropClaimConditions struct {
-    // contains filtered or unexported fields
-}
-```
-
-### func [NewNFTDropClaimConditions](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop_claim_conditions.go#L13>)
-
-```go
-func NewNFTDropClaimConditions(contractWrapper *ContractWrapper[*abi.DropERC721], storage Storage) *NFTDropClaimConditions
-```
-
-### func \(\*NFTDropClaimConditions\) [GetActive](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop_claim_conditions.go#L21>)
-
-```go
-func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error)
 ```
 
 ## type [NFTMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L17-L27>)
@@ -687,99 +531,6 @@ type NativeToken struct {
 }
 ```
 
-## type [NoAddressError](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L32-L34>)
-
-```go
-type NoAddressError struct {
-    // contains filtered or unexported fields
-}
-```
-
-### func \(\*NoAddressError\) [Error](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L36>)
-
-```go
-func (m *NoAddressError) Error() string
-```
-
-## type [NoSignerError](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L23-L26>)
-
-```go
-type NoSignerError struct {
-    Err error
-    // contains filtered or unexported fields
-}
-```
-
-### func \(\*NoSignerError\) [Error](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L28>)
-
-```go
-func (m *NoSignerError) Error() string
-```
-
-## type [NotFoundError](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L5-L7>)
-
-```go
-type NotFoundError struct {
-    // contains filtered or unexported fields
-}
-```
-
-### func \(\*NotFoundError\) [Error](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L9>)
-
-```go
-func (m *NotFoundError) Error() string
-```
-
-## type [ProviderHandler](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L15-L20>)
-
-```go
-type ProviderHandler struct {
-    // contains filtered or unexported fields
-}
-```
-
-### func [NewProviderHandler](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L22>)
-
-```go
-func NewProviderHandler(provider *ethclient.Client, privateKey string) (*ProviderHandler, error)
-```
-
-### func \(\*ProviderHandler\) [GetChainID](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L60>)
-
-```go
-func (handler *ProviderHandler) GetChainID() (*big.Int, error)
-```
-
-### func \(\*ProviderHandler\) [GetProvider](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L48>)
-
-```go
-func (handler *ProviderHandler) GetProvider() *ethclient.Client
-```
-
-### func \(\*ProviderHandler\) [GetRawPrivateKey](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L56>)
-
-```go
-func (handler *ProviderHandler) GetRawPrivateKey() string
-```
-
-### func \(\*ProviderHandler\) [GetSignerAddress](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L52>)
-
-```go
-func (handler *ProviderHandler) GetSignerAddress() common.Address
-```
-
-### func \(\*ProviderHandler\) [UpdatePrivateKey](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L40>)
-
-```go
-func (handler *ProviderHandler) UpdatePrivateKey(privateKey string) error
-```
-
-### func \(\*ProviderHandler\) [UpdateProvider](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L36>)
-
-```go
-func (handler *ProviderHandler) UpdateProvider(provider *ethclient.Client)
-```
-
 ## type [SDKOptions](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L7-L10>)
 
 ```go
@@ -787,22 +538,6 @@ type SDKOptions struct {
     PrivateKey string
     GatewayUrl string
 }
-```
-
-## type [Storage](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/ipfs_storage.go#L20-L24>)
-
-```go
-type Storage interface {
-    Get(uri string) ([]byte, error)
-    Upload(data any, contractAddress string, signerAddress string) (string, error)
-    UploadBatch(data []any, contractAddress string, signerAddress string) (*BaseUriWithUris, error)
-}
-```
-
-### func [NewIpfsStorage](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/ipfs_storage.go#L38>)
-
-```go
-func NewIpfsStorage(uri string) Storage
 ```
 
 ## type [ThirdwebSDK](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L11-L14>)
@@ -836,35 +571,6 @@ func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error)
-```
-
-## type [UnmarshalError](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L13-L17>)
-
-```go
-type UnmarshalError struct {
-    UnderlyingError error
-    // contains filtered or unexported fields
-}
-```
-
-### func \(\*UnmarshalError\) [Error](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L19>)
-
-```go
-func (m *UnmarshalError) Error() string
-```
-
-## type [UnsupportedFunctionError](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L40-L43>)
-
-```go
-type UnsupportedFunctionError struct {
-    // contains filtered or unexported fields
-}
-```
-
-### func \(\*UnsupportedFunctionError\) [Error](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/error.go#L45>)
-
-```go
-func (m *UnsupportedFunctionError) Error() string
 ```
 
 ## type [WrappedToken](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L102-L106>)
