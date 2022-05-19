@@ -10,18 +10,24 @@ import (
 )
 
 type Edition struct {
+	abi *abi.TokenERC1155
 	*ERC1155
 }
 
 func newEdition(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Edition, error) {
-	if erc1155, err := abi.NewTokenERC1155(address, provider); err != nil {
+	if abi, err := abi.NewTokenERC1155(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := newContractWrapper(erc1155, address, provider, privateKey); err != nil {
+		if contractWrapper, err := newContractWrapper(address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			erc1155 := newERC1155(contractWrapper, storage)
+			erc1155, err := newERC1155(address, provider, contractWrapper, storage)
+			if err != nil {
+				return nil, err
+			}
+
 			edition := &Edition{
+				abi,
 				erc1155,
 			}
 			return edition, nil
@@ -57,7 +63,7 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 	}
 
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
-	tx, err := edition.contractWrapper.abi.MintTo(
+	tx, err := edition.abi.MintTo(
 		edition.contractWrapper.getTxOptions(),
 		common.HexToAddress(address),
 		MaxUint256,
@@ -100,7 +106,7 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 		return nil, err
 	}
 
-	tx, err := edition.contractWrapper.abi.MintTo(
+	tx, err := edition.abi.MintTo(
 		edition.contractWrapper.getTxOptions(),
 		common.HexToAddress(to),
 		big.NewInt(int64(tokenId)),
@@ -140,7 +146,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 	encoded := [][]byte{}
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 	for index, uri := range uris {
-		tx, err := edition.contractWrapper.abi.MintTo(
+		tx, err := edition.abi.MintTo(
 			edition.contractWrapper.getTxOptions(),
 			common.HexToAddress(to),
 			MaxUint256,
@@ -154,7 +160,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 		encoded = append(encoded, tx.Data())
 	}
 
-	tx, err := edition.contractWrapper.abi.Multicall(edition.contractWrapper.getTxOptions(), encoded)
+	tx, err := edition.abi.Multicall(edition.contractWrapper.getTxOptions(), encoded)
 	if err != nil {
 		return nil, err
 	}

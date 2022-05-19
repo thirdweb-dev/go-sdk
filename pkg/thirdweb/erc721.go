@@ -13,7 +13,8 @@ import (
 )
 
 type ERC721 struct {
-	contractWrapper *contractWrapper[*abi.TokenERC721]
+	abi             *abi.TokenERC721
+	contractWrapper *contractWrapper
 	storage         storage
 }
 
@@ -23,12 +24,13 @@ type NFTResult struct {
 }
 
 func newERC721(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*ERC721, error) {
-	if erc721, err := abi.NewTokenERC721(address, provider); err != nil {
+	if abi, err := abi.NewTokenERC721(address, provider); err != nil {
 		return nil, err
-	} else if contractWrapper, err := newContractWrapper(erc721, address, provider, privateKey); err != nil {
+	} else if contractWrapper, err := newContractWrapper(address, provider, privateKey); err != nil {
 		return nil, err
 	} else {
 		return &ERC721{
+			abi,
 			contractWrapper,
 			storage,
 		}, nil
@@ -82,7 +84,7 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 //
 // returns: the total number of NFTs on this contract
 func (erc721 *ERC721) GetTotalCount() (*big.Int, error) {
-	return erc721.contractWrapper.abi.NextTokenIdToMint(&bind.CallOpts{})
+	return erc721.abi.NextTokenIdToMint(&bind.CallOpts{})
 }
 
 // GetOwned
@@ -116,13 +118,13 @@ func (erc721 *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
 		address = erc721.contractWrapper.GetSignerAddress().String()
 	}
 
-	if balance, err := erc721.contractWrapper.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address)); err != nil {
+	if balance, err := erc721.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address)); err != nil {
 		return nil, err
 	} else {
 		tokenIds := []*big.Int{}
 
 		for i := 0; i < int(balance.Int64()); i++ {
-			if tokenId, err := erc721.contractWrapper.abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
+			if tokenId, err := erc721.abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
 				tokenIds = append(tokenIds, tokenId)
 			}
 		}
@@ -139,7 +141,7 @@ func (erc721 *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
 //
 // returns: the owner of the NFT
 func (erc721 *ERC721) OwnerOf(tokenId int) (string, error) {
-	if address, err := erc721.contractWrapper.abi.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
+	if address, err := erc721.abi.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return "", err
 	} else {
 		return address.String(), nil
@@ -152,7 +154,7 @@ func (erc721 *ERC721) OwnerOf(tokenId int) (string, error) {
 //
 // returns: the supply of NFTs on this contract
 func (erc721 *ERC721) TotalSupply() (*big.Int, error) {
-	return erc721.contractWrapper.abi.TotalSupply(&bind.CallOpts{})
+	return erc721.abi.TotalSupply(&bind.CallOpts{})
 }
 
 // Balance
@@ -172,7 +174,7 @@ func (erc721 *ERC721) Balance() (*big.Int, error) {
 //
 // returns: the number of NFTs on this contract owned by the specified wallet
 func (erc721 *ERC721) BalanceOf(address string) (*big.Int, error) {
-	return erc721.contractWrapper.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
+	return erc721.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
 }
 
 // IsApproved
@@ -185,7 +187,7 @@ func (erc721 *ERC721) BalanceOf(address string) (*big.Int, error) {
 //
 // returns: true if the operator is approved for all operations of the assets, otherwise false
 func (erc721 *ERC721) IsApproved(address string, operator string) (bool, error) {
-	return erc721.contractWrapper.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
+	return erc721.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
 }
 
 // Transfer
@@ -198,7 +200,7 @@ func (erc721 *ERC721) IsApproved(address string, operator string) (bool, error) 
 //
 // returns: the transaction of the NFT transfer
 func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, error) {
-	if tx, err := erc721.contractWrapper.abi.SafeTransferFrom(erc721.contractWrapper.getTxOptions(), erc721.contractWrapper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
+	if tx, err := erc721.abi.SafeTransferFrom(erc721.contractWrapper.getTxOptions(), erc721.contractWrapper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
 		return erc721.contractWrapper.awaitTx(tx.Hash())
@@ -213,7 +215,7 @@ func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, erro
 //
 // returns: the transaction receipt of the burn
 func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
-	if tx, err := erc721.contractWrapper.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
+	if tx, err := erc721.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
 		return erc721.contractWrapper.awaitTx(tx.Hash())
@@ -232,7 +234,7 @@ func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
 //
 // returns: the transaction receipt of the approval
 func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error) {
-	if tx, err := erc721.contractWrapper.abi.SetApprovalForAll(erc721.contractWrapper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
+	if tx, err := erc721.abi.SetApprovalForAll(erc721.contractWrapper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
 		return nil, err
 	} else {
 		return erc721.contractWrapper.awaitTx(tx.Hash())
@@ -240,7 +242,7 @@ func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.
 }
 
 func (erc721 *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
-	if uri, err := erc721.contractWrapper.abi.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
+	if uri, err := erc721.abi.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
 		if nft, err := fetchTokenMetadata(tokenId, uri, erc721.storage); err != nil {

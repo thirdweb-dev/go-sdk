@@ -123,7 +123,7 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 }
 
 func approveErc20Allowance(
-	contractToApprove *contractWrapper[*abi.DropERC721],
+	contractToApprove *contractWrapper,
 	currencyAddress string,
 	price *big.Int,
 	quantity int,
@@ -134,14 +134,14 @@ func approveErc20Allowance(
 		return err
 	}
 
-	erc20, err := newContractWrapper(abi, common.HexToAddress(currencyAddress), provider, "")
+	erc20, err := newContractWrapper(common.HexToAddress(currencyAddress), provider, "")
 	if err != nil {
 		return err
 	}
 
 	owner := contractToApprove.GetSignerAddress()
 	spender := contractToApprove.getAddress()
-	allowance, err := erc20.abi.Allowance(&bind.CallOpts{}, owner, spender)
+	allowance, err := abi.Allowance(&bind.CallOpts{}, owner, spender)
 	if err != nil {
 		return err
 	}
@@ -149,7 +149,7 @@ func approveErc20Allowance(
 	totalPrice := price.Mul(big.NewInt(int64(quantity)), price)
 
 	if allowance.Cmp(totalPrice) < 0 {
-		erc20.abi.Approve(erc20.getTxOptions(), spender, allowance.Add(allowance, totalPrice))
+		abi.Approve(erc20.getTxOptions(), spender, allowance.Add(allowance, totalPrice))
 	}
 
 	return nil
@@ -160,7 +160,7 @@ func approveErc20Allowance(
 func prepareClaim(
 	quantity int,
 	activeClaimCondition *ClaimConditionOutput,
-	contractWrapper *contractWrapper[*abi.DropERC721],
+	contractWrapper *contractWrapper,
 	storage storage,
 ) (*ClaimVerification, error) {
 	maxClaimable := 0

@@ -13,8 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-type contractWrapper[TContractABI any] struct {
-	abi     TContractABI
+type contractWrapper struct {
 	address common.Address
 	*ProviderHandler
 }
@@ -24,12 +23,11 @@ const (
 	txMaxAttempts             = 20
 )
 
-func newContractWrapper[TContractABI any](abi TContractABI, address common.Address, provider *ethclient.Client, privateKey string) (*contractWrapper[TContractABI], error) {
+func newContractWrapper(address common.Address, provider *ethclient.Client, privateKey string) (*contractWrapper, error) {
 	if handler, err := NewProviderHandler(provider, privateKey); err != nil {
 		return nil, err
 	} else {
-		wrapper := &contractWrapper[TContractABI]{
-			abi,
+		wrapper := &contractWrapper{
 			address,
 			handler,
 		}
@@ -37,11 +35,11 @@ func newContractWrapper[TContractABI any](abi TContractABI, address common.Addre
 	}
 }
 
-func (wrapper *contractWrapper[TContractABI]) getAddress() common.Address {
+func (wrapper *contractWrapper) getAddress() common.Address {
 	return wrapper.address
 }
 
-func (wrapper *contractWrapper[TContractABI]) getTxOptions() *bind.TransactOpts {
+func (wrapper *contractWrapper) getTxOptions() *bind.TransactOpts {
 	var tipCap, feeCap *big.Int
 
 	provider := wrapper.GetProvider()
@@ -61,7 +59,7 @@ func (wrapper *contractWrapper[TContractABI]) getTxOptions() *bind.TransactOpts 
 	}
 }
 
-func (wrapper *contractWrapper[TContractABI]) awaitTx(hash common.Hash) (*types.Transaction, error) {
+func (wrapper *contractWrapper) awaitTx(hash common.Hash) (*types.Transaction, error) {
 	provider := wrapper.GetProvider()
 	wait := txWaitTimeBetweenAttempts
 	maxAttempts := uint8(txMaxAttempts)

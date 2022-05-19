@@ -8,21 +8,23 @@ import (
 )
 
 type NFTCollection struct {
-	contractWrapper *contractWrapper[*abi.TokenERC721]
+	abi             *abi.TokenERC721
+	contractWrapper *contractWrapper
 	*ERC721
 }
 
 func newNFTCollection(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*NFTCollection, error) {
-	if erc721, err := abi.NewTokenERC721(address, provider); err != nil {
+	if abi, err := abi.NewTokenERC721(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := newContractWrapper(erc721, address, provider, privateKey); err != nil {
+		if contractWrapper, err := newContractWrapper(address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
 			if erc721, err := newERC721(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
 				nftCollection := &NFTCollection{
+					abi,
 					contractWrapper,
 					erc721,
 				}
@@ -59,7 +61,7 @@ func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*t
 		return nil, err
 	}
 
-	tx, err := nft.contractWrapper.abi.MintTo(
+	tx, err := nft.abi.MintTo(
 		nft.contractWrapper.getTxOptions(),
 		common.HexToAddress(address),
 		uri,
@@ -100,7 +102,7 @@ func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataIn
 
 	encoded := [][]byte{}
 	for _, uri := range uris {
-		tx, err := nft.contractWrapper.abi.MintTo(
+		tx, err := nft.abi.MintTo(
 			nft.contractWrapper.getTxOptions(),
 			common.HexToAddress(address), uri,
 		)
@@ -111,7 +113,7 @@ func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataIn
 		encoded = append(encoded, tx.Data())
 	}
 
-	tx, err := nft.contractWrapper.abi.Multicall(nft.contractWrapper.getTxOptions(), encoded)
+	tx, err := nft.abi.Multicall(nft.contractWrapper.getTxOptions(), encoded)
 	if err != nil {
 		return nil, err
 	}

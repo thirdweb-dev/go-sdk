@@ -11,23 +11,29 @@ import (
 )
 
 type NFTDrop struct {
-	contractWrapper *contractWrapper[*abi.DropERC721]
+	abi             *abi.DropERC721
+	contractWrapper *contractWrapper
 	*ERC721
 	claimConditions *nftDropClaimConditions
 }
 
 func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*NFTDrop, error) {
-	if dropAbi, err := abi.NewDropERC721(address, provider); err != nil {
+	if abi, err := abi.NewDropERC721(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := newContractWrapper(dropAbi, address, provider, privateKey); err != nil {
+		if contractWrapper, err := newContractWrapper(address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
 			if erc721, err := newERC721(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
-				claimConditions := newNFTDropClaimConditions(contractWrapper, storage)
+				claimConditions, err := newNFTDropClaimConditions(address, provider, contractWrapper, storage)
+				if err != nil {
+					return nil, err
+				}
+
 				nftCollection := &NFTDrop{
+					abi,
 					contractWrapper,
 					erc721,
 					claimConditions,
@@ -44,7 +50,7 @@ func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey s
 //
 // returns: a list of the metadatas of the claimed NFTs
 func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error) {
-	if maxId, err := drop.contractWrapper.abi.NextTokenIdToClaim(&bind.CallOpts{}); err != nil {
+	if maxId, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{}); err != nil {
 		return nil, err
 	} else {
 		nfts := []*NFTMetadataOwner{}
@@ -65,11 +71,11 @@ func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error) {
 //
 // returns: a list of the metadatas of the unclaimed NFTs
 func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
-	maxId, err := drop.contractWrapper.abi.NextTokenIdToMint(&bind.CallOpts{})
+	maxId, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
-	unmintedId, err := drop.contractWrapper.abi.NextTokenIdToClaim(&bind.CallOpts{})
+	unmintedId, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +98,7 @@ func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 //
 // returns: the transaction receipt of the batch creation
 func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error) {
-	startNumber, err := drop.contractWrapper.abi.NextTokenIdToMint(&bind.CallOpts{})
+	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +107,7 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 	contractAddress := drop.contractWrapper.getAddress().String()
 	signerAddress := drop.contractWrapper.GetSignerAddress().String()
 
-	data := []any{}
+	data := []interface{}{}
 	for _, metadata := range metadatas {
 		data = append(data, metadata)
 	}
@@ -112,7 +118,7 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 		signerAddress,
 	)
 
-	tx, err := drop.contractWrapper.abi.LazyMint(
+	tx, err := drop.abi.LazyMint(
 		drop.contractWrapper.getTxOptions(),
 		big.NewInt(int64(len(batch.uris))),
 		batch.baseUri,
@@ -152,7 +158,7 @@ func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Tr
 		return nil, err
 	}
 
-	tx, err := drop.contractWrapper.abi.Claim(
+	tx, err := drop.abi.Claim(
 		drop.contractWrapper.getTxOptions(),
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(quantity)),
