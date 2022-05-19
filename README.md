@@ -128,6 +128,7 @@ func main() {
 		&thirdweb.NFTMetadataInput{
 			Name:        "Test NFT",
 			Description: "Minted with the thirdweb Go SDK",
+			Image: "ipfs://QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0",
 		},
 	)
 	if err != nil {
