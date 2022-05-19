@@ -6,6 +6,7 @@
 <h1 align="center">Thirdweb Go SDK</h1>
 <p align="center">
 <a href="https://discord.gg/thirdweb"><img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/></a>
+</p>
 
 # Installation
 
