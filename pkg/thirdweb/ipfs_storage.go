@@ -31,18 +31,25 @@ type uploadResponse struct {
 	IpfsUri     string   `json:"IpfsUri"`
 }
 
-type ipfsStorage struct {
+type IpfsStorage struct {
 	Url string
 }
 
-func newIpfsStorage(uri string) storage {
-	return &ipfsStorage{
+func newIpfsStorage(uri string) *IpfsStorage {
+	return &IpfsStorage{
 		Url: uri,
 	}
 }
 
-func (gw *ipfsStorage) Get(uri string) ([]byte, error) {
-	gatewayUrl := replaceIpfsPrefixWithGateway(uri, gw.Url)
+// Get
+//
+// Get IPFS data at a given hash and return it as byte data
+//
+// uri: the IPFS URI to fetch data from
+//
+// returns: byte data of the IPFS data at the URI
+func (ipfs *IpfsStorage) Get(uri string) ([]byte, error) {
+	gatewayUrl := replaceIpfsPrefixWithGateway(uri, ipfs.Url)
 	resp, err := http.Get(gatewayUrl)
 	if err != nil {
 		return nil, err
@@ -59,9 +66,18 @@ func (gw *ipfsStorage) Get(uri string) ([]byte, error) {
 	return body, nil
 }
 
-// Upload method can be used to upload a generic payload to IPFS. NftLabs provides a default proxy
-// in the SDK. You can override this with the ISdk.SetStorage
-func (ipfs *ipfsStorage) Upload(data any, contractAddress string, signerAddress string) (string, error) {
+// Upload
+//
+// Upload method can be used to upload a generic payload to IPFS.
+//
+// data: the individual data to upload to IPFS
+//
+// contractAddress: the optional contractAddress upload is being called from
+//
+// signerAddress: the optional signerAddress upload is being called from
+//
+// returns: the URI of the IPFS upload
+func (ipfs *IpfsStorage) Upload(data any, contractAddress string, signerAddress string) (string, error) {
 	baseUriWithUris, err := ipfs.UploadBatch([]any{data}, contractAddress, signerAddress)
 	if err != nil {
 		return "", err
@@ -71,8 +87,18 @@ func (ipfs *ipfsStorage) Upload(data any, contractAddress string, signerAddress 
 	return baseUri, nil
 }
 
-// UploadBatch uploads a list of arbitrary objects and returns their URIs *in the order they were passed*
-func (ipfs *ipfsStorage) UploadBatch(data []any, contractAddress string, signerAddress string) (*baseUriWithUris, error) {
+// UploadBatch
+//
+// UploadBatch method can be used to upload a batch of generic payloads to IPFS.
+//
+// data: the array of data to upload to IPFS
+//
+// contractAddress: the optional contractAddress upload is being called from
+//
+// signerAddress: the optional signerAddress upload is being called from
+//
+// returns: the base URI of the IPFS upload folder with the URIs of each subfile
+func (ipfs *IpfsStorage) UploadBatch(data []any, contractAddress string, signerAddress string) (*baseUriWithUris, error) {
 	baseUriWithUris, err := ipfs.uploadBatchWithCid(data, contractAddress, signerAddress)
 	if err != nil {
 		return nil, err
@@ -81,7 +107,7 @@ func (ipfs *ipfsStorage) UploadBatch(data []any, contractAddress string, signerA
 	return baseUriWithUris, nil
 }
 
-func (ipfs *ipfsStorage) getUploadToken(contractAddress string) (string, error) {
+func (ipfs *IpfsStorage) getUploadToken(contractAddress string) (string, error) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("%v/grant", twIpfsServerUrl), nil)
@@ -107,7 +133,7 @@ func (ipfs *ipfsStorage) getUploadToken(contractAddress string) (string, error) 
 	return text, nil
 }
 
-func (ipfs *ipfsStorage) uploadBatchWithCid(
+func (ipfs *IpfsStorage) uploadBatchWithCid(
 	data []any,
 	contractAddress string,
 	signerAddress string,

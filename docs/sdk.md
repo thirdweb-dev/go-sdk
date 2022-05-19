@@ -14,7 +14,7 @@ type SDKOptions struct {
 ```go
 type ThirdwebSDK struct {
     *ProviderHandler
-    // contains filtered or unexported fields
+    Storage IpfsStorage
 }
 ```
 
@@ -32,7 +32,7 @@ rpcUrlOrName: the name of the chain to connection to \(e\.g\. "rinkeby"\, "mumba
 
 options: an SDKOptions instance to specify a private key and/or an IPFS gateway URL
 
-### func \(\*ThirdwebSDK\) [GetEdition](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L83>)
+### func \(\*ThirdwebSDK\) [GetEdition](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L85>)
 
 ```go
 func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error)
@@ -44,7 +44,7 @@ Get an Edition contract SDK instance
 
 address: the address of the Edition contract
 
-### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L70>)
+### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L72>)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
@@ -56,7 +56,7 @@ Get an NFT Collection contract SDK instance
 
 address: the address of the NFT Collection contract
 
-### func \(\*ThirdwebSDK\) [GetNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L96>)
+### func \(\*ThirdwebSDK\) [GetNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L98>)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error)

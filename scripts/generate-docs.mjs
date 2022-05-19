@@ -5,23 +5,27 @@ const docPath = "./docs/doc.md"
 const delimiters = {
   "## type [ERC1155]": {
     name: "erc1155.md",
-    header: "## ERC1155\n",
+    header: "## ERC1155\nThis interface is supported by the \`Edition\` contract.\n",
   },
   "## type [ERC721]": {
     name: "erc721.md",
-    header: "\n## ERC721\n",
+    header: "\n## ERC721\nThis interface is supported by the \`NFTCollection\` and \`NFTDrop\` contracts.\n",
   },
   "## type [Edition]": {
     name: "edition.md",
-    header: "\n## Edition\n",
+    header: "\n## Edition\nYou can access this interface through the SDK with \`sdk.GetEdition(address)\`.\n",
+  },
+  "## type [IpfsStorage]": {
+    name: "storage.md",
+    header: `## IPFS Storage\nYou can access this interface through the SDK with \`sdk.Storage\`.\n`,
   },
   "## type [NFTCollection]": {
     name: "nft_collection.md",
-    header: "\n## NFT Collection\n",
+    header: "\n## NFT Collection\nYou can access this interface through the SDK with \`sdk.GetNFTCollection(address)\`.\n",
   },
   "## type [NFTDrop]": {
     name: "nft_drop.md",
-    header: "\n## NFT Drop\n",
+    header: "\n## NFT Drop\nYou can access this interface through the SDK with \`sdk.GetNFTDrop(address)\`.\n",
   },
   "## type [ProviderHandler]": {
     name: "provider.md",

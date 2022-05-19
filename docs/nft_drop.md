@@ -1,5 +1,6 @@
 
 ## NFT Drop
+You can access this interface through the SDK with `sdk.GetNFTDrop(address)`.
 
 
 ```go

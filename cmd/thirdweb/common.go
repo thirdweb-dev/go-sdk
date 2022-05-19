@@ -68,6 +68,10 @@ func getNftDrop() (*thirdweb.NFTDrop, error) {
 	}
 }
 
-func getStorage() thirdweb.Storage {
-	return thirdweb.NewIpfsStorage(thirdweb.DEFAULT_IPFS_GATEWAY_URL)
+func getStorage() thirdweb.IpfsStorage {
+	if thirdwebSDK == nil {
+		initSdk()
+	}
+
+	return thirdwebSDK.Storage
 }

@@ -1,5 +1,6 @@
 
 ## Edition
+You can access this interface through the SDK with `sdk.GetEdition(address)`.
 
 
 ```go
@@ -118,14 +119,5 @@ type EditionMetadataOwner struct {
 ```go
 type EditionResult struct {
     // contains filtered or unexported fields
-}
-```
-
-## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L12-L15>)
-
-```go
-type Metadata struct {
-    MetadataUri    string
-    MetadataObject interface{}
 }
 ```

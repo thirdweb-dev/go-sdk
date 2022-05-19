@@ -1,5 +1,6 @@
 
 ## NFT Collection
+You can access this interface through the SDK with `sdk.GetNFTCollection(address)`.
 
 
 ```go

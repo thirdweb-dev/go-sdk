@@ -10,7 +10,7 @@ import (
 
 type ThirdwebSDK struct {
 	*ProviderHandler
-	storage storage
+	Storage IpfsStorage
 }
 
 // NewThirdwebSDK
@@ -39,7 +39,8 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 
 		storage := newIpfsStorage(defaultIpfsGatewayUrl)
 		sdk := &ThirdwebSDK{
-			handler, storage,
+			ProviderHandler: handler,
+			Storage:         *storage,
 		}
 		return sdk, nil
 	} else {
@@ -56,7 +57,8 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 		storage := newIpfsStorage(gatewayUrl)
 
 		sdk := &ThirdwebSDK{
-			handler, storage,
+			ProviderHandler: handler,
+			Storage:         *storage,
 		}
 		return sdk, nil
 	}
@@ -68,7 +70,7 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 //
 // address: the address of the NFT Collection contract
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error) {
-	if contract, err := newNFTCollection(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+	if contract, err := newNFTCollection(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
 		return nil, err
 	} else {
 		return contract, nil
@@ -81,7 +83,7 @@ func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
 //
 // address: the address of the Edition contract
 func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
-	if contract, err := newEdition(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+	if contract, err := newEdition(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
 		return nil, err
 	} else {
 		return contract, nil
@@ -94,7 +96,7 @@ func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
 //
 // address: the address of the NFT Drop contract
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
-	if contract, err := newNFTDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+	if contract, err := newNFTDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
 		return nil, err
 	} else {
 		return contract, nil
