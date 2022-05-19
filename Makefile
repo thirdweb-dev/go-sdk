@@ -11,30 +11,38 @@ abi:
 cmd: FORCE
 	cd cmd/thirdweb && go build -o ../../bin/thirdweb && cd -
 
-test-nft-collection:
+test-nft-read:
 	./bin/thirdweb nft getAll -a ${GO_NFT_COLLECTION} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb nft getOwned -a ${GO_NFT_COLLECTION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
-test-edition:
+test-nft-write:
+	./bin/thirdweb nft mint -a ${GO_NFT_COLLECTION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+
+test-edition-read:
 	./bin/thirdweb edition getAll -a ${GO_EDITION} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb edition getOwned -a ${GO_EDITION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
-test-nft-drop:
+test-edition-write:
+	./bin/thirdweb edition mint -a ${GO_EDITION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+
+test-drop-read:
 	./bin/thirdweb nftdrop getAll -a ${GO_NFT_DROP} -u ${GO_ALCHEMY_RPC}
+
+test-drop-write:
 	./bin/thirdweb nftdrop claim -a ${GO_NFT_DROP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test-storage:
 	./bin/thirdweb storage upload
 	./bin/thirdweb storage uploadBatch
 
-test-write:
-	./bin/thirdweb nft mint -a ${GO_NFT_COLLECTION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
-	./bin/thirdweb edition mint -a ${GO_EDITION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
-
 test:
 	make cmd
-	make test-nft-collection
-	make test-edition
-	make test-nft-drop
+	make test-nft-read
+	make test-nft-write
+	make test-edition-read
+	make test-edition-write
+	make test-drop-read
+	make test-drop-write
+	make test-storage
 
 FORCE: ;
