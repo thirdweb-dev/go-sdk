@@ -10,9 +10,16 @@ import (
 
 type ThirdwebSDK struct {
 	*ProviderHandler
-	storage Storage
+	Storage IpfsStorage
 }
 
+// NewThirdwebSDK
+//
+// Create a new instance of the Thirdweb SDK
+//
+// rpcUrlOrName: the name of the chain to connection to (e.g. "rinkeby", "mumbai", "polygon", "mainnet", "fantom", "avalanche") or the RPC URL to connect to
+//
+// options: an SDKOptions instance to specify a private key and/or an IPFS gateway URL
 func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK, error) {
 	rpc, err := getDefaultRpcUrl(rpcUrlOrChainName)
 	if err != nil {
@@ -30,15 +37,16 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 			return nil, err
 		}
 
-		storage := NewIpfsStorage(DEFAULT_IPFS_GATEWAY_URL)
+		storage := newIpfsStorage(defaultIpfsGatewayUrl)
 		sdk := &ThirdwebSDK{
-			handler, storage,
+			ProviderHandler: handler,
+			Storage:         *storage,
 		}
 		return sdk, nil
 	} else {
 		gatewayUrl := options.GatewayUrl
 		if gatewayUrl == "" {
-			gatewayUrl = DEFAULT_IPFS_GATEWAY_URL
+			gatewayUrl = defaultIpfsGatewayUrl
 		}
 
 		handler, err := NewProviderHandler(provider, options.PrivateKey)
@@ -46,33 +54,49 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 			return nil, err
 		}
 
-		storage := NewIpfsStorage(gatewayUrl)
+		storage := newIpfsStorage(gatewayUrl)
 
 		sdk := &ThirdwebSDK{
-			handler, storage,
+			ProviderHandler: handler,
+			Storage:         *storage,
 		}
 		return sdk, nil
 	}
 }
 
+// GetNFTCollection
+//
+// Get an NFT Collection contract SDK instance
+//
+// address: the address of the NFT Collection contract
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error) {
-	if contract, err := NewNFTCollection(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+	if contract, err := newNFTCollection(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
 		return nil, err
 	} else {
 		return contract, nil
 	}
 }
 
+// GetEdition
+//
+// Get an Edition contract SDK instance
+//
+// address: the address of the Edition contract
 func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
-	if contract, err := NewEdition(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+	if contract, err := newEdition(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
 		return nil, err
 	} else {
 		return contract, nil
 	}
 }
 
+// GetNFTDrop
+//
+// Get an NFT Drop contract SDK instance
+//
+// address: the address of the NFT Drop contract
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
-	if contract, err := NewNFTDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
+	if contract, err := newNFTDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
 		return nil, err
 	} else {
 		return contract, nil
@@ -81,25 +105,25 @@ func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
 
 func getDefaultRpcUrl(rpcUrlorName string) (string, error) {
 	switch rpcUrlorName {
-    case "mumbai":
+	case "mumbai":
 		return "https://polygon-mumbai.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
-    case "rinkeby":
-        return "https://eth-rinkeby.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
-    case "goerli":
-        return "https://eth-goerli.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+	case "rinkeby":
+		return "https://eth-rinkeby.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+	case "goerli":
+		return "https://eth-goerli.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
 	case "polygon":
-        return "https://polygon-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+		return "https://polygon-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
 	case "mainnet":
-        return "https://eth-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+		return "https://eth-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
 	case "fantom":
-        return "https://rpc.ftm.tools", nil
+		return "https://rpc.ftm.tools", nil
 	case "avalanche":
-        return "https://rpc.ankr.com/avalanche", nil
+		return "https://rpc.ankr.com/avalanche", nil
 	default:
 		if strings.HasPrefix(rpcUrlorName, "http") {
 			return rpcUrlorName, nil
 		} else {
 			return "", fmt.Errorf("invalid rpc url or chain name: %s", rpcUrlorName)
 		}
-    }
+	}
 }

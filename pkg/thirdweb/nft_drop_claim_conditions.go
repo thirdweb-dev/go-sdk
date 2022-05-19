@@ -5,20 +5,20 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
-type NFTDropClaimConditions struct {
-	contractWrapper *ContractWrapper[*abi.DropERC721]
-	storage         Storage
+type nftDropClaimConditions struct {
+	contractWrapper *contractWrapper[*abi.DropERC721]
+	storage         storage
 }
 
-func NewNFTDropClaimConditions(contractWrapper *ContractWrapper[*abi.DropERC721], storage Storage) *NFTDropClaimConditions {
-	claimConditions := &NFTDropClaimConditions{
+func newNFTDropClaimConditions(contractWrapper *contractWrapper[*abi.DropERC721], storage storage) *nftDropClaimConditions {
+	claimConditions := &nftDropClaimConditions{
 		contractWrapper,
 		storage,
 	}
 	return claimConditions
 }
 
-func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) {
+func (claim *nftDropClaimConditions) GetActive() (*ClaimConditionOutput, error) {
 	id, err := claim.contractWrapper.abi.GetActiveClaimConditionId(&bind.CallOpts{})
 	if err != nil {
 		return nil, err

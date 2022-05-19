@@ -15,7 +15,7 @@ import (
 
 // NFT
 
-func fetchTokenMetadata(tokenId int, uri string, storage Storage) (*NFTMetadata, error) {
+func fetchTokenMetadata(tokenId int, uri string, storage storage) (*NFTMetadata, error) {
 	if body, err := storage.Get(uri); err != nil {
 		return nil, err
 	} else {
@@ -23,18 +23,18 @@ func fetchTokenMetadata(tokenId int, uri string, storage Storage) (*NFTMetadata,
 			Id: big.NewInt(int64(tokenId)),
 		}
 		if err := json.Unmarshal(body, &metadata); err != nil {
-			return nil, &UnmarshalError{body: string(body), typeName: "nft", UnderlyingError: err}
+			return nil, &unmarshalError{body: string(body), typeName: "nft", UnderlyingError: err}
 		}
 
 		return metadata, nil
 	}
 }
 
-func uploadOrExtractUri(metadata *NFTMetadataInput, storage Storage) (string, error) {
+func uploadOrExtractUri(metadata *NFTMetadataInput, storage storage) (string, error) {
 	return storage.Upload(metadata, "", "")
 }
 
-func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage Storage) ([]string, error) {
+func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]string, error) {
 	// Why is this necessary?
 	data := []interface{}{}
 	for _, metadata := range metadatas {
@@ -123,7 +123,7 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 }
 
 func approveErc20Allowance(
-	contractToApprove *ContractWrapper[*abi.DropERC721],
+	contractToApprove *contractWrapper[*abi.DropERC721],
 	currencyAddress string,
 	price *big.Int,
 	quantity int,
@@ -134,7 +134,7 @@ func approveErc20Allowance(
 		return err
 	}
 
-	erc20, err := NewContractWrapper(abi, common.HexToAddress(currencyAddress), provider, "")
+	erc20, err := newContractWrapper(abi, common.HexToAddress(currencyAddress), provider, "")
 	if err != nil {
 		return err
 	}
@@ -160,8 +160,8 @@ func approveErc20Allowance(
 func prepareClaim(
 	quantity int,
 	activeClaimCondition *ClaimConditionOutput,
-	contractWrapper *ContractWrapper[*abi.DropERC721],
-	storage Storage,
+	contractWrapper *contractWrapper[*abi.DropERC721],
+	storage storage,
 ) (*ClaimVerification, error) {
 	maxClaimable := 0
 	price := activeClaimCondition.price
@@ -189,7 +189,7 @@ func prepareClaim(
 func transformResultToClaimCondition(
 	pm *abi.IDropClaimConditionClaimCondition,
 	provider *ethclient.Client,
-	storage Storage,
+	storage storage,
 ) (*ClaimConditionOutput, error) {
 	currencyValue, err := fetchCurrencyValue(provider, pm.Currency.String(), pm.PricePerToken)
 	if err != nil {
