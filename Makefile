@@ -23,6 +23,10 @@ test-nft-drop:
 	./bin/thirdweb nftdrop getAll -a ${GO_NFT_DROP} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb nftdrop claim -a ${GO_NFT_DROP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
+test-storage:
+	./bin/thirdweb storage upload
+	./bin/thirdweb storage uploadBatch
+
 test-write:
 	./bin/thirdweb nft mint -a ${GO_NFT_COLLECTION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb edition mint -a ${GO_EDITION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}

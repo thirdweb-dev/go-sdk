@@ -34,6 +34,7 @@ func init() {
 	rootCmd.AddCommand(nftCmd)
 	rootCmd.AddCommand(editionCmd)
 	rootCmd.AddCommand(nftDropCmd)
+	rootCmd.AddCommand(storageCmd)
 }
 
 func initConfig() {
