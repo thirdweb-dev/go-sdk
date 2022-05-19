@@ -20,7 +20,7 @@ type baseUriWithUris struct {
 type storage interface {
 	Get(uri string) ([]byte, error)
 	Upload(data any, contractAddress string, signerAddress string) (string, error)
-	UploadBatch(data []any, contractAddress string, signerAddress string) (*baseUriWithUris, error)
+	UploadBatch(data []any, fileStartNumber int, contractAddress string, signerAddress string) (*baseUriWithUris, error)
 }
 
 type uploadResponse struct {
@@ -78,7 +78,7 @@ func (ipfs *IpfsStorage) Get(uri string) ([]byte, error) {
 //
 // returns: the URI of the IPFS upload
 func (ipfs *IpfsStorage) Upload(data any, contractAddress string, signerAddress string) (string, error) {
-	baseUriWithUris, err := ipfs.UploadBatch([]any{data}, contractAddress, signerAddress)
+	baseUriWithUris, err := ipfs.UploadBatch([]any{data}, 0, contractAddress, signerAddress)
 	if err != nil {
 		return "", err
 	}
@@ -98,8 +98,8 @@ func (ipfs *IpfsStorage) Upload(data any, contractAddress string, signerAddress 
 // signerAddress: the optional signerAddress upload is being called from
 //
 // returns: the base URI of the IPFS upload folder with the URIs of each subfile
-func (ipfs *IpfsStorage) UploadBatch(data []any, contractAddress string, signerAddress string) (*baseUriWithUris, error) {
-	baseUriWithUris, err := ipfs.uploadBatchWithCid(data, contractAddress, signerAddress)
+func (ipfs *IpfsStorage) UploadBatch(data []any, fileStartNumber int, contractAddress string, signerAddress string) (*baseUriWithUris, error) {
+	baseUriWithUris, err := ipfs.uploadBatchWithCid(data, fileStartNumber, contractAddress, signerAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -135,6 +135,7 @@ func (ipfs *IpfsStorage) getUploadToken(contractAddress string) (string, error) 
 
 func (ipfs *IpfsStorage) uploadBatchWithCid(
 	data []any,
+	fileStartNumber int,
 	contractAddress string,
 	signerAddress string,
 ) (*baseUriWithUris, error) {
@@ -155,7 +156,7 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 			return nil, err
 		}
 
-		fileName := fmt.Sprintf("%v", i)
+		fileName := fmt.Sprintf("%v", i+fileStartNumber)
 		fileNames = append(fileNames, fileName)
 
 		part, err := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))

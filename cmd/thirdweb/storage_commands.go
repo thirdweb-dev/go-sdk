@@ -46,6 +46,7 @@ var storageUploadBatchCmd = &cobra.Command{
 				&thirdweb.NFTMetadataInput{Name: "Test NFT 2", Description: "Description 2"},
 				&thirdweb.NFTMetadataInput{Name: "Test NFT 3", Description: "Description 3"},
 			},
+			0,
 			"",
 			"",
 		)

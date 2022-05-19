@@ -41,7 +41,7 @@ func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]stri
 		data = append(data, metadata)
 	}
 
-	baseUriWithUris, err := storage.UploadBatch(data, "", "")
+	baseUriWithUris, err := storage.UploadBatch(data, 0, "", "")
 	if err != nil {
 		return nil, err
 	}

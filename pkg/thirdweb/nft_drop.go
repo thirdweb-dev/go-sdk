@@ -92,6 +92,12 @@ func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 //
 // returns: the transaction receipt of the batch creation
 func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error) {
+	startNumber, err := drop.contractWrapper.abi.NextTokenIdToMint(&bind.CallOpts{})
+	if err != nil {
+		return nil, err
+	}
+	fileStartNumber := int(startNumber.Int64())
+
 	contractAddress := drop.contractWrapper.getAddress().String()
 	signerAddress := drop.contractWrapper.GetSignerAddress().String()
 
@@ -101,6 +107,7 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 	}
 	batch, err := drop.storage.UploadBatch(
 		data,
+		fileStartNumber,
 		contractAddress,
 		signerAddress,
 	)
