@@ -85,14 +85,14 @@ func fetchCurrencyMetadata(provider *ethclient.Client, asset string) (*Currency,
 		}
 		return currency, nil
 	} else {
-		abi, err := abi.NewTokenERC20(common.HexToAddress(asset), provider)
+		contractAbi, err := abi.NewTokenERC20(common.HexToAddress(asset), provider)
 		if err != nil {
 			return nil, err
 		}
 
-		name, err := abi.Name(&bind.CallOpts{})
-		symbol, err := abi.Symbol(&bind.CallOpts{})
-		decimals, err := abi.Decimals(&bind.CallOpts{})
+		name, err := contractAbi.Name(&bind.CallOpts{})
+		symbol, err := contractAbi.Symbol(&bind.CallOpts{})
+		decimals, err := contractAbi.Decimals(&bind.CallOpts{})
 
 		currency := &Currency{
 			name,
@@ -123,25 +123,25 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 }
 
 func approveErc20Allowance(
-	contractToApprove *contractWrapper[*abi.DropERC721],
+	contractToApprove *contractHelper,
 	currencyAddress string,
 	price *big.Int,
 	quantity int,
 ) error {
 	provider := contractToApprove.GetProvider()
-	abi, err := abi.NewIERC20(common.HexToAddress(currencyAddress), provider)
+	contractAbi, err := abi.NewIERC20(common.HexToAddress(currencyAddress), provider)
 	if err != nil {
 		return err
 	}
 
-	erc20, err := newContractWrapper(abi, common.HexToAddress(currencyAddress), provider, "")
+	erc20, err := newContractHelper(common.HexToAddress(currencyAddress), provider, "")
 	if err != nil {
 		return err
 	}
 
 	owner := contractToApprove.GetSignerAddress()
 	spender := contractToApprove.getAddress()
-	allowance, err := erc20.abi.Allowance(&bind.CallOpts{}, owner, spender)
+	allowance, err := contractAbi.Allowance(&bind.CallOpts{}, owner, spender)
 	if err != nil {
 		return err
 	}
@@ -149,7 +149,7 @@ func approveErc20Allowance(
 	totalPrice := price.Mul(big.NewInt(int64(quantity)), price)
 
 	if allowance.Cmp(totalPrice) < 0 {
-		erc20.abi.Approve(erc20.getTxOptions(), spender, allowance.Add(allowance, totalPrice))
+		contractAbi.Approve(erc20.getTxOptions(), spender, allowance.Add(allowance, totalPrice))
 	}
 
 	return nil
@@ -160,7 +160,7 @@ func approveErc20Allowance(
 func prepareClaim(
 	quantity int,
 	activeClaimCondition *ClaimConditionOutput,
-	contractWrapper *contractWrapper[*abi.DropERC721],
+	contractHelper *contractHelper,
 	storage storage,
 ) (*ClaimVerification, error) {
 	maxClaimable := 0
@@ -170,7 +170,7 @@ func prepareClaim(
 
 	if price > 0 && !isNativeToken(currencyAddress) {
 		approveErc20Allowance(
-			contractWrapper,
+			contractHelper,
 			currencyAddress,
 			big.NewInt(int64(activeClaimCondition.price)),
 			quantity,

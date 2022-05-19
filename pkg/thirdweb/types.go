@@ -19,7 +19,7 @@ type NFTMetadata struct {
 	Uri             string      `json:"uri"`
 	Name            string      `json:"name"`
 	Description     string      `json:"description"`
-	Image           any         `json:"image"`
+	Image           interface{} `json:"image"`
 	ExternalUrl     string      `json:"external_url"`
 	AnimationUrl    string      `json:"animation_url"`
 	BackgroundColor string      `json:"background_color"`
@@ -29,7 +29,7 @@ type NFTMetadata struct {
 type NFTMetadataInput struct {
 	Name            string      `json:"name"`
 	Description     string      `json:"description"`
-	Image           any         `json:"image"`
+	Image           interface{} `json:"image"`
 	ExternalUrl     string      `json:"external_url"`
 	AnimationUrl    string      `json:"animation_url"`
 	BackgroundColor string      `json:"background_color"`
