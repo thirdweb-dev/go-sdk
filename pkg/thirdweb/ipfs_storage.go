@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/big"
@@ -151,16 +152,38 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 	}
 
 	for i, asset := range data {
-		jsonData, err := json.Marshal(asset)
-		if err != nil {
-			return nil, err
+
+		file, ok := asset.(io.Reader)
+		if ok {
+			fileName := fmt.Sprintf("%v", i+fileStartNumber)
+			fileNames = append(fileNames, fileName)
+
+			part, _ := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
+			io.Copy(part, file)
+		} else {
+			assetToUpload := asset
+			assetMetadata := assetToUpload.(*NFTMetadataInput)
+
+			if _, ok := (assetMetadata.Image).(io.Reader); ok {
+				uri, err := ipfs.Upload(assetMetadata.Image, contractAddress, signerAddress)
+				if err != nil {
+					return nil, err
+				}
+				assetMetadata.Image = uri
+				assetToUpload = assetMetadata
+			}
+
+			jsonData, err := json.Marshal(assetToUpload)
+			if err != nil {
+				return nil, err
+			}
+
+			fileName := fmt.Sprintf("%v", i+fileStartNumber)
+			fileNames = append(fileNames, fileName)
+
+			part, err := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
+			part.Write(jsonData)
 		}
-
-		fileName := fmt.Sprintf("%v", i+fileStartNumber)
-		fileNames = append(fileNames, fileName)
-
-		part, err := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
-		part.Write(jsonData)
 	}
 
 	_ = writer.Close()

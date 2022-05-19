@@ -24,6 +24,7 @@ test-nft-read:
 
 test-nft-write:
 	./bin/thirdweb nft mint -a ${GO_NFT_COLLECTION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb nft mintLink -a ${GO_NFT_COLLECTION} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test-edition-read:
 	./bin/thirdweb edition getAll -a ${GO_EDITION} -u ${GO_ALCHEMY_RPC}
@@ -42,6 +43,8 @@ test-drop-write:
 test-storage:
 	./bin/thirdweb storage upload
 	./bin/thirdweb storage uploadBatch
+	./bin/thirdweb storage uploadImage
+	./bin/thirdweb storage uploadImageLink
 
 test:
 	make cmd

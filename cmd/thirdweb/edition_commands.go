@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
@@ -71,9 +72,16 @@ var editionMintCmd = &cobra.Command{
 			panic(err)
 		}
 
+		imageFile, err := os.Open("internal/test/0.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
 		if tx, err := edition.Mint(&thirdweb.EditionMetadataInput{
 			Metadata: &thirdweb.NFTMetadataInput{
-				Name: "Edition Test",
+				Name:  "Edition Test",
+				Image: imageFile,
 			},
 			Supply: 1,
 		}); err != nil {

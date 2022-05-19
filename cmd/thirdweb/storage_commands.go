@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
+
+	_ "image/jpeg"
 )
 
 var storageCmd = &cobra.Command{
@@ -59,7 +62,57 @@ var storageUploadBatchCmd = &cobra.Command{
 	},
 }
 
+var storageUploadImageCmd = &cobra.Command{
+	Use:   "uploadImage",
+	Short: "Upload image with storage interface",
+	Run: func(cmd *cobra.Command, args []string) {
+		storage := getStorage()
+
+		imageFile, err := os.Open("internal/test/0.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
+		uri, err := storage.Upload(&thirdweb.NFTMetadataInput{
+			Name:  "Test NFT 1",
+			Image: imageFile,
+		}, "", "")
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Successfully uploaded to URI:", uri)
+	},
+}
+
+var storageUploadImageLinkCmd = &cobra.Command{
+	Use:   "uploadImageLink",
+	Short: "Upload image with link with storage interface",
+	Run: func(cmd *cobra.Command, args []string) {
+		storage := getStorage()
+
+		imageFile, err := os.Open("internal/test/0.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
+		uri, err := storage.Upload(&thirdweb.NFTMetadataInput{
+			Name:  "Test NFT 1",
+			Image: "ipfs://QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0",
+		}, "", "")
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Successfully uploaded to URI:", uri)
+	},
+}
+
 func init() {
 	storageCmd.AddCommand(storageUploadCmd)
 	storageCmd.AddCommand(storageUploadBatchCmd)
+	storageCmd.AddCommand(storageUploadImageCmd)
+	storageCmd.AddCommand(storageUploadImageLinkCmd)
 }

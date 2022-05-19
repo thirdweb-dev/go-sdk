@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
@@ -71,16 +72,25 @@ var nftDropCreateBatchCmd = &cobra.Command{
 			panic(err)
 		}
 
+		imageFile, err := os.Open("internal/test/0.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
 		if tx, err := nftDrop.CreateBatch(
 			[]*thirdweb.NFTMetadataInput{
 				{
-					Name: "Drop NFT 1",
+					Name:  "Drop NFT 1",
+					Image: imageFile,
 				},
 				{
-					Name: "Drop NFT 2",
+					Name:  "Drop NFT 2",
+					Image: imageFile,
 				},
 				{
-					Name: "Drop NFT 3",
+					Name:  "Drop NFT 3",
+					Image: "ipfs://QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0",
 				},
 			},
 		); err != nil {
