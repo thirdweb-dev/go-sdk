@@ -24,9 +24,9 @@ import "github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
   - [func (erc1155 *ERC1155) GetAll() ([]*EditionMetadata, error)](<#func-erc1155-getall>)
   - [func (erc1155 *ERC1155) GetOwned(address string) ([]*EditionMetadataOwner, error)](<#func-erc1155-getowned>)
   - [func (erc1155 *ERC1155) GetTotalCount() (*big.Int, error)](<#func-erc1155-gettotalcount>)
-  - [func (erc1155 *ERC1155) GetTotalSupply(tokenId int) (*big.Int, error)](<#func-erc1155-gettotalsupply>)
   - [func (erc1155 *ERC1155) IsApproved(address string, operator string) (bool, error)](<#func-erc1155-isapproved>)
   - [func (erc1155 *ERC1155) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error)](<#func-erc1155-setapprovalforall>)
+  - [func (erc1155 *ERC1155) TotalSupply(tokenId int) (*big.Int, error)](<#func-erc1155-totalsupply>)
   - [func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Transaction, error)](<#func-erc1155-transfer>)
 - [type ERC721](<#type-erc721>)
   - [func (erc721 *ERC721) Balance() (*big.Int, error)](<#func-erc721-balance>)
@@ -43,7 +43,7 @@ import "github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
   - [func (erc721 *ERC721) TotalSupply() (*big.Int, error)](<#func-erc721-totalsupply>)
   - [func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, error)](<#func-erc721-transfer>)
 - [type Edition](<#type-edition>)
-  - [func (edition *Edition) Mint(metadata *EditionMetadataInput) (*types.Transaction, error)](<#func-edition-mint>)
+  - [func (edition *Edition) Mint(metadataWithSupply *EditionMetadataInput) (*types.Transaction, error)](<#func-edition-mint>)
   - [func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error)](<#func-edition-mintadditionalsupply>)
   - [func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) (*types.Transaction, error)](<#func-edition-mintadditionalsupplyto>)
   - [func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error)](<#func-edition-mintbatchto>)
@@ -160,71 +160,167 @@ type ERC1155 struct {
 }
 ```
 
-### func \(\*ERC1155\) [Balance](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L111>)
+### func \(\*ERC1155\) [Balance](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L149>)
 
 ```go
 func (erc1155 *ERC1155) Balance(tokenId int) (*big.Int, error)
 ```
 
-### func \(\*ERC1155\) [BalanceOf](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L116>)
+#### Balance
+
+Get the NFT balance of the connected wallet for a specific token ID
+
+tokenId: the token ID of a specific token to check the balance of
+
+returns: the number of NFTs of the specified token ID owned by the connected wallet
+
+### func \(\*ERC1155\) [BalanceOf](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L161>)
 
 ```go
 func (erc1155 *ERC1155) BalanceOf(address string, tokenId int) (*big.Int, error)
 ```
 
-### func \(\*ERC1155\) [Burn](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L139>)
+#### BalanceOf
+
+Get the NFT balance of a specific wallet
+
+address: the address of the wallet to get the NFT balance of
+
+returns: the number of NFTs of the specified token ID owned by the specified wallet
+
+### func \(\*ERC1155\) [Burn](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L213>)
 
 ```go
 func (erc1155 *ERC1155) Burn(tokenId int, amount int) (*types.Transaction, error)
 ```
 
-### func \(\*ERC1155\) [Get](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L31>)
+#### Burn
+
+Burn an amount of a specified NFT from the connected wallet
+
+tokenId: tokenID of the token to burn
+
+amount: number of NFTs of the token ID to burn
+
+returns: the transaction receipt of the burn
+
+### func \(\*ERC1155\) [Get](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L38>)
 
 ```go
 func (erc1155 *ERC1155) Get(tokenId int) (*EditionMetadata, error)
 ```
 
-### func \(\*ERC1155\) [GetAll](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L48>)
+#### Get
+
+Get metadata for a token
+
+tokenId: token ID of the token to get the metadata for
+
+returns: the metadata for the NFT and its supply
+
+### func \(\*ERC1155\) [GetAll](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L60>)
 
 ```go
 func (erc1155 *ERC1155) GetAll() ([]*EditionMetadata, error)
 ```
 
-### func \(\*ERC1155\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L64>)
+#### GetAll
+
+Get the metadata of all the NFTs on this contract
+
+returns: the metadatas and supplies of all the NFTs on this contract
+
+### func \(\*ERC1155\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L88>)
 
 ```go
 func (erc1155 *ERC1155) GetOwned(address string) ([]*EditionMetadataOwner, error)
 ```
 
-### func \(\*ERC1155\) [GetTotalCount](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L60>)
+#### GetOwned
+
+Get the metadatas of all the NFTs owned by a specific address
+
+address: the address of the owner of the NFTs
+
+returns: the metadatas and supplies of all the NFTs owned by the address
+
+### func \(\*ERC1155\) [GetTotalCount](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L77>)
 
 ```go
 func (erc1155 *ERC1155) GetTotalCount() (*big.Int, error)
 ```
 
-### func \(\*ERC1155\) [GetTotalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L107>)
+#### GetTotalCount
 
-```go
-func (erc1155 *ERC1155) GetTotalSupply(tokenId int) (*big.Int, error)
-```
+Get the total number of NFTs on this contract
 
-### func \(\*ERC1155\) [IsApproved](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L120>)
+returns: the total number of NFTs on this contract
+
+### func \(\*ERC1155\) [IsApproved](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L174>)
 
 ```go
 func (erc1155 *ERC1155) IsApproved(address string, operator string) (bool, error)
 ```
 
-### func \(\*ERC1155\) [SetApprovalForAll](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L153>)
+#### IsApproved
+
+Check whether an operator address is approved for all operations of a specifc addresses assets
+
+address: the address whose assets are to be checked
+
+operator: the address of the operator to check
+
+returns: true if the operator is approved for all operations of the assets\, otherwise false
+
+### func \(\*ERC1155\) [SetApprovalForAll](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L238>)
 
 ```go
 func (erc1155 *ERC1155) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error)
 ```
 
-### func \(\*ERC1155\) [Transfer](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L124>)
+#### SetApprovalForAll
+
+Set the approval for all operations of a specific address's assets
+
+address: the address whose assets are to be approved
+
+operator: the address of the operator to set the approval for
+
+approved: true if the operator is approved for all operations of the assets\, otherwise false
+
+returns: the transaction receipt of the approval
+
+### func \(\*ERC1155\) [TotalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L138>)
+
+```go
+func (erc1155 *ERC1155) TotalSupply(tokenId int) (*big.Int, error)
+```
+
+#### TotalSupply
+
+Get the total number of NFTs of a specific token ID
+
+tokenId: the token ID to check the total supply of
+
+returns: the supply of NFTs on the specified token ID
+
+### func \(\*ERC1155\) [Transfer](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc1155.go#L189>)
 
 ```go
 func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Transaction, error)
 ```
+
+#### Transfer
+
+Transfer a specific quantity of a token ID from the connected wallet to a specified address
+
+to: wallet address to transfer the tokens to
+
+tokenId: the token ID of the NFT to transfer
+
+amount: number of NFTs of the token ID to transfer
+
+returns: the transaction of the NFT transfer
 
 ## type [ERC721](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L15-L18>)
 
@@ -234,83 +330,187 @@ type ERC721 struct {
 }
 ```
 
-### func \(\*ERC721\) [Balance](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L111>)
+### func \(\*ERC721\) [Balance](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L163>)
 
 ```go
 func (erc721 *ERC721) Balance() (*big.Int, error)
 ```
 
-### func \(\*ERC721\) [BalanceOf](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L115>)
+#### Balance
+
+Get the NFT balance of the connected wallet
+
+returns: the number of NFTs on this contract owned by the connected wallet
+
+### func \(\*ERC721\) [BalanceOf](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L174>)
 
 ```go
 func (erc721 *ERC721) BalanceOf(address string) (*big.Int, error)
 ```
 
-### func \(\*ERC721\) [Burn](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L131>)
+#### BalanceOf
+
+Get the NFT balance of a specific wallet
+
+address: the address of the wallet to get the NFT balance of
+
+returns: the number of NFTs on this contract owned by the specified wallet
+
+### func \(\*ERC721\) [Burn](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L215>)
 
 ```go
 func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error)
 ```
 
-### func \(\*ERC721\) [Get](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L38>)
+#### Burn
+
+Burn a specified NFT from the connected wallet
+
+tokenId: tokenID of the token to burn
+
+returns: the transaction receipt of the burn
+
+### func \(\*ERC721\) [Get](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L45>)
 
 ```go
 func (erc721 *ERC721) Get(tokenId int) (*NFTMetadataOwner, error)
 ```
 
-### func \(\*ERC721\) [GetAll](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L55>)
+#### Get
+
+Get metadata for a token
+
+tokenId: token ID of the token to get the metadata for
+
+returns: the metadata for the NFT and its owner
+
+### func \(\*ERC721\) [GetAll](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L67>)
 
 ```go
 func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error)
 ```
 
-### func \(\*ERC721\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L71>)
+#### GetAll
+
+Get the metadata of all the NFTs on this contract
+
+returns: the metadata of all the NFTs on this contract
+
+### func \(\*ERC721\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L95>)
 
 ```go
 func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error)
 ```
 
-### func \(\*ERC721\) [GetOwnedTokenIDs](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L79>)
+#### GetOwned
+
+Get the metadatas of all the NFTs owned by a specific address
+
+address: the address of the owner of the NFTs
+
+returns: the metadata of all the NFTs owned by the address
+
+### func \(\*ERC721\) [GetOwnedTokenIDs](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L114>)
 
 ```go
 func (erc721 *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error)
 ```
 
-### func \(\*ERC721\) [GetTotalCount](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L67>)
+#### GetOwnedTokenIDs
+
+Get the tokenIds of all the NFTs owned by a specific address
+
+address: the address of the owner of the NFTs
+
+returns: the tokenIds of all the NFTs owned by the address
+
+### func \(\*ERC721\) [GetTotalCount](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L84>)
 
 ```go
 func (erc721 *ERC721) GetTotalCount() (*big.Int, error)
 ```
 
-### func \(\*ERC721\) [IsApproved](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L119>)
+#### GetTotalCount
+
+Get the total number of NFTs on this contract
+
+returns: the total number of NFTs on this contract
+
+### func \(\*ERC721\) [IsApproved](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L187>)
 
 ```go
 func (erc721 *ERC721) IsApproved(address string, operator string) (bool, error)
 ```
 
-### func \(\*ERC721\) [OwnerOf](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L99>)
+#### IsApproved
+
+Check whether an operator address is approved for all operations of a specifc addresses assets
+
+address: the address whose assets are to be checked
+
+operator: the address of the operator to check
+
+returns: true if the operator is approved for all operations of the assets\, otherwise false
+
+### func \(\*ERC721\) [OwnerOf](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L141>)
 
 ```go
 func (erc721 *ERC721) OwnerOf(tokenId int) (string, error)
 ```
 
-### func \(\*ERC721\) [SetApprovalForAll](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L139>)
+#### OwnerOf
+
+Get the owner of an NFT
+
+tokenId: the token ID of the NFT to get the owner of
+
+returns: the owner of the NFT
+
+### func \(\*ERC721\) [SetApprovalForAll](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L234>)
 
 ```go
 func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error)
 ```
 
-### func \(\*ERC721\) [TotalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L107>)
+#### SetApprovalForAll
+
+Set the approval for all operations of a specific address's assets
+
+address: the address whose assets are to be approved
+
+operator: the address of the operator to set the approval for
+
+approved: true if the operator is approved for all operations of the assets\, otherwise false
+
+returns: the transaction receipt of the approval
+
+### func \(\*ERC721\) [TotalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L154>)
 
 ```go
 func (erc721 *ERC721) TotalSupply() (*big.Int, error)
 ```
 
-### func \(\*ERC721\) [Transfer](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L123>)
+#### TotalSupply
+
+Get the total number of NFTs on this contract
+
+returns: the supply of NFTs on this contract
+
+### func \(\*ERC721\) [Transfer](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/erc721.go#L200>)
 
 ```go
 func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, error)
 ```
+
+#### Transfer
+
+Transfer a specified token from the connected wallet to a specified address
+
+to: wallet address to transfer the tokens to
+
+tokenId: the token ID of the NFT to transfer
+
+returns: the transaction of the NFT transfer
 
 ## type [Edition](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L12-L14>)
 
@@ -320,35 +520,81 @@ type Edition struct {
 }
 ```
 
-### func \(\*Edition\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L32>)
+### func \(\*Edition\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L39>)
 
 ```go
-func (edition *Edition) Mint(metadata *EditionMetadataInput) (*types.Transaction, error)
+func (edition *Edition) Mint(metadataWithSupply *EditionMetadataInput) (*types.Transaction, error)
 ```
 
-### func \(\*Edition\) [MintAdditionalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L58>)
+#### Mint
+
+Mint an NFT to the connected wallet
+
+metadataWithSupply: nft metadata with supply of the NFT to mint
+
+returns: the transaction receipt of the mint
+
+### func \(\*Edition\) [MintAdditionalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L83>)
 
 ```go
 func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error)
 ```
 
-### func \(\*Edition\) [MintAdditionalSupplyTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L63>)
+#### MintAdditionalSupply
+
+Mint additionaly supply of a token to the connected wallet
+
+tokenId: token ID to mint additional supply of
+
+additionalSupply: additional supply to mint
+
+returns: the transaction receipt of the mint
+
+### func \(\*Edition\) [MintAdditionalSupplyTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L97>)
 
 ```go
 func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) (*types.Transaction, error)
 ```
 
-### func \(\*Edition\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L83>)
+#### MintAdditionalSupplyTo
+
+to: address of the wallet to mint NFTs to
+
+tokenId: token Id to mint additional supply of
+
+additionalySupply: additional supply to mint
+
+returns: the transaction receipt of the mint
+
+### func \(\*Edition\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L124>)
 
 ```go
 func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error)
 ```
 
-### func \(\*Edition\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L37>)
+#### MintBatchTo
+
+to: address of the wallet to mint NFTs to
+
+metadatasWithSupply: list of NFT metadatas with supplies to mint
+
+returns: the transaction receipt of the mint
+
+### func \(\*Edition\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/edition.go#L53>)
 
 ```go
 func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error)
 ```
+
+#### MintTo
+
+Mint a new NFT to the specified wallet
+
+address: the wallet address to mint the NFT to
+
+metadataWithSupply: nft metadata with supply of the NFT to mint
+
+returns: the transaction receipt of the mint
 
 ## type [EditionMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L44-L47>)
 
@@ -405,29 +651,65 @@ type NFTCollection struct {
 }
 ```
 
-### func \(\*NFTCollection\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L35>)
+### func \(\*NFTCollection\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L42>)
 
 ```go
 func (nft *NFTCollection) Mint(metadata *NFTMetadataInput) (*types.Transaction, error)
 ```
 
-### func \(\*NFTCollection\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L58>)
+#### Mint
+
+Mint a new NFT to the connected wallet
+
+metadata: metadata of the NFT to mint
+
+returns: the transaction receipt of the mint
+
+### func \(\*NFTCollection\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L81>)
 
 ```go
 func (nft *NFTCollection) MintBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
 ```
 
-### func \(\*NFTCollection\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L63>)
+#### MintBatch
+
+Mint a batch of new NFTs to the connected wallet
+
+metadatas: list of metadata of the NFTs to mint
+
+returns: the transaction receipt of the mint
+
+### func \(\*NFTCollection\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L95>)
 
 ```go
 func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) (*types.Transaction, error)
 ```
 
-### func \(\*NFTCollection\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L40>)
+#### MintBatchTo
+
+Mint a batch of new NFTs to the specified wallet
+
+to: the wallet address to mint to
+
+metadatas: list of metadata of the NFTs to mint
+
+returns: the transaction receipt of the mint
+
+### func \(\*NFTCollection\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_collection.go#L56>)
 
 ```go
 func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*types.Transaction, error)
 ```
+
+#### Mint
+
+Mint a new NFT to the specified wallet
+
+address: the wallet address to mint to
+
+metadata: metadata of the NFT to mint
+
+returns: the transaction receipt of the mint
 
 ## type [NFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L13-L17>)
 
@@ -438,35 +720,73 @@ type NFTDrop struct {
 }
 ```
 
-### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L104>)
+### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L128>)
 
 ```go
 func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error)
 ```
 
-### func \(\*NFTDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L109>)
+#### Claim
+
+Claim NFTs from this contract to the connect wallet
+
+quantity: the number of NFTs to claim
+
+returns: the transaction receipt of the claim
+
+### func \(\*NFTDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L142>)
 
 ```go
 func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Transaction, error)
 ```
 
-### func \(\*NFTDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L77>)
+#### ClaimTo
+
+Claim NFTs from this contract to the connect wallet
+
+destinationAddress: the address of the wallet to claim the NFTs to
+
+quantity: the number of NFTs to claim
+
+returns: the transaction receipt of the claim
+
+### func \(\*NFTDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L94>)
 
 ```go
 func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
 ```
 
-### func \(\*NFTDrop\) [GetAllClaimed](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L41>)
+#### CreateBatch
+
+Create a batch of NFTs on this contract
+
+metadatas: a list of the metadatas of the NFTs to create
+
+returns: the transaction receipt of the batch creation
+
+### func \(\*NFTDrop\) [GetAllClaimed](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L46>)
 
 ```go
 func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error)
 ```
 
-### func \(\*NFTDrop\) [GetAllUnclaimed](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L57>)
+#### GetAllClaimed
+
+Get a list of all the NFTs that have been claimed from this contract
+
+returns: a list of the metadatas of the claimed NFTs
+
+### func \(\*NFTDrop\) [GetAllUnclaimed](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/nft_drop.go#L67>)
 
 ```go
 func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error)
 ```
+
+#### GetAllUnclaimed
+
+Get a list of all the NFTs on this contract that have not yet been claimed
+
+returns: a list of the metadatas of the unclaimed NFTs
 
 ## type [NFTMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L17-L27>)
 

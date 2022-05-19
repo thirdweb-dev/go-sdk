@@ -38,6 +38,11 @@ func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey s
 	}
 }
 
+// GetAllClaimed
+//
+// Get a list of all the NFTs that have been claimed from this contract
+//
+// returns: a list of the metadatas of the claimed NFTs
 func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error) {
 	if maxId, err := drop.contractWrapper.abi.NextTokenIdToClaim(&bind.CallOpts{}); err != nil {
 		return nil, err
@@ -54,6 +59,11 @@ func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error) {
 	}
 }
 
+// GetAllUnclaimed
+//
+// Get a list of all the NFTs on this contract that have not yet been claimed
+//
+// returns: a list of the metadatas of the unclaimed NFTs
 func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 	maxId, err := drop.contractWrapper.abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
@@ -74,6 +84,13 @@ func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 	return nfts, nil
 }
 
+// CreateBatch
+//
+// Create a batch of NFTs on this contract
+//
+// metadatas: a list of the metadatas of the NFTs to create
+//
+// returns: the transaction receipt of the batch creation
 func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	contractAddress := drop.contractWrapper.getAddress().String()
 	signerAddress := drop.contractWrapper.GetSignerAddress().String()
@@ -101,11 +118,27 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 	return drop.contractWrapper.awaitTx(tx.Hash())
 }
 
+// Claim
+//
+// Claim NFTs from this contract to the connect wallet
+//
+// quantity: the number of NFTs to claim
+//
+// returns: the transaction receipt of the claim
 func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error) {
 	address := drop.contractWrapper.GetSignerAddress().String()
 	return drop.ClaimTo(address, quantity)
 }
 
+// ClaimTo
+//
+// Claim NFTs from this contract to the connect wallet
+//
+// destinationAddress: the address of the wallet to claim the NFTs to
+//
+// quantity: the number of NFTs to claim
+//
+// returns: the transaction receipt of the claim
 func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Transaction, error) {
 	claimVerification, err := drop.prepareClaim(quantity)
 	if err != nil {

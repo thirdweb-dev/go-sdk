@@ -29,11 +29,27 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 	}
 }
 
-func (edition *Edition) Mint(metadata *EditionMetadataInput) (*types.Transaction, error) {
+// Mint
+//
+// Mint an NFT to the connected wallet
+//
+// metadataWithSupply: nft metadata with supply of the NFT to mint
+//
+// returns: the transaction receipt of the mint
+func (edition *Edition) Mint(metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
 	address := edition.contractWrapper.GetSignerAddress().String()
-	return edition.MintTo(address, metadata)
+	return edition.MintTo(address, metadataWithSupply)
 }
 
+// MintTo
+//
+// Mint a new NFT to the specified wallet
+//
+// address: the wallet address to mint the NFT to
+//
+// metadataWithSupply: nft metadata with supply of the NFT to mint
+//
+// returns: the transaction receipt of the mint
 func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadataWithSupply.Metadata, edition.storage)
 	if err != nil {
@@ -55,11 +71,29 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 	return edition.contractWrapper.awaitTx((tx.Hash()))
 }
 
+// MintAdditionalSupply
+//
+// Mint additionaly supply of a token to the connected wallet
+//
+// tokenId: token ID to mint additional supply of
+//
+// additionalSupply: additional supply to mint
+//
+// returns: the transaction receipt of the mint
 func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error) {
 	address := edition.contractWrapper.GetSignerAddress().String()
 	return edition.MintAdditionalSupplyTo(address, tokenId, additionalSupply)
 }
 
+// MintAdditionalSupplyTo
+//
+// to: address of the wallet to mint NFTs to
+//
+// tokenId: token Id to mint additional supply of
+//
+// additionalySupply: additional supply to mint
+//
+// returns: the transaction receipt of the mint
 func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) (*types.Transaction, error) {
 	metadata, err := edition.getTokenMetadata(tokenId)
 	if err != nil {
@@ -80,6 +114,13 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 	return edition.contractWrapper.awaitTx(tx.Hash())
 }
 
+// MintBatchTo
+//
+// to: address of the wallet to mint NFTs to
+//
+// metadatasWithSupply: list of NFT metadatas with supplies to mint
+//
+// returns: the transaction receipt of the mint
 func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
 	metadatas := []*NFTMetadataInput{}
 	for _, metadataWithSupply := range metadatasWithSupply {
