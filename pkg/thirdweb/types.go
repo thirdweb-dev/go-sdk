@@ -23,7 +23,7 @@ type NFTMetadata struct {
 	ExternalUrl     string      `json:"external_url"`
 	AnimationUrl    string      `json:"animation_url"`
 	BackgroundColor string      `json:"background_color"`
-	Properties      interface{} `json:"properties"`
+	Properties      interface{} `json:"properties,omitempty"`
 }
 
 type NFTMetadataInput struct {
@@ -33,7 +33,7 @@ type NFTMetadataInput struct {
 	ExternalUrl     string      `json:"external_url"`
 	AnimationUrl    string      `json:"animation_url"`
 	BackgroundColor string      `json:"background_color"`
-	Properties      interface{} `json:"properties"`
+	Properties      interface{} `json:"properties,omitempty"`
 }
 
 type NFTMetadataOwner struct {
