@@ -31,10 +31,6 @@ type uploadResponse struct {
 	IpfsUri     string   `json:"IpfsUri"`
 }
 
-const (
-	nftLabsApiUrl = "https://upload.nftlabs.co"
-)
-
 type IpfsStorage struct {
 	Url string
 }
@@ -85,16 +81,48 @@ func (ipfs *IpfsStorage) UploadBatch(data []any, contractAddress string, signerA
 	return baseUriWithUris, nil
 }
 
+func (ipfs *IpfsStorage) getUploadToken(contractAddress string) (string, error) {
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%v/grant", TW_IPFS_SERVER_URL), nil)
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("X-App-Name", fmt.Sprintf("CONSOLE-GO-SDK-%v", contractAddress))
+	result, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+
+	if result.StatusCode != http.StatusOK {
+		return "", &FailedToUploadError{
+			statusCode: result.StatusCode,
+		}
+	}
+
+	body, err := ioutil.ReadAll(result.Body)
+	text := string(body)
+
+	return text, nil
+}
+
 func (ipfs *IpfsStorage) uploadBatchWithCid(
 	data []any,
 	contractAddress string,
 	signerAddress string,
 ) (*BaseUriWithUris, error) {
+	uploadToken, err := ipfs.getUploadToken(contractAddress)
+
 	client := &http.Client{}
 	fileNames := []string{}
 
 	body := &bytes.Buffer{}
-	mp := multipart.NewWriter(body)
+	writer := multipart.NewWriter(body)
+	if err != nil {
+		return nil, err
+	}
+
 	for i, asset := range data {
 		jsonData, err := json.Marshal(asset)
 		if err != nil {
@@ -103,21 +131,20 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 
 		fileName := fmt.Sprintf("%v", i)
 		fileNames = append(fileNames, fileName)
-		if err := mp.WriteField(fileName, string(jsonData)); err != nil {
-			return nil, err
-		}
+
+		part, err := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
+		part.Write(jsonData)
 	}
 
-	_ = mp.Close()
+	_ = writer.Close()
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%v/upload", nftLabsApiUrl), body)
+	req, err := http.NewRequest("POST", PINATA_IPFS_URL, body)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Set("X-App-Name", fmt.Sprintf("CONSOLE-GO-SDK-%v", contractAddress))
-	req.Header.Set("X-Public-Address", signerAddress)
-	req.Header.Set("Content-Type", mp.FormDataContentType())
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", uploadToken))
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 
 	if result, err := client.Do(req); err != nil {
 		return nil, err
