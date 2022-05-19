@@ -13,7 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-type contractWrapper struct {
+type contractHelper struct {
 	address common.Address
 	*ProviderHandler
 }
@@ -23,26 +23,26 @@ const (
 	txMaxAttempts             = 20
 )
 
-func newContractWrapper(address common.Address, provider *ethclient.Client, privateKey string) (*contractWrapper, error) {
+func newContractHelper(address common.Address, provider *ethclient.Client, privateKey string) (*contractHelper, error) {
 	if handler, err := NewProviderHandler(provider, privateKey); err != nil {
 		return nil, err
 	} else {
-		wrapper := &contractWrapper{
+		helper := &contractHelper{
 			address,
 			handler,
 		}
-		return wrapper, nil
+		return helper, nil
 	}
 }
 
-func (wrapper *contractWrapper) getAddress() common.Address {
-	return wrapper.address
+func (helper *contractHelper) getAddress() common.Address {
+	return helper.address
 }
 
-func (wrapper *contractWrapper) getTxOptions() *bind.TransactOpts {
+func (helper *contractHelper) getTxOptions() *bind.TransactOpts {
 	var tipCap, feeCap *big.Int
 
-	provider := wrapper.GetProvider()
+	provider := helper.GetProvider()
 	block, err := provider.BlockByNumber(context.Background(), nil)
 	if err == nil && block.BaseFee() != nil {
 		tipCap, _ = big.NewInt(0).SetString("2500000000", 10)
@@ -52,15 +52,15 @@ func (wrapper *contractWrapper) getTxOptions() *bind.TransactOpts {
 
 	return &bind.TransactOpts{
 		NoSend:    false,
-		From:      wrapper.GetSignerAddress(),
-		Signer:    wrapper.getSigner(),
+		From:      helper.GetSignerAddress(),
+		Signer:    helper.getSigner(),
 		GasTipCap: tipCap,
 		GasFeeCap: feeCap,
 	}
 }
 
-func (wrapper *contractWrapper) awaitTx(hash common.Hash) (*types.Transaction, error) {
-	provider := wrapper.GetProvider()
+func (helper *contractHelper) awaitTx(hash common.Hash) (*types.Transaction, error) {
+	provider := helper.GetProvider()
 	wait := txWaitTimeBetweenAttempts
 	maxAttempts := uint8(txMaxAttempts)
 	attempts := uint8(0)

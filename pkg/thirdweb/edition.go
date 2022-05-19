@@ -15,19 +15,19 @@ type Edition struct {
 }
 
 func newEdition(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Edition, error) {
-	if abi, err := abi.NewTokenERC1155(address, provider); err != nil {
+	if contractAbi, err := abi.NewTokenERC1155(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := newContractWrapper(address, provider, privateKey); err != nil {
+		if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			erc1155, err := newERC1155(address, provider, contractWrapper, storage)
+			erc1155, err := newERC1155(address, provider, helper, storage)
 			if err != nil {
 				return nil, err
 			}
 
 			edition := &Edition{
-				abi,
+				contractAbi,
 				erc1155,
 			}
 			return edition, nil
@@ -43,7 +43,7 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 //
 // returns: the transaction receipt of the mint
 func (edition *Edition) Mint(metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
-	address := edition.contractWrapper.GetSignerAddress().String()
+	address := edition.helper.GetSignerAddress().String()
 	return edition.MintTo(address, metadataWithSupply)
 }
 
@@ -64,7 +64,7 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 	tx, err := edition.abi.MintTo(
-		edition.contractWrapper.getTxOptions(),
+		edition.helper.getTxOptions(),
 		common.HexToAddress(address),
 		MaxUint256,
 		uri,
@@ -74,7 +74,7 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 		return nil, err
 	}
 
-	return edition.contractWrapper.awaitTx((tx.Hash()))
+	return edition.helper.awaitTx((tx.Hash()))
 }
 
 // MintAdditionalSupply
@@ -87,7 +87,7 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 //
 // returns: the transaction receipt of the mint
 func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error) {
-	address := edition.contractWrapper.GetSignerAddress().String()
+	address := edition.helper.GetSignerAddress().String()
 	return edition.MintAdditionalSupplyTo(address, tokenId, additionalSupply)
 }
 
@@ -107,7 +107,7 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 	}
 
 	tx, err := edition.abi.MintTo(
-		edition.contractWrapper.getTxOptions(),
+		edition.helper.getTxOptions(),
 		common.HexToAddress(to),
 		big.NewInt(int64(tokenId)),
 		metadata.Uri,
@@ -117,7 +117,7 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 		return nil, err
 	}
 
-	return edition.contractWrapper.awaitTx(tx.Hash())
+	return edition.helper.awaitTx(tx.Hash())
 }
 
 // MintBatchTo
@@ -147,7 +147,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 	for index, uri := range uris {
 		tx, err := edition.abi.MintTo(
-			edition.contractWrapper.getTxOptions(),
+			edition.helper.getTxOptions(),
 			common.HexToAddress(to),
 			MaxUint256,
 			uri,
@@ -160,10 +160,10 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 		encoded = append(encoded, tx.Data())
 	}
 
-	tx, err := edition.abi.Multicall(edition.contractWrapper.getTxOptions(), encoded)
+	tx, err := edition.abi.Multicall(edition.helper.getTxOptions(), encoded)
 	if err != nil {
 		return nil, err
 	}
 
-	return edition.contractWrapper.awaitTx(tx.Hash())
+	return edition.helper.awaitTx(tx.Hash())
 }

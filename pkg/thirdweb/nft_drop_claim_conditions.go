@@ -8,18 +8,18 @@ import (
 )
 
 type nftDropClaimConditions struct {
-	abi             *abi.DropERC721
-	contractWrapper *contractWrapper
-	storage         storage
+	abi     *abi.DropERC721
+	helper  *contractHelper
+	storage storage
 }
 
-func newNFTDropClaimConditions(address common.Address, provider *ethclient.Client, contractWrapper *contractWrapper, storage storage) (*nftDropClaimConditions, error) {
-	if abi, err := abi.NewDropERC721(address, provider); err != nil {
+func newNFTDropClaimConditions(address common.Address, provider *ethclient.Client, helper *contractHelper, storage storage) (*nftDropClaimConditions, error) {
+	if contractAbi, err := abi.NewDropERC721(address, provider); err != nil {
 		return nil, err
 	} else {
 		claimConditions := &nftDropClaimConditions{
-			abi,
-			contractWrapper,
+			contractAbi,
+			helper,
 			storage,
 		}
 		return claimConditions, err
@@ -37,7 +37,7 @@ func (claim *nftDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 		return nil, err
 	}
 
-	provider := claim.contractWrapper.GetProvider()
+	provider := claim.helper.GetProvider()
 	claimCondition, err := transformResultToClaimCondition(
 		&mc,
 		provider,

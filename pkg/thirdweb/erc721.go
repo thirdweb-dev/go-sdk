@@ -13,9 +13,9 @@ import (
 )
 
 type ERC721 struct {
-	abi             *abi.TokenERC721
-	contractWrapper *contractWrapper
-	storage         storage
+	abi     *abi.TokenERC721
+	helper  *contractHelper
+	storage storage
 }
 
 type NFTResult struct {
@@ -24,14 +24,14 @@ type NFTResult struct {
 }
 
 func newERC721(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*ERC721, error) {
-	if abi, err := abi.NewTokenERC721(address, provider); err != nil {
+	if contractAbi, err := abi.NewTokenERC721(address, provider); err != nil {
 		return nil, err
-	} else if contractWrapper, err := newContractWrapper(address, provider, privateKey); err != nil {
+	} else if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 		return nil, err
 	} else {
 		return &ERC721{
-			abi,
-			contractWrapper,
+			contractAbi,
+			helper,
 			storage,
 		}, nil
 	}
@@ -96,7 +96,7 @@ func (erc721 *ERC721) GetTotalCount() (*big.Int, error) {
 // returns: the metadata of all the NFTs owned by the address
 func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
 	if address == "" {
-		address = erc721.contractWrapper.GetSignerAddress().String()
+		address = erc721.helper.GetSignerAddress().String()
 	}
 
 	if tokenIds, err := erc721.GetOwnedTokenIDs(address); err != nil {
@@ -115,7 +115,7 @@ func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
 // returns: the tokenIds of all the NFTs owned by the address
 func (erc721 *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
 	if address == "" {
-		address = erc721.contractWrapper.GetSignerAddress().String()
+		address = erc721.helper.GetSignerAddress().String()
 	}
 
 	if balance, err := erc721.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address)); err != nil {
@@ -163,7 +163,7 @@ func (erc721 *ERC721) TotalSupply() (*big.Int, error) {
 //
 // returns: the number of NFTs on this contract owned by the connected wallet
 func (erc721 *ERC721) Balance() (*big.Int, error) {
-	return erc721.BalanceOf(erc721.contractWrapper.GetSignerAddress().String())
+	return erc721.BalanceOf(erc721.helper.GetSignerAddress().String())
 }
 
 // BalanceOf
@@ -200,10 +200,10 @@ func (erc721 *ERC721) IsApproved(address string, operator string) (bool, error) 
 //
 // returns: the transaction of the NFT transfer
 func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, error) {
-	if tx, err := erc721.abi.SafeTransferFrom(erc721.contractWrapper.getTxOptions(), erc721.contractWrapper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
+	if tx, err := erc721.abi.SafeTransferFrom(erc721.helper.getTxOptions(), erc721.helper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
-		return erc721.contractWrapper.awaitTx(tx.Hash())
+		return erc721.helper.awaitTx(tx.Hash())
 	}
 }
 
@@ -218,7 +218,7 @@ func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
 	if tx, err := erc721.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
-		return erc721.contractWrapper.awaitTx(tx.Hash())
+		return erc721.helper.awaitTx(tx.Hash())
 	}
 }
 
@@ -234,10 +234,10 @@ func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
 //
 // returns: the transaction receipt of the approval
 func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error) {
-	if tx, err := erc721.abi.SetApprovalForAll(erc721.contractWrapper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
+	if tx, err := erc721.abi.SetApprovalForAll(erc721.helper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
 		return nil, err
 	} else {
-		return erc721.contractWrapper.awaitTx(tx.Hash())
+		return erc721.helper.awaitTx(tx.Hash())
 	}
 }
 

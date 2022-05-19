@@ -11,30 +11,30 @@ import (
 )
 
 type NFTDrop struct {
-	abi             *abi.DropERC721
-	contractWrapper *contractWrapper
+	abi    *abi.DropERC721
+	helper *contractHelper
 	*ERC721
 	claimConditions *nftDropClaimConditions
 }
 
 func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*NFTDrop, error) {
-	if abi, err := abi.NewDropERC721(address, provider); err != nil {
+	if contractAbi, err := abi.NewDropERC721(address, provider); err != nil {
 		return nil, err
 	} else {
-		if contractWrapper, err := newContractWrapper(address, provider, privateKey); err != nil {
+		if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
 			if erc721, err := newERC721(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
-				claimConditions, err := newNFTDropClaimConditions(address, provider, contractWrapper, storage)
+				claimConditions, err := newNFTDropClaimConditions(address, provider, helper, storage)
 				if err != nil {
 					return nil, err
 				}
 
 				nftCollection := &NFTDrop{
-					abi,
-					contractWrapper,
+					contractAbi,
+					helper,
 					erc721,
 					claimConditions,
 				}
@@ -104,8 +104,8 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 	}
 	fileStartNumber := int(startNumber.Int64())
 
-	contractAddress := drop.contractWrapper.getAddress().String()
-	signerAddress := drop.contractWrapper.GetSignerAddress().String()
+	contractAddress := drop.helper.getAddress().String()
+	signerAddress := drop.helper.GetSignerAddress().String()
 
 	data := []interface{}{}
 	for _, metadata := range metadatas {
@@ -119,7 +119,7 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 	)
 
 	tx, err := drop.abi.LazyMint(
-		drop.contractWrapper.getTxOptions(),
+		drop.helper.getTxOptions(),
 		big.NewInt(int64(len(batch.uris))),
 		batch.baseUri,
 		[]byte{},
@@ -128,7 +128,7 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 		return nil, err
 	}
 
-	return drop.contractWrapper.awaitTx(tx.Hash())
+	return drop.helper.awaitTx(tx.Hash())
 }
 
 // Claim
@@ -139,7 +139,7 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 //
 // returns: the transaction receipt of the claim
 func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error) {
-	address := drop.contractWrapper.GetSignerAddress().String()
+	address := drop.helper.GetSignerAddress().String()
 	return drop.ClaimTo(address, quantity)
 }
 
@@ -159,7 +159,7 @@ func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Tr
 	}
 
 	tx, err := drop.abi.Claim(
-		drop.contractWrapper.getTxOptions(),
+		drop.helper.getTxOptions(),
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(quantity)),
 		common.HexToAddress(claimVerification.currencyAddress),
@@ -171,7 +171,7 @@ func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Tr
 		return nil, err
 	}
 
-	return drop.contractWrapper.awaitTx(tx.Hash())
+	return drop.helper.awaitTx(tx.Hash())
 }
 
 func (drop *NFTDrop) prepareClaim(quantity int) (*ClaimVerification, error) {
@@ -183,7 +183,7 @@ func (drop *NFTDrop) prepareClaim(quantity int) (*ClaimVerification, error) {
 	claimVerification, err := prepareClaim(
 		quantity,
 		claimCondition,
-		drop.contractWrapper,
+		drop.helper,
 		drop.storage,
 	)
 	if err != nil {
