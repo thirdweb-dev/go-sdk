@@ -13,6 +13,13 @@ type ThirdwebSDK struct {
 	storage storage
 }
 
+// NewThirdwebSDK
+//
+// Create a new instance of the Thirdweb SDK
+//
+// rpcUrlOrName: the name of the chain to connection to (e.g. "rinkeby", "mumbai", "polygon", "mainnet", "fantom", "avalanche") or the RPC URL to connect to
+//
+// options: an SDKOptions instance to specify a private key and/or an IPFS gateway URL
 func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK, error) {
 	rpc, err := getDefaultRpcUrl(rpcUrlOrChainName)
 	if err != nil {
@@ -55,6 +62,11 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 	}
 }
 
+// GetNFTCollection
+//
+// Get an NFT Collection contract SDK instance
+//
+// address: the address of the NFT Collection contract
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error) {
 	if contract, err := newNFTCollection(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
 		return nil, err
@@ -63,6 +75,11 @@ func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
 	}
 }
 
+// GetEdition
+//
+// Get an Edition contract SDK instance
+//
+// address: the address of the Edition contract
 func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
 	if contract, err := newEdition(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
 		return nil, err
@@ -71,6 +88,11 @@ func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
 	}
 }
 
+// GetNFTDrop
+//
+// Get an NFT Drop contract SDK instance
+//
+// address: the address of the NFT Drop contract
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
 	if contract, err := newNFTDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), sdk.storage); err != nil {
 		return nil, err

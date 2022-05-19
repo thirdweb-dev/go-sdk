@@ -69,6 +69,14 @@ import "github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
 - [type NFTMetadataOwner](<#type-nftmetadataowner>)
 - [type NFTResult](<#type-nftresult>)
 - [type NativeToken](<#type-nativetoken>)
+- [type ProviderHandler](<#type-providerhandler>)
+  - [func NewProviderHandler(provider *ethclient.Client, privateKey string) (*ProviderHandler, error)](<#func-newproviderhandler>)
+  - [func (handler *ProviderHandler) GetChainID() (*big.Int, error)](<#func-providerhandler-getchainid>)
+  - [func (handler *ProviderHandler) GetProvider() *ethclient.Client](<#func-providerhandler-getprovider>)
+  - [func (handler *ProviderHandler) GetRawPrivateKey() string](<#func-providerhandler-getrawprivatekey>)
+  - [func (handler *ProviderHandler) GetSignerAddress() common.Address](<#func-providerhandler-getsigneraddress>)
+  - [func (handler *ProviderHandler) UpdatePrivateKey(privateKey string) error](<#func-providerhandler-updateprivatekey>)
+  - [func (handler *ProviderHandler) UpdateProvider(provider *ethclient.Client)](<#func-providerhandler-updateprovider>)
 - [type SDKOptions](<#type-sdkoptions>)
 - [type ThirdwebSDK](<#type-thirdwebsdk>)
   - [func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK, error)](<#func-newthirdwebsdk>)
@@ -90,22 +98,6 @@ const (
     AVALANCHE         = 43114
     MUMBAI            = 80001
 )
-```
-
-```go
-const DEFAULT_IPFS_GATEWAY_URL = "https://gateway.ipfscdn.io/ipfs/"
-```
-
-```go
-const DEFAULT_MERKLE_ROOT = "0x0000000000000000000000000000000000000000000000000000000000000000"
-```
-
-```go
-const PINATA_IPFS_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS"
-```
-
-```go
-const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co"
 ```
 
 ## type [ChainID](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/constants.go#L13>)
@@ -531,6 +523,56 @@ type NativeToken struct {
 }
 ```
 
+## type [ProviderHandler](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L15-L20>)
+
+```go
+type ProviderHandler struct {
+    // contains filtered or unexported fields
+}
+```
+
+### func [NewProviderHandler](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L22>)
+
+```go
+func NewProviderHandler(provider *ethclient.Client, privateKey string) (*ProviderHandler, error)
+```
+
+### func \(\*ProviderHandler\) [GetChainID](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L60>)
+
+```go
+func (handler *ProviderHandler) GetChainID() (*big.Int, error)
+```
+
+### func \(\*ProviderHandler\) [GetProvider](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L48>)
+
+```go
+func (handler *ProviderHandler) GetProvider() *ethclient.Client
+```
+
+### func \(\*ProviderHandler\) [GetRawPrivateKey](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L56>)
+
+```go
+func (handler *ProviderHandler) GetRawPrivateKey() string
+```
+
+### func \(\*ProviderHandler\) [GetSignerAddress](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L52>)
+
+```go
+func (handler *ProviderHandler) GetSignerAddress() common.Address
+```
+
+### func \(\*ProviderHandler\) [UpdatePrivateKey](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L40>)
+
+```go
+func (handler *ProviderHandler) UpdatePrivateKey(privateKey string) error
+```
+
+### func \(\*ProviderHandler\) [UpdateProvider](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/provider_handler.go#L36>)
+
+```go
+func (handler *ProviderHandler) UpdateProvider(provider *ethclient.Client)
+```
+
 ## type [SDKOptions](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L7-L10>)
 
 ```go
@@ -549,29 +591,55 @@ type ThirdwebSDK struct {
 }
 ```
 
-### func [NewThirdwebSDK](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L16>)
+### func [NewThirdwebSDK](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L23>)
 
 ```go
 func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK, error)
 ```
 
-### func \(\*ThirdwebSDK\) [GetEdition](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L66>)
+#### NewThirdwebSDK
+
+Create a new instance of the Thirdweb SDK
+
+rpcUrlOrName: the name of the chain to connection to \(e\.g\. "rinkeby"\, "mumbai"\, "polygon"\, "mainnet"\, "fantom"\, "avalanche"\) or the RPC URL to connect to
+
+options: an SDKOptions instance to specify a private key and/or an IPFS gateway URL
+
+### func \(\*ThirdwebSDK\) [GetEdition](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L83>)
 
 ```go
 func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error)
 ```
 
-### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L58>)
+#### GetEdition
+
+Get an Edition contract SDK instance
+
+address: the address of the Edition contract
+
+### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L70>)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
 ```
 
-### func \(\*ThirdwebSDK\) [GetNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L74>)
+#### GetNFTCollection
+
+Get an NFT Collection contract SDK instance
+
+address: the address of the NFT Collection contract
+
+### func \(\*ThirdwebSDK\) [GetNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/sdk.go#L96>)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error)
 ```
+
+#### GetNFTDrop
+
+Get an NFT Drop contract SDK instance
+
+address: the address of the NFT Drop contract
 
 ## type [WrappedToken](<https://github.com/thirdweb-dev/go-sdk/blob/master/pkg/thirdweb/types.go#L102-L106>)
 
