@@ -26,15 +26,27 @@ Once you have all the necessary dependencies, you can follow the following setup
 package main
 
 import (
+  "fmt"
+  
 	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
 )
 
 func main() {
-	// Creates a new read only SDK instance to read data from your contracts
-	// you can pass either
-	// - a chain name (rinkeby, mumbai, mainnet, polygon, etc)
-	// - your own rpc URL
-	sdk, _ := thirdweb.NewThirdwebSDK("polygon", nil)
+	// Creates a new SDK instance to get read-only data for your contracts, you can pass:
+	// - a chain name (mainnet, rinkeby, goerli, polygon, mumbai, avalanche, fantom)
+	// - a custom RPC URL
+	sdk, err := thirdweb.NewThirdwebSDK("mumbai", nil)
+	if err != nil {
+		panic(err)
+	}
+
+	// Now we can interact with the SDK, like displaying the connected chain ID
+  chainId, err := sdk.GetChainID()
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Println("New SDK instance create on chain", chainId)
 }
 ```
 
@@ -52,15 +64,25 @@ import (
 )
 
 func main() {
-	sdk, _ := thirdweb.NewThirdwebSDK("mumbai", nil)
+	sdk, err := thirdweb.NewThirdwebSDK("mumbai", nil)
+	if err != nil {
+		panic(err)
+	}
 
 	// Add your NFT Collection contract address here
 	address := "0x..."
-	nft, _ := sdk.GetNFTCollection(address)
+	nft, err := sdk.GetNFTCollection(address)
+	if err != nil {
+		panic(err)
+	}
 
 	// Now you can use any of the read-only SDK contract functions
-	nfts, _ := nft.GetAll()
-	fmt.Println(len(nfts))
+	nfts, err := nft.GetAll()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%d NFTs found on this contract\n", len(nfts))
 }
 ```
 
@@ -76,24 +98,43 @@ To connect your wallet to the SDK, you can use the following setup:
 package main
 
 import (
+	"fmt"
+	"encoding/json"
+
 	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
 )
 
 func main() {
-	// Instantiate the SDK with your privateKey (ideally from an env variable)
-	sdk, _ := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+	// Get your private key securely (preferably from an environment variable)
+	privateKey := "..."
+
+	// Instantiate the SDK with your privateKey
+	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
 		PrivateKey: privateKey,
 	})
+	if err != nil {
+		panic(err)
+	}
 
+	// Replace your contract address here
 	address := "0x..."
-	nft, _ := sdk.GetNFTCollection(address)
+	nft, err := sdk.GetNFTCollection(address)
+	if err != nil {
+		panic(err)
+	}
 
 	// Now you can execute transactions using the SDK contract functions
-	tx, _ = nft.Mint(
+	tx, err := nft.Mint(
 		&thirdweb.NFTMetadataInput{
 			Name:        "Test NFT",
 			Description: "Minted with the thirdweb Go SDK",
-		}
+		},
 	)
+	if err != nil {
+		panic(err)
+	}
+
+	result, _ := json.Marshal(&tx)
+	fmt.Println(string(result))
 }
 ```

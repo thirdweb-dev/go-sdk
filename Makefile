@@ -57,6 +57,7 @@ test:
 	make test-storage
 
 publish:
+	# Make sure to pass the TAG variable to this command ex: `make publish TAG=v2.0.0`
 	# Publish following https://go.dev/doc/modules/publishing
 	go mod tidy
 	git tag $(TAG)
