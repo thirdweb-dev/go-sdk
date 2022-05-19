@@ -9,7 +9,11 @@ abi:
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC20.json --out internal/abi/ierc20.go --type IERC20
 
 docs:
+	rm -rf docs
+	mkdir docs
 	gomarkdoc --output docs/doc.md ./pkg/thirdweb
+	node ./scripts/generate-docs.mjs
+	rm ./docs/doc.md ./docs/start.md ./docs/finish.md
 
 cmd: FORCE
 	cd cmd/thirdweb && go build -o ../../bin/thirdweb && cd -
