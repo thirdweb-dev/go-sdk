@@ -7,6 +7,10 @@ const delimiters = {
     name: "erc1155.md",
     header: "## ERC1155\nThis interface is supported by the \`Edition\` contract.\n",
   },
+  "## type [ERC20]": {
+    name: "erc20.md",
+    header: "\n## ERC20\nThis interface is supported by the \`Token\` contracts.\n",
+  },
   "## type [ERC721]": {
     name: "erc721.md",
     header: "\n## ERC721\nThis interface is supported by the \`NFTCollection\` and \`NFTDrop\` contracts.\n",
@@ -38,6 +42,10 @@ const delimiters = {
   "## type [SDKOptions]": {
     name: "sdk.md",
     header: "\n## ThirdwebSDK\n",
+  },
+  "## type [Token]": {
+    name: "token.md",
+    header: "\n## Tokenn\nYou can access this interface through the SDK with \`sdk.GetToken(address)\`.\n",
   },
   "## type [WrappedToken]": {
     name: "finish.md",
