@@ -118,8 +118,8 @@ func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantit
 	tx, err := drop.abi.Claim(
 		drop.helper.getTxOptions(),
 		common.HexToAddress(destinationAddress),
-		big.NewInt(int64(quantity)),
 		big.NewInt(int64(tokenId)),
+		big.NewInt(int64(quantity)),
 		common.HexToAddress(claimVerification.currencyAddress),
 		big.NewInt(int64(claimVerification.price)),
 		claimVerification.proofs,
