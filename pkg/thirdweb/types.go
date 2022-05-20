@@ -86,17 +86,22 @@ type ClaimConditionOutput struct {
 }
 
 type Currency struct {
-	name     string
-	symbol   string
-	decimals int
+	Name     string
+	Symbol   string
+	Decimals int
 }
 
 type CurrencyValue struct {
-	name         string
-	symbol       string
-	decimals     int
-	value        *big.Int
-	displayValue float64
+	Name         string
+	Symbol       string
+	Decimals     int
+	Value        *big.Int
+	DisplayValue float64
+}
+
+type TokenAmount struct {
+	ToAddress string
+	Amount    float64
 }
 
 type WrappedToken struct {

@@ -110,12 +110,12 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 		return nil, err
 	}
 
-	displayValue := formatUnits(price, metadata.decimals)
+	displayValue := formatUnits(price, metadata.Decimals)
 
 	currencyValue := &CurrencyValue{
-		metadata.name,
-		metadata.symbol,
-		metadata.decimals,
+		metadata.Name,
+		metadata.Symbol,
+		metadata.Decimals,
 		price,
 		displayValue,
 	}
@@ -196,7 +196,7 @@ func transformResultToClaimCondition(
 		return nil, err
 	}
 
-	price := formatUnits(pm.PricePerToken, currencyValue.decimals)
+	price := formatUnits(pm.PricePerToken, currencyValue.Decimals)
 
 	return &ClaimConditionOutput{
 		startTime:                   int(pm.StartTimestamp.Int64()),

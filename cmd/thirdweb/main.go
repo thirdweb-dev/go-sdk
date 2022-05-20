@@ -33,6 +33,7 @@ func init() {
 
 	rootCmd.AddCommand(nftCmd)
 	rootCmd.AddCommand(editionCmd)
+	rootCmd.AddCommand(tokenCmd)
 	rootCmd.AddCommand(nftDropCmd)
 	rootCmd.AddCommand(editionDropCmd)
 	rootCmd.AddCommand(storageCmd)

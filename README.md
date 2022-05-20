@@ -28,7 +28,7 @@ Once you have all the necessary dependencies, you can follow the following setup
 package main
 
 import (
-  "fmt"
+	"fmt"
   
 	thirdweb "github.com/thirdweb-dev/go-sdk"
 )
