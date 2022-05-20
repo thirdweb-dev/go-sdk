@@ -1,5 +1,5 @@
 
-## Tokenn
+## Token
 You can access this interface through the SDK with `sdk.GetToken(address)`.
 
 
