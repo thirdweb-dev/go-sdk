@@ -10,7 +10,8 @@ import (
 )
 
 type Edition struct {
-	abi *abi.TokenERC1155
+	abi    *abi.TokenERC1155
+	helper *contractHelper
 	*ERC1155
 }
 
@@ -21,13 +22,14 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 		if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			erc1155, err := newERC1155(address, provider, helper, storage)
+			erc1155, err := newERC1155(provider, address, privateKey, storage)
 			if err != nil {
 				return nil, err
 			}
 
 			edition := &Edition{
 				contractAbi,
+				helper,
 				erc1155,
 			}
 			return edition, nil

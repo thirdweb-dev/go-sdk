@@ -44,6 +44,18 @@ Get an Edition contract SDK instance
 
 address: the address of the Edition contract
 
+### func \(\*ThirdwebSDK\) [GetEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/sdk.go#L111>)
+
+```go
+func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error)
+```
+
+#### GetEditionDrop
+
+Get an Edition Drop contract SDK instance
+
+address: the address of the Edition Drop contract
+
 ### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/sdk.go#L72>)
 
 ```go
