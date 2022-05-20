@@ -11,7 +11,7 @@
 # Installation
 
 ```bash
-go get -u github.com/thirdweb-dev/go-sdk && go mod tidy
+go get -u github.com/thirdweb-dev/go-sdk
 ```
 
 ## Getting Started
