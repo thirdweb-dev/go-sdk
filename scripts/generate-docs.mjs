@@ -45,7 +45,7 @@ const delimiters = {
   },
   "## type [Token]": {
     name: "token.md",
-    header: "\n## Tokenn\nYou can access this interface through the SDK with \`sdk.GetToken(address)\`.\n",
+    header: "\n## Token\nYou can access this interface through the SDK with \`sdk.GetToken(address)\`.\n",
   },
   "## type [WrappedToken]": {
     name: "finish.md",
