@@ -90,6 +90,21 @@ func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
 	}
 }
 
+// GetToken
+//
+// Returns a Token contract SDK instance
+//
+// address: address of the token contract
+//
+// Returns a Token contract SDK instance
+func (sdk *ThirdwebSDK) GetToken(address string) (*Token, error) {
+	if contract, err := newToken(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 // GetNFTDrop
 //
 // Get an NFT Drop contract SDK instance

@@ -125,7 +125,7 @@ type NFTResult struct {
 }
 ```
 
-## type [NativeToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L108-L113>)
+## type [NativeToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L113-L118>)
 
 ```go
 type NativeToken struct {

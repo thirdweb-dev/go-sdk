@@ -53,6 +53,21 @@ func getEdition() (*thirdweb.Edition, error) {
 	}
 }
 
+func getToken() (*thirdweb.Token, error) {
+	if thirdwebSDK == nil {
+		initSdk()
+	}
+
+	log.Printf("Obtaining a Token on chain %v, contract %v\n", chainRpcUrl, tokenAddress)
+
+	if contract, err := thirdwebSDK.GetToken(tokenAddress); err != nil {
+		log.Println("Failed to create an Token object")
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 func getNftDrop() (*thirdweb.NFTDrop, error) {
 	if thirdwebSDK == nil {
 		initSdk()
