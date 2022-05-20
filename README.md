@@ -16,7 +16,7 @@ To install the SDK with the `go get` command, run the following:
 go get -u github.com/thirdweb-dev/go-sdk
 ```
 
-Note that once you have a script or file importing the `github.com/thirdweb-dev/go-sdk/pkg/thirdweb` package, you'll have to run `go get` to install any missing dependencies.
+Note that once you have a script or file importing the `github.com/thirdweb-dev/go-sdk/pkg/thirdweb` package, you may have to run `go get` to install any missing dependencies.
 
 ## Getting Started
 
