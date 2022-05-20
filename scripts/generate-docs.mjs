@@ -15,6 +15,10 @@ const delimiters = {
     name: "edition.md",
     header: "\n## Edition\nYou can access this interface through the SDK with \`sdk.GetEdition(address)\`.\n",
   },
+  "## type [EditionDrop]": {
+    name: "edition_drop.md",
+    header: "\n## Edition Drop\nYou can access this interface through the SDK with \`sdk.GetEditionDrop(address)\`.\n",
+  },
   "## type [IpfsStorage]": {
     name: "storage.md",
     header: `## IPFS Storage\nYou can access this interface through the SDK with \`sdk.Storage\`.\n`,

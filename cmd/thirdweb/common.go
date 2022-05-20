@@ -68,6 +68,21 @@ func getNftDrop() (*thirdweb.NFTDrop, error) {
 	}
 }
 
+func getEditionDrop() (*thirdweb.EditionDrop, error) {
+	if thirdwebSDK == nil {
+		initSdk()
+	}
+
+	log.Printf("Obtaining a Edition Drop on chain %v, contract %v\n", chainRpcUrl, editionDropContractAddress)
+
+	if contract, err := thirdwebSDK.GetEditionDrop(editionDropContractAddress); err != nil {
+		log.Println("Failed to create an Edition Drop object")
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 func getStorage() thirdweb.IpfsStorage {
 	if thirdwebSDK == nil {
 		initSdk()

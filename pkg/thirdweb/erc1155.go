@@ -23,18 +23,18 @@ type EditionResult struct {
 	err error
 }
 
-func newERC1155(address common.Address, provider *ethclient.Client, helper *contractHelper, storage storage) (*ERC1155, error) {
-	contractAbi, err := abi.NewTokenERC1155(address, provider)
-	if err != nil {
+func newERC1155(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*ERC1155, error) {
+	if contractAbi, err := abi.NewTokenERC1155(address, provider); err != nil {
 		return nil, err
+	} else if helper, err := newContractHelper(address, provider, privateKey); err != nil {
+		return nil, err
+	} else {
+		return &ERC1155{
+			contractAbi,
+			helper,
+			storage,
+		}, nil
 	}
-
-	erc1155 := &ERC1155{
-		contractAbi,
-		helper,
-		storage,
-	}
-	return erc1155, nil
 }
 
 // Get

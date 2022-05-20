@@ -103,6 +103,19 @@ func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
 	}
 }
 
+// GetEditionDrop
+//
+// Get an Edition Drop contract SDK instance
+//
+// address: the address of the Edition Drop contract
+func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error) {
+	if contract, err := newEditionDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 func getDefaultRpcUrl(rpcUrlorName string) (string, error) {
 	switch rpcUrlorName {
 	case "mumbai":
