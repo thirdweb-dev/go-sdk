@@ -72,25 +72,35 @@ var nftDropCreateBatchCmd = &cobra.Command{
 			panic(err)
 		}
 
-		imageFile, err := os.Open("internal/test/0.jpg")
+		image0, err := os.Open("internal/test/0.jpg")
 		if err != nil {
 			panic(err)
 		}
-		defer imageFile.Close()
+		defer image0.Close()
+
+		image1, err := os.Open("internal/test/1.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer image1.Close()
 
 		if tx, err := nftDrop.CreateBatch(
 			[]*thirdweb.NFTMetadataInput{
 				{
 					Name:  "Drop NFT 1",
-					Image: imageFile,
+					Image: image0,
 				},
 				{
 					Name:  "Drop NFT 2",
-					Image: imageFile,
+					Image: image1,
 				},
 				{
 					Name:  "Drop NFT 3",
 					Image: "ipfs://QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0",
+				},
+				{
+					Name:  "Drop NFT 4",
+					Image: "ipfs://QmRCGCu9uyo2deiTFRUc5aMFB6AYUapCCxvF4QLUJbK474/0",
 				},
 			},
 		); err != nil {
