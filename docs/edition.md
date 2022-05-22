@@ -1,12 +1,9 @@
 
 ## Edition
-You can access this interface through the SDK with `sdk.GetEdition(address)`.
-
 
 ```go
 type Edition struct {
     *ERC1155
-    // contains filtered or unexported fields
 }
 ```
 

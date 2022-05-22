@@ -1,12 +1,9 @@
 
 ## Token
-You can access this interface through the SDK with `sdk.GetToken(address)`.
-
 
 ```go
 type Token struct {
     *ERC20
-    // contains filtered or unexported fields
 }
 ```
 

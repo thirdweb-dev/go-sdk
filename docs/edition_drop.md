@@ -1,12 +1,9 @@
 
 ## Edition Drop
-You can access this interface through the SDK with `sdk.GetEditionDrop(address)`.
-
 
 ```go
 type EditionDrop struct {
     *ERC1155
-    // contains filtered or unexported fields
 }
 ```
 

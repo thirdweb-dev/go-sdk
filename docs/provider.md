@@ -1,10 +1,8 @@
 
 ## Provider
 
-
 ```go
 type ProviderHandler struct {
-    // contains filtered or unexported fields
 }
 ```
 

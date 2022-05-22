@@ -1,11 +1,8 @@
 
 ## ERC20
-This interface is supported by the `Token` contracts.
-
 
 ```go
 type ERC20 struct {
-    // contains filtered or unexported fields
 }
 ```
 

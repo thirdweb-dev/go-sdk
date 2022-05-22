@@ -7,6 +7,9 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// You can access the NFT Collection interface from the SDK as follows:
+//
+//	contract, err := sdk.GetNFTCollection("{{contract_address}}")
 type NFTCollection struct {
 	abi    *abi.TokenERC721
 	helper *contractHelper
@@ -34,27 +37,32 @@ func newNFTCollection(provider *ethclient.Client, address common.Address, privat
 	}
 }
 
-// Mint
-//
-// Mint a new NFT to the connected wallet
+// Mint a new NFT to the connected wallet.
 //
 // metadata: metadata of the NFT to mint
 //
 // returns: the transaction receipt of the mint
+//
+// Example
+//
+// 	nft.Mint(&thirdweb.NFTMetadataInput{ Name: "NFT" })
 func (nft *NFTCollection) Mint(metadata *NFTMetadataInput) (*types.Transaction, error) {
 	address := nft.helper.GetSignerAddress().String()
 	return nft.MintTo(address, metadata)
 }
 
-// Mint
-//
-// Mint a new NFT to the specified wallet
+// Mint a new NFT to the specified wallet.
 //
 // address: the wallet address to mint to
 //
 // metadata: metadata of the NFT to mint
 //
 // returns: the transaction receipt of the mint
+//
+// Example
+//
+//
+// 	nft.MintTo("0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc", &thirdweb.NFTMetadataInput{ Name: "NFT" })
 func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadata, nft.storage)
 	if err != nil {

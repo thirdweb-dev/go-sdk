@@ -1,12 +1,9 @@
 
 ## NFT Drop
-You can access this interface through the SDK with `sdk.GetNFTDrop(address)`.
-
 
 ```go
 type NFTDrop struct {
     *ERC721
-    // contains filtered or unexported fields
 }
 ```
 
