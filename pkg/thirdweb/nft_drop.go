@@ -10,6 +10,19 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// You can access the NFT Drop interface from the SDK as follows:
+//
+// 	import (
+// 		thirdweb "github.com/thirdweb-dev/go-sdk/thirdweb"
+// 	)
+//
+// 	privateKey = "..."
+//
+// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//		PrivateKey: privateKey,
+// 	})
+//
+//	contract, err := sdk.GetNFTDrop("{{contract_address}}")
 type NFTDrop struct {
 	abi    *abi.DropERC721
 	helper *contractHelper
@@ -44,11 +57,14 @@ func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey s
 	}
 }
 
-// GetAllClaimed
-//
-// Get a list of all the NFTs that have been claimed from this contract
+// Get a list of all the NFTs that have been claimed from this contract.
 //
 // returns: a list of the metadatas of the claimed NFTs
+//
+// Example
+//
+// 	claimedNfts, err := contract.GetAllClaimed()
+// 	firstOwner := claimedNfts[0].Owner
 func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error) {
 	if maxId, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{}); err != nil {
 		return nil, err
@@ -65,11 +81,14 @@ func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error) {
 	}
 }
 
-// GetAllUnclaimed
-//
-// Get a list of all the NFTs on this contract that have not yet been claimed
+// Get a list of all the NFTs on this contract that have not yet been claimed.
 //
 // returns: a list of the metadatas of the unclaimed NFTs
+//
+// Example
+//
+// 	unclaimedNfts, err := contract.GetAllUnclaimed()
+// 	firstNftName := unclaimedNfts[0].Name
 func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 	maxId, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
@@ -90,13 +109,34 @@ func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 	return nfts, nil
 }
 
-// CreateBatch
-//
-// Create a batch of NFTs on this contract
+// Create a batch of NFTs on this contract.
 //
 // metadatas: a list of the metadatas of the NFTs to create
 //
 // returns: the transaction receipt of the batch creation
+//
+// Example
+//
+// 	image0, err := os.Open("path/to/image/0.jpg")
+// 	defer image0.Close()
+//
+// 	image1, err := os.Open("path/to/image/1.jpg")
+// 	defer image1.Close()
+//
+// 	metadatas := []*thirdweb.NFTMetadataInput{
+// 		&thirdweb.NFTMetadataInput{
+// 			Name: "Cool NFT",
+// 			Description: "This is a cool NFT",
+// 			Image: image1
+// 		}
+// 		&thirdweb.NFTMetadataInput{
+// 			Name: "Cool NFT 2",
+// 			Description: "This is also a cool NFT",
+// 			Image: image2
+// 		}
+// 	}
+//
+// 	tx, err := contract.CreateBatch(metadatas)
 func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
@@ -131,9 +171,7 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 	return drop.helper.awaitTx(tx.Hash())
 }
 
-// Claim
-//
-// Claim NFTs from this contract to the connect wallet
+// Claim NFTs from this contract to the connect wallet.
 //
 // quantity: the number of NFTs to claim
 //
@@ -143,15 +181,20 @@ func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error) {
 	return drop.ClaimTo(address, quantity)
 }
 
-// ClaimTo
-//
-// Claim NFTs from this contract to the connect wallet
+// Claim NFTs from this contract to the connect wallet.
 //
 // destinationAddress: the address of the wallet to claim the NFTs to
 //
 // quantity: the number of NFTs to claim
 //
 // returns: the transaction receipt of the claim
+//
+// Example
+//
+// 	address := "{{wallet_address}}"
+// 	quantity = 1
+//
+// 	tx, err := contract.ClaimTo(address, quantity)
 func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Transaction, error) {
 	claimVerification, err := drop.prepareClaim(quantity)
 	if err != nil {

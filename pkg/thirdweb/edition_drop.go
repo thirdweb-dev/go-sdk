@@ -10,6 +10,19 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// You can access the Edition Drop interface from the SDK as follows:
+//
+// 	import (
+// 		thirdweb "github.com/thirdweb-dev/go-sdk/thirdweb"
+// 	)
+//
+// 	privateKey = "..."
+//
+// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//		PrivateKey: privateKey,
+// 	})
+//
+//	contract, err := sdk.GetEditionDrop("{{contract_address}}")
 type EditionDrop struct {
 	abi    *abi.DropERC1155
 	helper *contractHelper
@@ -51,6 +64,35 @@ func newEditionDrop(provider *ethclient.Client, address common.Address, privateK
 // metadatas: a list of the metadatas of the NFTs to create
 //
 // returns: the transaction receipt of the batch creation
+//
+// Example
+//
+// 	image0, err := os.Open("path/to/image/0.jpg")
+// 	defer image0.Close()
+//
+// 	image1, err := os.Open("path/to/image/1.jpg")
+// 	defer image1.Close()
+//
+// 	metadatasWithSupply := []*thirdweb.EditionMetadataInput{
+// 		&thirdweb.EditionMetadataInput{
+// 			Metadata: &thirdweb.NFTMetadataInput{
+// 				Name: "Cool NFT",
+// 				Description: "This is a cool NFT",
+// 				Image: image0,
+// 			},
+// 			Supply: 100,
+// 		},
+// 		&thirdweb.EditionMetadataInput{
+// 			Metadata: &thirdweb.NFTMetadataInput{
+// 				Name: "Cool NFT",
+// 				Description: "This is a cool NFT",
+// 				Image: image1,
+// 			},
+// 			Supply: 100,
+// 		},
+// 	}
+//
+// 	tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
 func (drop *EditionDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
@@ -109,6 +151,14 @@ func (drop *EditionDrop) Claim(tokenId int, quantity int) (*types.Transaction, e
 // quantity: the number of NFTs to claim
 //
 // returns: the transaction receipt of the claim
+//
+// Example
+//
+// 	address = "{{wallet_address}}"
+// 	tokenId = 0
+// 	quantity = 1
+//
+// 	tx, err := contract.ClaimTo(address, tokenId, quantity)
 func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantity int) (*types.Transaction, error) {
 	claimVerification, err := drop.prepareClaim(tokenId, quantity)
 	if err != nil {

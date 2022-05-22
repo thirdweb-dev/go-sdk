@@ -4,6 +4,16 @@
 You can access the NFT Collection interface from the SDK as follows:
 
 ```
+import (
+	thirdweb "github.com/thirdweb-dev/go-sdk/thirdweb"
+)
+
+privateKey = "..."
+
+sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+	PrivateKey: privateKey,
+})
+
 contract, err := sdk.GetNFTCollection("{{contract_address}}")
 ```
 
@@ -13,7 +23,7 @@ type NFTCollection struct {
 }
 ```
 
-### func \(\*NFTCollection\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/nft_collection.go#L49>)
+### func \(\*NFTCollection\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/nft_collection.go#L55>)
 
 ```go
 func (nft *NFTCollection) Mint(metadata *NFTMetadataInput) (*types.Transaction, error)
@@ -25,35 +35,25 @@ metadata: metadata of the NFT to mint
 
 returns: the transaction receipt of the mint
 
-#### Example
-
-```
-nft.Mint(&thirdweb.NFTMetadataInput{ Name: "NFT" })
-```
-
-### func \(\*NFTCollection\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/nft_collection.go#L91>)
+### func \(\*NFTCollection\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/nft_collection.go#L103>)
 
 ```go
 func (nft *NFTCollection) MintBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
 ```
 
-#### MintBatch
-
-Mint a batch of new NFTs to the connected wallet
+Mint a batch of new NFTs to the connected wallet\.
 
 metadatas: list of metadata of the NFTs to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*NFTCollection\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/nft_collection.go#L105>)
+### func \(\*NFTCollection\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/nft_collection.go#L130>)
 
 ```go
 func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) (*types.Transaction, error)
 ```
 
-#### MintBatchTo
-
-Mint a batch of new NFTs to the specified wallet
+Mint a batch of new NFTs to the specified wallet\.
 
 to: the wallet address to mint to
 
@@ -61,7 +61,24 @@ metadatas: list of metadata of the NFTs to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*NFTCollection\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/nft_collection.go#L66>)
+#### Example
+
+```
+metadatas := []*thirdweb.NFTMetadataInput{
+	&thirdweb.NFTMetadataInput{
+		Name: "Cool NFT",
+		Description: "This is a cool NFT",
+	}
+	&thirdweb.NFTMetadataInput{
+		Name: "Cool NFT 2",
+		Description: "This is also a cool NFT",
+	}
+}
+
+tx, err := contract.MintBatchTo("{{wallet_address}}", metadatas)
+```
+
+### func \(\*NFTCollection\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/nft_collection.go#L80>)
 
 ```go
 func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*types.Transaction, error)
@@ -78,5 +95,14 @@ returns: the transaction receipt of the mint
 #### Example
 
 ```
-nft.MintTo("0x0dcd5d886577d5081b0c52e242ef29e70be3e7bc", &thirdweb.NFTMetadataInput{ Name: "NFT" })
+image, err := os.Open("path/to/image.jpg")
+defer image.Close()
+
+metadata := &thirdweb.NFTMetadataInput{
+	Name: "Cool NFT",
+	Description: "This is a cool NFT",
+	Image: image,
+}
+
+tx, err := contract.MintTo("{{wallet_address}}", metadata)
 ```
