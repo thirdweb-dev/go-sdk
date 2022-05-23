@@ -23,15 +23,13 @@ type EditionDrop struct {
 }
 ```
 
-### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition_drop.go#L138>)
+### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition_drop.go#L134>)
 
 ```go
 func (drop *EditionDrop) Claim(tokenId int, quantity int) (*types.Transaction, error)
 ```
 
-#### Claim
-
-Claim NFTs from this contract to the connect wallet
+Claim NFTs from this contract to the connect wallet\.
 
 tokenId: the token ID of the NFT to claim
 
@@ -39,15 +37,13 @@ quantity: the number of NFTs to claim
 
 returns: the transaction receipt of the claim
 
-### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition_drop.go#L162>)
+### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition_drop.go#L156>)
 
 ```go
 func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantity int) (*types.Transaction, error)
 ```
 
-#### ClaimTo
-
-Claim NFTs from this contract to the connect wallet
+Claim NFTs from this contract to the connect wallet\.
 
 tokenId: the token ID of the NFT to claim
 
@@ -67,15 +63,13 @@ quantity = 1
 tx, err := contract.ClaimTo(address, tokenId, quantity)
 ```
 
-### func \(\*EditionDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition_drop.go#L96>)
+### func \(\*EditionDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition_drop.go#L94>)
 
 ```go
 func (drop *EditionDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
 ```
 
-#### CreateBatch
-
-Create a batch of NFTs on this contract
+Create a batch of NFTs on this contract\.
 
 metadatas: a list of the metadatas of the NFTs to create
 
@@ -141,7 +135,7 @@ type EditionMetadataOwner struct {
 }
 ```
 
-## type [EditionResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/erc1155.go#L21-L24>)
+## type [EditionResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/erc1155.go#L23-L26>)
 
 ```go
 type EditionResult struct {

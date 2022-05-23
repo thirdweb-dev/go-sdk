@@ -12,6 +12,8 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// This interface is currently support by the Edition and Edition Drop contracts.
+// You can access all of its functions through an Edition or Edition Drop contract instance.
 type ERC1155 struct {
 	abi     *abi.TokenERC1155
 	helper  *contractHelper
@@ -37,13 +39,17 @@ func newERC1155(provider *ethclient.Client, address common.Address, privateKey s
 	}
 }
 
-// Get
-//
-// Get metadata for a token
+// Get metadata for a token.
 //
 // tokenId: token ID of the token to get the metadata for
 //
 // returns: the metadata for the NFT and its supply
+//
+// Example
+//
+// 	nft, err := contract.Get(0)
+//  supply := nft.Supply
+// 	name := nft.Metadata.Name
 func (erc1155 *ERC1155) Get(tokenId int) (*EditionMetadata, error) {
 	supply := 0
 	if totalSupply, err := erc1155.abi.TotalSupply(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err == nil {
@@ -61,11 +67,15 @@ func (erc1155 *ERC1155) Get(tokenId int) (*EditionMetadata, error) {
 	}
 }
 
-// GetAll
-//
-// Get the metadata of all the NFTs on this contract
+// Get the metadata of all the NFTs on this contract.
 //
 // returns: the metadatas and supplies of all the NFTs on this contract
+//
+// Example
+//
+// 	nfts, err := contract.GetAll()
+// 	supplyOne := nfts[0].Supply
+// 	nameOne := nfts[0].Metadata.Name
 func (erc1155 *ERC1155) GetAll() ([]*EditionMetadata, error) {
 	if totalCount, err := erc1155.GetTotalCount(); err != nil {
 		return nil, err
@@ -78,22 +88,24 @@ func (erc1155 *ERC1155) GetAll() ([]*EditionMetadata, error) {
 	}
 }
 
-// GetTotalCount
-//
-// Get the total number of NFTs on this contract
+// Get the total number of NFTs on this contract.
 //
 // returns: the total number of NFTs on this contract
 func (erc1155 *ERC1155) GetTotalCount() (*big.Int, error) {
 	return erc1155.abi.NextTokenIdToMint(&bind.CallOpts{})
 }
 
-// GetOwned
-//
-// Get the metadatas of all the NFTs owned by a specific address
+// Get the metadatas of all the NFTs owned by a specific address.
 //
 // address: the address of the owner of the NFTs
 //
 // returns: the metadatas and supplies of all the NFTs owned by the address
+//
+// Example
+//
+// 	owner := "{{wallet_address}}"
+// 	nfts, err := contract.GetOwned(owner)
+// 	name := nfts[0].Metadata.Name
 func (erc1155 *ERC1155) GetOwned(address string) ([]*EditionMetadataOwner, error) {
 	if address == "" {
 		address = erc1155.helper.GetSignerAddress().String()
@@ -137,9 +149,7 @@ func (erc1155 *ERC1155) GetOwned(address string) ([]*EditionMetadataOwner, error
 	return metadataOwners, nil
 }
 
-// TotalSupply
-//
-// Get the total number of NFTs of a specific token ID
+// Get the total number of NFTs of a specific token ID.
 //
 // tokenId: the token ID to check the total supply of
 //
@@ -148,9 +158,7 @@ func (erc1155 *ERC1155) TotalSupply(tokenId int) (*big.Int, error) {
 	return erc1155.abi.TotalSupply(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
 }
 
-// Balance
-//
-// Get the NFT balance of the connected wallet for a specific token ID
+// Get the NFT balance of the connected wallet for a specific token ID.
 //
 // tokenId: the token ID of a specific token to check the balance of
 //
@@ -160,20 +168,22 @@ func (erc1155 *ERC1155) Balance(tokenId int) (*big.Int, error) {
 	return erc1155.BalanceOf(address, tokenId)
 }
 
-// BalanceOf
-//
-// Get the NFT balance of a specific wallet
+// Get the NFT balance of a specific wallet.
 //
 // address: the address of the wallet to get the NFT balance of
 //
 // returns: the number of NFTs of the specified token ID owned by the specified wallet
+//
+// Example
+//
+// 	address := "{{wallet_address}}"
+// 	tokenId := 0
+// 	balance, err := contract.BalanceOf(address, tokenId)
 func (erc1155 *ERC1155) BalanceOf(address string, tokenId int) (*big.Int, error) {
 	return erc1155.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(tokenId)))
 }
 
-// IsApproved
-//
-// Check whether an operator address is approved for all operations of a specifc addresses assets
+// Check whether an operator address is approved for all operations of a specifc addresses assets.
 //
 // address: the address whose assets are to be checked
 //
@@ -184,9 +194,7 @@ func (erc1155 *ERC1155) IsApproved(address string, operator string) (bool, error
 	return erc1155.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
 }
 
-// Transfer
-//
-// Transfer a specific quantity of a token ID from the connected wallet to a specified address
+// Transfer a specific quantity of a token ID from the connected wallet to a specified address.
 //
 // to: wallet address to transfer the tokens to
 //
@@ -195,6 +203,14 @@ func (erc1155 *ERC1155) IsApproved(address string, operator string) (bool, error
 // amount: number of NFTs of the token ID to transfer
 //
 // returns: the transaction of the NFT transfer
+//
+// Example
+//
+// 	to := "0x..."
+// 	tokenId := 0
+// 	amount := 1
+//
+// 	tx, err := contract.Transfer(to, tokenId, amount)
 func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Transaction, error) {
 	if tx, err := erc1155.abi.SafeTransferFrom(
 		erc1155.helper.getTxOptions(),
@@ -210,15 +226,19 @@ func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Tra
 	}
 }
 
-// Burn
-//
-// Burn an amount of a specified NFT from the connected wallet
+// Burn an amount of a specified NFT from the connected wallet.
 //
 // tokenId: tokenID of the token to burn
 //
 // amount: number of NFTs of the token ID to burn
 //
 // returns: the transaction receipt of the burn
+//
+// Example
+//
+// 	tokenId := 0
+// 	amount := 1
+// 	tx, err := contract.Burn(tokenId, amount)
 func (erc1155 *ERC1155) Burn(tokenId int, amount int) (*types.Transaction, error) {
 	address := erc1155.helper.GetSignerAddress()
 	if tx, err := erc1155.abi.Burn(
@@ -233,9 +253,7 @@ func (erc1155 *ERC1155) Burn(tokenId int, amount int) (*types.Transaction, error
 	}
 }
 
-// SetApprovalForAll
-//
-// Set the approval for all operations of a specific address's assets
+// Set the approval for all operations of a specific address's assets.
 //
 // address: the address whose assets are to be approved
 //

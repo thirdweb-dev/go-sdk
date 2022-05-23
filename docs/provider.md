@@ -2,8 +2,7 @@
 ## Provider
 
 ```go
-type ProviderHandler struct {
-}
+type ProviderHandler struct {}
 ```
 
 ### func [NewProviderHandler](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/provider_handler.go#L22>)

@@ -57,9 +57,7 @@ func newEditionDrop(provider *ethclient.Client, address common.Address, privateK
 	}
 }
 
-// CreateBatch
-//
-// Create a batch of NFTs on this contract
+// Create a batch of NFTs on this contract.
 //
 // metadatas: a list of the metadatas of the NFTs to create
 //
@@ -126,9 +124,7 @@ func (drop *EditionDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Tran
 	return drop.helper.awaitTx(tx.Hash())
 }
 
-// Claim
-//
-// Claim NFTs from this contract to the connect wallet
+// Claim NFTs from this contract to the connect wallet.
 //
 // tokenId: the token ID of the NFT to claim
 //
@@ -140,9 +136,7 @@ func (drop *EditionDrop) Claim(tokenId int, quantity int) (*types.Transaction, e
 	return drop.ClaimTo(address, tokenId, quantity)
 }
 
-// ClaimTo
-//
-// Claim NFTs from this contract to the connect wallet
+// Claim NFTs from this contract to the connect wallet.
 //
 // tokenId: the token ID of the NFT to claim
 //

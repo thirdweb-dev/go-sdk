@@ -65,11 +65,17 @@ async function main() {
     let matched = false;
 
     for (const delimiter of Object.keys(delimiters)) {
+
+      // Get the actual type delimiter to split the file by
       const typeDelimeter = `## type [${delimiter}]`;
+
       if (line.indexOf(typeDelimeter) == 0 && !matched) {
         matched = true;
-        file = file.replace("    // contains filtered or unexported fields\n", "")
+
+        // Do basic formatting on doc output to make them nicer
+        file = file.replace("    // contains filtered or unexported fields\n", "").replace("{\n}", "{}")
         file = `\n## ${header}${file}`
+        
         fs.writeFile(`./docs/${name}`, file, (err) => {
           if (err) throw err;
         })

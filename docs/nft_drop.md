@@ -168,7 +168,7 @@ type NFTMetadataOwner struct {
 }
 ```
 
-## type [NFTResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/erc721.go#L21-L24>)
+## type [NFTResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/erc721.go#L23-L26>)
 
 ```go
 type NFTResult struct {
