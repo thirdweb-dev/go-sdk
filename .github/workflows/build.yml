@@ -19,4 +19,4 @@ jobs:
       - name: Build
         run: go build ./thirdweb 
       - name: Build cmd
-        run: go build ./cmd/thirdweb -o ./thirdweb-cmd
+        run: mkdir bin && go build ./cmd/thirdweb -o ./bin
