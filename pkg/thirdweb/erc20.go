@@ -139,7 +139,7 @@ func (erc20 *ERC20) AllowanceOf(owner string, spender string) (*CurrencyValue, e
 // Example
 //
 // 	to := "0x..."
-//  amount := 1
+// 	amount := 1
 //
 // 	tx, err := contract.Transfer(to, amount)
 func (erc20 *ERC20) Transfer(to string, amount float64) (*types.Transaction, error) {

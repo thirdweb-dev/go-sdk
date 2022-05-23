@@ -201,11 +201,8 @@ returns: transaction receipt of the transfer
 
 ```
 to := "0x..."
-```
-
 amount := 1
 
-```
 tx, err := contract.Transfer(to, amount)
 ```
 

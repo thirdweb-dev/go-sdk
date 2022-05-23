@@ -312,7 +312,7 @@
       {
         "name": "Transfer",
         "summary": "",
-        "example": "to := \"0x...\"\n",
+        "example": "to := \"0x...\"\namount := 1\n\ntx, err := contract.Transfer(to, amount)\n",
         "reference": "https://docs.thirdweb.com/go/token#func-token-transfer"
       },
       {
