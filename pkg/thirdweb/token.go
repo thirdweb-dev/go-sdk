@@ -8,6 +8,19 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// You can access the Token interface from the SDK as follows:
+//
+// 	import (
+// 		thirdweb "github.com/thirdweb-dev/go-sdk/thirdweb"
+// 	)
+//
+// 	privateKey = "..."
+//
+// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//		PrivateKey: privateKey,
+// 	})
+//
+//	contract, err := sdk.GetToken("{{contract_address}}")
 type Token struct {
 	abi    *abi.TokenERC20
 	helper *contractHelper
@@ -33,18 +46,14 @@ func newToken(provider *ethclient.Client, address common.Address, privateKey str
 	}
 }
 
-// GetVoteBalance
-//
-// Get the connected wallets voting power in this token
+// Get the connected wallets voting power in this token.
 //
 // returns: vote balance of the connected wallet
 func (token *Token) GetVoteBalance() (*CurrencyValue, error) {
 	return token.GetVoteBalanceOf(token.helper.GetSignerAddress().String())
 }
 
-// GetVoteBalanceOf
-//
-// Get the voting power of the specified wallet in this token
+// Get the voting power of the specified wallet in this token.
 //
 // address: wallet address to check the vote balance of
 //
@@ -58,8 +67,6 @@ func (token *Token) GetVoteBalanceOf(address string) (*CurrencyValue, error) {
 	return token.getValue(votes)
 }
 
-// GetDelegation
-//
 // Get the connected wallets delegatee address for this token.
 //
 // returns: delegation address of the connected wallet
@@ -67,9 +74,7 @@ func (token *Token) GetDelegation() (string, error) {
 	return token.GetDelegationOf(token.helper.GetSignerAddress().String())
 }
 
-// GetDelegationOf
-//
-// Get a specified wallets delegatee for this token
+// Get a specified wallets delegatee for this token.
 //
 // returns: delegation address of the connected wallet
 func (token *Token) GetDelegationOf(address string) (string, error) {
@@ -81,9 +86,7 @@ func (token *Token) GetDelegationOf(address string) (string, error) {
 	return delegation.String(), nil
 }
 
-// Mint
-//
-// Mint tokens to the connected wallet
+// Mint tokens to the connected wallet.
 //
 // amount: amount of tokens to mint
 //
@@ -92,15 +95,17 @@ func (token *Token) Mint(amount float64) (*types.Transaction, error) {
 	return token.MintTo(token.helper.GetSignerAddress().String(), amount)
 }
 
-// MintTo
-//
-// Mint tokens to a specified wallet
+// Mint tokens to a specified wallet.
 //
 // to: wallet address to mint tokens to
 //
 // amount: amount of tokens to mint
 //
 // returns: transaction receipt of the mint
+//
+// Example
+//
+// 	tx, err := contract.MintTo("{{wallet_address}}", 1)
 func (token *Token) MintTo(to string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := token.normalizeAmount(amount)
 	if err != nil {
@@ -115,13 +120,26 @@ func (token *Token) MintTo(to string, amount float64) (*types.Transaction, error
 	return token.helper.awaitTx(tx.Hash())
 }
 
-// MintBatchTo
-//
-// Mint tokens to a list of wallets
+// Mint tokens to a list of wallets.
 //
 // args: list of wallet addresses and amounts to mint
 //
 // returns: transaction receipt of the mint
+//
+// Example
+//
+// 	args = []*thirdweb.TokenAmount{
+// 		&thirdweb.TokenAmount{
+// 			ToAddress: "{{wallet_address}}",
+// 			Amount:    1
+// 		}
+// 		&thirdweb.TokenAmount{
+// 			ToAddress: "{{wallet_address}}",
+// 			Amount:    2
+// 		}
+// 	}
+//
+// 	tx, err := contract.MintBatchTo(args)
 func (token *Token) MintBatchTo(args []*TokenAmount) (*types.Transaction, error) {
 	encoded := [][]byte{}
 
@@ -147,11 +165,9 @@ func (token *Token) MintBatchTo(args []*TokenAmount) (*types.Transaction, error)
 	return token.helper.awaitTx(tx.Hash())
 }
 
-// DelegateTo
+// Delegate the connected wallets tokens to a specified wallet.
 //
-// Delegate the connected wallets tokens to a specified wallet
-//
-// delegatreeAddress: wallet address to delegate tokens to
+// delegateeAddress: wallet address to delegate tokens to
 //
 // returns: transaction receipt of the delegation
 func (token *Token) DelegateTo(delegatreeAddress string) (*types.Transaction, error) {

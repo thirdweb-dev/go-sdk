@@ -9,6 +9,19 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// You can access the Edition interface from the SDK as follows:
+//
+// 	import (
+// 		thirdweb "github.com/thirdweb-dev/go-sdk/thirdweb"
+// 	)
+//
+// 	privateKey = "..."
+//
+// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//		PrivateKey: privateKey,
+// 	})
+//
+//	contract, err := sdk.GetEdition("{{contract_address}}")
 type Edition struct {
 	abi    *abi.TokenERC1155
 	helper *contractHelper
@@ -37,9 +50,7 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 	}
 }
 
-// Mint
-//
-// Mint an NFT to the connected wallet
+// Mint an NFT to the connected wallet.
 //
 // metadataWithSupply: nft metadata with supply of the NFT to mint
 //
@@ -49,15 +60,29 @@ func (edition *Edition) Mint(metadataWithSupply *EditionMetadataInput) (*types.T
 	return edition.MintTo(address, metadataWithSupply)
 }
 
-// MintTo
-//
-// Mint a new NFT to the specified wallet
+// Mint a new NFT to the specified wallet.
 //
 // address: the wallet address to mint the NFT to
 //
 // metadataWithSupply: nft metadata with supply of the NFT to mint
 //
 // returns: the transaction receipt of the mint
+//
+// Example
+//
+// 	image, err := os.Open("path/to/image.jpg")
+// 	defer image.Close()
+//
+// 	metadataWithSupply := &thirdweb.EditionMetadataInput{
+// 		Metadata: &thirdweb.NFTMetadataInput{
+// 			Name: "Cool NFT",
+// 			Description: "This is a cool NFT",
+// 			Image: image,
+// 		},
+// 		Supply: 100,
+// 	}
+//
+// 	tx, err := contract.MintTo("{{wallet_address}}", metadataWithSupply)
 func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadataWithSupply.Metadata, edition.storage)
 	if err != nil {
@@ -79,9 +104,7 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 	return edition.helper.awaitTx((tx.Hash()))
 }
 
-// MintAdditionalSupply
-//
-// Mint additionaly supply of a token to the connected wallet
+// Mint additionaly supply of a token to the connected wallet.
 //
 // tokenId: token ID to mint additional supply of
 //
@@ -93,7 +116,7 @@ func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) 
 	return edition.MintAdditionalSupplyTo(address, tokenId, additionalSupply)
 }
 
-// MintAdditionalSupplyTo
+// Mint additional supply of a token to the specified wallet.
 //
 // to: address of the wallet to mint NFTs to
 //
@@ -122,13 +145,34 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 	return edition.helper.awaitTx(tx.Hash())
 }
 
-// MintBatchTo
+// Mint a batch of tokens to various wallets.
 //
 // to: address of the wallet to mint NFTs to
 //
 // metadatasWithSupply: list of NFT metadatas with supplies to mint
 //
 // returns: the transaction receipt of the mint
+//
+// Example
+//
+// 	metadatasWithSupply := []*thirdweb.EditionMetadataInput{
+// 		&thirdweb.EditionMetadataInput{
+// 			Metadata: &thirdweb.NFTMetadataInput{
+// 				Name: "Cool NFT",
+// 				Description: "This is a cool NFT",
+// 			},
+// 			Supply: 100,
+// 		},
+// 		&thirdweb.EditionMetadataInput{
+// 			Metadata: &thirdweb.NFTMetadataInput{
+// 				Name: "Cool NFT",
+// 				Description: "This is a cool NFT",
+// 			},
+// 			Supply: 100,
+// 		},
+// 	}
+//
+// 	tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
 func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
 	metadatas := []*NFTMetadataInput{}
 	for _, metadataWithSupply := range metadatasWithSupply {

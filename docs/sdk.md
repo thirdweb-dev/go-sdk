@@ -1,7 +1,6 @@
 
 ## ThirdwebSDK
 
-
 ```go
 type SDKOptions struct {
     PrivateKey string

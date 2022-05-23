@@ -1,11 +1,8 @@
 
 ## Provider
 
-
 ```go
-type ProviderHandler struct {
-    // contains filtered or unexported fields
-}
+type ProviderHandler struct {}
 ```
 
 ### func [NewProviderHandler](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/provider_handler.go#L22>)

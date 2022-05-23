@@ -10,6 +10,8 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// This interface is currently support by the Token contract. You can access
+// all of its functions through a Token contract instance.
 type ERC20 struct {
 	abi     *abi.TokenERC20
 	helper  *contractHelper
@@ -30,31 +32,41 @@ func newERC20(provider *ethclient.Client, address common.Address, privateKey str
 	}
 }
 
-// Get
-//
 // Get token metadata including name, symbol, decimals, etc.
 //
 // returns: the metadata for the token
+//
+// Example
+//
+// 	currency, err := contract.Get()
+// 	symbol := currency.Symbol
 func (erc20 *ERC20) Get() (*Currency, error) {
 	return fetchCurrencyMetadata(erc20.helper.GetProvider(), erc20.helper.getAddress().String())
 }
 
-// Balance
-//
-// Get the token balance of the connected wallet
+// Get the token balance of the connected wallet.
 //
 // returns: balance of the connected wallet
+//
+// Example
+//
+// 	balance, err := contract.Balance()
+//  balanceValue := balance.DisplayValue
 func (erc20 *ERC20) Balance() (*CurrencyValue, error) {
 	return erc20.BalanceOf(erc20.helper.GetSignerAddress().String())
 }
 
-// BalanceOf
-//
-// Get the balance of the specified wallet
+// Get the balance of the specified wallet.
 //
 // address: wallet address to check the balance of
 //
 // returns: balance of the specified wallet
+//
+// Example
+//
+// 	address := "{{wallet_address}}"
+// 	balance, err := contract.BalanceOf()
+//  balanceValue := balance.DisplayValue
 func (erc20 *ERC20) BalanceOf(address string) (*CurrencyValue, error) {
 	balanceOf, err := erc20.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
 	if err != nil {
@@ -64,9 +76,7 @@ func (erc20 *ERC20) BalanceOf(address string) (*CurrencyValue, error) {
 	return erc20.getValue(balanceOf)
 }
 
-// TotalSupply
-//
-// Get the total minted supply of the token
+// Get the total minted supply of the token.
 //
 // returns: total minted supply of the token
 func (erc20 *ERC20) TotalSupply() (*CurrencyValue, error) {
@@ -78,26 +88,37 @@ func (erc20 *ERC20) TotalSupply() (*CurrencyValue, error) {
 	return erc20.getValue(totalySupply)
 }
 
-// Allowance
-//
-// Get a specified spenders allowance for the connected wallets tokens
+// Get a specified spenders allowance for the connected wallets tokens.
 //
 // spender: wallet address to check the allowance of
 //
 // returns: allowance of the spender for the connected wallets tokens
+//
+// Example
+//
+// 	spender := "0x..."
+//
+// 	allowance, err := contract.Allowance(spender)
+//	allowanceValue := allowance.DisplayValue
 func (erc20 *ERC20) Allowance(spender string) (*CurrencyValue, error) {
 	return erc20.AllowanceOf(erc20.helper.GetSignerAddress().String(), spender)
 }
 
-// AllowanceOf
-//
-// Get a specified spenders allowance for the a specific wallets tokens
+// Get a specified spenders allowance for the a specific wallets tokens.
 //
 // owner: wallet address who owns the assets
 //
 // spender: wallet address to check the allowance of
 //
 // returns: allowance of the spender for the connected wallets tokens
+//
+// Example
+//
+// 	address := "{{wallet_address}}"
+// 	spender := "0x..."
+//
+// 	allowance, err := contract.AllowanceOf(address, spender)
+//	allowanceValue := allowance.DisplayValue
 func (erc20 *ERC20) AllowanceOf(owner string, spender string) (*CurrencyValue, error) {
 	allowance, err := erc20.abi.Allowance(&bind.CallOpts{}, common.HexToAddress(owner), common.HexToAddress(spender))
 	if err != nil {
@@ -107,8 +128,6 @@ func (erc20 *ERC20) AllowanceOf(owner string, spender string) (*CurrencyValue, e
 	return erc20.getValue(allowance)
 }
 
-// Transfer
-//
 // Transfer a specified amount of tokens from the connected wallet to a specified address.
 //
 // to: address to transfer the tokens to
@@ -116,6 +135,13 @@ func (erc20 *ERC20) AllowanceOf(owner string, spender string) (*CurrencyValue, e
 // amount: amount of tokens to transfer
 //
 // returns: transaction receipt of the transfer
+//
+// Example
+//
+// 	to := "0x..."
+//  amount := 1
+//
+// 	tx, err := contract.Transfer(to, amount)
 func (erc20 *ERC20) Transfer(to string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {
@@ -130,8 +156,6 @@ func (erc20 *ERC20) Transfer(to string, amount float64) (*types.Transaction, err
 	return erc20.helper.awaitTx(tx.Hash())
 }
 
-// TransferFrom
-//
 // Transfer a specified amount of tokens from one specified address to another.
 //
 // from: address to transfer the tokens from
@@ -141,6 +165,14 @@ func (erc20 *ERC20) Transfer(to string, amount float64) (*types.Transaction, err
 // amount: amount of tokens to transfer
 //
 // returns: transaction receipt of the transfer
+//
+// Example
+//
+// 	from := "{{wallet_address}}"
+// 	to := "0x..."
+//  amount := 1
+//
+// 	tx, err := contract.Transfer(from, to, amount)
 func (erc20 *ERC20) TransferFrom(from string, to string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {
@@ -155,15 +187,20 @@ func (erc20 *ERC20) TransferFrom(from string, to string, amount float64) (*types
 	return erc20.helper.awaitTx(tx.Hash())
 }
 
-// SetAllowance
-//
-// Sets the allowance of a wallet to spend the connected wallets funds
+// Sets the allowance of a wallet to spend the connected wallets funds.
 //
 // spender: wallet address to set the allowance of
 //
 // amount: amount of tokens to grant the spender allowance of
 //
 // returns: transaction receipt of the allowance set
+//
+// Example
+//
+// 	spender := "0x..."
+// 	amount := 1
+//
+// 	tx, err := contract.SetAllowance(spender, amount)
 func (erc20 *ERC20) SetAllowance(spender string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {
@@ -178,13 +215,26 @@ func (erc20 *ERC20) SetAllowance(spender string, amount float64) (*types.Transac
 	return erc20.helper.awaitTx(tx.Hash())
 }
 
-// TransferBatch
-//
-// Transfer tokens from the connected wallet to many wallets
+// Transfer tokens from the connected wallet to many wallets.
 //
 // args: list of token amounts with amounts and addresses to transfer to
 //
 // returns: transaction receipt of the transfers
+//
+// Example
+//
+// 	args = []*thirdweb.TokenAmount{
+// 		&thirdweb.TokenAmount{
+// 			ToAddress: "0x...",
+// 			Amount:    1
+// 		}
+// 		&thirdweb.TokenAmount{
+// 			ToAddress: "0x...",
+// 			Amount:    2
+// 		}
+// 	}
+//
+// 	tx, err := contract.TransferBatch(args)
 func (erc20 *ERC20) TransferBatch(args []*TokenAmount) (*types.Transaction, error) {
 	encoded := [][]byte{}
 
@@ -210,13 +260,16 @@ func (erc20 *ERC20) TransferBatch(args []*TokenAmount) (*types.Transaction, erro
 	return erc20.helper.awaitTx(tx.Hash())
 }
 
-// Burn
-//
-// Burn a specified amount of tokens from the connected wallet
+// Burn a specified amount of tokens from the connected wallet.
 //
 // amount: amount of tokens to burn
 //
 // returns: transaction receipt of the burn
+//
+// Example
+//
+// 	amount := 1
+// 	tx, err := contract.Burn(amount)
 func (erc20 *ERC20) Burn(amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {
@@ -231,15 +284,20 @@ func (erc20 *ERC20) Burn(amount float64) (*types.Transaction, error) {
 	return erc20.helper.awaitTx(tx.Hash())
 }
 
-// BurnFrom
-//
-// Burn a specified amount of tokens from a specific wallet
+// Burn a specified amount of tokens from a specific wallet.
 //
 // holder: wallet address to burn the tokens from
 //
 // amount: amount of tokens to burn
 //
 // returns: transaction receipt of the burn
+//
+// Example
+//
+// 	holder := "0x..."
+// 	amount := 1
+//
+// 	tx, err := contract.BurnFrom(holder, amount)
 func (erc20 *ERC20) BurnFrom(holder string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {

@@ -1,6 +1,5 @@
-## IPFS Storage
-You can access this interface through the SDK with `sdk.Storage`.
 
+## IPFS Storage
 
 ```go
 type IpfsStorage struct {

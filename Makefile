@@ -15,6 +15,7 @@ docs:
 	gomarkdoc --output docs/doc.md --repository.default-branch main ./pkg/thirdweb
 	node ./scripts/generate-docs.mjs
 	rm ./docs/doc.md ./docs/start.md ./docs/finish.md
+	node ./scripts/generate-snippets.mjs
 
 cmd: FORCE
 	cd cmd/thirdweb && go build -o ../../bin/thirdweb && cd -

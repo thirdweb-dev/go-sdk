@@ -12,6 +12,8 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// This interface is currently support by the NFT Collection and NFT Drop contracts.
+// You can access all of its functions through an NFT Collection or NFT Drop contract instance.
 type ERC721 struct {
 	abi     *abi.TokenERC721
 	helper  *contractHelper
@@ -37,13 +39,17 @@ func newERC721(provider *ethclient.Client, address common.Address, privateKey st
 	}
 }
 
-// Get
-//
-// Get metadata for a token
+// Get metadata for a token.
 //
 // tokenId: token ID of the token to get the metadata for
 //
 // returns: the metadata for the NFT and its owner
+//
+// Example
+//
+// 	nft, err := contract.Get(0)
+//  owner := nft.Owner
+// 	name := nft.Metadata.Name
 func (erc721 *ERC721) Get(tokenId int) (*NFTMetadataOwner, error) {
 	owner := "0x0000000000000000000000000000000000000000"
 	if address, err := erc721.OwnerOf(tokenId); err == nil {
@@ -61,11 +67,15 @@ func (erc721 *ERC721) Get(tokenId int) (*NFTMetadataOwner, error) {
 	}
 }
 
-// GetAll
-//
-// Get the metadata of all the NFTs on this contract
+// Get the metadata of all the NFTs on this contract.
 //
 // returns: the metadata of all the NFTs on this contract
+//
+// Example
+//
+// 	nfts, err := contract.GetAll()
+// 	ownerOne := nfts[0].Owner
+// 	nameOne := nfts[0].Metadata.Name
 func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 	if totalCount, err := erc721.GetTotalCount(); err != nil {
 		return nil, err
@@ -78,22 +88,24 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 	}
 }
 
-// GetTotalCount
-//
-// Get the total number of NFTs on this contract
+// Get the total number of NFTs on this contract.
 //
 // returns: the total number of NFTs on this contract
 func (erc721 *ERC721) GetTotalCount() (*big.Int, error) {
 	return erc721.abi.NextTokenIdToMint(&bind.CallOpts{})
 }
 
-// GetOwned
-//
-// Get the metadatas of all the NFTs owned by a specific address
+// Get the metadatas of all the NFTs owned by a specific address.
 //
 // address: the address of the owner of the NFTs
 //
 // returns: the metadata of all the NFTs owned by the address
+//
+// Example
+//
+// 	owner := "{{wallet_address}}"
+// 	nfts, err := contract.GetOwned(owner)
+// 	name := nfts[0].Metadata.Name
 func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
 	if address == "" {
 		address = erc721.helper.GetSignerAddress().String()
@@ -106,9 +118,7 @@ func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
 	}
 }
 
-// GetOwnedTokenIDs
-//
-// Get the tokenIds of all the NFTs owned by a specific address
+// Get the tokenIds of all the NFTs owned by a specific address.
 //
 // address: the address of the owner of the NFTs
 //
@@ -133,9 +143,7 @@ func (erc721 *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
 	}
 }
 
-// OwnerOf
-//
-// Get the owner of an NFT
+// Get the owner of an NFT.
 //
 // tokenId: the token ID of the NFT to get the owner of
 //
@@ -148,38 +156,40 @@ func (erc721 *ERC721) OwnerOf(tokenId int) (string, error) {
 	}
 }
 
-// TotalSupply
-//
-// Get the total number of NFTs on this contract
+// Get the total number of NFTs on this contract.
 //
 // returns: the supply of NFTs on this contract
 func (erc721 *ERC721) TotalSupply() (*big.Int, error) {
 	return erc721.abi.TotalSupply(&bind.CallOpts{})
 }
 
-// Balance
-//
-// Get the NFT balance of the connected wallet
+// Get the NFT balance of the connected wallet.
 //
 // returns: the number of NFTs on this contract owned by the connected wallet
-func (erc721 *ERC721) Balance() (*big.Int, error) {
+func (erc721 *ERC721) Balance() (int, error) {
 	return erc721.BalanceOf(erc721.helper.GetSignerAddress().String())
 }
 
-// BalanceOf
-//
-// Get the NFT balance of a specific wallet
+// Get the NFT balance of a specific wallet.
 //
 // address: the address of the wallet to get the NFT balance of
 //
 // returns: the number of NFTs on this contract owned by the specified wallet
-func (erc721 *ERC721) BalanceOf(address string) (*big.Int, error) {
-	return erc721.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
+//
+// Example
+//
+// 	address := "{{wallet_address}}"
+// 	balance, err := contract.BalanceOf(address)
+func (erc721 *ERC721) BalanceOf(address string) (int, error) {
+	balance, err := erc721.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address))
+	if err != nil {
+		return 0, err
+	}
+
+	return int(balance.Int64()), nil
 }
 
-// IsApproved
-//
-// Check whether an operator address is approved for all operations of a specifc addresses assets
+// Check whether an operator address is approved for all operations of a specifc addresses assets.
 //
 // address: the address whose assets are to be checked
 //
@@ -190,15 +200,20 @@ func (erc721 *ERC721) IsApproved(address string, operator string) (bool, error) 
 	return erc721.abi.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(address), common.HexToAddress(operator))
 }
 
-// Transfer
-//
-// Transfer a specified token from the connected wallet to a specified address
+// Transfer a specified token from the connected wallet to a specified address.
 //
 // to: wallet address to transfer the tokens to
 //
 // tokenId: the token ID of the NFT to transfer
 //
 // returns: the transaction of the NFT transfer
+//
+// Example
+//
+// 	to := "0x..."
+// 	tokenId := 0
+//
+// 	tx, err := contract.Transfer(to, tokenId)
 func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, error) {
 	if tx, err := erc721.abi.SafeTransferFrom(erc721.helper.getTxOptions(), erc721.helper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
@@ -207,13 +222,16 @@ func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, erro
 	}
 }
 
-// Burn
-//
-// Burn a specified NFT from the connected wallet
+// Burn a specified NFT from the connected wallet.
 //
 // tokenId: tokenID of the token to burn
 //
 // returns: the transaction receipt of the burn
+//
+// Example
+//
+// 	tokenId := 0
+// 	tx, err := contract.Burn(tokenId)
 func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
 	if tx, err := erc721.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
@@ -222,9 +240,7 @@ func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
 	}
 }
 
-// SetApprovalForAll
-//
-// Set the approval for all operations of a specific address's assets
+// Set the approval for all operations of a specific address's assets.
 //
 // address: the address whose assets are to be approved
 //

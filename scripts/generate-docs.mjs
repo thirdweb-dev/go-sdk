@@ -2,54 +2,56 @@ import fs from "fs";
 
 const docPath = "./docs/doc.md"
 
+// Delimiters are used to split the initially generated single doc file into multiple files
+// We search for the structure `## type [delimiter]` and create a new file for each delimiter
 const delimiters = {
-  "## type [ERC1155]": {
+  "ERC1155": {
     name: "erc1155.md",
-    header: "## ERC1155\nThis interface is supported by the \`Edition\` contract.\n",
+    header: "ERC1155",
   },
-  "## type [ERC20]": {
+  "ERC20": {
     name: "erc20.md",
-    header: "\n## ERC20\nThis interface is supported by the \`Token\` contracts.\n",
+    header: "ERC20",
   },
-  "## type [ERC721]": {
+  "ERC721": {
     name: "erc721.md",
-    header: "\n## ERC721\nThis interface is supported by the \`NFTCollection\` and \`NFTDrop\` contracts.\n",
+    header: "ERC721",
   },
-  "## type [Edition]": {
+  "Edition": {
     name: "edition.md",
-    header: "\n## Edition\nYou can access this interface through the SDK with \`sdk.GetEdition(address)\`.\n",
+    header: "Edition",
   },
-  "## type [EditionDrop]": {
+  "EditionDrop": {
     name: "edition_drop.md",
-    header: "\n## Edition Drop\nYou can access this interface through the SDK with \`sdk.GetEditionDrop(address)\`.\n",
+    header: "Edition Drop",
   },
-  "## type [IpfsStorage]": {
+  "IpfsStorage": {
     name: "storage.md",
-    header: `## IPFS Storage\nYou can access this interface through the SDK with \`sdk.Storage\`.\n`,
+    header: `IPFS Storage`,
   },
-  "## type [NFTCollection]": {
+  "NFTCollection": {
     name: "nft_collection.md",
-    header: "\n## NFT Collection\nYou can access this interface through the SDK with \`sdk.GetNFTCollection(address)\`.\n",
+    header: "NFT Collection",
   },
-  "## type [NFTDrop]": {
+  "NFTDrop": {
     name: "nft_drop.md",
-    header: "\n## NFT Drop\nYou can access this interface through the SDK with \`sdk.GetNFTDrop(address)\`.\n",
+    header: "NFT Drop",
   },
-  "## type [ProviderHandler]": {
+  "ProviderHandler": {
     name: "provider.md",
-    header: "\n## Provider\n",
+    header: "Provider",
   },
-  "## type [SDKOptions]": {
+  "SDKOptions": {
     name: "sdk.md",
-    header: "\n## ThirdwebSDK\n",
+    header: "ThirdwebSDK",
   },
-  "## type [Token]": {
+  "Token": {
     name: "token.md",
-    header: "\n## Token\nYou can access this interface through the SDK with \`sdk.GetToken(address)\`.\n",
+    header: "Token",
   },
-  "## type [WrappedToken]": {
+  "WrappedToken": {
     name: "finish.md",
-    header: "\n## Wrapped Token\n",
+    header: "",
   },
 }
 
@@ -63,9 +65,18 @@ async function main() {
     let matched = false;
 
     for (const delimiter of Object.keys(delimiters)) {
-      if (line.indexOf(delimiter) == 0 && !matched) {
+
+      // Get the actual type delimiter to split the file by
+      const typeDelimeter = `## type [${delimiter}]`;
+
+      if (line.indexOf(typeDelimeter) == 0 && !matched) {
         matched = true;
-        fs.writeFile(`./docs/${name}`, header + file, (err) => {
+
+        // Do basic formatting on doc output to make them nicer
+        file = file.replace("    // contains filtered or unexported fields\n", "").replace("{\n}", "{}")
+        file = `\n## ${header}${file}`
+        
+        fs.writeFile(`./docs/${name}`, file, (err) => {
           if (err) throw err;
         })
 

@@ -7,6 +7,19 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// You can access the NFT Collection interface from the SDK as follows:
+//
+// 	import (
+// 		thirdweb "github.com/thirdweb-dev/go-sdk/thirdweb"
+// 	)
+//
+// 	privateKey = "..."
+//
+// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//		PrivateKey: privateKey,
+// 	})
+//
+//	contract, err := sdk.GetNFTCollection("{{contract_address}}")
 type NFTCollection struct {
 	abi    *abi.TokenERC721
 	helper *contractHelper
@@ -34,9 +47,7 @@ func newNFTCollection(provider *ethclient.Client, address common.Address, privat
 	}
 }
 
-// Mint
-//
-// Mint a new NFT to the connected wallet
+// Mint a new NFT to the connected wallet.
 //
 // metadata: metadata of the NFT to mint
 //
@@ -46,15 +57,26 @@ func (nft *NFTCollection) Mint(metadata *NFTMetadataInput) (*types.Transaction, 
 	return nft.MintTo(address, metadata)
 }
 
-// Mint
-//
-// Mint a new NFT to the specified wallet
+// Mint a new NFT to the specified wallet.
 //
 // address: the wallet address to mint to
 //
 // metadata: metadata of the NFT to mint
 //
 // returns: the transaction receipt of the mint
+//
+// Example
+//
+// 	image, err := os.Open("path/to/image.jpg")
+// 	defer image.Close()
+//
+// 	metadata := &thirdweb.NFTMetadataInput{
+// 		Name: "Cool NFT",
+// 		Description: "This is a cool NFT",
+// 		Image: image,
+// 	}
+//
+// 	tx, err := contract.MintTo("{{wallet_address}}", metadata)
 func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadata, nft.storage)
 	if err != nil {
@@ -73,9 +95,7 @@ func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*t
 	return nft.helper.awaitTx(tx.Hash())
 }
 
-// MintBatch
-//
-// Mint a batch of new NFTs to the connected wallet
+// Mint a batch of new NFTs to the connected wallet.
 //
 // metadatas: list of metadata of the NFTs to mint
 //
@@ -85,15 +105,28 @@ func (nft *NFTCollection) MintBatch(metadatas []*NFTMetadataInput) (*types.Trans
 	return nft.MintBatchTo(address, metadatas)
 }
 
-// MintBatchTo
-//
-// Mint a batch of new NFTs to the specified wallet
+// Mint a batch of new NFTs to the specified wallet.
 //
 // to: the wallet address to mint to
 //
 // metadatas: list of metadata of the NFTs to mint
 //
 // returns: the transaction receipt of the mint
+//
+// Example
+//
+// 	metadatas := []*thirdweb.NFTMetadataInput{
+// 		&thirdweb.NFTMetadataInput{
+// 			Name: "Cool NFT",
+// 			Description: "This is a cool NFT",
+// 		}
+// 		&thirdweb.NFTMetadataInput{
+// 			Name: "Cool NFT 2",
+// 			Description: "This is also a cool NFT",
+// 		}
+// 	}
+//
+// 	tx, err := contract.MintBatchTo("{{wallet_address}}", metadatas)
 func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	uris, err := uploadOrExtractUris(metadatas, nft.storage)
 	if err != nil {
