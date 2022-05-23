@@ -324,7 +324,7 @@
       {
         "name": "TransferFrom",
         "summary": "",
-        "example": "from := \"{{wallet_address}}\"\nto := \"0x...\"\n",
+        "example": "from := \"{{wallet_address}}\"\nto := \"0x...\"\namount := 1\n\ntx, err := contract.Transfer(from, to, amount)\n",
         "reference": "https://docs.thirdweb.com/go/token#func-token-transferfrom"
       }
     ],
