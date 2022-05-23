@@ -139,7 +139,7 @@ func (erc20 *ERC20) AllowanceOf(owner string, spender string) (*CurrencyValue, e
 // Example
 //
 // 	to := "0x..."
-//  amount := 1
+// 	amount := 1
 //
 // 	tx, err := contract.Transfer(to, amount)
 func (erc20 *ERC20) Transfer(to string, amount float64) (*types.Transaction, error) {
@@ -170,9 +170,9 @@ func (erc20 *ERC20) Transfer(to string, amount float64) (*types.Transaction, err
 //
 // 	from := "{{wallet_address}}"
 // 	to := "0x..."
-//  amount := 1
+// 	amount := 1
 //
-// 	tx, err := contract.Transfer(from, to, amount)
+// 	tx, err := contract.TransferFrom(from, to, amount)
 func (erc20 *ERC20) TransferFrom(from string, to string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {

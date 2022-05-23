@@ -58,7 +58,7 @@ async function main() {
       const functions = fs.readFileSync(`./docs/${fileName}`).toString().split(/### func \\\(\\.+\) \[.+\]/);
       functions.map((fn) => {
         const functionNames = fn.match(/(?<=func \(.+\) )\S+(?=\()/)
-        const examples = fn.match(/(?<=#### Example\n\n\`\`\`\n)(\n|.)+(?=\`\`\`)/)
+        const examples = fn.match(/(?<=#### Example\n\n\`\`\`\n)(\n|.)+?(?=\`\`\`)/)
 
         if (examples?.length && functionNames?.length) {  
           const fnReference = `${contractReference}#func-${contractData.docName.replace("_", "")}-${functionNames[0].toLowerCase()}`;
