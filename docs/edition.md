@@ -5,7 +5,7 @@ You can access the Edition interface from the SDK as follows:
 
 ```
 import (
-	thirdweb "github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/thirdweb"
 )
 
 privateKey = "..."
@@ -23,7 +23,7 @@ type Edition struct {
 }
 ```
 
-### func \(\*Edition\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition.go#L58>)
+### func \(\*Edition\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L58>)
 
 ```go
 func (edition *Edition) Mint(metadataWithSupply *EditionMetadataInput) (*types.Transaction, error)
@@ -35,7 +35,7 @@ metadataWithSupply: nft metadata with supply of the NFT to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*Edition\) [MintAdditionalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition.go#L114>)
+### func \(\*Edition\) [MintAdditionalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L114>)
 
 ```go
 func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error)
@@ -49,7 +49,7 @@ additionalSupply: additional supply to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*Edition\) [MintAdditionalSupplyTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition.go#L128>)
+### func \(\*Edition\) [MintAdditionalSupplyTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L128>)
 
 ```go
 func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) (*types.Transaction, error)
@@ -65,7 +65,7 @@ additionalySupply: additional supply to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*Edition\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition.go#L176>)
+### func \(\*Edition\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L176>)
 
 ```go
 func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error)
@@ -102,7 +102,7 @@ metadatasWithSupply := []*thirdweb.EditionMetadataInput{
 tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
 ```
 
-### func \(\*Edition\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/edition.go#L86>)
+### func \(\*Edition\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L86>)
 
 ```go
 func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error)
