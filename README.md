@@ -13,7 +13,7 @@
 To install the SDK with the `go get` command, run the following:
 
 ```bash
-go get github.com/thirdweb-dev/go-sdk
+go get github.com/thirdweb-dev/go-sdk/thirdweb
 ```
 
 ## Getting Started
