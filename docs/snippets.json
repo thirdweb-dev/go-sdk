@@ -14,7 +14,7 @@
       {
         "name": "CreateBatch",
         "summary": "",
-        "example": "image0, err := os.Open(\"path/to/image/0.jpg\")\ndefer image0.Close()\n\nimage1, err := os.Open(\"path/to/image/1.jpg\")\ndefer image1.Close()\n\nmetadatasWithSupply := []*thirdweb.EditionMetadataInput{\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image0,\n\t\t},\n\t\tSupply: 100,\n\t},\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image1,\n\t\t},\n\t\tSupply: 100,\n\t},\n}\n\ntx, err := contract.MintBatchTo(\"{{wallet_address}}\", metadatasWithSupply)\n```\n\n## type [EditionMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L44-L47>)\n\n```go\ntype EditionMetadata struct {\n    Metadata *NFTMetadata\n    Supply   int\n}\n```\n\n## type [EditionMetadataInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L56-L59>)\n\n```go\ntype EditionMetadataInput struct {\n    Metadata *NFTMetadataInput\n    Supply   int\n}\n```\n\n## type [EditionMetadataOwner](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L49-L54>)\n\n```go\ntype EditionMetadataOwner struct {\n    Metadata      *NFTMetadata\n    Supply        int\n    Owner         string\n    QuantityOwned int\n}\n```\n\n## type [EditionResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/erc1155.go#L23-L26>)\n\n```go\ntype EditionResult struct {\n    // contains filtered or unexported fields\n}\n",
+        "example": "image0, err := os.Open(\"path/to/image/0.jpg\")\ndefer image0.Close()\n\nimage1, err := os.Open(\"path/to/image/1.jpg\")\ndefer image1.Close()\n\nmetadatasWithSupply := []*thirdweb.EditionMetadataInput{\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image0,\n\t\t},\n\t\tSupply: 100,\n\t},\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image1,\n\t\t},\n\t\tSupply: 100,\n\t},\n}\n\ntx, err := contract.MintBatchTo(\"{{wallet_address}}\", metadatasWithSupply)\n",
         "reference": "https://docs.thirdweb.com/go/edition_drop#func-editiondrop-createbatch"
       },
       {
@@ -200,7 +200,7 @@
       {
         "name": "GetAllUnclaimed",
         "summary": "",
-        "example": "unclaimedNfts, err := contract.GetAllUnclaimed()\nfirstNftName := unclaimedNfts[0].Name\n```\n\n## type [NFTMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L17-L27>)\n\n```go\ntype NFTMetadata struct {\n    Id              *big.Int    `json:\"id\"`\n    Uri             string      `json:\"uri\"`\n    Name            string      `json:\"name\"`\n    Description     string      `json:\"description\"`\n    Image           interface{} `json:\"image\"`\n    ExternalUrl     string      `json:\"external_url\"`\n    AnimationUrl    string      `json:\"animation_url\"`\n    BackgroundColor string      `json:\"background_color\"`\n    Properties      interface{} `json:\"properties,omitempty\"`\n}\n```\n\n## type [NFTMetadataInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L29-L37>)\n\n```go\ntype NFTMetadataInput struct {\n    Name            string      `json:\"name\"`\n    Description     string      `json:\"description\"`\n    Image           interface{} `json:\"image\"`\n    ExternalUrl     string      `json:\"external_url\"`\n    AnimationUrl    string      `json:\"animation_url\"`\n    BackgroundColor string      `json:\"background_color\"`\n    Properties      interface{} `json:\"properties,omitempty\"`\n}\n```\n\n## type [NFTMetadataOwner](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L39-L42>)\n\n```go\ntype NFTMetadataOwner struct {\n    Metadata *NFTMetadata\n    Owner    string\n}\n```\n\n## type [NFTResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/erc721.go#L23-L26>)\n\n```go\ntype NFTResult struct {\n    // contains filtered or unexported fields\n}\n```\n\n## type [NativeToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L113-L118>)\n\n```go\ntype NativeToken struct {\n    // contains filtered or unexported fields\n}\n",
+        "example": "unclaimedNfts, err := contract.GetAllUnclaimed()\nfirstNftName := unclaimedNfts[0].Name\n",
         "reference": "https://docs.thirdweb.com/go/nft_drop#func-nftdrop-getallunclaimed"
       },
       {
@@ -258,7 +258,7 @@
       {
         "name": "MintTo",
         "summary": "",
-        "example": "tx, err := contract.MintTo(\"{{wallet_address}}\", 1)\n```\n\n## type [TokenAmount](<https://github.com/thirdweb-dev/go-sdk/blob/main/pkg/thirdweb/types.go#L102-L105>)\n\n```go\ntype TokenAmount struct {\n    ToAddress string\n    Amount    float64\n}\n",
+        "example": "tx, err := contract.MintTo(\"{{wallet_address}}\", 1)\n",
         "reference": "https://docs.thirdweb.com/go/token#func-token-mintto"
       },
       {
@@ -312,7 +312,7 @@
       {
         "name": "Transfer",
         "summary": "",
-        "example": "to := \"0x...\"\n```\n\namount := 1\n\n```\ntx, err := contract.Transfer(to, amount)\n",
+        "example": "to := \"0x...\"\n",
         "reference": "https://docs.thirdweb.com/go/token#func-token-transfer"
       },
       {
@@ -324,7 +324,7 @@
       {
         "name": "TransferFrom",
         "summary": "",
-        "example": "from := \"{{wallet_address}}\"\nto := \"0x...\"\n```\n\namount := 1\n\n```\ntx, err := contract.Transfer(from, to, amount)\n",
+        "example": "from := \"{{wallet_address}}\"\nto := \"0x...\"\n",
         "reference": "https://docs.thirdweb.com/go/token#func-token-transferfrom"
       }
     ],
