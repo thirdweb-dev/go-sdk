@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/thirdweb-dev/go-sdk/pkg/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/thirdweb"
 )
 
 var (

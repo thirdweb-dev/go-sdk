@@ -13,7 +13,7 @@ import (
 // You can access the NFT Drop interface from the SDK as follows:
 //
 // 	import (
-// 		thirdweb "github.com/thirdweb-dev/go-sdk/thirdweb"
+// 		"github.com/thirdweb-dev/go-sdk/thirdweb"
 // 	)
 //
 // 	privateKey = "..."
