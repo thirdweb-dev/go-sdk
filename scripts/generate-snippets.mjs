@@ -2,6 +2,10 @@ import fs from "fs";
 
 const BASE_DOC_URL = "https://docs.thirdweb.com/go/";
 
+// Setup for contract snippets
+// Name must match contract name for TS and Python
+// The first code block of first file in files will be the contract setup script
+// docname corresponds with name of file page in docs repo
 const contracts = [
   {
     name: "EditionDrop",
@@ -37,10 +41,14 @@ async function main() {
     const contractName = contractData.name
     const contractReference = `${BASE_DOC_URL}${contractData.docName}`;
 
+    const codeBlocks = fs.readFileSync(`./docs/${contractData.files[0]}`).toString().match(/\`\`\`(\n|.)+?\`\`\`/)
+    const setupExample = codeBlocks?.length ? codeBlocks[0].replaceAll("```", "") : "";
+
     const contract = {
       name: contractName,
       summary: "",
       description: "",
+      example: setupExample,
       methods: [],
       properties: [],
       reference: contractReference,

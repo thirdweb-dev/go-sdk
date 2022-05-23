@@ -3,6 +3,7 @@
     "name": "EditionDrop",
     "summary": "",
     "description": "",
+    "example": "\nimport (\n\tthirdweb \"github.com/thirdweb-dev/go-sdk/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetEditionDrop(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "ClaimTo",
@@ -60,6 +61,7 @@
     "name": "Edition",
     "summary": "",
     "description": "",
+    "example": "\nimport (\n\tthirdweb \"github.com/thirdweb-dev/go-sdk/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetEdition(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "MintBatchTo",
@@ -117,6 +119,7 @@
     "name": "NFTCollection",
     "summary": "",
     "description": "",
+    "example": "\nimport (\n\tthirdweb \"github.com/thirdweb-dev/go-sdk/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetNFTCollection(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "MintBatchTo",
@@ -174,6 +177,7 @@
     "name": "NFTDrop",
     "summary": "",
     "description": "",
+    "example": "\nimport (\n\tthirdweb \"github.com/thirdweb-dev/go-sdk/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetNFTDrop(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "ClaimTo",
@@ -243,6 +247,7 @@
     "name": "Token",
     "summary": "",
     "description": "",
+    "example": "\nimport (\n\tthirdweb \"github.com/thirdweb-dev/go-sdk/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetToken(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "MintBatchTo",
