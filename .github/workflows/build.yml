@@ -17,6 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build
-        run: mkdir bin && go build ./thirdweb -o ./bin/thirdweb
+        run: go build ./thirdweb 
       - name: Build cmd
-        run: go build ./cmd/thirdweb -o ./bin/cmd
+        run: go build ./cmd/thirdweb -o cmd
