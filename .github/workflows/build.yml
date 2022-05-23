@@ -18,5 +18,3 @@ jobs:
         uses: actions/checkout@v2
       - name: Build
         run: go build ./thirdweb 
-      - name: Build cmd
-        run: mkdir bin && go build ./cmd/thirdweb -o ../../bin/thirdweb
