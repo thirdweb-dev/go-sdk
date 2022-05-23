@@ -1,4 +1,4 @@
-module github.com/thirdweb-dev/go-sdk
+module github.com/thirdweb-dev/go-sdk/v2
 
 go 1.16
 
