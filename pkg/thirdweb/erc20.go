@@ -172,7 +172,7 @@ func (erc20 *ERC20) Transfer(to string, amount float64) (*types.Transaction, err
 // 	to := "0x..."
 // 	amount := 1
 //
-// 	tx, err := contract.Transfer(from, to, amount)
+// 	tx, err := contract.TransferFrom(from, to, amount)
 func (erc20 *ERC20) TransferFrom(from string, to string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {

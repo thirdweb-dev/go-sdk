@@ -261,5 +261,5 @@ from := "{{wallet_address}}"
 to := "0x..."
 amount := 1
 
-tx, err := contract.Transfer(from, to, amount)
+tx, err := contract.TransferFrom(from, to, amount)
 ```
