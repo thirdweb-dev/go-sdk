@@ -42,7 +42,15 @@ func (signature *ERC721SignatureMinting) Mint(signedPayload *SignedPayload721) (
 		return nil, err
 	}
 
-	tx, err := signature.abi.MintWithSignature(signature.helper.getTxOptions(), *message, signedPayload.Signature)
+	txOpts := signature.helper.getTxOptions()
+	setErc20Allowance(
+		signature.helper,
+		message.Price,
+		message.Currency.String(),
+		txOpts,
+	)
+
+	tx, err := signature.abi.MintWithSignature(txOpts, *message, signedPayload.Signature)
 	if err != nil {
 		return nil, err
 	}
@@ -185,7 +193,8 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 		rawData := []byte(fmt.Sprintf("\x19\x01%s%s", string(domainSeparator), string(typedDataHash)))
 		sigHash := crypto.Keccak256(rawData)
 
-		signature, err := crypto.Sign(sigHash, signature.helper.GetPrivateKey())
+		privateKey := signature.helper.GetPrivateKey()
+		signature, err := crypto.Sign(sigHash, privateKey)
 		if err != nil {
 			return nil, err
 		}

@@ -131,6 +131,37 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 	return currencyValue, nil
 }
 
+func setErc20Allowance(
+	contractToApprove *contractHelper,
+	value *big.Int,
+	currencyAddress string,
+	txOpts *bind.TransactOpts,
+) error {
+	if isNativeToken(currencyAddress) {
+		txOpts.Value = value
+		return nil
+	} else {
+		provider := contractToApprove.GetProvider()
+		erc20, err := abi.NewIERC20(common.HexToAddress(currencyAddress), provider)
+		if err != nil {
+			return err
+		}
+
+		owner := contractToApprove.GetSignerAddress()
+		spender := contractToApprove.getAddress()
+		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
+		if err != nil {
+			return err
+		}
+
+		if allowance.Cmp(value) < 0 {
+			erc20.Approve(&bind.TransactOpts{}, spender, value)
+		}
+
+		return nil
+	}
+}
+
 func approveErc20Allowance(
 	contractToApprove *contractHelper,
 	currencyAddress string,
