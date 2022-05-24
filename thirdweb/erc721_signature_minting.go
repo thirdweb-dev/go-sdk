@@ -1,6 +1,8 @@
 package thirdweb
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"math/big"
 
@@ -174,6 +176,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 					{Name: "chainId", Type: "uint256"},
 					{Name: "version", Type: "string"},
 					{Name: "verifyingContract", Type: "string"},
+					{Name: "salt", Type: "string"},
 				},
 			},
 			PrimaryType: "MintRequest",
@@ -182,26 +185,44 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 				Version:           "1",
 				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
 				VerifyingContract: signature.helper.getAddress().String(),
-				Salt:              "",
+				Salt:              "some-random-string-or-hash-here",
 			},
 			Message: mappedPayload,
 		}
 
-		typedDataHash, _ := typedData.HashStruct(typedData.PrimaryType, typedData.Message)
-		domainSeparator, _ := typedData.HashStruct("EIP712Domain", typedData.Domain.Map())
+		domainSeparator, err := typedData.HashStruct("EIP712Domain", typedData.Domain.Map())
+		if err != nil {
+			return nil, err
+		}
+
+		typedDataHash, err := typedData.HashStruct(typedData.PrimaryType, typedData.Message)
+		if err != nil {
+			return nil, err
+		}
 
 		rawData := []byte(fmt.Sprintf("\x19\x01%s%s", string(domainSeparator), string(typedDataHash)))
 		sigHash := crypto.Keccak256(rawData)
 
 		privateKey := signature.helper.GetPrivateKey()
-		signature, err := crypto.Sign(sigHash, privateKey)
+		signatureHash, err := crypto.Sign(sigHash, privateKey)
 		if err != nil {
 			return nil, err
 		}
 
+		if signatureHash[64] == 0 || signatureHash[64] == 1 {
+			signatureHash[64] += 27
+		}
+
+		verified, err := signature.internalVerifySignature(signatureHash, sigHash)
+		if err != nil {
+			return nil, err
+		} else if verified == false {
+			return nil, errors.New("Addresses do not match!")
+		}
+
 		signedPayloads = append(signedPayloads, &SignedPayload721{
 			Payload:   payload,
-			Signature: signature,
+			Signature: signatureHash,
 		})
 	}
 
@@ -216,16 +237,17 @@ func (signature *ERC721SignatureMinting) generateMessage(mintRequest *Signature7
 	}
 
 	message := signerTypes.TypedDataMessage{
-		"to":                     common.HexToAddress(mintRequest.To),
-		"royaltyRecipient":       common.HexToAddress(mintRequest.RoyaltyRecipient),
-		"royaltyBps":             big.NewInt(int64(mintRequest.RoyaltyBps)),
-		"primarySaleRecipient":   common.HexToAddress(mintRequest.PrimarySaleReceipient),
-		"uri":                    mintRequest.Uri,
-		"price":                  price,
-		"currency":               common.HexToAddress(mintRequest.CurrencyAddress),
-		"validityStartTimestamp": big.NewInt(int64(mintRequest.MintStartTime)),
-		"validityEndTimestamp":   big.NewInt(int64(mintRequest.MintEndTime)),
-		"uid":                    [32]byte(mintRequest.Uid),
+		"to":                   mintRequest.To,
+		"royaltyRecipient":     mintRequest.RoyaltyRecipient,
+		"royaltyBps":           fmt.Sprintf("%v", mintRequest.RoyaltyBps),
+		"primarySaleRecipient": mintRequest.PrimarySaleReceipient,
+		"uri":                  mintRequest.Uri,
+		// TODO: Make sure price value is correct
+		"price":                  fmt.Sprintf("%v", int(price.Int64())),
+		"currency":               mintRequest.CurrencyAddress,
+		"validityStartTimestamp": fmt.Sprintf("%v", mintRequest.MintStartTime),
+		"validityEndTimestamp":   fmt.Sprintf("%v", mintRequest.MintEndTime),
+		"uid":                    mintRequest.Uid[:],
 	}
 
 	return message, nil
@@ -250,4 +272,34 @@ func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(mintRequest 
 		ValidityEndTimestamp:   big.NewInt(int64(mintRequest.MintEndTime)),
 		Uid:                    [32]byte(mintRequest.Uid),
 	}, nil
+}
+
+func (signature *ERC721SignatureMinting) internalVerifySignature(hash []byte, sigHash []byte) (bool, error) {
+	signatureHash := hash[:]
+
+	if len(signatureHash) != 65 {
+		return false, fmt.Errorf("invalid signature length: %d", len(signatureHash))
+	}
+
+	if signatureHash[64] != 27 && signatureHash[64] != 28 {
+		return false, fmt.Errorf("invalid recovery id: %d", signatureHash[64])
+	}
+	signatureHash[64] -= 27
+
+	pubKeyRaw, err := crypto.Ecrecover(sigHash, signatureHash)
+	if err != nil {
+		return false, fmt.Errorf("invalid signature: %s", err.Error())
+	}
+
+	pubKey, err := crypto.UnmarshalPubkey(pubKeyRaw)
+	if err != nil {
+		return false, err
+	}
+
+	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
+	if !bytes.Equal(recoveredAddr.Bytes(), signature.helper.GetSignerAddress().Bytes()) {
+		return false, errors.New("Addresses do not match!")
+	}
+
+	return true, nil
 }
