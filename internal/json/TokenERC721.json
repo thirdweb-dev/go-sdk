@@ -299,23 +299,13 @@
             "type": "address"
           },
           {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
             "internalType": "string",
             "name": "uri",
             "type": "string"
           },
           {
             "internalType": "uint256",
-            "name": "quantity",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "pricePerToken",
+            "name": "price",
             "type": "uint256"
           },
           {
@@ -340,7 +330,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC721.MintRequest",
         "name": "mintRequest",
         "type": "tuple"
       }
@@ -808,23 +798,13 @@
             "type": "address"
           },
           {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
             "internalType": "string",
             "name": "uri",
             "type": "string"
           },
           {
             "internalType": "uint256",
-            "name": "quantity",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "pricePerToken",
+            "name": "price",
             "type": "uint256"
           },
           {
@@ -848,7 +828,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC721.MintRequest",
         "name": "_req",
         "type": "tuple"
       },
@@ -859,7 +839,13 @@
       }
     ],
     "name": "mintWithSignature",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenIdMinted",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -1379,23 +1365,13 @@
             "type": "address"
           },
           {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
             "internalType": "string",
             "name": "uri",
             "type": "string"
           },
           {
             "internalType": "uint256",
-            "name": "quantity",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "pricePerToken",
+            "name": "price",
             "type": "uint256"
           },
           {
@@ -1419,7 +1395,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC721.MintRequest",
         "name": "_req",
         "type": "tuple"
       },
@@ -1433,12 +1409,12 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "success",
+        "name": "",
         "type": "bool"
       },
       {
         "internalType": "address",
-        "name": "signer",
+        "name": "",
         "type": "address"
       }
     ],

@@ -3,13 +3,18 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "amount",
         "type": "uint256"
       },
       {
         "internalType": "string",
-        "name": "_baseURIForTokens",
+        "name": "baseURIForTokens",
         "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
       }
     ],
     "name": "lazyMint",

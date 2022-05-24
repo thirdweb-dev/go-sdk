@@ -240,12 +240,6 @@
         "type": "address"
       },
       {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenIdMinted",
-        "type": "uint256"
-      },
-      {
         "components": [
           {
             "internalType": "address",
@@ -254,28 +248,8 @@
           },
           {
             "internalType": "address",
-            "name": "royaltyRecipient",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "royaltyBps",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
             "name": "primarySaleRecipient",
             "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "uri",
-            "type": "string"
           },
           {
             "internalType": "uint256",
@@ -284,7 +258,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "pricePerToken",
+            "name": "price",
             "type": "uint256"
           },
           {
@@ -309,7 +283,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC20.MintRequest",
         "name": "mintRequest",
         "type": "tuple"
       }
@@ -965,28 +939,8 @@
           },
           {
             "internalType": "address",
-            "name": "royaltyRecipient",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "royaltyBps",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
             "name": "primarySaleRecipient",
             "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "uri",
-            "type": "string"
           },
           {
             "internalType": "uint256",
@@ -995,7 +949,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "pricePerToken",
+            "name": "price",
             "type": "uint256"
           },
           {
@@ -1019,7 +973,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC20.MintRequest",
         "name": "_req",
         "type": "tuple"
       },
@@ -1376,28 +1330,8 @@
           },
           {
             "internalType": "address",
-            "name": "royaltyRecipient",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "royaltyBps",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
             "name": "primarySaleRecipient",
             "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "uri",
-            "type": "string"
           },
           {
             "internalType": "uint256",
@@ -1406,7 +1340,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "pricePerToken",
+            "name": "price",
             "type": "uint256"
           },
           {
@@ -1430,7 +1364,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC20.MintRequest",
         "name": "_req",
         "type": "tuple"
       },
@@ -1444,12 +1378,12 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "success",
+        "name": "",
         "type": "bool"
       },
       {
         "internalType": "address",
-        "name": "signer",
+        "name": "",
         "type": "address"
       }
     ],

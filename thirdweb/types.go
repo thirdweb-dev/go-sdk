@@ -116,3 +116,70 @@ type NativeToken struct {
 	decimals int
 	wrapper  *WrappedToken
 }
+
+type Signature721PayloadInput struct {
+	To                    string
+	Price                 float64
+	CurrencyAddress       string
+	MintStartTime         int
+	MintEndTime           int
+	Uid                   [32]byte
+	PrimarySaleReceipient string
+	Metadata              *NFTMetadataInput
+	RoyaltyRecipient      string
+	RoyaltyBps            int
+}
+
+type Signature721PayloadOutput struct {
+	To                    string
+	Price                 float64
+	CurrencyAddress       string
+	MintStartTime         int
+	MintEndTime           int
+	Uid                   [32]byte
+	PrimarySaleReceipient string
+	Metadata              *NFTMetadataInput
+	RoyaltyRecipient      string
+	RoyaltyBps            int
+	Uri                   string
+}
+
+type SignedPayload721 struct {
+	Payload   *Signature721PayloadOutput
+	Signature []byte
+}
+
+type Signature1155PayloadInput struct {
+	To                    string
+	Price                 float64
+	CurrencyAddress       string
+	MintStartTime         int
+	MintEndTime           int
+	Uid                   [32]byte
+	PrimarySaleReceipient string
+	Metadata              *NFTMetadataInput
+	RoyaltyRecipient      string
+	RoyaltyBps            int
+	TokenId               int
+	Quantity              int
+}
+
+type Signature1155PayloadOutput struct {
+	To                    string
+	Price                 float64
+	CurrencyAddress       string
+	MintStartTime         int
+	MintEndTime           int
+	Uid                   [32]byte
+	PrimarySaleReceipient string
+	Metadata              *NFTMetadataInput
+	RoyaltyRecipient      string
+	RoyaltyBps            int
+	TokenId               int
+	Quantity              int
+}
+
+type SignedPayload1155 struct {
+	Payload   *Signature1155PayloadOutput
+	Signature []byte
+}

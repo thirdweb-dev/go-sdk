@@ -61,6 +61,15 @@ func parseUnits(value float64, decimals int) *big.Int {
 	return big.NewInt(int64(value * math.Pow10(decimals)))
 }
 
+func normalizePriceValue(provider *ethclient.Client, price float64, currencyAddress string) (*big.Int, error) {
+	metadata, err := fetchCurrencyMetadata(provider, currencyAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return parseUnits(price, metadata.Decimals), nil
+}
+
 func formatUnits(value *big.Int, decimals int) float64 {
 	// Importantly copy value to a new variable so big.Div doesn't mutate it
 	bigNumber := big.NewInt(value.Int64())

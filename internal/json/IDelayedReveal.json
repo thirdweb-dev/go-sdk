@@ -27,12 +27,12 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "index",
+        "name": "identifier",
         "type": "uint256"
       },
       {
         "internalType": "bytes",
-        "name": "_key",
+        "name": "key",
         "type": "bytes"
       }
     ],

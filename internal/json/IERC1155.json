@@ -5,19 +5,19 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "account",
+        "name": "_owner",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "operator",
+        "name": "_operator",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "bool",
-        "name": "approved",
+        "name": "_approved",
         "type": "bool"
       }
     ],
@@ -30,31 +30,31 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "operator",
+        "name": "_operator",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "from",
+        "name": "_from",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "to",
+        "name": "_to",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256[]",
-        "name": "ids",
+        "name": "_ids",
         "type": "uint256[]"
       },
       {
         "indexed": false,
         "internalType": "uint256[]",
-        "name": "values",
+        "name": "_values",
         "type": "uint256[]"
       }
     ],
@@ -67,31 +67,31 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "operator",
+        "name": "_operator",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "from",
+        "name": "_from",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "to",
+        "name": "_to",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "id",
+        "name": "_id",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "value",
+        "name": "_value",
         "type": "uint256"
       }
     ],
@@ -104,13 +104,13 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "value",
+        "name": "_value",
         "type": "string"
       },
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "id",
+        "name": "_id",
         "type": "uint256"
       }
     ],
@@ -121,12 +121,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "_owner",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "id",
+        "name": "_id",
         "type": "uint256"
       }
     ],
@@ -145,12 +145,12 @@
     "inputs": [
       {
         "internalType": "address[]",
-        "name": "accounts",
+        "name": "_owners",
         "type": "address[]"
       },
       {
         "internalType": "uint256[]",
-        "name": "ids",
+        "name": "_ids",
         "type": "uint256[]"
       }
     ],
@@ -169,12 +169,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "_owner",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "operator",
+        "name": "_operator",
         "type": "address"
       }
     ],
@@ -193,27 +193,27 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "from",
+        "name": "_from",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "to",
+        "name": "_to",
         "type": "address"
       },
       {
         "internalType": "uint256[]",
-        "name": "ids",
+        "name": "_ids",
         "type": "uint256[]"
       },
       {
         "internalType": "uint256[]",
-        "name": "amounts",
+        "name": "_values",
         "type": "uint256[]"
       },
       {
         "internalType": "bytes",
-        "name": "data",
+        "name": "_data",
         "type": "bytes"
       }
     ],
@@ -226,27 +226,27 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "from",
+        "name": "_from",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "to",
+        "name": "_to",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "id",
+        "name": "_id",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "_value",
         "type": "uint256"
       },
       {
         "internalType": "bytes",
-        "name": "data",
+        "name": "_data",
         "type": "bytes"
       }
     ],
@@ -259,37 +259,18 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "operator",
+        "name": "_operator",
         "type": "address"
       },
       {
         "internalType": "bool",
-        "name": "approved",
+        "name": "_approved",
         "type": "bool"
       }
     ],
     "name": "setApprovalForAll",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "interfaceId",
-        "type": "bytes4"
-      }
-    ],
-    "name": "supportsInterface",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   }
 ]

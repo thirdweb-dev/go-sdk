@@ -117,10 +117,49 @@ var nftMintLinkCmd = &cobra.Command{
 	},
 }
 
+var nftSigmintCmd = &cobra.Command{
+	Use:   "sigmint",
+	Short: "Sign and mint an nft",
+	Run: func(cmd *cobra.Command, args []string) {
+		nftCollection, err := getNftCollection()
+		if err != nil {
+			panic(err)
+		}
+
+		payload, err := nftCollection.Signature.Generate(
+			&thirdweb.Signature721PayloadInput{
+				To:                    "0xa05271523BD00593eb4CC6DCbDcbd045361a9a03",
+				Price:                 0,
+				CurrencyAddress:       "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+				MintStartTime:         0,
+				MintEndTime:           100000000000000000,
+				Uid:                   [32]byte{},
+				PrimarySaleReceipient: "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+				Metadata: &thirdweb.NFTMetadataInput{
+					Name: "Cool NFT",
+				},
+				RoyaltyRecipient: "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+				RoyaltyBps:       0,
+			},
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		valid, err := nftCollection.Signature.Verify(payload)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Valid: ", valid)
+	},
+}
+
 func init() {
 	nftCmd.PersistentFlags().StringVarP(&nftContractAddress, "address", "a", "", "nft contract address")
 	nftCmd.AddCommand(nftGetAllCmd)
 	nftCmd.AddCommand(nftGetOwnedCmd)
 	nftCmd.AddCommand(nftMintCmd)
 	nftCmd.AddCommand(nftMintLinkCmd)
+	nftCmd.AddCommand(nftSigmintCmd)
 }

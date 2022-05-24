@@ -1,0 +1,244 @@
+package thirdweb
+
+import (
+	"fmt"
+	"math/big"
+
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/math"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+	signerTypes "github.com/ethereum/go-ethereum/signer/core/apitypes"
+	"github.com/thirdweb-dev/go-sdk/internal/abi"
+)
+
+// You can access this interface from the NFT Collection contract under the
+// signature interface.
+type ERC721SignatureMinting struct {
+	abi     *abi.TokenERC721
+	helper  *contractHelper
+	storage storage
+}
+
+func newERC721SignatureMinting(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*ERC721SignatureMinting, error) {
+	if contractAbi, err := abi.NewTokenERC721(address, provider); err != nil {
+		return nil, err
+	} else if helper, err := newContractHelper(address, provider, privateKey); err != nil {
+		return nil, err
+	} else {
+		return &ERC721SignatureMinting{
+			contractAbi,
+			helper,
+			storage,
+		}, nil
+	}
+}
+
+func (signature *ERC721SignatureMinting) Mint(signedPayload *SignedPayload721) (*types.Transaction, error) {
+	message, err := signature.mapPayloadToContractStruct(signedPayload.Payload)
+	if err != nil {
+		return nil, err
+	}
+
+	tx, err := signature.abi.MintWithSignature(signature.helper.getTxOptions(), *message, signedPayload.Signature)
+	if err != nil {
+		return nil, err
+	}
+
+	return signature.helper.awaitTx(tx.Hash())
+}
+
+func (signature *ERC721SignatureMinting) MintBatch(signedPayloads []*SignedPayload721) (*types.Transaction, error) {
+	contractPayloads := []*abi.ITokenERC721MintRequest{}
+	for _, signedPayload := range signedPayloads {
+		if signedPayload.Payload.Price > 0 {
+			return nil, fmt.Errorf("Can only batch free mints. For mints with a price, use the Mint() function.")
+		}
+
+		payload, err := signature.mapPayloadToContractStruct(signedPayload.Payload)
+		if err != nil {
+			return nil, err
+		}
+
+		contractPayloads = append(contractPayloads, payload)
+	}
+
+	encoded := [][]byte{}
+	for i, payload := range contractPayloads {
+		tx, err := signature.abi.MintWithSignature(signature.helper.getTxOptions(), *payload, signedPayloads[i].Signature)
+		if err != nil {
+			return nil, err
+		}
+
+		encoded = append(encoded, tx.Data())
+	}
+
+	tx, err := signature.abi.Multicall(signature.helper.getTxOptions(), encoded)
+	if err != nil {
+		return nil, err
+	}
+
+	return signature.helper.awaitTx(tx.Hash())
+}
+
+func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721) (bool, error) {
+	mintRequest := signedPayload.Payload
+	mintSignature := signedPayload.Signature
+	message, err := signature.mapPayloadToContractStruct(mintRequest)
+
+	if err != nil {
+		return false, err
+	}
+
+	verification, _, err := signature.abi.Verify(&bind.CallOpts{}, *message, mintSignature)
+
+	return verification, err
+}
+
+func (signature *ERC721SignatureMinting) Generate(payloadToSign *Signature721PayloadInput) (*SignedPayload721, error) {
+	payload, err := signature.GenerateBatch([]*Signature721PayloadInput{payloadToSign})
+	if err != nil {
+		return nil, err
+	}
+
+	return payload[0], nil
+}
+
+func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error) {
+	// TODO: Verify roles and return error
+
+	metadatas := []*NFTMetadataInput{}
+	for _, payload := range payloadsToSign {
+		metadatas = append(metadatas, payload.Metadata)
+	}
+
+	uris, err := uploadOrExtractUris(metadatas, signature.storage)
+	if err != nil {
+		return nil, err
+	}
+
+	chainId, err := signature.helper.GetChainID()
+	if err != nil {
+		return nil, err
+	}
+
+	signedPayloads := []*SignedPayload721{}
+
+	for i, uri := range uris {
+		p := payloadsToSign[i]
+		payload := &Signature721PayloadOutput{
+			To:                    p.To,
+			Price:                 p.Price,
+			CurrencyAddress:       p.CurrencyAddress,
+			MintStartTime:         p.MintStartTime,
+			MintEndTime:           p.MintEndTime,
+			Uid:                   p.Uid,
+			PrimarySaleReceipient: p.PrimarySaleReceipient,
+			Metadata:              p.Metadata,
+			RoyaltyRecipient:      p.RoyaltyRecipient,
+			RoyaltyBps:            p.RoyaltyBps,
+			Uri:                   uri,
+		}
+
+		mappedPayload, err := signature.generateMessage(payload)
+		if err != nil {
+			return nil, err
+		}
+
+		typedData := signerTypes.TypedData{
+			Types: signerTypes.Types{
+				"MintRequest": []signerTypes.Type{
+					{Name: "to", Type: "address"},
+					{Name: "royaltyRecipient", Type: "address"},
+					{Name: "royaltyBps", Type: "uint256"},
+					{Name: "primarySaleRecipient", Type: "address"},
+					{Name: "uri", Type: "string"},
+					{Name: "price", Type: "uint256"},
+					{Name: "currency", Type: "address"},
+					{Name: "validityStartTimestamp", Type: "uint128"},
+					{Name: "validityEndTimestamp", Type: "uint128"},
+					{Name: "uid", Type: "bytes32"},
+				},
+				"EIP712Domain": []signerTypes.Type{
+					{Name: "name", Type: "string"},
+					{Name: "chainId", Type: "uint256"},
+					{Name: "version", Type: "string"},
+					{Name: "verifyingContract", Type: "string"},
+				},
+			},
+			PrimaryType: "MintRequest",
+			Domain: signerTypes.TypedDataDomain{
+				Name:              "TokenERC721",
+				Version:           "1",
+				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
+				VerifyingContract: signature.helper.getAddress().String(),
+				Salt:              "",
+			},
+			Message: mappedPayload,
+		}
+
+		typedDataHash, _ := typedData.HashStruct(typedData.PrimaryType, typedData.Message)
+		domainSeparator, _ := typedData.HashStruct("EIP712Domain", typedData.Domain.Map())
+
+		rawData := []byte(fmt.Sprintf("\x19\x01%s%s", string(domainSeparator), string(typedDataHash)))
+		sigHash := crypto.Keccak256(rawData)
+
+		signature, err := crypto.Sign(sigHash, signature.helper.GetPrivateKey())
+		if err != nil {
+			return nil, err
+		}
+
+		signedPayloads = append(signedPayloads, &SignedPayload721{
+			Payload:   payload,
+			Signature: signature,
+		})
+	}
+
+	return signedPayloads, nil
+}
+
+func (signature *ERC721SignatureMinting) generateMessage(mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
+	provider := signature.helper.GetProvider()
+	price, err := normalizePriceValue(provider, mintRequest.Price, mintRequest.CurrencyAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	message := signerTypes.TypedDataMessage{
+		"to":                     common.HexToAddress(mintRequest.To),
+		"royaltyRecipient":       common.HexToAddress(mintRequest.RoyaltyRecipient),
+		"royaltyBps":             big.NewInt(int64(mintRequest.RoyaltyBps)),
+		"primarySaleRecipient":   common.HexToAddress(mintRequest.PrimarySaleReceipient),
+		"uri":                    mintRequest.Uri,
+		"price":                  price,
+		"currency":               common.HexToAddress(mintRequest.CurrencyAddress),
+		"validityStartTimestamp": big.NewInt(int64(mintRequest.MintStartTime)),
+		"validityEndTimestamp":   big.NewInt(int64(mintRequest.MintEndTime)),
+		"uid":                    [32]byte(mintRequest.Uid),
+	}
+
+	return message, nil
+}
+
+func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
+	provider := signature.helper.GetProvider()
+	price, err := normalizePriceValue(provider, mintRequest.Price, mintRequest.CurrencyAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return &abi.ITokenERC721MintRequest{
+		To:                     common.HexToAddress(mintRequest.To),
+		RoyaltyRecipient:       common.HexToAddress(mintRequest.RoyaltyRecipient),
+		RoyaltyBps:             big.NewInt(int64(mintRequest.RoyaltyBps)),
+		PrimarySaleRecipient:   common.HexToAddress(mintRequest.PrimarySaleReceipient),
+		Uri:                    mintRequest.Uri,
+		Price:                  price,
+		Currency:               common.HexToAddress(mintRequest.CurrencyAddress),
+		ValidityStartTimestamp: big.NewInt(int64(mintRequest.MintStartTime)),
+		ValidityEndTimestamp:   big.NewInt(int64(mintRequest.MintEndTime)),
+		Uid:                    [32]byte(mintRequest.Uid),
+	}, nil
+}

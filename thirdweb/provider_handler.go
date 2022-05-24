@@ -57,6 +57,10 @@ func (handler *ProviderHandler) GetRawPrivateKey() string {
 	return handler.rawPrivateKey
 }
 
+func (handler *ProviderHandler) GetPrivateKey() *ecdsa.PrivateKey {
+	return handler.privateKey
+}
+
 func (handler *ProviderHandler) GetChainID() (*big.Int, error) {
 	return handler.provider.ChainID(context.Background())
 }
