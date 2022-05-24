@@ -128,17 +128,16 @@ var nftSigmintCmd = &cobra.Command{
 
 		payload, err := nftCollection.Signature.Generate(
 			&thirdweb.Signature721PayloadInput{
-				To:                    "0xa05271523BD00593eb4CC6DCbDcbd045361a9a03",
-				Price:                 0,
-				CurrencyAddress:       "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-				MintStartTime:         0,
-				MintEndTime:           100000000000000000,
-				Uid:                   [32]byte{},
-				PrimarySaleReceipient: "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+				To:                   "0x0000000000000000000000000000000000000000",
+				Price:                0,
+				CurrencyAddress:      "0x0000000000000000000000000000000000000000",
+				MintStartTime:        0,
+				MintEndTime:          100000000000000000,
+				PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
 				Metadata: &thirdweb.NFTMetadataInput{
 					Name: "Cool NFT",
 				},
-				RoyaltyRecipient: "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+				RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
 				RoyaltyBps:       0,
 			},
 		)

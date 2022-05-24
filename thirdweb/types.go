@@ -118,30 +118,28 @@ type NativeToken struct {
 }
 
 type Signature721PayloadInput struct {
-	To                    string
-	Price                 float64
-	CurrencyAddress       string
-	MintStartTime         int
-	MintEndTime           int
-	Uid                   [32]byte
-	PrimarySaleReceipient string
-	Metadata              *NFTMetadataInput
-	RoyaltyRecipient      string
-	RoyaltyBps            int
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	RoyaltyRecipient     string
+	RoyaltyBps           int
 }
 
 type Signature721PayloadOutput struct {
-	To                    string
-	Price                 float64
-	CurrencyAddress       string
-	MintStartTime         int
-	MintEndTime           int
-	Uid                   [32]byte
-	PrimarySaleReceipient string
-	Metadata              *NFTMetadataInput
-	RoyaltyRecipient      string
-	RoyaltyBps            int
-	Uri                   string
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+	Uri                  string
 }
 
 type SignedPayload721 struct {
@@ -150,33 +148,31 @@ type SignedPayload721 struct {
 }
 
 type Signature1155PayloadInput struct {
-	To                    string
-	Price                 float64
-	CurrencyAddress       string
-	MintStartTime         int
-	MintEndTime           int
-	Uid                   [32]byte
-	PrimarySaleReceipient string
-	Metadata              *NFTMetadataInput
-	RoyaltyRecipient      string
-	RoyaltyBps            int
-	TokenId               int
-	Quantity              int
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+	TokenId              int
+	Quantity             int
 }
 
 type Signature1155PayloadOutput struct {
-	To                    string
-	Price                 float64
-	CurrencyAddress       string
-	MintStartTime         int
-	MintEndTime           int
-	Uid                   [32]byte
-	PrimarySaleReceipient string
-	Metadata              *NFTMetadataInput
-	RoyaltyRecipient      string
-	RoyaltyBps            int
-	TokenId               int
-	Quantity              int
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+	TokenId              int
+	Quantity             int
 }
 
 type SignedPayload1155 struct {

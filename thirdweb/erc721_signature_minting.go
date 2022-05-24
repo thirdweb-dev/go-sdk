@@ -98,11 +98,16 @@ func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721)
 	mintSignature := signedPayload.Signature
 	message, err := signature.mapPayloadToContractStruct(mintRequest)
 
+	fmt.Println("Sending payload...")
+	fmt.Println(message)
+
 	if err != nil {
 		return false, err
 	}
 
-	verification, _, err := signature.abi.Verify(&bind.CallOpts{}, *message, mintSignature)
+	verification, address, err := signature.abi.Verify(&bind.CallOpts{}, *message, mintSignature)
+	fmt.Println("Address: ", address.String())
+	fmt.Println("Signer: ", signature.helper.GetSignerAddress().String())
 
 	return verification, err
 }
@@ -139,17 +144,16 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 	for i, uri := range uris {
 		p := payloadsToSign[i]
 		payload := &Signature721PayloadOutput{
-			To:                    p.To,
-			Price:                 p.Price,
-			CurrencyAddress:       p.CurrencyAddress,
-			MintStartTime:         p.MintStartTime,
-			MintEndTime:           p.MintEndTime,
-			Uid:                   p.Uid,
-			PrimarySaleReceipient: p.PrimarySaleReceipient,
-			Metadata:              p.Metadata,
-			RoyaltyRecipient:      p.RoyaltyRecipient,
-			RoyaltyBps:            p.RoyaltyBps,
-			Uri:                   uri,
+			To:                   p.To,
+			Price:                p.Price,
+			CurrencyAddress:      p.CurrencyAddress,
+			MintStartTime:        p.MintStartTime,
+			MintEndTime:          p.MintEndTime,
+			PrimarySaleRecipient: p.PrimarySaleRecipient,
+			Metadata:             p.Metadata,
+			RoyaltyRecipient:     p.RoyaltyRecipient,
+			RoyaltyBps:           p.RoyaltyBps,
+			Uri:                  uri,
 		}
 
 		mappedPayload, err := signature.generateMessage(payload)
@@ -173,10 +177,9 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 				},
 				"EIP712Domain": []signerTypes.Type{
 					{Name: "name", Type: "string"},
-					{Name: "chainId", Type: "uint256"},
 					{Name: "version", Type: "string"},
+					{Name: "chainId", Type: "uint256"},
 					{Name: "verifyingContract", Type: "string"},
-					{Name: "salt", Type: "string"},
 				},
 			},
 			PrimaryType: "MintRequest",
@@ -185,10 +188,23 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 				Version:           "1",
 				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
 				VerifyingContract: signature.helper.getAddress().String(),
-				Salt:              "some-random-string-or-hash-here",
 			},
 			Message: mappedPayload,
 		}
+
+		// // ============ Sketchy Sht ============
+
+		// domainSeparator, err := typedData.EncodeData("EIP712Domain", typedData.Domain.Map(), 1)
+		// if err != nil {
+		// 	return nil, err
+		// }
+
+		// typedDataHash, err := typedData.EncodeData(typedData.PrimaryType, typedData.Message, 1)
+		// if err != nil {
+		// 	return nil, err
+		// }
+
+		// // ========== End Sketchy Sht ==========
 
 		domainSeparator, err := typedData.HashStruct("EIP712Domain", typedData.Domain.Map())
 		if err != nil {
@@ -209,15 +225,9 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 			return nil, err
 		}
 
+		// We need this to correct v = 0,1 to v = 27,28 - or else all will break
 		if signatureHash[64] == 0 || signatureHash[64] == 1 {
 			signatureHash[64] += 27
-		}
-
-		verified, err := signature.internalVerifySignature(signatureHash, sigHash)
-		if err != nil {
-			return nil, err
-		} else if verified == false {
-			return nil, errors.New("Addresses do not match!")
 		}
 
 		signedPayloads = append(signedPayloads, &SignedPayload721{
@@ -237,17 +247,16 @@ func (signature *ERC721SignatureMinting) generateMessage(mintRequest *Signature7
 	}
 
 	message := signerTypes.TypedDataMessage{
-		"to":                   mintRequest.To,
-		"royaltyRecipient":     mintRequest.RoyaltyRecipient,
-		"royaltyBps":           fmt.Sprintf("%v", mintRequest.RoyaltyBps),
-		"primarySaleRecipient": mintRequest.PrimarySaleReceipient,
-		"uri":                  mintRequest.Uri,
-		// TODO: Make sure price value is correct
+		"to":                     mintRequest.To,
+		"royaltyRecipient":       mintRequest.RoyaltyRecipient,
+		"royaltyBps":             fmt.Sprintf("%v", mintRequest.RoyaltyBps),
+		"primarySaleRecipient":   mintRequest.PrimarySaleRecipient,
+		"uri":                    mintRequest.Uri,
 		"price":                  fmt.Sprintf("%v", int(price.Int64())),
 		"currency":               mintRequest.CurrencyAddress,
 		"validityStartTimestamp": fmt.Sprintf("%v", mintRequest.MintStartTime),
 		"validityEndTimestamp":   fmt.Sprintf("%v", mintRequest.MintEndTime),
-		"uid":                    mintRequest.Uid[:],
+		"uid":                    make([]byte, 32),
 	}
 
 	return message, nil
@@ -264,19 +273,18 @@ func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(mintRequest 
 		To:                     common.HexToAddress(mintRequest.To),
 		RoyaltyRecipient:       common.HexToAddress(mintRequest.RoyaltyRecipient),
 		RoyaltyBps:             big.NewInt(int64(mintRequest.RoyaltyBps)),
-		PrimarySaleRecipient:   common.HexToAddress(mintRequest.PrimarySaleReceipient),
+		PrimarySaleRecipient:   common.HexToAddress(mintRequest.PrimarySaleRecipient),
 		Uri:                    mintRequest.Uri,
 		Price:                  price,
 		Currency:               common.HexToAddress(mintRequest.CurrencyAddress),
 		ValidityStartTimestamp: big.NewInt(int64(mintRequest.MintStartTime)),
 		ValidityEndTimestamp:   big.NewInt(int64(mintRequest.MintEndTime)),
-		Uid:                    [32]byte(mintRequest.Uid),
+		Uid:                    [32]byte{},
 	}, nil
 }
 
-func (signature *ERC721SignatureMinting) internalVerifySignature(hash []byte, sigHash []byte) (bool, error) {
-	signatureHash := hash[:]
-
+func (signature *ERC721SignatureMinting) internalVerifySignature(signatureHash []byte, sigHash []byte) (bool, error) {
+	// DANGER: Do not use this function! It mutates the signature objects to be wrong!
 	if len(signatureHash) != 65 {
 		return false, fmt.Errorf("invalid signature length: %d", len(signatureHash))
 	}
@@ -300,6 +308,9 @@ func (signature *ERC721SignatureMinting) internalVerifySignature(hash []byte, si
 	if !bytes.Equal(recoveredAddr.Bytes(), signature.helper.GetSignerAddress().Bytes()) {
 		return false, errors.New("Addresses do not match!")
 	}
+
+	fmt.Println(recoveredAddr.String())
+	fmt.Println(signature.helper.GetSignerAddress().String())
 
 	return true, nil
 }
