@@ -126,16 +126,23 @@ var nftSigmintCmd = &cobra.Command{
 			panic(err)
 		}
 
+		imageFile, err := os.Open("internal/test/1.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
 		payload, err := nftCollection.Signature.Generate(
 			&thirdweb.Signature721PayloadInput{
-				To:                   "0x0000000000000000000000000000000000000000",
+				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
 				Price:                0,
 				CurrencyAddress:      "0x0000000000000000000000000000000000000000",
 				MintStartTime:        0,
-				MintEndTime:          100,
+				MintEndTime:          100000000000000,
 				PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
 				Metadata: &thirdweb.NFTMetadataInput{
-					Name: "Cool NFT",
+					Name:  "ERC721 Sigmint!",
+					Image: imageFile,
 				},
 				RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
 				RoyaltyBps:       0,
@@ -148,9 +155,17 @@ var nftSigmintCmd = &cobra.Command{
 		valid, err := nftCollection.Signature.Verify(payload)
 		if err != nil {
 			panic(err)
+		} else if !valid {
+			panic("Invalid signature")
 		}
 
-		fmt.Println("Valid: ", valid)
+		tx, err := nftCollection.Signature.Mint(payload)
+		if err != nil {
+			panic(err)
+		}
+
+		result, _ := json.Marshal(&tx)
+		fmt.Println(string(result))
 	},
 }
 

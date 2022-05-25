@@ -158,7 +158,20 @@ type Signature1155PayloadInput struct {
 	Metadata             *NFTMetadataInput
 	RoyaltyRecipient     string
 	RoyaltyBps           int
+	Quantity             int
+}
+
+type Signature1155PayloadInputWithTokenId struct {
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
 	TokenId              int
+	RoyaltyRecipient     string
+	RoyaltyBps           int
 	Quantity             int
 }
 
@@ -174,6 +187,7 @@ type Signature1155PayloadOutput struct {
 	RoyaltyBps           int
 	TokenId              int
 	Quantity             int
+	Uri                  string
 	Uid                  [32]byte
 }
 

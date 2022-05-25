@@ -96,9 +96,118 @@ var editionMintCmd = &cobra.Command{
 	},
 }
 
+var editionSigmintCmd = &cobra.Command{
+	Use:   "sigmint",
+	Short: "Sign and mint an nft",
+	Run: func(cmd *cobra.Command, args []string) {
+		edition, err := getEdition()
+		if err != nil {
+			panic(err)
+		}
+
+		imageFile, err := os.Open("internal/test/1.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
+		payload, err := edition.Signature.Generate(
+			&thirdweb.Signature1155PayloadInput{
+				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+				Price:                0,
+				CurrencyAddress:      "0x0000000000000000000000000000000000000000",
+				MintStartTime:        0,
+				MintEndTime:          100000000000000,
+				PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
+				Metadata: &thirdweb.NFTMetadataInput{
+					Name:  "ERC1155 Sigmint!",
+					Image: imageFile,
+				},
+				RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
+				RoyaltyBps:       0,
+				Quantity:         1,
+			},
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		valid, err := edition.Signature.Verify(payload)
+		if err != nil {
+			panic(err)
+		} else if !valid {
+			panic("Invalid signature")
+		}
+
+		tx, err := edition.Signature.Mint(payload)
+		if err != nil {
+			panic(err)
+		}
+
+		result, _ := json.Marshal(&tx)
+		fmt.Println(string(result))
+	},
+}
+
+var editionSigmintTokenIdCmd = &cobra.Command{
+	Use:   "sigmint-tokenid",
+	Short: "Sign and mint an nft",
+	Run: func(cmd *cobra.Command, args []string) {
+		edition, err := getEdition()
+		if err != nil {
+			panic(err)
+		}
+
+		imageFile, err := os.Open("internal/test/1.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
+		payload, err := edition.Signature.GenerateFromTokenIds(
+			&thirdweb.Signature1155PayloadInputWithTokenId{
+				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+				Price:                0,
+				CurrencyAddress:      "0x0000000000000000000000000000000000000000",
+				MintStartTime:        0,
+				MintEndTime:          100000000000000,
+				PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
+				Metadata: &thirdweb.NFTMetadataInput{
+					Name:  "ERC1155 Sigmint!",
+					Image: imageFile,
+				},
+				RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
+				RoyaltyBps:       0,
+				Quantity:         11,
+				TokenId:          0,
+			},
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		valid, err := edition.Signature.Verify(payload)
+		if err != nil {
+			panic(err)
+		} else if !valid {
+			panic("Invalid signature")
+		}
+
+		tx, err := edition.Signature.Mint(payload)
+		if err != nil {
+			panic(err)
+		}
+
+		result, _ := json.Marshal(&tx)
+		fmt.Println(string(result))
+	},
+}
+
 func init() {
 	editionCmd.PersistentFlags().StringVarP(&editionAddress, "address", "a", "", "nft contract address")
 	editionCmd.AddCommand(editionGetAllCmd)
 	editionCmd.AddCommand(editionGetOwnedCmd)
 	editionCmd.AddCommand(editionMintCmd)
+	editionCmd.AddCommand(editionSigmintCmd)
+	editionCmd.AddCommand(editionSigmintTokenIdCmd)
 }
