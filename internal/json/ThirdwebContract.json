@@ -1,25 +1,31 @@
 [
   {
-    "inputs": [],
-    "name": "contractURI",
-    "outputs": [
+    "anonymous": false,
+    "inputs": [
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        "indexed": false,
+        "internalType": "address",
+        "name": "prevOwner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "OwnerUpdated",
+    "type": "event"
   },
   {
     "inputs": [],
-    "name": "getPublishMetadataUri",
+    "name": "owner",
     "outputs": [
       {
-        "internalType": "string",
+        "internalType": "address",
         "name": "",
-        "type": "string"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -28,24 +34,25 @@
   {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "publishMetadataUri",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "contractURI",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct ThirdwebContract.ThirdwebInfo",
-        "name": "_thirdwebInfo",
-        "type": "tuple"
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
       }
     ],
-    "name": "setThirdwebInfo",
+    "name": "setOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
+      }
+    ],
+    "name": "tw_initializeOwner",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

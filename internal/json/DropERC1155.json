@@ -1631,19 +1631,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "thirdwebFee",
-    "outputs": [
-      {
-        "internalType": "contract ITWFee",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",

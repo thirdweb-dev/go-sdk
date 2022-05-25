@@ -321,7 +321,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC1155.MintRequest",
         "name": "mintRequest",
         "type": "tuple"
       }
@@ -926,7 +926,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC1155.MintRequest",
         "name": "_req",
         "type": "tuple"
       },
@@ -1452,7 +1452,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct ISignatureMint.MintRequest",
+        "internalType": "struct ITokenERC1155.MintRequest",
         "name": "_req",
         "type": "tuple"
       },
@@ -1466,12 +1466,12 @@
     "outputs": [
       {
         "internalType": "bool",
-        "name": "success",
+        "name": "",
         "type": "bool"
       },
       {
         "internalType": "address",
-        "name": "signer",
+        "name": "",
         "type": "address"
       }
     ],

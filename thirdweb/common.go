@@ -61,6 +61,15 @@ func parseUnits(value float64, decimals int) *big.Int {
 	return big.NewInt(int64(value * math.Pow10(decimals)))
 }
 
+func normalizePriceValue(provider *ethclient.Client, price float64, currencyAddress string) (*big.Int, error) {
+	metadata, err := fetchCurrencyMetadata(provider, currencyAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	return parseUnits(price, metadata.Decimals), nil
+}
+
 func formatUnits(value *big.Int, decimals int) float64 {
 	// Importantly copy value to a new variable so big.Div doesn't mutate it
 	bigNumber := big.NewInt(value.Int64())
@@ -120,6 +129,37 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 		displayValue,
 	}
 	return currencyValue, nil
+}
+
+func setErc20Allowance(
+	contractToApprove *contractHelper,
+	value *big.Int,
+	currencyAddress string,
+	txOpts *bind.TransactOpts,
+) error {
+	if isNativeToken(currencyAddress) {
+		txOpts.Value = value
+		return nil
+	} else {
+		provider := contractToApprove.GetProvider()
+		erc20, err := abi.NewIERC20(common.HexToAddress(currencyAddress), provider)
+		if err != nil {
+			return err
+		}
+
+		owner := contractToApprove.GetSignerAddress()
+		spender := contractToApprove.getAddress()
+		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
+		if err != nil {
+			return err
+		}
+
+		if allowance.Cmp(value) < 0 {
+			erc20.Approve(&bind.TransactOpts{}, spender, value)
+		}
+
+		return nil
+	}
 }
 
 func approveErc20Allowance(

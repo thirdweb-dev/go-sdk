@@ -24,6 +24,7 @@ type NFTCollection struct {
 	abi    *abi.TokenERC721
 	helper *contractHelper
 	*ERC721
+	Signature *ERC721SignatureMinting
 }
 
 func newNFTCollection(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*NFTCollection, error) {
@@ -36,10 +37,16 @@ func newNFTCollection(provider *ethclient.Client, address common.Address, privat
 			if erc721, err := newERC721(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
+				signature, err := newERC721SignatureMinting(provider, address, privateKey, storage)
+				if err != nil {
+					return nil, err
+				}
+
 				nftCollection := &NFTCollection{
 					contractAbi,
 					helper,
 					erc721,
+					signature,
 				}
 				return nftCollection, nil
 			}

@@ -116,3 +116,82 @@ type NativeToken struct {
 	decimals int
 	wrapper  *WrappedToken
 }
+
+type Signature721PayloadInput struct {
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+}
+
+type Signature721PayloadOutput struct {
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+	Uri                  string
+	Uid                  [32]byte
+}
+
+type SignedPayload721 struct {
+	Payload   *Signature721PayloadOutput
+	Signature []byte
+}
+
+type Signature1155PayloadInput struct {
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+	Quantity             int
+}
+
+type Signature1155PayloadInputWithTokenId struct {
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	TokenId              int
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+	Quantity             int
+}
+
+type Signature1155PayloadOutput struct {
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	Metadata             *NFTMetadataInput
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+	TokenId              int
+	Quantity             int
+	Uri                  string
+	Uid                  [32]byte
+}
+
+type SignedPayload1155 struct {
+	Payload   *Signature1155PayloadOutput
+	Signature []byte
+}

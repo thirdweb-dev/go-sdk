@@ -117,10 +117,63 @@ var nftMintLinkCmd = &cobra.Command{
 	},
 }
 
+var nftSigmintCmd = &cobra.Command{
+	Use:   "sigmint",
+	Short: "Sign and mint an nft",
+	Run: func(cmd *cobra.Command, args []string) {
+		nftCollection, err := getNftCollection()
+		if err != nil {
+			panic(err)
+		}
+
+		imageFile, err := os.Open("internal/test/1.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
+		payload, err := nftCollection.Signature.Generate(
+			&thirdweb.Signature721PayloadInput{
+				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+				Price:                0,
+				CurrencyAddress:      "0x0000000000000000000000000000000000000000",
+				MintStartTime:        0,
+				MintEndTime:          100000000000000,
+				PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
+				Metadata: &thirdweb.NFTMetadataInput{
+					Name:  "ERC721 Sigmint!",
+					Image: imageFile,
+				},
+				RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
+				RoyaltyBps:       0,
+			},
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		valid, err := nftCollection.Signature.Verify(payload)
+		if err != nil {
+			panic(err)
+		} else if !valid {
+			panic("Invalid signature")
+		}
+
+		tx, err := nftCollection.Signature.Mint(payload)
+		if err != nil {
+			panic(err)
+		}
+
+		result, _ := json.Marshal(&tx)
+		fmt.Println(string(result))
+	},
+}
+
 func init() {
 	nftCmd.PersistentFlags().StringVarP(&nftContractAddress, "address", "a", "", "nft contract address")
 	nftCmd.AddCommand(nftGetAllCmd)
 	nftCmd.AddCommand(nftGetOwnedCmd)
 	nftCmd.AddCommand(nftMintCmd)
 	nftCmd.AddCommand(nftMintLinkCmd)
+	nftCmd.AddCommand(nftSigmintCmd)
 }
