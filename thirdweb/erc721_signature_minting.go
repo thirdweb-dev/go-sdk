@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	signerTypes "github.com/ethereum/go-ethereum/signer/core/apitypes"
+	"github.com/google/uuid"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
@@ -98,9 +99,6 @@ func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721)
 	mintSignature := signedPayload.Signature
 	message, err := signature.mapPayloadToContractStruct(mintRequest)
 
-	fmt.Println("Sending payload...")
-	fmt.Println(message)
-
 	if err != nil {
 		return false, err
 	}
@@ -143,6 +141,13 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 
 	for i, uri := range uris {
 		p := payloadsToSign[i]
+
+		generatedId := uuid.New()
+		id := [32]byte{}
+		for i := 0; i < 16; i++ {
+			id[16+i] = generatedId[i]
+		}
+
 		payload := &Signature721PayloadOutput{
 			To:                   p.To,
 			Price:                p.Price,
@@ -154,6 +159,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 			RoyaltyRecipient:     p.RoyaltyRecipient,
 			RoyaltyBps:           p.RoyaltyBps,
 			Uri:                  uri,
+			Uid:                  id,
 		}
 
 		mappedPayload, err := signature.generateMessage(payload)
@@ -192,20 +198,6 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 			Message: mappedPayload,
 		}
 
-		// // ============ Sketchy Sht ============
-
-		// domainSeparator, err := typedData.EncodeData("EIP712Domain", typedData.Domain.Map(), 1)
-		// if err != nil {
-		// 	return nil, err
-		// }
-
-		// typedDataHash, err := typedData.EncodeData(typedData.PrimaryType, typedData.Message, 1)
-		// if err != nil {
-		// 	return nil, err
-		// }
-
-		// // ========== End Sketchy Sht ==========
-
 		domainSeparator, err := typedData.HashStruct("EIP712Domain", typedData.Domain.Map())
 		if err != nil {
 			return nil, err
@@ -218,6 +210,9 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 
 		rawData := []byte(fmt.Sprintf("\x19\x01%s%s", string(domainSeparator), string(typedDataHash)))
 		sigHash := crypto.Keccak256(rawData)
+
+		fmt.Println("Hash: ", crypto.Keccak256Hash(rawData))
+		fmt.Println("")
 
 		privateKey := signature.helper.GetPrivateKey()
 		signatureHash, err := crypto.Sign(sigHash, privateKey)
@@ -256,8 +251,21 @@ func (signature *ERC721SignatureMinting) generateMessage(mintRequest *Signature7
 		"currency":               mintRequest.CurrencyAddress,
 		"validityStartTimestamp": fmt.Sprintf("%v", mintRequest.MintStartTime),
 		"validityEndTimestamp":   fmt.Sprintf("%v", mintRequest.MintEndTime),
-		"uid":                    make([]byte, 32),
+		"uid":                    mintRequest.Uid[:],
 	}
+
+	fmt.Println("==================== Typed Data Message ====================")
+	fmt.Println("To: ", mintRequest.To)
+	fmt.Println("RoyaltyRecipient: ", mintRequest.RoyaltyRecipient)
+	fmt.Println("RoyaltyBps: ", fmt.Sprintf("%v", mintRequest.RoyaltyBps))
+	fmt.Println("PrimarySaleRecipient: ", mintRequest.PrimarySaleRecipient)
+	fmt.Println("Uri: ", mintRequest.Uri)
+	fmt.Println("Price: ", fmt.Sprintf("%v", int(price.Int64())))
+	fmt.Println("Currency: ", mintRequest.CurrencyAddress)
+	fmt.Println("ValidityStartTimestamp: ", fmt.Sprintf("%v", mintRequest.MintStartTime))
+	fmt.Println("ValidityEndTimestamp: ", fmt.Sprintf("%v", mintRequest.MintEndTime))
+	fmt.Println("Uid: ", mintRequest.Uid[:])
+	fmt.Println("")
 
 	return message, nil
 }
@@ -269,6 +277,19 @@ func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(mintRequest 
 		return nil, err
 	}
 
+	fmt.Println("==================== Contract Payload ====================")
+	fmt.Println("To: ", common.HexToAddress(mintRequest.To))
+	fmt.Println("RoyaltyBps: ", big.NewInt(int64(mintRequest.RoyaltyBps)))
+	fmt.Println("RoyaltyRecipient: ", common.HexToAddress(mintRequest.RoyaltyRecipient))
+	fmt.Println("PrimarySaleRecipient: ", common.HexToAddress(mintRequest.PrimarySaleRecipient))
+	fmt.Println("Uri: ", mintRequest.Uri)
+	fmt.Println("Price: ", price)
+	fmt.Println("Currency: ", common.HexToAddress(mintRequest.CurrencyAddress))
+	fmt.Println("ValidityStartTimestamp: ", big.NewInt(int64(mintRequest.MintStartTime)))
+	fmt.Println("ValidityEndTimestamp: ", big.NewInt(int64(mintRequest.MintEndTime)))
+	fmt.Println("Uid: ", mintRequest.Uid[:])
+	fmt.Println("")
+
 	return &abi.ITokenERC721MintRequest{
 		To:                     common.HexToAddress(mintRequest.To),
 		RoyaltyRecipient:       common.HexToAddress(mintRequest.RoyaltyRecipient),
@@ -279,7 +300,7 @@ func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(mintRequest 
 		Currency:               common.HexToAddress(mintRequest.CurrencyAddress),
 		ValidityStartTimestamp: big.NewInt(int64(mintRequest.MintStartTime)),
 		ValidityEndTimestamp:   big.NewInt(int64(mintRequest.MintEndTime)),
-		Uid:                    [32]byte{},
+		Uid:                    mintRequest.Uid,
 	}, nil
 }
 

@@ -132,7 +132,7 @@ var nftSigmintCmd = &cobra.Command{
 				Price:                0,
 				CurrencyAddress:      "0x0000000000000000000000000000000000000000",
 				MintStartTime:        0,
-				MintEndTime:          100000000000000000,
+				MintEndTime:          100,
 				PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
 				Metadata: &thirdweb.NFTMetadataInput{
 					Name: "Cool NFT",

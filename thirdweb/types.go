@@ -140,6 +140,7 @@ type Signature721PayloadOutput struct {
 	RoyaltyRecipient     string
 	RoyaltyBps           int
 	Uri                  string
+	Uid                  [32]byte
 }
 
 type SignedPayload721 struct {
@@ -173,6 +174,7 @@ type Signature1155PayloadOutput struct {
 	RoyaltyBps           int
 	TokenId              int
 	Quantity             int
+	Uid                  [32]byte
 }
 
 type SignedPayload1155 struct {
