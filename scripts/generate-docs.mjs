@@ -5,17 +5,25 @@ const docPath = "./docs/doc.md"
 // Delimiters are used to split the initially generated single doc file into multiple files
 // We search for the structure `## type [delimiter]` and create a new file for each delimiter
 const delimiters = {
-  "ERC1155": {
-    name: "erc1155.md",
-    header: "ERC1155",
-  },
   "ERC20": {
     name: "erc20.md",
     header: "ERC20",
   },
+  "ERC721SignatureMinting": {
+    name: "erc721_signature_minting.md",
+    header: "ERC721 Signature Minting",
+  },
   "ERC721": {
     name: "erc721.md",
     header: "ERC721",
+  },
+  "ERC1155SignatureMinting": {
+    name: "erc1155_signature_minting.md",
+    header: "ERC1155 Signature Minting",
+  },
+  "ERC1155": {
+    name: "erc1155.md",
+    header: "ERC1155",
   },
   "Edition": {
     name: "edition.md",
@@ -42,6 +50,10 @@ const delimiters = {
     header: "Provider",
   },
   "SDKOptions": {
+    name: "types.md",
+    header: "Types",
+  },
+  "ThirdwebSDK": {
     name: "sdk.md",
     header: "ThirdwebSDK",
   },

@@ -164,7 +164,7 @@ var editionSigmintTokenIdCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		payload, err := edition.Signature.GenerateFromTokenIds(
+		payload, err := edition.Signature.GenerateFromTokenId(
 			&thirdweb.Signature1155PayloadInputWithTokenId{
 				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
 				Price:                0,
