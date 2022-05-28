@@ -257,6 +257,22 @@ func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.
 	}
 }
 
+// Approve an operator for the NFT owner, which allows the operator to call transferFrom or
+// safeTransferFrom for the specified token.
+//
+// operator: the address of the operator to approve
+//
+// tokenId: the token ID of the NFT to approve
+//
+// returns: the transaction receipt of the approval
+func (erc721 *ERC721) SetApprovalForToken(operator string, tokenId int) (*types.Transaction, error) {
+	if tx, err := erc721.abi.Approve(erc721.helper.getTxOptions(), common.HexToAddress(operator), big.NewInt(int64(tokenId))); err != nil {
+		return nil, err
+	} else {
+		return erc721.helper.awaitTx(tx.Hash())
+	}
+}
+
 func (erc721 *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
 	if uri, err := erc721.abi.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err

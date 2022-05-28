@@ -46,6 +46,18 @@ Get an Edition Drop contract SDK instance
 
 address: the address of the Edition Drop contract
 
+### func \(\*ThirdwebSDK\) [GetMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L139>)
+
+```go
+func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error)
+```
+
+#### GetMultiwrap
+
+Get a Multiwrap contract SDK instance
+
+address: the address of the Multiwrap contract
+
 ### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L72>)
 
 ```go

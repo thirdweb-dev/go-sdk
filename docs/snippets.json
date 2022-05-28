@@ -330,5 +330,63 @@
     ],
     "properties": [],
     "reference": "https://docs.thirdweb.com/go/token"
+  },
+  "Multiwrap": {
+    "name": "Multiwrap",
+    "summary": "",
+    "description": "",
+    "example": "go\ntype Multiwrap struct {\n    *ERC721\n}\n",
+    "methods": [
+      {
+        "name": "GetWrappedContents",
+        "summary": "",
+        "example": "tokenId := 0\ncontents, err := contract.GetWrappedContents(tokenId)\nerc20Tokens := contents.Erc20Tokens\nerc721Tokens := contents.Erc721Tokens\nerc1155Tokens := contents.Erc1155Tokens\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-getwrappedcontents"
+      },
+      {
+        "name": "Unwrap",
+        "summary": "",
+        "example": "tokenId := 0\ntx, err := contract.Unwrap(tokenId, \"\")\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-unwrap"
+      },
+      {
+        "name": "BalanceOf",
+        "summary": "",
+        "example": "address := \"{{wallet_address}}\"\nbalance, err := contract.BalanceOf(address)\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-balanceof"
+      },
+      {
+        "name": "Burn",
+        "summary": "",
+        "example": "tokenId := 0\ntx, err := contract.Burn(tokenId)\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-burn"
+      },
+      {
+        "name": "Get",
+        "summary": "",
+        "example": "nft, err := contract.Get(0)\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-get"
+      },
+      {
+        "name": "GetAll",
+        "summary": "",
+        "example": "nfts, err := contract.GetAll()\nownerOne := nfts[0].Owner\nnameOne := nfts[0].Metadata.Name\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-getall"
+      },
+      {
+        "name": "GetOwned",
+        "summary": "",
+        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(owner)\nname := nfts[0].Metadata.Name\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-getowned"
+      },
+      {
+        "name": "Transfer",
+        "summary": "",
+        "example": "to := \"0x...\"\ntokenId := 0\n\ntx, err := contract.Transfer(to, tokenId)\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-transfer"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/go/multiwrap"
   }
 }

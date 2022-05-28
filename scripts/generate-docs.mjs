@@ -37,6 +37,10 @@ const delimiters = {
     name: "storage.md",
     header: `IPFS Storage`,
   },
+  "Multiwrap": {
+    name: "multiwrap.md",
+    header: "Multiwrap",
+  },
   "NFTCollection": {
     name: "nft_collection.md",
     header: "NFT Collection",

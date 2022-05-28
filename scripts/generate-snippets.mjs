@@ -32,6 +32,11 @@ const contracts = [
     files: ["token.md", "erc20.md"],
     docName: "token",
   },
+  {
+    name: "Multiwrap",
+    files: ["multiwrap.md", "erc721.md"],
+    docName: "multiwrap",
+  }
 ]
 
 async function main() {
