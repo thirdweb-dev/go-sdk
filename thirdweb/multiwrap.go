@@ -3,6 +3,7 @@ package thirdweb
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -57,6 +58,8 @@ func (multiwrap *Multiwrap) GetWrappedContents(wrappedTokenId int) (*MultiwrapBu
 	if err != nil {
 		return nil, err
 	}
+
+	log.Println("Tokens: ", len(wrappedTokens))
 
 	erc20Tokens := []*MultiwrapERC20{}
 	erc721Tokens := []*MultiwrapERC721{}
