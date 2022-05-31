@@ -57,6 +57,54 @@ func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey s
 	}
 }
 
+// Get the metadatas of all the NFTs owned by a specific address.
+//
+// address: the address of the owner of the NFTs
+//
+// returns: the metadata of all the NFTs owned by the address
+//
+// Example
+//
+// 	owner := "{{wallet_address}}"
+// 	nfts, err := contract.GetOwned(owner)
+// 	name := nfts[0].Metadata.Name
+func (nft *NFTDrop) GetOwned(address string) ([]*NFTMetadataOwner, error) {
+	if address == "" {
+		address = nft.helper.GetSignerAddress().String()
+	}
+
+	if tokenIds, err := nft.GetOwnedTokenIDs(address); err != nil {
+		return nil, err
+	} else {
+		return nft.fetchNFTsByTokenId(tokenIds)
+	}
+}
+
+// Get the tokenIds of all the NFTs owned by a specific address.
+//
+// address: the address of the owner of the NFTs
+//
+// returns: the tokenIds of all the NFTs owned by the address
+func (nft *NFTDrop) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
+	if address == "" {
+		address = nft.helper.GetSignerAddress().String()
+	}
+
+	if balance, err := nft.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address)); err != nil {
+		return nil, err
+	} else {
+		tokenIds := []*big.Int{}
+
+		for i := 0; i < int(balance.Int64()); i++ {
+			if tokenId, err := nft.abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
+				tokenIds = append(tokenIds, tokenId)
+			}
+		}
+
+		return tokenIds, nil
+	}
+}
+
 // Get a list of all the NFTs that have been claimed from this contract.
 //
 // returns: a list of the metadatas of the claimed NFTs
