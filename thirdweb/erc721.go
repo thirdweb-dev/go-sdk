@@ -84,7 +84,7 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 		for i := 0; i < int(totalCount.Int64()); i++ {
 			tokenIds = append(tokenIds, big.NewInt(int64(i)))
 		}
-		return fetchNFTsByTokenId(erc721, tokenIds)
+		return erc721.fetchNFTsByTokenId(tokenIds)
 	}
 }
 
@@ -93,54 +93,6 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 // returns: the total number of NFTs on this contract
 func (erc721 *ERC721) GetTotalCount() (*big.Int, error) {
 	return erc721.abi.NextTokenIdToMint(&bind.CallOpts{})
-}
-
-// Get the metadatas of all the NFTs owned by a specific address.
-//
-// address: the address of the owner of the NFTs
-//
-// returns: the metadata of all the NFTs owned by the address
-//
-// Example
-//
-// 	owner := "{{wallet_address}}"
-// 	nfts, err := contract.GetOwned(owner)
-// 	name := nfts[0].Metadata.Name
-func (erc721 *ERC721) GetOwned(address string) ([]*NFTMetadataOwner, error) {
-	if address == "" {
-		address = erc721.helper.GetSignerAddress().String()
-	}
-
-	if tokenIds, err := erc721.GetOwnedTokenIDs(address); err != nil {
-		return nil, err
-	} else {
-		return fetchNFTsByTokenId(erc721, tokenIds)
-	}
-}
-
-// Get the tokenIds of all the NFTs owned by a specific address.
-//
-// address: the address of the owner of the NFTs
-//
-// returns: the tokenIds of all the NFTs owned by the address
-func (erc721 *ERC721) GetOwnedTokenIDs(address string) ([]*big.Int, error) {
-	if address == "" {
-		address = erc721.helper.GetSignerAddress().String()
-	}
-
-	if balance, err := erc721.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address)); err != nil {
-		return nil, err
-	} else {
-		tokenIds := []*big.Int{}
-
-		for i := 0; i < int(balance.Int64()); i++ {
-			if tokenId, err := erc721.abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
-				tokenIds = append(tokenIds, tokenId)
-			}
-		}
-
-		return tokenIds, nil
-	}
 }
 
 // Get the owner of an NFT.
@@ -257,6 +209,22 @@ func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.
 	}
 }
 
+// Approve an operator for the NFT owner, which allows the operator to call transferFrom or
+// safeTransferFrom for the specified token.
+//
+// operator: the address of the operator to approve
+//
+// tokenId: the token ID of the NFT to approve
+//
+// returns: the transaction receipt of the approval
+func (erc721 *ERC721) SetApprovalForToken(operator string, tokenId int) (*types.Transaction, error) {
+	if tx, err := erc721.abi.Approve(erc721.helper.getTxOptions(), common.HexToAddress(operator), big.NewInt(int64(tokenId))); err != nil {
+		return nil, err
+	} else {
+		return erc721.helper.awaitTx(tx.Hash())
+	}
+}
+
 func (erc721 *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
 	if uri, err := erc721.abi.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
@@ -269,7 +237,7 @@ func (erc721 *ERC721) getTokenMetadata(tokenId int) (*NFTMetadata, error) {
 	}
 }
 
-func fetchNFTsByTokenId(erc721 *ERC721, tokenIds []*big.Int) ([]*NFTMetadataOwner, error) {
+func (erc721 *ERC721) fetchNFTsByTokenId(tokenIds []*big.Int) ([]*NFTMetadataOwner, error) {
 	total := len(tokenIds)
 
 	ch := make(chan *NFTResult)

@@ -101,7 +101,7 @@ var editionDropCreateBatchCmd = &cobra.Command{
 }
 
 func init() {
-	editionDropCmd.PersistentFlags().StringVarP(&editionDropContractAddress, "address", "a", "", "nft drop contract address")
+	editionDropCmd.PersistentFlags().StringVarP(&editionDropContractAddress, "address", "a", "", "edition drop contract address")
 	editionDropCmd.AddCommand(editionDropGetAllCmd)
 	editionDropCmd.AddCommand(editionDropClaimCmd)
 	editionDropCmd.AddCommand(editionDropCreateBatchCmd)

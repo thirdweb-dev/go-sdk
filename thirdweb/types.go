@@ -195,3 +195,25 @@ type SignedPayload1155 struct {
 	Payload   *Signature1155PayloadOutput
 	Signature []byte
 }
+
+type MultiwrapERC20 struct {
+	ContractAddress string
+	Quantity        float64
+}
+
+type MultiwrapERC721 struct {
+	ContractAddress string
+	TokenId         int
+}
+
+type MultiwrapERC1155 struct {
+	ContractAddress string
+	TokenId         int
+	Quantity        int
+}
+
+type MultiwrapBundle struct {
+	ERC20Tokens   []*MultiwrapERC20
+	ERC721Tokens  []*MultiwrapERC721
+	ERC1155Tokens []*MultiwrapERC1155
+}

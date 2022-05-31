@@ -131,6 +131,19 @@ func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error) {
 	}
 }
 
+// GetMultiwrap
+//
+// Get a Multiwrap contract SDK instance
+//
+// address: the address of the Multiwrap contract
+func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error) {
+	if contract, err := newMultiwrap(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 func getDefaultRpcUrl(rpcUrlorName string) (string, error) {
 	switch rpcUrlorName {
 	case "mumbai":

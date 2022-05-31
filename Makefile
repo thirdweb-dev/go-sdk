@@ -4,10 +4,16 @@ abi:
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC20.json --out internal/abi/token_erc20.go --type TokenERC20
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC721.json --out internal/abi/token_erc721.go --type TokenERC721
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC1155.json --out internal/abi/token_erc1155.go --type TokenERC1155
-	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC721.json --out internal/abi/drop_erc721.go --type DropERC721
-	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC1155.json --out internal/abi/drop_erc1155.go --type DropERC1155
+	# If you want to generate drop contracts, you'll have to delete a struct
+	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC721.json --out internal/abi/drop_erc721.go --type DropERC721
+	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC1155.json --out internal/abi/drop_erc1155.go --type DropERC1155
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Multiwrap.json --out internal/abi/multiwrap.go --type Multiwrap
+
 
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC20.json --out internal/abi/ierc20.go --type IERC20
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC721.json --out internal/abi/ierc721.go --type IERC721
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC1155.json --out internal/abi/ierc1155.go --type IERC1155
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC165.json --out internal/abi/ierc165.go --type IERC165
 
 docs:
 	rm -rf docs
@@ -49,6 +55,14 @@ test-token-write:
 	./bin/thirdweb token mint -a ${GO_TOKEN} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb token mintBatch -a ${GO_TOKEN} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
+test-multiwrap-read:
+	./bin/thirdweb multiwrap getAll -a ${GO_MULTIWRAP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb multiwrap getContents -a ${GO_MULTIWRAP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+
+test-multiwrap-write:
+	./bin/thirdweb multiwrap wrap -a ${GO_MULTIWRAP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC} -n ${GO_NFT_COLLECTION} -e ${GO_EDITION} -t ${GO_TOKEN}
+	./bin/thirdweb multiwrap unwrap -a ${GO_MULTIWRAP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+
 test-drop-read:
 	./bin/thirdweb nftdrop getAll -a ${GO_NFT_DROP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
@@ -81,6 +95,8 @@ test:
 	make test-drop-write
 	make test-edition-drop-read
 	make test-edition-drop-write
+	make test-multiwrap-read
+	make test-multiwrap-write
 	make test-storage
 
 publish:

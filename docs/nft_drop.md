@@ -23,7 +23,7 @@ type NFTDrop struct {
 }
 ```
 
-### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L179>)
+### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L227>)
 
 ```go
 func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error)
@@ -35,7 +35,7 @@ quantity: the number of NFTs to claim
 
 returns: the transaction receipt of the claim
 
-### func \(\*NFTDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L198>)
+### func \(\*NFTDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L246>)
 
 ```go
 func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Transaction, error)
@@ -58,7 +58,7 @@ quantity = 1
 tx, err := contract.ClaimTo(address, quantity)
 ```
 
-### func \(\*NFTDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L140>)
+### func \(\*NFTDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L188>)
 
 ```go
 func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
@@ -95,7 +95,7 @@ metadatas := []*thirdweb.NFTMetadataInput{
 tx, err := contract.CreateBatch(metadatas)
 ```
 
-### func \(\*NFTDrop\) [GetAllClaimed](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L68>)
+### func \(\*NFTDrop\) [GetAllClaimed](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L116>)
 
 ```go
 func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error)
@@ -112,7 +112,7 @@ claimedNfts, err := contract.GetAllClaimed()
 firstOwner := claimedNfts[0].Owner
 ```
 
-### func \(\*NFTDrop\) [GetAllUnclaimed](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L92>)
+### func \(\*NFTDrop\) [GetAllUnclaimed](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L140>)
 
 ```go
 func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error)
@@ -128,6 +128,38 @@ returns: a list of the metadatas of the unclaimed NFTs
 unclaimedNfts, err := contract.GetAllUnclaimed()
 firstNftName := unclaimedNfts[0].Name
 ```
+
+### func \(\*NFTDrop\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L71>)
+
+```go
+func (nft *NFTDrop) GetOwned(address string) ([]*NFTMetadataOwner, error)
+```
+
+Get the metadatas of all the NFTs owned by a specific address\.
+
+address: the address of the owner of the NFTs
+
+returns: the metadata of all the NFTs owned by the address
+
+#### Example
+
+```
+owner := "{{wallet_address}}"
+nfts, err := contract.GetOwned(owner)
+name := nfts[0].Metadata.Name
+```
+
+### func \(\*NFTDrop\) [GetOwnedTokenIDs](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L88>)
+
+```go
+func (nft *NFTDrop) GetOwnedTokenIDs(address string) ([]*big.Int, error)
+```
+
+Get the tokenIds of all the NFTs owned by a specific address\.
+
+address: the address of the owner of the NFTs
+
+returns: the tokenIds of all the NFTs owned by the address
 
 ## type [NFTMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L17-L27>)
 

@@ -3,6 +3,7 @@ package thirdweb
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"math"
 	"math/big"
 	"strings"
@@ -195,6 +196,27 @@ func approveErc20Allowance(
 	return nil
 }
 
+func hasErc20Allowance(contractToApprove *contractHelper, currencyAddress string, value *big.Int) (bool, error) {
+	if isNativeToken(currencyAddress) {
+		return true, nil
+	} else {
+		provider := contractToApprove.GetProvider()
+		contractAbi, err := abi.NewTokenERC20(common.HexToAddress(currencyAddress), provider)
+		if err != nil {
+			return false, err
+		}
+
+		owner := contractToApprove.GetSignerAddress()
+		spender := contractToApprove.getAddress()
+		allowance, err := contractAbi.Allowance(&bind.CallOpts{}, owner, spender)
+		if err != nil {
+			return false, err
+		}
+
+		return allowance.Cmp(value) >= 0, nil
+	}
+}
+
 // DROP
 
 func prepareClaim(
@@ -248,4 +270,62 @@ func transformResultToClaimCondition(
 		currencyAddress:             pm.Currency.String(),
 		currencyMetadata:            currencyValue,
 	}, nil
+}
+
+// MULTIWRAP
+
+func isTokenApprovedForTransfer(
+	provider *ethclient.Client,
+	transferrerContractAddress string,
+	assetContract string,
+	tokenId int,
+	from string,
+) (bool, error) {
+	erc165, err := abi.NewIERC165(common.HexToAddress(assetContract), provider)
+	if err != nil {
+		return false, err
+	}
+
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	if err != nil {
+		return false, err
+	}
+
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	if err != nil {
+		return false, err
+	}
+
+	if isErc721 {
+		ierc721, err := abi.NewIERC721(common.HexToAddress(assetContract), provider)
+		if err != nil {
+			return false, err
+		}
+
+		approved, err := ierc721.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(transferrerContractAddress))
+		if err != nil {
+			return false, err
+		}
+
+		if approved {
+			return true, nil
+		}
+
+		address, err := ierc721.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+		if err != nil {
+			return false, err
+		}
+
+		return strings.ToLower(address.String()) == strings.ToLower(transferrerContractAddress), nil
+	} else if isErc1155 {
+		ierc1155, err := abi.NewIERC1155(common.HexToAddress(assetContract), provider)
+		if err != nil {
+			return false, err
+		}
+
+		return ierc1155.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(transferrerContractAddress))
+	} else {
+		fmt.Println("Contract does not implement ERC1155 or ERC721")
+		return false, nil
+	}
 }

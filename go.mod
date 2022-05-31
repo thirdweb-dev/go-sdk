@@ -12,7 +12,7 @@ require (
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/mattn/go-runewidth v0.0.12 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

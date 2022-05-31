@@ -98,6 +98,21 @@ func getEditionDrop() (*thirdweb.EditionDrop, error) {
 	}
 }
 
+func getMultiwrap() (*thirdweb.Multiwrap, error) {
+	if thirdwebSDK == nil {
+		initSdk()
+	}
+
+	log.Printf("Obtaining a Multiwrap on chain %v, contract %v\n", chainRpcUrl, multiwrapContractAddress)
+
+	if contract, err := thirdwebSDK.GetMultiwrap(multiwrapContractAddress); err != nil {
+		log.Println("Failed to create a Multiwrap object")
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 func getStorage() thirdweb.IpfsStorage {
 	if thirdwebSDK == nil {
 		initSdk()
