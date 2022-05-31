@@ -122,6 +122,12 @@
     "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetNFTCollection(\"{{contract_address}}\")\n",
     "methods": [
       {
+        "name": "GetOwned",
+        "summary": "",
+        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(owner)\nname := nfts[0].Metadata.Name\n",
+        "reference": "https://docs.thirdweb.com/go/nft_collection#func-nftcollection-getowned"
+      },
+      {
         "name": "MintBatchTo",
         "summary": "",
         "example": "metadatas := []*thirdweb.NFTMetadataInput{\n\t&thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT\",\n\t\tDescription: \"This is a cool NFT\",\n\t}\n\t&thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT 2\",\n\t\tDescription: \"This is also a cool NFT\",\n\t}\n}\n\ntx, err := contract.MintBatchTo(\"{{wallet_address}}\", metadatas)\n",
@@ -156,12 +162,6 @@
         "summary": "",
         "example": "nfts, err := contract.GetAll()\nownerOne := nfts[0].Owner\nnameOne := nfts[0].Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/nft_collection#func-nftcollection-getall"
-      },
-      {
-        "name": "GetOwned",
-        "summary": "",
-        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(owner)\nname := nfts[0].Metadata.Name\n",
-        "reference": "https://docs.thirdweb.com/go/nft_collection#func-nftcollection-getowned"
       },
       {
         "name": "Transfer",
@@ -204,6 +204,12 @@
         "reference": "https://docs.thirdweb.com/go/nft_drop#func-nftdrop-getallunclaimed"
       },
       {
+        "name": "GetOwned",
+        "summary": "",
+        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(owner)\nname := nfts[0].Metadata.Name\n",
+        "reference": "https://docs.thirdweb.com/go/nft_drop#func-nftdrop-getowned"
+      },
+      {
         "name": "BalanceOf",
         "summary": "",
         "example": "address := \"{{wallet_address}}\"\nbalance, err := contract.BalanceOf(address)\n",
@@ -226,12 +232,6 @@
         "summary": "",
         "example": "nfts, err := contract.GetAll()\nownerOne := nfts[0].Owner\nnameOne := nfts[0].Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/nft_drop#func-nftdrop-getall"
-      },
-      {
-        "name": "GetOwned",
-        "summary": "",
-        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(owner)\nname := nfts[0].Metadata.Name\n",
-        "reference": "https://docs.thirdweb.com/go/nft_drop#func-nftdrop-getowned"
       },
       {
         "name": "Transfer",
@@ -350,6 +350,12 @@
         "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-unwrap"
       },
       {
+        "name": "Wrap",
+        "summary": "",
+        "example": "contents := &thirdweb.MultiwrapBundle{\n\tERC20Tokens: []*thirdweb.MultiwrapERC20{\n\t\t&thirdweb.MultiwrapERC20{\n\t\t\tContractAddress: \"0x...\",\n\t\t\tQuantity:        1,\n\t\t},\n\t},\n\tERC721Tokens: []*thirdweb.MultiwrapERC721{\n\t\t&thirdweb.MultiwrapERC721{\n\t\t\tContractAddress: \"0x...\",\n\t\t\tTokenId:         1,\n\t\t},\n\t},\n\tERC1155Tokens: []*thirdweb.MultiwrapERC1155{\n\t\t&thirdweb.MultiwrapERC1155{\n\t\t\tContractAddress: \"0x...\",\n\t\t\tTokenId:         1,\n\t\t\tQuantity:        1,\n\t\t},\n\t},\n}\n\nwrappedTokenMetadata := &thirdweb.NFTMetadataInput{\n\tName: \"Wrapped Token\"\n}\n\n// This will mint the wrapped token to the connected wallet\ntx, err := contract.Wrap(contents, wrappedTokenMetadata, \"\")\n",
+        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-wrap"
+      },
+      {
         "name": "BalanceOf",
         "summary": "",
         "example": "address := \"{{wallet_address}}\"\nbalance, err := contract.BalanceOf(address)\n",
@@ -372,12 +378,6 @@
         "summary": "",
         "example": "nfts, err := contract.GetAll()\nownerOne := nfts[0].Owner\nnameOne := nfts[0].Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-getall"
-      },
-      {
-        "name": "GetOwned",
-        "summary": "",
-        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(owner)\nname := nfts[0].Metadata.Name\n",
-        "reference": "https://docs.thirdweb.com/go/multiwrap#func-multiwrap-getowned"
       },
       {
         "name": "Transfer",

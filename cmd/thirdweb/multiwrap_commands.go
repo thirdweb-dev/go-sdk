@@ -25,6 +25,28 @@ var multiwrapCmd = &cobra.Command{
 	},
 }
 
+var multiwrapGetAllCmd = &cobra.Command{
+	Use:   "getAll",
+	Short: "Get all tokens of `ADDRESS`",
+	Run: func(cmd *cobra.Command, args []string) {
+		multiwrap, err := getMultiwrap()
+		if err != nil {
+			panic(err)
+		}
+		tokens, err := multiwrap.GetAll()
+		if err != nil {
+			panic(err)
+		}
+		log.Printf("%d tokens found", len(tokens))
+
+		for _, token := range tokens {
+			log.Println("ID: ", token.Metadata.Id)
+			log.Println("Owner: ", token.Owner)
+			log.Println("Name: ", token.Metadata.Name)
+		}
+	},
+}
+
 var multiwrapGetContentsCmd = &cobra.Command{
 	Use:   "getContents",
 	Short: "Get contents of a token `ADDRESS`",
@@ -62,7 +84,7 @@ var multiwrapWrapCmd = &cobra.Command{
 			ERC721Tokens: []*thirdweb.MultiwrapERC721{
 				{
 					ContractAddress: multiwrapNft,
-					TokenId:         0,
+					TokenId:         5,
 				},
 			},
 			ERC1155Tokens: []*thirdweb.MultiwrapERC1155{
@@ -73,6 +95,10 @@ var multiwrapWrapCmd = &cobra.Command{
 				},
 			},
 		}
+
+		log.Println("Token: ", multiwrapToken)
+		log.Println("NFT: ", multiwrapNft)
+		log.Println("Edition: ", multiwrapEdition)
 
 		if tx, err := multiwrap.Wrap(
 			contents,
@@ -100,7 +126,7 @@ var multiwrapUnwrapCmd = &cobra.Command{
 			panic(err)
 		}
 
-		if tx, err := multiwrap.Unwrap(0, ""); err != nil {
+		if tx, err := multiwrap.Unwrap(3, ""); err != nil {
 			panic(err)
 		} else {
 			log.Printf("Wrapped tokens successfully")
@@ -119,4 +145,5 @@ func init() {
 	multiwrapCmd.AddCommand(multiwrapWrapCmd)
 	multiwrapCmd.AddCommand(multiwrapUnwrapCmd)
 	multiwrapCmd.AddCommand(multiwrapGetContentsCmd)
+	multiwrapCmd.AddCommand(multiwrapGetAllCmd)
 }

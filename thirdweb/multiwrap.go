@@ -140,7 +140,6 @@ func (multiwrap *Multiwrap) GetWrappedContents(wrappedTokenId int) (*MultiwrapBu
 //
 // 	// This will mint the wrapped token to the connected wallet
 // 	tx, err := contract.Wrap(contents, wrappedTokenMetadata, "")
-
 func (multiwrap *Multiwrap) Wrap(contents *MultiwrapBundle, wrappedTokenMetadata interface{}, recipientAddress string) (*types.Transaction, error) {
 	uri, ok := wrappedTokenMetadata.(string)
 	if !ok {

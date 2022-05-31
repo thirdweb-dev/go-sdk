@@ -7,7 +7,7 @@ type Multiwrap struct {
 }
 ```
 
-### func \(\*Multiwrap\) [GetWrappedContents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L55>)
+### func \(\*Multiwrap\) [GetWrappedContents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L56>)
 
 ```go
 func (multiwrap *Multiwrap) GetWrappedContents(wrappedTokenId int) (*MultiwrapBundle, error)
@@ -29,7 +29,7 @@ erc721Tokens := contents.Erc721Tokens
 erc1155Tokens := contents.Erc1155Tokens
 ```
 
-### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L186>)
+### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L188>)
 
 ```go
 func (multiwrap *Multiwrap) Unwrap(wrappedTokenId int, recipientAddress string) (*types.Transaction, error)
@@ -50,10 +50,53 @@ tokenId := 0
 tx, err := contract.Unwrap(tokenId, "")
 ```
 
-### func \(\*Multiwrap\) [Wrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L141>)
+### func \(\*Multiwrap\) [Wrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L143>)
 
 ```go
 func (multiwrap *Multiwrap) Wrap(contents *MultiwrapBundle, wrappedTokenMetadata interface{}, recipientAddress string) (*types.Transaction, error)
+```
+
+Wrap any number of ERC20\, ERC721\, or ERC1155 tokens into a single wrapped token
+
+contents: the tokens to wrap into a single wrapped token
+
+wrappedTokenMetadata: the NFT Metadata or URI to as the metadata for the wrapped token
+
+recipientAddress: the optional address to send the wrapped token to
+
+returns: the transaction receipt of the wrapping
+
+#### Example
+
+```
+contents := &thirdweb.MultiwrapBundle{
+	ERC20Tokens: []*thirdweb.MultiwrapERC20{
+		&thirdweb.MultiwrapERC20{
+			ContractAddress: "0x...",
+			Quantity:        1,
+		},
+	},
+	ERC721Tokens: []*thirdweb.MultiwrapERC721{
+		&thirdweb.MultiwrapERC721{
+			ContractAddress: "0x...",
+			TokenId:         1,
+		},
+	},
+	ERC1155Tokens: []*thirdweb.MultiwrapERC1155{
+		&thirdweb.MultiwrapERC1155{
+			ContractAddress: "0x...",
+			TokenId:         1,
+			Quantity:        1,
+		},
+	},
+}
+
+wrappedTokenMetadata := &thirdweb.NFTMetadataInput{
+	Name: "Wrapped Token"
+}
+
+// This will mint the wrapped token to the connected wallet
+tx, err := contract.Wrap(contents, wrappedTokenMetadata, "")
 ```
 
 ## type [MultiwrapBundle](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L215-L219>)
