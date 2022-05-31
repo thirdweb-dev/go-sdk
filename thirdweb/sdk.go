@@ -141,7 +141,7 @@ func getDefaultRpcUrl(rpcUrlorName string) (string, error) {
 		return "https://eth-goerli.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
 	case "polygon":
 		return "https://polygon-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
-	case "mainnet" || "ethereum":
+	case "mainnet", "ethereum":
 		return "https://eth-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
 	case "fantom":
 		return "https://rpc.ftm.tools", nil
