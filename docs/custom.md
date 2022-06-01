@@ -3,7 +3,7 @@
 
 ### Custom Contracts
 
-With the thirdweb SDK\, you can get an SDK instance fo any contract\. Additionally\, if you deployed your contract using thirdweb deploy\, you can get a more explicit and intuitive interface to interact with your contracts\.
+With the thirdweb SDK\, you can get a contract instance for any contract\. Additionally\, if you deployed your contract using thirdweb deploy\, you can get a more explicit and intuitive interface to interact with your contracts\.
 
 ### Getting a Custom Contract Instance
 

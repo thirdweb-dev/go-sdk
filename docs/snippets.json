@@ -335,7 +335,7 @@
     "name": "Multiwrap",
     "summary": "",
     "description": "",
-    "example": "go\ntype Multiwrap struct {\n    *ERC721\n}\n",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetMultiwrap(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "GetWrappedContents",

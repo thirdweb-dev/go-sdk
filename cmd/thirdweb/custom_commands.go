@@ -21,9 +21,9 @@ var customCmd = &cobra.Command{
 	},
 }
 
-var customGetCmd = &cobra.Command{
+var customSetCmd = &cobra.Command{
 	Use:   "set",
-	Short: "Get all available nfts in a contract `ADDRESS`",
+	Short: "Set custom contract profile in a contract `ADDRESS`",
 	Run: func(cmd *cobra.Command, args []string) {
 		contract, err := getCustom()
 		if err != nil {
@@ -49,5 +49,5 @@ var customGetCmd = &cobra.Command{
 
 func init() {
 	customCmd.PersistentFlags().StringVarP(&customContractAddress, "address", "a", "", "nft contract address")
-	customCmd.AddCommand(customGetCmd)
+	customCmd.AddCommand(customSetCmd)
 }
