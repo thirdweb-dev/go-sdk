@@ -84,7 +84,7 @@ test-storage:
 	./bin/thirdweb storage uploadImageLink
 
 test-custom:
-	./bin/thirdweb custom get -a ${GO_CUSTOM}
+	./bin/thirdweb custom set -a ${GO_CUSTOM} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test:
 	make cmd

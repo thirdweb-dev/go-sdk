@@ -80,6 +80,7 @@ type SmartContract struct {
 
 func newSmartContract(provider *ethclient.Client, address common.Address, contractAbi string, privateKey string, storage storage) (*SmartContract, error) {
 	helper, err := newContractHelper(address, provider, privateKey)
+	fmt.Println(privateKey)
 	if err != nil {
 		return nil, err
 	}
@@ -177,7 +178,11 @@ func (c *SmartContract) Call(method string, args ...interface{}) (interface{}, e
 
 		return out, nil
 	} else {
-		tx, err := c.contract.Transact(c.helper.getTxOptions(), method, typedArgs...)
+		txOpts, err := c.helper.getTxOptions()
+		if err != nil {
+			return nil, err
+		}
+		tx, err := c.contract.Transact(txOpts, method, typedArgs...)
 		if err != nil {
 			return nil, err
 		}

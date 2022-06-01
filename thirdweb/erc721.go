@@ -167,7 +167,11 @@ func (erc721 *ERC721) IsApproved(address string, operator string) (bool, error) 
 //
 // 	tx, err := contract.Transfer(to, tokenId)
 func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, error) {
-	if tx, err := erc721.abi.SafeTransferFrom(erc721.helper.getTxOptions(), erc721.helper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
+	txOpts, err := erc721.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	if tx, err := erc721.abi.SafeTransferFrom(txOpts, erc721.helper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
 		return erc721.helper.awaitTx(tx.Hash())
@@ -202,7 +206,11 @@ func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
 //
 // returns: the transaction receipt of the approval
 func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error) {
-	if tx, err := erc721.abi.SetApprovalForAll(erc721.helper.getTxOptions(), common.HexToAddress(operator), approved); err != nil {
+	txOpts, err := erc721.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	if tx, err := erc721.abi.SetApprovalForAll(txOpts, common.HexToAddress(operator), approved); err != nil {
 		return nil, err
 	} else {
 		return erc721.helper.awaitTx(tx.Hash())
@@ -218,7 +226,11 @@ func (erc721 *ERC721) SetApprovalForAll(operator string, approved bool) (*types.
 //
 // returns: the transaction receipt of the approval
 func (erc721 *ERC721) SetApprovalForToken(operator string, tokenId int) (*types.Transaction, error) {
-	if tx, err := erc721.abi.Approve(erc721.helper.getTxOptions(), common.HexToAddress(operator), big.NewInt(int64(tokenId))); err != nil {
+	txOpts, err := erc721.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	if tx, err := erc721.abi.Approve(txOpts, common.HexToAddress(operator), big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
 		return erc721.helper.awaitTx(tx.Hash())

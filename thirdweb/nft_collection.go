@@ -141,8 +141,12 @@ func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*t
 		return nil, err
 	}
 
+	txOpts, err := nft.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	tx, err := nft.abi.MintTo(
-		nft.helper.getTxOptions(),
+		txOpts,
 		common.HexToAddress(address),
 		uri,
 	)
@@ -193,8 +197,12 @@ func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataIn
 
 	encoded := [][]byte{}
 	for _, uri := range uris {
+		txOpts, err := nft.helper.getTxOptions()
+		if err != nil {
+			return nil, err
+		}
 		tx, err := nft.abi.MintTo(
-			nft.helper.getTxOptions(),
+			txOpts,
 			common.HexToAddress(address), uri,
 		)
 		if err != nil {
@@ -204,7 +212,11 @@ func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataIn
 		encoded = append(encoded, tx.Data())
 	}
 
-	tx, err := nft.abi.Multicall(nft.helper.getTxOptions(), encoded)
+	txOpts, err := nft.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := nft.abi.Multicall(txOpts, encoded)
 	if err != nil {
 		return nil, err
 	}

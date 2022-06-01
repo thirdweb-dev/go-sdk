@@ -22,7 +22,7 @@ var customCmd = &cobra.Command{
 }
 
 var customGetCmd = &cobra.Command{
-	Use:   "get",
+	Use:   "set",
 	Short: "Get all available nfts in a contract `ADDRESS`",
 	Run: func(cmd *cobra.Command, args []string) {
 		contract, err := getCustom()
@@ -30,7 +30,7 @@ var customGetCmd = &cobra.Command{
 			panic(err)
 		}
 
-		tx, err := contract.Call("setProfile", "Ken", "Kaneki")
+		tx, err := contract.Call("setProfile", "Akira", "Fudo")
 		if err != nil {
 			panic(err)
 		}

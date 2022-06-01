@@ -192,7 +192,11 @@ func approveErc20Allowance(
 	totalPrice := price.Mul(big.NewInt(int64(quantity)), price)
 
 	if allowance.Cmp(totalPrice) < 0 {
-		contractAbi.Approve(erc20.getTxOptions(), spender, allowance.Add(allowance, totalPrice))
+		txOpts, err := erc20.getTxOptions()
+		if err != nil {
+			return err
+		}
+		contractAbi.Approve(txOpts, spender, allowance.Add(allowance, totalPrice))
 	}
 
 	return nil
