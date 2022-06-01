@@ -56,21 +56,18 @@ Now that you have an SDK instance for your contract\, you can easily call any fu
 
 ```
 // The first parameter to the call function is the method name
-```
+// All other parameters to the call function get passed as arguments to your contract
+balance, err := contract.Call("balanceOf", "{{wallet_address}}")
 
-// All other parameters to the call function get passed as arguments to your contract balance\, err := contract\.Call\("balanceOf"\, "\{\{wallet\_address\}\}"\)
-
-```
 // You can also make a transaction to your contract with the call method
+tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
 ```
-
-tx\, err := contract\.Call\("mintTo"\, "\{\{wallet\_address\}\}"\, "ipfs://\.\.\."\)
 
 ```go
 type SmartContract struct {}
 ```
 
-### func \(\*SmartContract\) [Call](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/smart_contract.go#L116>)
+### func \(\*SmartContract\) [Call](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/smart_contract.go#L117>)
 
 ```go
 func (c *SmartContract) Call(method string, args ...interface{}) (interface{}, error)
@@ -86,12 +83,9 @@ args: the arguments to pass to the method
 
 ```
 // The first parameter to the call function is the method name
-```
+// All other parameters to the call function get passed as arguments to your contract
+balance, err := contract.Call("balanceOf", "{{wallet_address}}")
 
-// All other parameters to the call function get passed as arguments to your contract balance\, err := contract\.Call\("balanceOf"\, "\{\{wallet\_address\}\}"\)
-
-```
 // You can also make a transaction to your contract with the call method
+tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
 ```
-
-tx\, err := contract\.Call\("mintTo"\, "\{\{wallet\_address\}\}"\, "ipfs://\.\.\."\)

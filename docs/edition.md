@@ -36,7 +36,7 @@ metadataWithSupply: nft metadata with supply of the NFT to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*Edition\) [MintAdditionalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L121>)
+### func \(\*Edition\) [MintAdditionalSupply](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L125>)
 
 ```go
 func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error)
@@ -50,7 +50,7 @@ additionalSupply: additional supply to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*Edition\) [MintAdditionalSupplyTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L135>)
+### func \(\*Edition\) [MintAdditionalSupplyTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L139>)
 
 ```go
 func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) (*types.Transaction, error)
@@ -66,7 +66,7 @@ additionalySupply: additional supply to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*Edition\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L183>)
+### func \(\*Edition\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L191>)
 
 ```go
 func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error)

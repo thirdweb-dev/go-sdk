@@ -29,7 +29,7 @@ erc721Tokens := contents.Erc721Tokens
 erc1155Tokens := contents.Erc1155Tokens
 ```
 
-### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L188>)
+### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L192>)
 
 ```go
 func (multiwrap *Multiwrap) Unwrap(wrappedTokenId int, recipientAddress string) (*types.Transaction, error)

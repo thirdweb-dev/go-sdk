@@ -7,7 +7,7 @@ You can access this interface from the NFT Collection contract under the signatu
 type ERC721SignatureMinting struct {}
 ```
 
-### func \(\*ERC721SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L164>)
+### func \(\*ERC721SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L175>)
 
 ```go
 func (signature *ERC721SignatureMinting) Generate(payloadToSign *Signature721PayloadInput) (*SignedPayload721, error)
@@ -39,7 +39,7 @@ payload := &thirdweb.Signature721PayloadInput{
 signedPayload, err := contract.Signature.Generate(payload)
 ```
 
-### func \(\*ERC721SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L213>)
+### func \(\*ERC721SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L224>)
 
 ```go
 func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error)
@@ -108,7 +108,7 @@ signedPayload, err := contract.Signature.Generate(payload)
 tx, err := contract.Signature.Mint(signedPayload)
 ```
 
-### func \(\*ERC721SignatureMinting\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L84>)
+### func \(\*ERC721SignatureMinting\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L87>)
 
 ```go
 func (signature *ERC721SignatureMinting) MintBatch(signedPayloads []*SignedPayload721) (*types.Transaction, error)
@@ -128,7 +128,7 @@ signedPayloads, err := contract.Signature.GenerateBatch(payloads)
 tx, err := contract.Signature.MintBatch(signedPayloads)
 ```
 
-### func \(\*ERC721SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L128>)
+### func \(\*ERC721SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L139>)
 
 ```go
 func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721) (bool, error)
@@ -145,6 +145,5 @@ returns: true if the payload is valid\, otherwise false\.
 ```
 // Learn more about how to craft a payload in the Generate() function
 signedPayload, err := contract.Signature.Generate(payload)
+isValid, err := contract.Signature.Verify(signedPayload)
 ```
-
-isValid\, err := contract\.Signature\.Verify\(signedPayload\)

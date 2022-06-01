@@ -135,7 +135,7 @@ func (signature *ERC721SignatureMinting) MintBatch(signedPayloads []*SignedPaylo
 //
 // 	// Learn more about how to craft a payload in the Generate() function
 // 	signedPayload, err := contract.Signature.Generate(payload)
-//  isValid, err := contract.Signature.Verify(signedPayload)
+// 	isValid, err := contract.Signature.Verify(signedPayload)
 func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721) (bool, error) {
 	mintRequest := signedPayload.Payload
 	mintSignature := signedPayload.Signature

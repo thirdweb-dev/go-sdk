@@ -67,11 +67,11 @@ import (
 // with the contract "call" method as follows:
 //
 // 	// The first parameter to the call function is the method name
-//  // All other parameters to the call function get passed as arguments to your contract
+// 	// All other parameters to the call function get passed as arguments to your contract
 // 	balance, err := contract.Call("balanceOf", "{{wallet_address}}")
 //
 // 	// You can also make a transaction to your contract with the call method
-//  tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
+// 	tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
 type SmartContract struct {
 	abi      *abi.ABI
 	contract *bind.BoundContract
@@ -109,11 +109,11 @@ func newSmartContract(provider *ethclient.Client, address common.Address, contra
 // Example
 //
 // 	// The first parameter to the call function is the method name
-//  // All other parameters to the call function get passed as arguments to your contract
+// 	// All other parameters to the call function get passed as arguments to your contract
 // 	balance, err := contract.Call("balanceOf", "{{wallet_address}}")
 //
 // 	// You can also make a transaction to your contract with the call method
-//  tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
+// 	tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
 func (c *SmartContract) Call(method string, args ...interface{}) (interface{}, error) {
 	abiMethod, exist := c.abi.Methods[method]
 	if !exist {

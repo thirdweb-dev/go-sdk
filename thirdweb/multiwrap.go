@@ -13,6 +13,19 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// You can access the Multiwrap interface from the SDK as follows:
+//
+// 	import (
+// 		"github.com/thirdweb-dev/go-sdk/thirdweb"
+// 	)
+//
+// 	privateKey = "..."
+//
+// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//		PrivateKey: privateKey,
+// 	})
+//
+//	contract, err := sdk.GetMultiwrap("{{contract_address}}")
 type Multiwrap struct {
 	abi    *abi.Multiwrap
 	helper *contractHelper
