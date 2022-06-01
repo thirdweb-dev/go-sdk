@@ -70,11 +70,12 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 //
 // address: the address of the NFT Collection contract
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error) {
-	if contract, err := newNFTCollection(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
-		return nil, err
-	} else {
-		return contract, nil
-	}
+	return newNFTCollection(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
 }
 
 // GetEdition
@@ -83,11 +84,12 @@ func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
 //
 // address: the address of the Edition contract
 func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
-	if contract, err := newEdition(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
-		return nil, err
-	} else {
-		return contract, nil
-	}
+	return newEdition(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
 }
 
 // GetToken
@@ -98,11 +100,12 @@ func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error) {
 //
 // Returns a Token contract SDK instance
 func (sdk *ThirdwebSDK) GetToken(address string) (*Token, error) {
-	if contract, err := newToken(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
-		return nil, err
-	} else {
-		return contract, nil
-	}
+	return newToken(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
 }
 
 // GetNFTDrop
@@ -111,11 +114,12 @@ func (sdk *ThirdwebSDK) GetToken(address string) (*Token, error) {
 //
 // address: the address of the NFT Drop contract
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
-	if contract, err := newNFTDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
-		return nil, err
-	} else {
-		return contract, nil
-	}
+	return newNFTDrop(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
 }
 
 // GetEditionDrop
@@ -124,11 +128,12 @@ func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error) {
 //
 // address: the address of the Edition Drop contract
 func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error) {
-	if contract, err := newEditionDrop(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
-		return nil, err
-	} else {
-		return contract, nil
-	}
+	return newEditionDrop(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
 }
 
 // GetMultiwrap
@@ -137,11 +142,43 @@ func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error) {
 //
 // address: the address of the Multiwrap contract
 func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error) {
-	if contract, err := newMultiwrap(sdk.GetProvider(), common.HexToAddress(address), sdk.GetRawPrivateKey(), &sdk.Storage); err != nil {
+	return newMultiwrap(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
+}
+
+// GetContract
+//
+// Get an instance of a custom contract deployed with thirdweb deploy
+//
+// address: the address of the contract
+func (sdk *ThirdwebSDK) GetContract(address string) (*SmartContract, error) {
+	abi, err := fetchContractMetadataFromAddress(address, sdk.GetProvider(), &sdk.Storage)
+	if err != nil {
 		return nil, err
-	} else {
-		return contract, nil
 	}
+
+	return sdk.GetContractFromAbi(address, abi)
+}
+
+// GetContractFromABI
+//
+// Get an instance of ant custom contract from its ABI
+//
+// address: the address of the contract
+//
+// abi: the ABI of the contract
+func (sdk *ThirdwebSDK) GetContractFromAbi(address string, abi string) (*SmartContract, error) {
+	return newSmartContract(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		abi,
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
 }
 
 func getDefaultRpcUrl(rpcUrlorName string) (string, error) {

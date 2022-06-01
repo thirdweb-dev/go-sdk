@@ -57,7 +57,7 @@ test-token-write:
 
 test-multiwrap-read:
 	./bin/thirdweb multiwrap getAll -a ${GO_MULTIWRAP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
-	./bin/thirdweb multiwrap getContents -a ${GO_MULTIWRAP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	# ./bin/thirdweb multiwrap getContents -a ${GO_MULTIWRAP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test-multiwrap-write:
 	./bin/thirdweb multiwrap wrap -a ${GO_MULTIWRAP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC} -n ${GO_NFT_COLLECTION} -e ${GO_EDITION} -t ${GO_TOKEN}
@@ -82,6 +82,9 @@ test-storage:
 	./bin/thirdweb storage uploadBatch
 	./bin/thirdweb storage uploadImage
 	./bin/thirdweb storage uploadImageLink
+
+test-custom:
+	./bin/thirdweb custom get -a ${GO_CUSTOM}
 
 test:
 	make cmd

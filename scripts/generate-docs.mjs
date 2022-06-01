@@ -57,6 +57,10 @@ const delimiters = {
     name: "types.md",
     header: "Types",
   },
+  "SmartContract": {
+    name: "custom.md",
+    header: "Custom Contracts",
+  },
   "ThirdwebSDK": {
     name: "sdk.md",
     header: "ThirdwebSDK",
