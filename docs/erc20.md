@@ -139,7 +139,7 @@ tx, err := contract.BurnFrom(holder, amount)
 func (erc20 *ERC20) Get() (*Currency, error)
 ```
 
-Get token metadata including name\, symbol\, decimals\, etc\.
+Get token metadata including name symbol decimals etc\.
 
 returns: the metadata for the token
 

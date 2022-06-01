@@ -93,7 +93,7 @@ async function main() {
         matched = true;
 
         // Do basic formatting on doc output to make them nicer
-        file = file.replace("    // contains filtered or unexported fields\n", "").replace("{\n}", "{}")
+        file = file.replaceAll("    // contains filtered or unexported fields\n", "").replaceAll("{\n}", "{}").replaceAll("\\,", "")
         file = `\n## ${header}${file}`
         
         fs.writeFile(`./docs/${name}`, file, (err) => {

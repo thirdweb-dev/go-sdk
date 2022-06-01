@@ -203,15 +203,11 @@ type NFTMetadataOwner struct {
 ## type [NFTResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721.go#L23-L26>)
 
 ```go
-type NFTResult struct {
-    // contains filtered or unexported fields
-}
+type NFTResult struct {}
 ```
 
 ## type [NativeToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L113-L118>)
 
 ```go
-type NativeToken struct {
-    // contains filtered or unexported fields
-}
+type NativeToken struct {}
 ```

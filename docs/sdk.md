@@ -18,7 +18,7 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 
 Create a new instance of the Thirdweb SDK
 
-rpcUrlOrName: the name of the chain to connection to \(e\.g\. "rinkeby"\, "mumbai"\, "polygon"\, "mainnet"\, "fantom"\, "avalanche"\) or the RPC URL to connect to
+rpcUrlOrName: the name of the chain to connection to \(e\.g\. "rinkeby" "mumbai" "polygon" "mainnet" "fantom" "avalanche"\) or the RPC URL to connect to
 
 options: an SDKOptions instance to specify a private key and/or an IPFS gateway URL
 
