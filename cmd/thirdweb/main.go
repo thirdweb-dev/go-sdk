@@ -38,6 +38,7 @@ func init() {
 	rootCmd.AddCommand(editionDropCmd)
 	rootCmd.AddCommand(multiwrapCmd)
 	rootCmd.AddCommand(storageCmd)
+	rootCmd.AddCommand(customCmd)
 }
 
 func initConfig() {

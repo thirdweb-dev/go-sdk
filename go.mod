@@ -10,7 +10,9 @@ require (
 
 require (
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1 // indirect
+	github.com/btcsuite/btcutil v1.0.2 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/fxamacker/cbor v1.5.1 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0 // indirect

@@ -8,9 +8,11 @@ import (
 	"math/big"
 	"strings"
 
+	"github.com/btcsuite/btcutil/base58"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/fxamacker/cbor"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
@@ -190,7 +192,11 @@ func approveErc20Allowance(
 	totalPrice := price.Mul(big.NewInt(int64(quantity)), price)
 
 	if allowance.Cmp(totalPrice) < 0 {
-		contractAbi.Approve(erc20.getTxOptions(), spender, allowance.Add(allowance, totalPrice))
+		txOpts, err := erc20.getTxOptions()
+		if err != nil {
+			return err
+		}
+		contractAbi.Approve(txOpts, spender, allowance.Add(allowance, totalPrice))
 	}
 
 	return nil
@@ -328,4 +334,61 @@ func isTokenApprovedForTransfer(
 		fmt.Println("Contract does not implement ERC1155 or ERC721")
 		return false, nil
 	}
+}
+
+// CUSTOM CONTRACTS
+
+func fetchContractMetadataFromAddress(address string, provider *ethclient.Client, storage storage) (string, error) {
+	metadataUri, err := resolveContractUriFromAddress(address, provider)
+	if err != nil {
+		return "", err
+	}
+
+	metadata, err := fetchContractMetadata(metadataUri, storage)
+	if err != nil {
+		return "", err
+	}
+
+	return metadata, nil
+}
+
+func resolveContractUriFromAddress(address string, provider *ethclient.Client) (string, error) {
+	bytecode, err := provider.CodeAt(context.Background(), common.HexToAddress(address), nil)
+	if err != nil {
+		return "", err
+	}
+
+	return extractIPFSHashFromBytecode(bytecode)
+}
+
+func extractIPFSHashFromBytecode(bytecode []byte) (string, error) {
+	cborLength := int(bytecode[len(bytecode)-2])*0x100 + int(bytecode[len(bytecode)-1])
+	cborBytecode := bytecode[len(bytecode)-cborLength-2 : len(bytecode)-2]
+
+	cborData := map[string][]byte{}
+	if err := cbor.Unmarshal(cborBytecode, &cborData); err != nil {
+		return "", err
+	}
+
+	ipfsHash := base58.Encode(cborData["ipfs"])
+	return fmt.Sprintf("ipfs://%v", ipfsHash), nil
+}
+
+func fetchContractMetadata(uri string, storage storage) (string, error) {
+	body, err := storage.Get(uri)
+	if err != nil {
+		return "", err
+	}
+
+	metadata := map[string]interface{}{}
+	if err := json.Unmarshal(body, &metadata); err != nil {
+		return "", err
+	}
+
+	abiBytes, err := json.Marshal(metadata["output"].(map[string]interface{})["abi"])
+	if err != nil {
+		return "", err
+	}
+
+	return string(abiBytes), nil
 }

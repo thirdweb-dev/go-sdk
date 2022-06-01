@@ -112,7 +112,11 @@ func (token *Token) MintTo(to string, amount float64) (*types.Transaction, error
 		return nil, err
 	}
 
-	tx, err := token.abi.MintTo(token.helper.getTxOptions(), common.HexToAddress(to), amountWithDecimals)
+	txOpts, err := token.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := token.abi.MintTo(txOpts, common.HexToAddress(to), amountWithDecimals)
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +153,11 @@ func (token *Token) MintBatchTo(args []*TokenAmount) (*types.Transaction, error)
 			return nil, err
 		}
 
-		tx, err := token.abi.MintTo(token.helper.getTxOptions(), common.HexToAddress(arg.ToAddress), amountWithDecimals)
+		txOpts, err := token.helper.getTxOptions()
+		if err != nil {
+			return nil, err
+		}
+		tx, err := token.abi.MintTo(txOpts, common.HexToAddress(arg.ToAddress), amountWithDecimals)
 		if err != nil {
 			return nil, err
 		}
@@ -157,7 +165,11 @@ func (token *Token) MintBatchTo(args []*TokenAmount) (*types.Transaction, error)
 		encoded = append(encoded, tx.Data())
 	}
 
-	tx, err := token.abi.Multicall(token.helper.getTxOptions(), encoded)
+	txOpts, err := token.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := token.abi.Multicall(txOpts, encoded)
 	if err != nil {
 		return nil, err
 	}
@@ -171,7 +183,11 @@ func (token *Token) MintBatchTo(args []*TokenAmount) (*types.Transaction, error)
 //
 // returns: transaction receipt of the delegation
 func (token *Token) DelegateTo(delegatreeAddress string) (*types.Transaction, error) {
-	tx, err := token.abi.Delegate(token.helper.getTxOptions(), common.HexToAddress(delegatreeAddress))
+	txOpts, err := token.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := token.abi.Delegate(txOpts, common.HexToAddress(delegatreeAddress))
 	if err != nil {
 		return nil, err
 	}

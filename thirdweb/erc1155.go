@@ -212,8 +212,12 @@ func (erc1155 *ERC1155) IsApproved(address string, operator string) (bool, error
 //
 // 	tx, err := contract.Transfer(to, tokenId, amount)
 func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Transaction, error) {
+	txOpts, err := erc1155.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	if tx, err := erc1155.abi.SafeTransferFrom(
-		erc1155.helper.getTxOptions(),
+		txOpts,
 		erc1155.helper.GetSignerAddress(),
 		common.HexToAddress(to),
 		big.NewInt(int64(tokenId)),
@@ -241,8 +245,12 @@ func (erc1155 *ERC1155) Transfer(to string, tokenId int, amount int) (*types.Tra
 // 	tx, err := contract.Burn(tokenId, amount)
 func (erc1155 *ERC1155) Burn(tokenId int, amount int) (*types.Transaction, error) {
 	address := erc1155.helper.GetSignerAddress()
+	txOpts, err := erc1155.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	if tx, err := erc1155.abi.Burn(
-		erc1155.helper.getTxOptions(),
+		txOpts,
 		address,
 		big.NewInt(int64(tokenId)),
 		big.NewInt(int64(amount)),
@@ -263,8 +271,12 @@ func (erc1155 *ERC1155) Burn(tokenId int, amount int) (*types.Transaction, error
 //
 // returns: the transaction receipt of the approval
 func (erc1155 *ERC1155) SetApprovalForAll(operator string, approved bool) (*types.Transaction, error) {
+	txOpts, err := erc1155.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	if tx, err := erc1155.abi.SetApprovalForAll(
-		erc1155.helper.getTxOptions(),
+		txOpts,
 		common.HexToAddress(operator),
 		approved,
 	); err != nil {

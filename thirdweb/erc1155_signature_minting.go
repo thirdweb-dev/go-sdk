@@ -54,7 +54,10 @@ func (signature *ERC1155SignatureMinting) Mint(signedPayload *SignedPayload1155)
 		return nil, err
 	}
 
-	txOpts := signature.helper.getTxOptions()
+	txOpts, err := signature.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	setErc20Allowance(
 		signature.helper,
 		big.NewInt(message.PricePerToken.Int64()).Mul(message.PricePerToken, message.Quantity),
@@ -98,7 +101,11 @@ func (signature *ERC1155SignatureMinting) MintBatch(signedPayloads []*SignedPayl
 
 	encoded := [][]byte{}
 	for i, payload := range contractPayloads {
-		tx, err := signature.abi.MintWithSignature(signature.helper.getTxOptions(), *payload, signedPayloads[i].Signature)
+		txOpts, err := signature.helper.getTxOptions()
+		if err != nil {
+			return nil, err
+		}
+		tx, err := signature.abi.MintWithSignature(txOpts, *payload, signedPayloads[i].Signature)
 		if err != nil {
 			return nil, err
 		}
@@ -106,7 +113,11 @@ func (signature *ERC1155SignatureMinting) MintBatch(signedPayloads []*SignedPayl
 		encoded = append(encoded, tx.Data())
 	}
 
-	tx, err := signature.abi.Multicall(signature.helper.getTxOptions(), encoded)
+	txOpts, err := signature.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := signature.abi.Multicall(txOpts, encoded)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +135,7 @@ func (signature *ERC1155SignatureMinting) MintBatch(signedPayloads []*SignedPayl
 //
 // 	// Learn more about how to craft a payload in the Generate() function
 // 	signedPayload, err := contract.Signature.Generate(payload)
-//  isValid, err := contract.Signature.Verify(signedPayload)
+// 	isValid, err := contract.Signature.Verify(signedPayload)
 func (signature *ERC1155SignatureMinting) Verify(signedPayload *SignedPayload1155) (bool, error) {
 	mintRequest := signedPayload.Payload
 	mintSignature := signedPayload.Signature

@@ -13,6 +13,19 @@ import (
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
+// You can access the Multiwrap interface from the SDK as follows:
+//
+// 	import (
+// 		"github.com/thirdweb-dev/go-sdk/thirdweb"
+// 	)
+//
+// 	privateKey = "..."
+//
+// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//		PrivateKey: privateKey,
+// 	})
+//
+//	contract, err := sdk.GetMultiwrap("{{contract_address}}")
 type Multiwrap struct {
 	abi    *abi.Multiwrap
 	helper *contractHelper
@@ -165,7 +178,11 @@ func (multiwrap *Multiwrap) Wrap(contents *MultiwrapBundle, wrappedTokenMetadata
 		return nil, err
 	}
 
-	tx, err := multiwrap.abi.Wrap(multiwrap.helper.getTxOptions(), tokens, uri, common.HexToAddress(recipientAddress))
+	txOpts, err := multiwrap.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := multiwrap.abi.Wrap(txOpts, tokens, uri, common.HexToAddress(recipientAddress))
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +207,11 @@ func (multiwrap *Multiwrap) Unwrap(wrappedTokenId int, recipientAddress string) 
 		recipientAddress = multiwrap.helper.GetSignerAddress().String()
 	}
 
-	tx, err := multiwrap.abi.Unwrap(multiwrap.helper.getTxOptions(), big.NewInt(int64(wrappedTokenId)), common.HexToAddress(recipientAddress))
+	txOpts, err := multiwrap.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := multiwrap.abi.Unwrap(txOpts, big.NewInt(int64(wrappedTokenId)), common.HexToAddress(recipientAddress))
 	if err != nil {
 		return nil, err
 	}

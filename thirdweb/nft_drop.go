@@ -206,8 +206,12 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 		signerAddress,
 	)
 
+	txOpts, err := drop.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	tx, err := drop.abi.LazyMint(
-		drop.helper.getTxOptions(),
+		txOpts,
 		big.NewInt(int64(len(batch.uris))),
 		batch.baseUri,
 		[]byte{},
@@ -249,8 +253,12 @@ func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Tr
 		return nil, err
 	}
 
+	txOpts, err := drop.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	tx, err := drop.abi.Claim(
-		drop.helper.getTxOptions(),
+		txOpts,
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(quantity)),
 		common.HexToAddress(claimVerification.currencyAddress),

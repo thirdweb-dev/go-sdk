@@ -112,8 +112,12 @@ func (drop *EditionDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Tran
 		signerAddress,
 	)
 
+	txOpts, err := drop.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	tx, err := drop.abi.LazyMint(
-		drop.helper.getTxOptions(),
+		txOpts,
 		big.NewInt(int64(len(batch.uris))),
 		batch.baseUri,
 	)
@@ -159,8 +163,12 @@ func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantit
 		return nil, err
 	}
 
+	txOpts, err := drop.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	tx, err := drop.abi.Claim(
-		drop.helper.getTxOptions(),
+		txOpts,
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(tokenId)),
 		big.NewInt(int64(quantity)),

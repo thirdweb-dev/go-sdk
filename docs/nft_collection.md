@@ -68,7 +68,7 @@ metadata: metadata of the NFT to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*NFTCollection\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L161>)
+### func \(\*NFTCollection\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L165>)
 
 ```go
 func (nft *NFTCollection) MintBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
@@ -80,7 +80,7 @@ metadatas: list of metadata of the NFTs to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*NFTCollection\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L188>)
+### func \(\*NFTCollection\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L192>)
 
 ```go
 func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) (*types.Transaction, error)

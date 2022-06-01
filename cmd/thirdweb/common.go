@@ -113,6 +113,21 @@ func getMultiwrap() (*thirdweb.Multiwrap, error) {
 	}
 }
 
+func getCustom() (*thirdweb.SmartContract, error) {
+	if thirdwebSDK == nil {
+		initSdk()
+	}
+
+	log.Printf("Obtaining a Custom on chain %v, contract %v\n", chainRpcUrl, customContractAddress)
+
+	if contract, err := thirdwebSDK.GetContract(customContractAddress); err != nil {
+		log.Println("Failed to create an Custom object")
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 func getStorage() thirdweb.IpfsStorage {
 	if thirdwebSDK == nil {
 		initSdk()

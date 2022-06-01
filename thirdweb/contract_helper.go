@@ -39,7 +39,11 @@ func (helper *contractHelper) getAddress() common.Address {
 	return helper.address
 }
 
-func (helper *contractHelper) getTxOptions() *bind.TransactOpts {
+func (helper *contractHelper) getTxOptions() (*bind.TransactOpts, error) {
+	if helper.GetRawPrivateKey() == "" {
+		return nil, fmt.Errorf("You need to set a private key to use this function!")
+	}
+
 	var tipCap, feeCap *big.Int
 
 	provider := helper.GetProvider()
@@ -50,13 +54,15 @@ func (helper *contractHelper) getTxOptions() *bind.TransactOpts {
 		feeCap = big.NewInt(0).Add(baseFee, tipCap)
 	}
 
-	return &bind.TransactOpts{
+	txOpts := &bind.TransactOpts{
 		NoSend:    false,
 		From:      helper.GetSignerAddress(),
 		Signer:    helper.getSigner(),
 		GasTipCap: tipCap,
 		GasFeeCap: feeCap,
 	}
+
+	return txOpts, nil
 }
 
 func (helper *contractHelper) awaitTx(hash common.Hash) (*types.Transaction, error) {

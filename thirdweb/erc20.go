@@ -148,7 +148,11 @@ func (erc20 *ERC20) Transfer(to string, amount float64) (*types.Transaction, err
 		return nil, err
 	}
 
-	tx, err := erc20.abi.Transfer(erc20.helper.getTxOptions(), common.HexToAddress(to), amountWithDecimals)
+	txOpts, err := erc20.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := erc20.abi.Transfer(txOpts, common.HexToAddress(to), amountWithDecimals)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +183,11 @@ func (erc20 *ERC20) TransferFrom(from string, to string, amount float64) (*types
 		return nil, err
 	}
 
-	tx, err := erc20.abi.TransferFrom(erc20.helper.getTxOptions(), common.HexToAddress(from), common.HexToAddress(to), amountWithDecimals)
+	txOpts, err := erc20.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := erc20.abi.TransferFrom(txOpts, common.HexToAddress(from), common.HexToAddress(to), amountWithDecimals)
 	if err != nil {
 		return nil, err
 	}
@@ -207,7 +215,11 @@ func (erc20 *ERC20) SetAllowance(spender string, amount float64) (*types.Transac
 		return nil, err
 	}
 
-	tx, err := erc20.abi.Approve(erc20.helper.getTxOptions(), common.HexToAddress(spender), amountWithDecimals)
+	txOpts, err := erc20.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := erc20.abi.Approve(txOpts, common.HexToAddress(spender), amountWithDecimals)
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +256,11 @@ func (erc20 *ERC20) TransferBatch(args []*TokenAmount) (*types.Transaction, erro
 			return nil, err
 		}
 
-		tx, err := erc20.abi.Transfer(erc20.helper.getTxOptions(), common.HexToAddress(arg.ToAddress), amountWithDecimals)
+		txOpts, err := erc20.helper.getTxOptions()
+		if err != nil {
+			return nil, err
+		}
+		tx, err := erc20.abi.Transfer(txOpts, common.HexToAddress(arg.ToAddress), amountWithDecimals)
 		if err != nil {
 			return nil, err
 		}
@@ -252,7 +268,11 @@ func (erc20 *ERC20) TransferBatch(args []*TokenAmount) (*types.Transaction, erro
 		encoded = append(encoded, tx.Data())
 	}
 
-	tx, err := erc20.abi.Multicall(erc20.helper.getTxOptions(), encoded)
+	txOpts, err := erc20.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := erc20.abi.Multicall(txOpts, encoded)
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +296,11 @@ func (erc20 *ERC20) Burn(amount float64) (*types.Transaction, error) {
 		return nil, err
 	}
 
-	tx, err := erc20.abi.Burn(erc20.helper.getTxOptions(), amountWithDecimals)
+	txOpts, err := erc20.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := erc20.abi.Burn(txOpts, amountWithDecimals)
 	if err != nil {
 		return nil, err
 	}
@@ -304,7 +328,11 @@ func (erc20 *ERC20) BurnFrom(holder string, amount float64) (*types.Transaction,
 		return nil, err
 	}
 
-	tx, err := erc20.abi.BurnFrom(erc20.helper.getTxOptions(), common.HexToAddress(holder), amountWithDecimals)
+	txOpts, err := erc20.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := erc20.abi.BurnFrom(txOpts, common.HexToAddress(holder), amountWithDecimals)
 	if err != nil {
 		return nil, err
 	}

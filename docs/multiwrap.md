@@ -1,13 +1,29 @@
 
 ## Multiwrap
 
+You can access the Multiwrap interface from the SDK as follows:
+
+```
+import (
+	"github.com/thirdweb-dev/go-sdk/thirdweb"
+)
+
+privateKey = "..."
+
+sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+	PrivateKey: privateKey,
+})
+
+contract, err := sdk.GetMultiwrap("{{contract_address}}")
+```
+
 ```go
 type Multiwrap struct {
     *ERC721
 }
 ```
 
-### func \(\*Multiwrap\) [GetWrappedContents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L56>)
+### func \(\*Multiwrap\) [GetWrappedContents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L69>)
 
 ```go
 func (multiwrap *Multiwrap) GetWrappedContents(wrappedTokenId int) (*MultiwrapBundle, error)
@@ -29,7 +45,7 @@ erc721Tokens := contents.Erc721Tokens
 erc1155Tokens := contents.Erc1155Tokens
 ```
 
-### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L188>)
+### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L205>)
 
 ```go
 func (multiwrap *Multiwrap) Unwrap(wrappedTokenId int, recipientAddress string) (*types.Transaction, error)
@@ -50,7 +66,7 @@ tokenId := 0
 tx, err := contract.Unwrap(tokenId, "")
 ```
 
-### func \(\*Multiwrap\) [Wrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L143>)
+### func \(\*Multiwrap\) [Wrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L156>)
 
 ```go
 func (multiwrap *Multiwrap) Wrap(contents *MultiwrapBundle, wrappedTokenMetadata interface{}, recipientAddress string) (*types.Transaction, error)

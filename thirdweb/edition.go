@@ -97,8 +97,12 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 	}
 
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
+	txOpts, err := edition.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	tx, err := edition.abi.MintTo(
-		edition.helper.getTxOptions(),
+		txOpts,
 		common.HexToAddress(address),
 		MaxUint256,
 		uri,
@@ -138,8 +142,12 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 		return nil, err
 	}
 
+	txOpts, err := edition.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
 	tx, err := edition.abi.MintTo(
-		edition.helper.getTxOptions(),
+		txOpts,
 		common.HexToAddress(to),
 		big.NewInt(int64(tokenId)),
 		metadata.Uri,
@@ -199,8 +207,12 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 	encoded := [][]byte{}
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 	for index, uri := range uris {
+		txOpts, err := edition.helper.getTxOptions()
+		if err != nil {
+			return nil, err
+		}
 		tx, err := edition.abi.MintTo(
-			edition.helper.getTxOptions(),
+			txOpts,
 			common.HexToAddress(to),
 			MaxUint256,
 			uri,
@@ -213,7 +225,11 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 		encoded = append(encoded, tx.Data())
 	}
 
-	tx, err := edition.abi.Multicall(edition.helper.getTxOptions(), encoded)
+	txOpts, err := edition.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	tx, err := edition.abi.Multicall(txOpts, encoded)
 	if err != nil {
 		return nil, err
 	}

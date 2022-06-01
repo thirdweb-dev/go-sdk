@@ -23,7 +23,7 @@ type Token struct {
 }
 ```
 
-### func \(\*Token\) [DelegateTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/token.go#L173>)
+### func \(\*Token\) [DelegateTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/token.go#L185>)
 
 ```go
 func (token *Token) DelegateTo(delegatreeAddress string) (*types.Transaction, error)
@@ -89,7 +89,7 @@ amount: amount of tokens to mint
 
 returns: transaction receipt of the mint
 
-### func \(\*Token\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/token.go#L143>)
+### func \(\*Token\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/token.go#L147>)
 
 ```go
 func (token *Token) MintBatchTo(args []*TokenAmount) (*types.Transaction, error)

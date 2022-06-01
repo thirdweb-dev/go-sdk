@@ -23,7 +23,7 @@ type NFTDrop struct {
 }
 ```
 
-### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L227>)
+### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L231>)
 
 ```go
 func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error)
@@ -35,7 +35,7 @@ quantity: the number of NFTs to claim
 
 returns: the transaction receipt of the claim
 
-### func \(\*NFTDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L246>)
+### func \(\*NFTDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L250>)
 
 ```go
 func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Transaction, error)

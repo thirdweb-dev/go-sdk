@@ -23,7 +23,7 @@ type EditionDrop struct {
 }
 ```
 
-### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L134>)
+### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L138>)
 
 ```go
 func (drop *EditionDrop) Claim(tokenId int, quantity int) (*types.Transaction, error)
@@ -37,7 +37,7 @@ quantity: the number of NFTs to claim
 
 returns: the transaction receipt of the claim
 
-### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L156>)
+### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L160>)
 
 ```go
 func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantity int) (*types.Transaction, error)
