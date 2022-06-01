@@ -30,20 +30,20 @@ var customSetCmd = &cobra.Command{
 			panic(err)
 		}
 
-		tx, err := contract.Call("setProfile", "Akira", "Fudo")
+		data, err := contract.Call("tokenURI", 0)
+		if err != nil {
+			panic(err)
+		}
+
+		log.Println(data)
+
+		tx, err := contract.Call("mintTo", thirdwebSDK.GetSignerAddress().Hex(), "ipfs://QmXCKX8MHHCXU62UWdiU38cjK3vbQ4MeL9FgXKo2hAR6Yz/0" )
 		if err != nil {
 			panic(err)
 		}
 
 		result, _ := json.Marshal(&tx)
 		fmt.Println(string(result))
-
-		data, err := contract.Call("getProfile", "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6")
-		if err != nil {
-			panic(err)
-		}
-
-		log.Println(data)
 	},
 }
 

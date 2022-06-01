@@ -117,12 +117,12 @@ func newSmartContract(provider *ethclient.Client, address common.Address, contra
 func (c *SmartContract) Call(method string, args ...interface{}) (interface{}, error) {
 	abiMethod, exist := c.abi.Methods[method]
 	if !exist {
-		return nil, fmt.Errorf("Function %s not found in contract %s", method, c.helper.getAddress().String())
+		return nil, fmt.Errorf("function '%s' not found in contract '%s'", method, c.helper.getAddress().String())
 	}
 
 	if len(abiMethod.Inputs) != len(args) {
 		return nil, fmt.Errorf(
-			"Function %s requires %d arguments, but %d arguments were provided.\nExpected function signature %s",
+			"function '%s' requires %d arguments, but %d arguments were provided.\nExpected function signature '%s'",
 			method,
 			len(abiMethod.Inputs),
 			len(args),
@@ -141,8 +141,9 @@ func (c *SmartContract) Call(method string, args ...interface{}) (interface{}, e
 			parsedArg, ok := arg.(string)
 			if !ok {
 				return nil, fmt.Errorf(
-					"Argument %d should be of type string, but type %v was provided",
-					i+1,
+					"argument %d (%v) should be of type 'string', but type '%v' was provided",
+					i,
+					input.Name,
 					reflect.TypeOf(arg),
 				)
 			}
@@ -152,8 +153,9 @@ func (c *SmartContract) Call(method string, args ...interface{}) (interface{}, e
 			parsedArg, ok := arg.(int)
 			if !ok {
 				return nil, fmt.Errorf(
-					"Argument %d should be of type int, but type %v was provided",
-					i+1,
+					"argument %d (%v) should be of type 'int', but type '%v' was provided",
+					i,
+					input.Name,
 					reflect.TypeOf(arg),
 				)
 			}
