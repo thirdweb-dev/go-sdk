@@ -72,7 +72,7 @@ tx, err := contract.Unwrap(tokenId, "")
 func (multiwrap *Multiwrap) Wrap(contents *MultiwrapBundle, wrappedTokenMetadata interface{}, recipientAddress string) (*types.Transaction, error)
 ```
 
-Wrap any number of ERC20\, ERC721\, or ERC1155 tokens into a single wrapped token
+Wrap any number of ERC20, ERC721, or ERC1155 tokens into a single wrapped token
 
 contents: the tokens to wrap into a single wrapped token
 

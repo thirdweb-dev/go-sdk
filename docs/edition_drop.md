@@ -138,7 +138,5 @@ type EditionMetadataOwner struct {
 ## type [EditionResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155.go#L23-L26>)
 
 ```go
-type EditionResult struct {
-    // contains filtered or unexported fields
-}
+type EditionResult struct {}
 ```

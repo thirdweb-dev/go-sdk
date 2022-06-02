@@ -138,7 +138,7 @@ func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721)
 
 signedPayload: the payload to verify
 
-returns: true if the payload is valid\, otherwise false\.
+returns: true if the payload is valid, otherwise false\.
 
 #### Example
 
