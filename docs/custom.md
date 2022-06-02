@@ -3,7 +3,7 @@
 
 ### Custom Contracts
 
-With the thirdweb SDK you can get a contract instance for any contract\. Additionally if you deployed your contract using thirdweb deploy you can get a more explicit and intuitive interface to interact with your contracts\.
+With the thirdweb SDK, you can get a contract instance for any contract\. Additionally, if you deployed your contract using thirdweb deploy, you can get a more explicit and intuitive interface to interact with your contracts\.
 
 ### Getting a Custom Contract Instance
 
@@ -27,7 +27,7 @@ contractAddress := "{{contract_address}}"
 contract, err := sdk.GetContract(contractAddress)
 ```
 
-Alternatively if you didn't deploy your contract with thirdweb deploy you can still get a contract instance for any contract using your contracts ABI:
+Alternatively, if you didn't deploy your contract with thirdweb deploy, you can still get a contract instance for any contract using your contracts ABI:
 
 ```
 import (
@@ -52,7 +52,7 @@ contract, err := sdk.GetContractFromAbi(contractAddress, abi)
 
 ### Calling Contract Functions
 
-Now that you have an SDK instance for your contract you can easily call any function on your contract with the contract "call" method as follows:
+Now that you have an SDK instance for your contract, you can easily call any function on your contract with the contract "call" method as follows:
 
 ```
 // The first parameter to the call function is the method name
