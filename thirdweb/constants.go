@@ -2,13 +2,19 @@ package thirdweb
 
 import "errors"
 
+// SERVER URLS
+
 const defaultIpfsGatewayUrl = "https://gateway.ipfscdn.io/ipfs/"
-
 const twIpfsServerUrl = "https://upload.nftlabs.co"
-
 const pinataIpfsUrl = "https://api.pinata.cloud/pinning/pinFileToIPFS"
 
+// CONSTANT VALUES
+
+const zeroAddress = "0x0000000000000000000000000000000000000000"
+const nativeTokenAddress = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 const defaultMerkleRoot = "0x0000000000000000000000000000000000000000000000000000000000000000"
+
+// NATIVE TOKEN BY CHAIN
 
 type ChainID int
 type ChainName string
@@ -104,5 +110,68 @@ func getNativeTokenByChainId(chainId ChainID) (*NativeToken, error) {
 		}, nil
 	default:
 		return nil, errors.New("Unsupported chain id")
+	}
+}
+
+// CONTRACT ADDRESSES BY CHAIN ID
+
+const twFactoryAddress = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd"
+const twRegistryAddress = "0x5DBC7B840baa9daBcBe9D2492E45D7244B54A2A0"
+const ozDefenderForwarderAddress = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81"
+
+func getContractAddressByChainId(chainId ChainID, contractName string) (string, error) {
+	var addresses map[string]string
+
+	switch chainId {
+	case MAINNET:
+		addresses = map[string]string{
+			"BiconomyForwarder": "0x84a0856b038eaAd1cC7E297cF34A7e72685A8693",
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
+	case RINKEBY:
+		addresses = map[string]string{
+			"BiconomyForwarder": "0xFD4973FeB2031D4409fB57afEE5dF2051b171104",
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
+	case GOERLI:
+		addresses = map[string]string{
+			"BiconomyForwarder": zeroAddress,
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
+	case POLYGON:
+		addresses = map[string]string{
+			"BiconomyForwarder": "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
+	case MUMBAI:
+		addresses = map[string]string{
+			"BiconomyForwarder": "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
+	case AVALANCHE:
+		addresses = map[string]string{
+			"BiconomyForwarder": "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
+	case FANTOM:
+		addresses = map[string]string{
+			"BiconomyForwarder": zeroAddress,
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
+	default:
+		return "", errors.New("Unsupported chain id")
+	}
+
+	if address, ok := addresses[contractName]; ok {
+		return address, nil
+	} else {
+		return "", errors.New("Unsupported contract name")
 	}
 }

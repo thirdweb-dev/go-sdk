@@ -217,3 +217,86 @@ type MultiwrapBundle struct {
 	ERC721Tokens  []*MultiwrapERC721
 	ERC1155Tokens []*MultiwrapERC1155
 }
+
+// Contract Metadata
+
+type NFTCollectionContractMetadata struct {
+	Name                   string   `json:"name"`
+	Description            string   `json:"description"`
+	Image                  string   `json:"image"`
+	ExternalLink           string   `json:"external_link"`
+	SellerFeeBasisPoints   int      `json:"seller_fee_basis_points"`
+	FeeRecipient           string   `json:"fee_recipient"`
+	Symbol                 string   `json:"symbol"`
+	PrimarySaleRecipient   string   `json:"primary_sale_recipient"`
+	PlatformFeeBasisPoints int      `json:"platform_fee_basis_points"`
+	PlatformFeeRecipient   string   `json:"platform_fee_recipient"`
+	TrustedForwarders      []string `json:"trusted_forwarders"`
+}
+
+type EditionContractMetadata struct {
+	Name                   string   `json:"name"`
+	Description            string   `json:"description"`
+	Image                  string   `json:"image"`
+	ExternalLink           string   `json:"external_link"`
+	SellerFeeBasisPoints   int      `json:"seller_fee_basis_points"`
+	FeeRecipient           string   `json:"fee_recipient"`
+	Symbol                 string   `json:"symbol"`
+	PrimarySaleRecipient   string   `json:"primary_sale_recipient"`
+	PlatformFeeBasisPoints int      `json:"platform_fee_basis_points"`
+	PlatformFeeRecipient   string   `json:"platform_fee_recipient"`
+	TrustedForwarders      []string `json:"trusted_forwarders"`
+}
+
+type TokenContractMetadata struct {
+	Name                   string   `json:"name"`
+	Description            string   `json:"description"`
+	Image                  string   `json:"image"`
+	ExternalLink           string   `json:"external_link"`
+	Symbol                 string   `json:"symbol"`
+	PrimarySaleRecipient   string   `json:"primary_sale_recipient"`
+	PlatformFeeBasisPoints int      `json:"platform_fee_basis_points"`
+	PlatformFeeRecipient   string   `json:"platform_fee_recipient"`
+	TrustedForwarders      []string `json:"trusted_forwarders"`
+}
+
+type NFTDropContractMetadata struct {
+	Name                   string            `json:"name"`
+	Description            string            `json:"description"`
+	Image                  string            `json:"image"`
+	ExternalLink           string            `json:"external_link"`
+	SellerFeeBasisPoints   int               `json:"seller_fee_basis_points"`
+	FeeRecipient           string            `json:"fee_recipient"`
+	Merkle                 map[string]string `json:"merkle"`
+	Symbol                 string            `json:"symbol"`
+	PrimarySaleRecipient   string            `json:"primary_sale_recipient"`
+	PlatformFeeBasisPoints int               `json:"platform_fee_basis_points"`
+	PlatformFeeRecipient   string            `json:"platform_fee_recipient"`
+	TrustedForwarders      []string          `json:"trusted_forwarders"`
+}
+
+type EditionDropContractMetadata struct {
+	Name                   string            `json:"name"`
+	Description            string            `json:"description"`
+	Image                  string            `json:"image"`
+	ExternalLink           string            `json:"external_link"`
+	SellerFeeBasisPoints   int               `json:"seller_fee_basis_points"`
+	FeeRecipient           string            `json:"fee_recipient"`
+	Merkle                 map[string]string `json:"merkle"`
+	Symbol                 string            `json:"symbol"`
+	PrimarySaleRecipient   string            `json:"primary_sale_recipient"`
+	PlatformFeeBasisPoints int               `json:"platform_fee_basis_points"`
+	PlatformFeeRecipient   string            `json:"platform_fee_recipient"`
+	TrustedForwarders      []string          `json:"trusted_forwarders"`
+}
+
+type MultiwrapContractMetadata struct {
+	Name                 string   `json:"name"`
+	Description          string   `json:"description"`
+	Image                string   `json:"image"`
+	ExternalLink         string   `json:"external_link"`
+	SellerFeeBasisPoints int      `json:"seller_fee_basis_points"`
+	FeeRecipient         string   `json:"fee_recipient"`
+	Symbol               string   `json:"symbol"`
+	TrustedForwarders    []string `json:"trusted_forwarders"`
+}

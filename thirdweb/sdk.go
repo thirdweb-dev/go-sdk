@@ -10,7 +10,8 @@ import (
 
 type ThirdwebSDK struct {
 	*ProviderHandler
-	Storage IpfsStorage
+	Storage  IpfsStorage
+	Deployer ContractDeployer
 }
 
 // NewThirdwebSDK
@@ -31,37 +32,40 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 		return nil, err
 	}
 
-	if options == nil {
-		handler, err := NewProviderHandler(provider, "")
-		if err != nil {
-			return nil, err
+	// Define defaults for all the options
+	privateKey := ""
+	gatewayUrl := defaultIpfsGatewayUrl
+
+	// Override defaults with the options that are defined
+	if options != nil {
+		if options.PrivateKey != "" {
+			privateKey = options.PrivateKey
 		}
 
-		storage := newIpfsStorage(defaultIpfsGatewayUrl)
-		sdk := &ThirdwebSDK{
-			ProviderHandler: handler,
-			Storage:         *storage,
+		if options.GatewayUrl != "" {
+			gatewayUrl = options.GatewayUrl
 		}
-		return sdk, nil
-	} else {
-		gatewayUrl := options.GatewayUrl
-		if gatewayUrl == "" {
-			gatewayUrl = defaultIpfsGatewayUrl
-		}
-
-		handler, err := NewProviderHandler(provider, options.PrivateKey)
-		if err != nil {
-			return nil, err
-		}
-
-		storage := newIpfsStorage(gatewayUrl)
-
-		sdk := &ThirdwebSDK{
-			ProviderHandler: handler,
-			Storage:         *storage,
-		}
-		return sdk, nil
 	}
+
+	storage := newIpfsStorage(gatewayUrl)
+
+	handler, err := NewProviderHandler(provider, privateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	deployer, err := newContractDeployer(provider, privateKey, storage)
+	if err != nil {
+		return nil, err
+	}
+
+	sdk := &ThirdwebSDK{
+		ProviderHandler: handler,
+		Storage:         *storage,
+		Deployer:        *deployer,
+	}
+
+	return sdk, nil
 }
 
 // GetNFTCollection

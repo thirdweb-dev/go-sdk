@@ -55,8 +55,8 @@ func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]stri
 // TOKEN
 
 func isNativeToken(tokenAddress string) bool {
-	isZero := tokenAddress == "0x0000000000000000000000000000000000000000"
-	isNative := strings.ToLower(tokenAddress) == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+	isZero := tokenAddress == zeroAddress
+	isNative := strings.ToLower(tokenAddress) == nativeTokenAddress
 	return isZero || isNative
 }
 
