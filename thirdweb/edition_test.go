@@ -13,6 +13,7 @@ func getEdition() *Edition {
 	address, _ := sdk.Deployer.DeployEdition(&DeployEditionMetadata{
 		Name: "Edition",
 	})
+	fmt.Println("Deployed edition at", address)
 	edition, _ := sdk.GetEdition(address)
 
 	return edition

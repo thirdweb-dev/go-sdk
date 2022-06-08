@@ -27,6 +27,8 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 		return nil, err
 	}
 
+	fmt.Println("Connecting to", rpc)
+
 	provider, err := ethclient.Dial(rpc)
 	if err != nil {
 		return nil, err
