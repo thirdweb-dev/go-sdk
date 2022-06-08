@@ -39,6 +39,7 @@ func init() {
 	rootCmd.AddCommand(multiwrapCmd)
 	rootCmd.AddCommand(storageCmd)
 	rootCmd.AddCommand(customCmd)
+	rootCmd.AddCommand(deployCmd)
 }
 
 func initConfig() {

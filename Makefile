@@ -86,6 +86,9 @@ test-storage:
 test-custom:
 	./bin/thirdweb custom set -a ${GO_CUSTOM} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
+test-deploy:
+	./bin/thirdweb deploy nft -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+
 test:
 	make cmd
 	make test-nft-read

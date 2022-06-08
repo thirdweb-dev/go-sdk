@@ -2,13 +2,16 @@ package thirdweb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/big"
+	"strings"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
+
+	gethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 )
 
 type ContractDeployer struct {
@@ -55,26 +58,32 @@ func newContractDeployer(provider *ethclient.Client, privateKey string, storage 
 }
 
 func (deployer *ContractDeployer) DeployNFTCollection(metadata *NFTCollectionContractMetadata) (string, error) {
+	metadata.fillDefaults()
 	return deployer.deployContract("nft-collection", metadata)
 }
 
 func (deployer *ContractDeployer) DeployEditionCollection(metadata *EditionContractMetadata) (string, error) {
+	metadata.fillDefaults()
 	return deployer.deployContract("edition", metadata)
 }
 
 func (deployer *ContractDeployer) DeployToken(metadata *TokenContractMetadata) (string, error) {
+	metadata.fillDefaults()
 	return deployer.deployContract("token", metadata)
 }
 
 func (deployer *ContractDeployer) DeployNFTDropCollection(metadata *NFTDropContractMetadata) (string, error) {
+	metadata.fillDefaults()
 	return deployer.deployContract("nft-drop", metadata)
 }
 
 func (deployer *ContractDeployer) DeployEditionDropCollection(metadata *EditionDropContractMetadata) (string, error) {
+	metadata.fillDefaults()
 	return deployer.deployContract("edition-drop", metadata)
 }
 
 func (deployer *ContractDeployer) DeployMultiwrap(metadata *MultiwrapContractMetadata) (string, error) {
+	metadata.fillDefaults()
 	return deployer.deployContract("multiwrap", metadata)
 }
 
@@ -92,10 +101,17 @@ func (deployer *ContractDeployer) deployContract(contractType string, metadata i
 		return "", err
 	}
 
-	encodedFunc, err := deployer.getEncodedFunc(contractType, metadata, contractUri)
+	contractAbi, err := deployer.getContractAbiByContractType(contractType)
 	if err != nil {
 		return "", err
 	}
+
+	deployArguments, err := deployer.getDeployArguments(contractType, metadata, contractUri)
+	if err != nil {
+		return "", err
+	}
+
+	encodedFunc, err := contractAbi.Pack("initialize", deployArguments...)
 
 	opts, err := deployer.helper.getTxOptions()
 	if err != nil {
@@ -112,9 +128,21 @@ func (deployer *ContractDeployer) deployContract(contractType string, metadata i
 		return "", err
 	}
 
-	fmt.Println(receipt)
+	txReceipt, err := deployer.GetProvider().TransactionReceipt(context.Background(), receipt.Hash())
+	if err != nil {
+		return "", err
+	}
 
-	return "", nil
+	for _, log := range txReceipt.Logs {
+		event, err := deployer.factory.ParseProxyDeployed(*log)
+		if err != nil {
+			continue
+		}
+
+		return event.Proxy.String(), nil
+	}
+
+	return "", errors.New("No ProxyDeployed event found")
 }
 
 func (deployer *ContractDeployer) getEncodedType(contractType string) ([32]byte, error) {
@@ -144,26 +172,38 @@ func (deployer *ContractDeployer) getEncodedType(contractType string) ([32]byte,
 	return encodedType, nil
 }
 
-func (deployer *ContractDeployer) getEncodedFunc(contractType string, metadata interface{}, contractUri string) ([]byte, error) {
+func (deployer *ContractDeployer) getDeployArguments(contractType string, metadata interface{}, contractUri string) ([]interface{}, error) {
 	trustedForwarders, err := deployer.getDefaultTrustForwarders()
 	if err != nil {
 		return nil, err
 	}
 
 	switch contractType {
-	case "nft-collection", "nft-drop":
+	case "nft-collection":
+		meta, ok := metadata.(*NFTCollectionContractMetadata)
+		if !ok {
+			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
+		}
+
+		return []interface{}{
+			deployer.GetSignerAddress(),
+			meta.Name,
+			meta.Symbol,
+			contractUri,
+			trustedForwarders,
+			common.HexToAddress(meta.PrimarySaleRecipient),
+			common.HexToAddress(meta.FeeRecipient),
+			big.NewInt(int64(meta.SellerFeeBasisPoints)),
+			big.NewInt(int64(meta.PlatformFeeBasisPoints)),
+			common.HexToAddress(meta.PlatformFeeRecipient),
+		}, nil
+	case "nft-drop":
 		meta, ok := metadata.(*NFTDropContractMetadata)
 		if !ok {
-			return nil, err
+			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
 
-		contract, err := abi.NewDropERC721(common.HexToAddress(zeroAddress), deployer.GetProvider())
-		if err != nil {
-			return nil, err
-		}
-
-		tx, err := contract.Initialize(
-			&bind.TransactOpts{},
+		return []interface{}{
 			deployer.GetSignerAddress(),
 			meta.Name,
 			meta.Symbol,
@@ -174,25 +214,32 @@ func (deployer *ContractDeployer) getEncodedFunc(contractType string, metadata i
 			big.NewInt(int64(meta.SellerFeeBasisPoints)),
 			big.NewInt(int64(meta.PlatformFeeBasisPoints)),
 			common.HexToAddress(meta.PlatformFeeRecipient),
-		)
-		if err != nil {
-			return nil, err
+		}, nil
+	case "edition":
+		meta, ok := metadata.(*EditionContractMetadata)
+		if !ok {
+			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
 
-		return tx.Data(), nil
-	case "edition", "edition-drop":
+		return []interface{}{
+			deployer.GetSignerAddress(),
+			meta.Name,
+			meta.Symbol,
+			contractUri,
+			trustedForwarders,
+			common.HexToAddress(meta.PrimarySaleRecipient),
+			common.HexToAddress(meta.FeeRecipient),
+			big.NewInt(int64(meta.SellerFeeBasisPoints)),
+			big.NewInt(int64(meta.PlatformFeeBasisPoints)),
+			common.HexToAddress(meta.PlatformFeeRecipient),
+		}, nil
+	case "edition-drop":
 		meta, ok := metadata.(*EditionDropContractMetadata)
 		if !ok {
-			return nil, err
+			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
 
-		contract, err := abi.NewDropERC1155(common.HexToAddress(zeroAddress), deployer.GetProvider())
-		if err != nil {
-			return nil, err
-		}
-
-		tx, err := contract.Initialize(
-			&bind.TransactOpts{},
+		return []interface{}{
 			deployer.GetSignerAddress(),
 			meta.Name,
 			meta.Symbol,
@@ -203,25 +250,14 @@ func (deployer *ContractDeployer) getEncodedFunc(contractType string, metadata i
 			big.NewInt(int64(meta.SellerFeeBasisPoints)),
 			big.NewInt(int64(meta.PlatformFeeBasisPoints)),
 			common.HexToAddress(meta.PlatformFeeRecipient),
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		return tx.Data(), nil
+		}, nil
 	case "token":
 		meta, ok := metadata.(*TokenContractMetadata)
 		if !ok {
-			return nil, err
+			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
 
-		contract, err := abi.NewTokenERC20(common.HexToAddress(zeroAddress), deployer.GetProvider())
-		if err != nil {
-			return nil, err
-		}
-
-		tx, err := contract.Initialize(
-			&bind.TransactOpts{},
+		return []interface{}{
 			deployer.GetSignerAddress(),
 			meta.Name,
 			meta.Symbol,
@@ -230,25 +266,14 @@ func (deployer *ContractDeployer) getEncodedFunc(contractType string, metadata i
 			common.HexToAddress(meta.PrimarySaleRecipient),
 			common.HexToAddress(meta.PlatformFeeRecipient),
 			big.NewInt(int64(meta.PlatformFeeBasisPoints)),
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		return tx.Data(), nil
+		}, nil
 	case "multiwrap":
 		meta, ok := metadata.(*MultiwrapContractMetadata)
 		if !ok {
 			return nil, err
 		}
 
-		contract, err := abi.NewMultiwrap(common.HexToAddress(zeroAddress), deployer.GetProvider())
-		if err != nil {
-			return nil, err
-		}
-
-		tx, err := contract.Initialize(
-			&bind.TransactOpts{},
+		return []interface{}{
 			deployer.GetSignerAddress(),
 			meta.Name,
 			meta.Symbol,
@@ -256,12 +281,7 @@ func (deployer *ContractDeployer) getEncodedFunc(contractType string, metadata i
 			trustedForwarders,
 			common.HexToAddress(meta.FeeRecipient),
 			big.NewInt(int64(meta.SellerFeeBasisPoints)),
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		return tx.Data(), nil
+		}, nil
 	default:
 		return nil, fmt.Errorf("Unsupported contract type: %s", contractType)
 	}
@@ -288,4 +308,32 @@ func (deployer *ContractDeployer) getDefaultTrustForwarders() ([]common.Address,
 	return []common.Address{
 		common.HexToAddress(ozDefenderForwarderAddress),
 	}, nil
+}
+
+func (deployer *ContractDeployer) getContractAbiByContractType(contractType string) (*gethAbi.ABI, error) {
+	var contractAbi string
+
+	switch contractType {
+	case "nft-collection":
+		contractAbi = abi.TokenERC721ABI
+	case "edition":
+		contractAbi = abi.TokenERC1155ABI
+	case "token":
+		contractAbi = abi.TokenERC20ABI
+	case "nft-drop":
+		contractAbi = abi.DropERC721ABI
+	case "edition-drop":
+		contractAbi = abi.DropERC1155ABI
+	case "multiwrap":
+		contractAbi = abi.MultiwrapABI
+	default:
+		return nil, fmt.Errorf("Unsupported contract type: %s", contractType)
+	}
+
+	parsedAbi, err := gethAbi.JSON(strings.NewReader(contractAbi))
+	if err != nil {
+		return nil, err
+	}
+
+	return &parsedAbi, nil
 }
