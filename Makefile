@@ -112,9 +112,11 @@ test-cmd:
 	make test-multiwrap-write
 	make test-storage
 
-test: FORCE
+stop-docker:
 	docker stop hardhat-node
 	docker rm hardhat-node
+
+test: FORCE
 	docker build . -t hardhat-mainnet-fork
 	docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
 	sudo bash ./scripts/test/await-hardhat.sh
