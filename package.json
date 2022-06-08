@@ -1,9 +1,5 @@
 {
   "dependencies": {
-    "hardhat": "^2.9.2",
-    "@ethersproject/hdnode": "^5.0.5",
-    "@nomiclabs/hardhat-ethers": "^2.0.1",
-    "@nomiclabs/hardhat-etherscan": "^2.1.0",
-    "ethers": "^5.0.0"
+    "hardhat": "^2.9.2"
   }
 }

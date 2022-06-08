@@ -1,7 +1,6 @@
 package thirdweb
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,7 +12,6 @@ const secondaryWallet = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
 const tertiaryWallet = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
 
 func getSDK() *ThirdwebSDK {
-	fmt.Println("Initializing SDK...")
 	sdk, _ := NewThirdwebSDK("http://localhost:8545", &SDKOptions{
 		PrivateKey: "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
 	})
