@@ -113,9 +113,9 @@ test-cmd:
 	make test-storage
 
 test: FORCE
-	sudo docker start hh-node || sudo docker run --name hh-node -d -p 8545:8545 ethereumoptimism/hardhat 
+	docker run --name hh-node -d -p 8545:8545 ethereumoptimism/hardhat 
 	sudo bash ./scripts/wait-for-hardhat.sh
-	sudo go test ./thirdweb
+	go test ./thirdweb
 
 publish:
 	# Make sure to pass the TAG variable to this command ex: `make publish TAG=v2.0.0`
