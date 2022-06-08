@@ -28,10 +28,10 @@ type ContractDeployer struct {
 }
 ```
 
-### func \(\*ContractDeployer\) [DeployEditionCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L110>)
+### func \(\*ContractDeployer\) [DeployEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L110>)
 
 ```go
-func (deployer *ContractDeployer) DeployEditionCollection(metadata *DeployEditionMetadata) (string, error)
+func (deployer *ContractDeployer) DeployEdition(metadata *DeployEditionMetadata) (string, error)
 ```
 
 Deploy a new Edition contract\.
@@ -50,10 +50,10 @@ address, err := sdk.Deployer.DeployEdition(
 })
 ```
 
-### func \(\*ContractDeployer\) [DeployEditionDropCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L164>)
+### func \(\*ContractDeployer\) [DeployEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L164>)
 
 ```go
-func (deployer *ContractDeployer) DeployEditionDropCollection(metadata *DeployEditionDropMetadata) (string, error)
+func (deployer *ContractDeployer) DeployEditionDrop(metadata *DeployEditionDropMetadata) (string, error)
 ```
 
 Deploy a new Edition Drop contract\.
@@ -116,10 +116,10 @@ address, err := sdk.Deployer.DeployNFTCollection(
 })
 ```
 
-### func \(\*ContractDeployer\) [DeployNFTDropCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L146>)
+### func \(\*ContractDeployer\) [DeployNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L146>)
 
 ```go
-func (deployer *ContractDeployer) DeployNFTDropCollection(metadata *DeployNFTDropMetadata) (string, error)
+func (deployer *ContractDeployer) DeployNFTDrop(metadata *DeployNFTDropMetadata) (string, error)
 ```
 
 Deploy a new NFT Drop contract\.
@@ -192,7 +192,7 @@ type DeployEditionDropMetadata struct {
     ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
     SellerFeeBasisPoints   int         `mapstructure:"seller_fee_basis_points" json:"seller_fee_basis_points"`
     FeeRecipient           string      `mapstructure:"fee_recipient" json:"fee_recipient"`
-    Merkle                 string      `mapstructure:"merkle" json:"merkle"`
+    Merkle                 interface{} `mapstructure:"merkle" json:"merkle"`
     Symbol                 string      `mapstructure:"symbol" json:"symbol"`
     PrimarySaleRecipient   string      `mapstructure:"primary_sale_recipient" json:"primary_sale_recipient"`
     PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
@@ -262,7 +262,7 @@ type DeployNFTDropMetadata struct {
     ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
     SellerFeeBasisPoints   int         `mapstructure:"seller_fee_basis_points" json:"seller_fee_basis_points"`
     FeeRecipient           string      `mapstructure:"fee_recipient" json:"fee_recipient"`
-    Merkle                 string      `mapstructure:"merkle" json:"merkle"`
+    Merkle                 interface{} `mapstructure:"merkle" json:"merkle"`
     Symbol                 string      `mapstructure:"symbol" json:"symbol"`
     PrimarySaleRecipient   string      `mapstructure:"primary_sale_recipient" json:"primary_sale_recipient"`
     PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
