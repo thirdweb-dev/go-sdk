@@ -113,8 +113,11 @@ test-cmd:
 	make test-storage
 
 test: FORCE
-	docker start hh-node || sudo docker run --name hh-node -d -p 8545:8545 ethereumoptimism/hardhat 
-	sudo bash ./scripts/wait-for-hardhat.sh
+	docker stop hardhat-node
+	docker rm hardhat-node
+	docker build . -t hardhat-mainnet-fork
+	docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
+	sudo bash ./scripts/test/await-hardhat.sh
 	go test -v ./thirdweb
 
 publish:
