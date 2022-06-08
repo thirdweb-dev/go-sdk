@@ -1,4 +1,6 @@
 name: Build & Test
+env:
+  SDK_ALCHEMY_KEY: ${{ secrets.SDK_ALCHEMY_KEY }}
 
 on: [push, pull_request]
 jobs:
