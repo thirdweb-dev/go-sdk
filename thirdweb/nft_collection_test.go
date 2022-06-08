@@ -35,9 +35,10 @@ func TestMintNft(t *testing.T) {
 	balance, _ := nft.Balance()
 	assert.Equal(t, 0, balance)
 
-	nft.Mint(&NFTMetadataInput{
+	_, err := nft.Mint(&NFTMetadataInput{
 		Name: "NFT",
 	})
+	assert.Nil(t, err)
 
 	balance, _ = nft.Balance()
 	assert.Equal(t, 1, balance)

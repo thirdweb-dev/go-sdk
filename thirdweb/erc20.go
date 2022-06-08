@@ -354,5 +354,5 @@ func (erc20 *ERC20) normalizeAmount(amount float64) (*big.Int, error) {
 		return nil, err
 	}
 
-	return parseUnits(amount, currency.Decimals), nil
+	return parseUnits(amount, currency.Decimals)
 }

@@ -22,12 +22,13 @@ func TestMintEdition(t *testing.T) {
 	balance, _ := edition.Balance(0)
 	assert.Equal(t, 0, balance)
 
-	edition.Mint(&EditionMetadataInput{
+	_, err := edition.Mint(&EditionMetadataInput{
 		Metadata: &NFTMetadataInput{
 			Name: "NFT",
 		},
 		Supply: 10,
 	})
+	assert.Nil(t, err)
 
 	balance, _ = edition.Balance(0)
 	assert.Equal(t, 10, balance)
