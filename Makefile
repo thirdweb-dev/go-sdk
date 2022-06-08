@@ -1,5 +1,7 @@
 .PHONY: abi test docs publish
 
+SHELL := /bin/bash
+
 abi:
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC20.json --out internal/abi/token_erc20.go --type TokenERC20
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC721.json --out internal/abi/token_erc721.go --type TokenERC721
