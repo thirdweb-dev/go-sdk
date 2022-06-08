@@ -94,7 +94,7 @@ test-deploy:
 	./bin/thirdweb deploy editiondrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb deploy multiwrap -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
-test:
+test-cmd:
 	make cmd
 	make test-nft-read
 	make test-nft-write
@@ -109,6 +109,10 @@ test:
 	make test-multiwrap-read
 	make test-multiwrap-write
 	make test-storage
+
+test:
+	npx hardhat node
+	go test ./thirdweb
 
 publish:
 	# Make sure to pass the TAG variable to this command ex: `make publish TAG=v2.0.0`

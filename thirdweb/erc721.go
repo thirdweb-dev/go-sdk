@@ -189,7 +189,11 @@ func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, erro
 // 	tokenId := 0
 // 	tx, err := contract.Burn(tokenId)
 func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
-	if tx, err := erc721.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
+	txOpts, err := erc721.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	if tx, err := erc721.abi.Burn(txOpts, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
 		return erc721.helper.awaitTx(tx.Hash())
