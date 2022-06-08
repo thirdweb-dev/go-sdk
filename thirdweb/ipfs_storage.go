@@ -137,6 +137,7 @@ func (ipfs *IpfsStorage) getUploadToken(contractAddress string) (string, error) 
 	return text, nil
 }
 
+// TODO: Take map as inputs instead of structs
 func (ipfs *IpfsStorage) uploadBatchWithCid(
 	data []interface{},
 	fileStartNumber int,
