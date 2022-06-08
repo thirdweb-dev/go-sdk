@@ -27,5 +27,5 @@ jobs:
         run: go build ./thirdweb 
 
       - name: Test
-        run: make test
+        run: yarn add hardhat && make test
 
