@@ -114,7 +114,7 @@ test-cmd:
 
 test: FORCE
 	docker start hh-node || sudo docker run --name hh-node -d -p 8545:8545 ethereumoptimism/hardhat 
-	./scripts/waitForHardhat.sh
+	./scripts/wait-for-hardhat.sh
 	go test ./thirdweb
 
 publish:

@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,6 +9,7 @@ import (
 
 func getEdition() *Edition {
 	sdk := getSDK()
+	fmt.Println("Deploying edition...")
 	address, _ := sdk.Deployer.DeployEdition(&DeployEditionMetadata{
 		Name: "Edition",
 	})
