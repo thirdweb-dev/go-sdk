@@ -110,8 +110,9 @@ test-cmd:
 	make test-multiwrap-write
 	make test-storage
 
-test:
-	npx hardhat node
+test: FORCE
+	docker start hh-node || docker run --name hh-node -d -p 8545:8545 ethereumoptimism/hardhat 
+	./test/scripts/waitForHardhatNode.sh
 	go test ./thirdweb
 
 publish:

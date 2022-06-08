@@ -26,7 +26,7 @@ jobs:
           node-version: 16.x
 
       - name: Build
-        run: go build ./thirdweb 
+        run: go build -v ./thirdweb
 
       - name: Test
         run: yarn add hardhat && make test
