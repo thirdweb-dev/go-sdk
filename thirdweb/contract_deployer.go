@@ -107,7 +107,7 @@ func (deployer *ContractDeployer) DeployNFTCollection(metadata *DeployNFTCollect
 // 			Name: "Go Edition",
 // 		}
 // 	})
-func (deployer *ContractDeployer) DeployEditionCollection(metadata *DeployEditionMetadata) (string, error) {
+func (deployer *ContractDeployer) DeployEdition(metadata *DeployEditionMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("edition", metadata)
 }
@@ -143,7 +143,7 @@ func (deployer *ContractDeployer) DeployToken(metadata *DeployTokenMetadata) (st
 // 			Name: "Go NFT Drop",
 // 		}
 // 	})
-func (deployer *ContractDeployer) DeployNFTDropCollection(metadata *DeployNFTDropMetadata) (string, error) {
+func (deployer *ContractDeployer) DeployNFTDrop(metadata *DeployNFTDropMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("nft-drop", metadata)
 }
@@ -161,7 +161,7 @@ func (deployer *ContractDeployer) DeployNFTDropCollection(metadata *DeployNFTDro
 // 			Name: "Go Edition Drop",
 // 		}
 // 	})
-func (deployer *ContractDeployer) DeployEditionDropCollection(metadata *DeployEditionDropMetadata) (string, error) {
+func (deployer *ContractDeployer) DeployEditionDrop(metadata *DeployEditionDropMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("edition-drop", metadata)
 }
