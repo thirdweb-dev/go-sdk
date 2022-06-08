@@ -113,7 +113,7 @@ test-cmd:
 	make test-storage
 
 test: FORCE
-	docker start hh-node || docker run --name hh-node -d -p 8545:8545 ethereumoptimism/hardhat 
+	sudo docker start hh-node || sudo docker run --name hh-node -d -p 8545:8545 ethereumoptimism/hardhat 
 	sudo bash ./scripts/wait-for-hardhat.sh
 	sudo go test ./thirdweb
 
