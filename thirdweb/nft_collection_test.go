@@ -29,7 +29,7 @@ func getNft() *NFTCollection {
 	return nft
 }
 
-func TestMint(t *testing.T) {
+func TestMintNft(t *testing.T) {
 	nft := getNft()
 
 	balance, _ := nft.Balance()
@@ -43,7 +43,7 @@ func TestMint(t *testing.T) {
 	assert.Equal(t, 1, balance)
 }
 
-func TestBurn(t *testing.T) {
+func TestBurnNft(t *testing.T) {
 	nft := getNft()
 
 	nft.Mint(&NFTMetadataInput{
@@ -60,7 +60,7 @@ func TestBurn(t *testing.T) {
 	assert.Equal(t, 0, balance)
 }
 
-func TestTransfer(t *testing.T) {
+func TestTransferNft(t *testing.T) {
 	nft := getNft()
 
 	nft.Mint(&NFTMetadataInput{
