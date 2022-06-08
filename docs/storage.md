@@ -7,7 +7,7 @@ type IpfsStorage struct {
 }
 ```
 
-### func \(\*IpfsStorage\) [Get](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/ipfs_storage.go#L52>)
+### func \(\*IpfsStorage\) [Get](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/ipfs_storage.go#L55>)
 
 ```go
 func (ipfs *IpfsStorage) Get(uri string) ([]byte, error)
@@ -21,7 +21,7 @@ uri: the IPFS URI to fetch data from
 
 returns: byte data of the IPFS data at the URI
 
-### func \(\*IpfsStorage\) [Upload](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/ipfs_storage.go#L81>)
+### func \(\*IpfsStorage\) [Upload](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/ipfs_storage.go#L84>)
 
 ```go
 func (ipfs *IpfsStorage) Upload(data interface{}, contractAddress string, signerAddress string) (string, error)
@@ -39,7 +39,7 @@ signerAddress: the optional signerAddress upload is being called from
 
 returns: the URI of the IPFS upload
 
-### func \(\*IpfsStorage\) [UploadBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/ipfs_storage.go#L102>)
+### func \(\*IpfsStorage\) [UploadBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/ipfs_storage.go#L105>)
 
 ```go
 func (ipfs *IpfsStorage) UploadBatch(data []interface{}, fileStartNumber int, contractAddress string, signerAddress string) (*baseUriWithUris, error)

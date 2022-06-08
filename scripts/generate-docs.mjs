@@ -5,6 +5,10 @@ const docPath = "./docs/doc.md"
 // Delimiters are used to split the initially generated single doc file into multiple files
 // We search for the structure `## type [delimiter]` and create a new file for each delimiter
 const delimiters = {
+  "ContractDeployer": {
+    name: "contract_deployer.md",
+    header: "Contract Deployments"
+  },
   "ERC20": {
     name: "erc20.md",
     header: "ERC20",

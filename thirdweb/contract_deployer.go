@@ -14,6 +14,25 @@ import (
 	gethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 )
 
+// The contract deployer lets you deploy new contracts to the blockchain using
+// just the thirdweb SDK. You can access the contract deployer interface as follows:
+//
+// 	import (
+// 		"github.com/thirdweb-dev/go-sdk/thirdweb"
+// 	)
+//
+// 	privateKey = "..."
+//
+// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//		PrivateKey: privateKey,
+// 	})
+//
+// 	// Now you can deploy a contract
+//	address, err := sdk.Deployer.DeployNFTCollection(
+// 		&thirdweb.DeployNFTCollectionMetadata{
+// 			Name: "Go NFT",
+// 		}
+// 	})
 type ContractDeployer struct {
 	*ProviderHandler
 	factory *abi.TWFactory
@@ -57,32 +76,110 @@ func newContractDeployer(provider *ethclient.Client, privateKey string, storage 
 	return contractDeployer, nil
 }
 
-func (deployer *ContractDeployer) DeployNFTCollection(metadata *NFTCollectionContractMetadata) (string, error) {
+// Deploy a new NFT Collection contract.
+//
+// metadata: the contract metadata
+//
+// returns: the address of the deployed contract
+//
+// Example
+//
+//	address, err := sdk.Deployer.DeployNFTCollection(
+// 		&thirdweb.DeployNFTCollectionMetadata{
+// 			Name: "Go NFT",
+// 		}
+// 	})
+func (deployer *ContractDeployer) DeployNFTCollection(metadata *DeployNFTCollectionMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("nft-collection", metadata)
 }
 
-func (deployer *ContractDeployer) DeployEditionCollection(metadata *EditionContractMetadata) (string, error) {
+// Deploy a new Edition contract.
+//
+// metadata: the contract metadata
+//
+// returns: the address of the deployed contract
+//
+// Example
+//
+//	address, err := sdk.Deployer.DeployEdition(
+// 		&thirdweb.DeployEditionMetadata{
+// 			Name: "Go Edition",
+// 		}
+// 	})
+func (deployer *ContractDeployer) DeployEditionCollection(metadata *DeployEditionMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("edition", metadata)
 }
 
-func (deployer *ContractDeployer) DeployToken(metadata *TokenContractMetadata) (string, error) {
+// Deploy a new Token contract.
+//
+// metadata: the contract metadata
+//
+// returns: the address of the deployed contract
+//
+// Example
+//
+//	address, err := sdk.Deployer.DeployToken(
+// 		&thirdweb.DeployTokenMetadata{
+// 			Name: "Go Token",
+// 		}
+// 	})
+func (deployer *ContractDeployer) DeployToken(metadata *DeployTokenMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("token", metadata)
 }
 
-func (deployer *ContractDeployer) DeployNFTDropCollection(metadata *NFTDropContractMetadata) (string, error) {
+// Deploy a new NFT Drop contract.
+//
+// metadata: the contract metadata
+//
+// returns: the address of the deployed contract
+//
+// Example
+//
+//	address, err := sdk.Deployer.DeployNFTDrop(
+// 		&thirdweb.DeployNFTDropMetadata{
+// 			Name: "Go NFT Drop",
+// 		}
+// 	})
+func (deployer *ContractDeployer) DeployNFTDropCollection(metadata *DeployNFTDropMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("nft-drop", metadata)
 }
 
-func (deployer *ContractDeployer) DeployEditionDropCollection(metadata *EditionDropContractMetadata) (string, error) {
+// Deploy a new Edition Drop contract.
+//
+// metadata: the contract metadata
+//
+// returns: the address of the deployed contract
+//
+// Example
+//
+//	address, err := sdk.Deployer.DeployEditionDrop(
+// 		&thirdweb.DeployEditionDropMetadata{
+// 			Name: "Go Edition Drop",
+// 		}
+// 	})
+func (deployer *ContractDeployer) DeployEditionDropCollection(metadata *DeployEditionDropMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("edition-drop", metadata)
 }
 
-func (deployer *ContractDeployer) DeployMultiwrap(metadata *MultiwrapContractMetadata) (string, error) {
+// Deploy a new Multiwrap contract.
+//
+// metadata: the contract metadata
+//
+// returns: the address of the deployed contract
+//
+// Example
+//
+//	address, err := sdk.Deployer.DeployMultiwrap(
+// 		&thirdweb.DeployMultiwrapMetadata{
+// 			Name: "Go Multiwrap",
+// 		}
+// 	})
+func (deployer *ContractDeployer) DeployMultiwrap(metadata *DeployMultiwrapMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract("multiwrap", metadata)
 }
@@ -180,7 +277,7 @@ func (deployer *ContractDeployer) getDeployArguments(contractType string, metada
 
 	switch contractType {
 	case "nft-collection":
-		meta, ok := metadata.(*NFTCollectionContractMetadata)
+		meta, ok := metadata.(*DeployNFTCollectionMetadata)
 		if !ok {
 			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
@@ -198,7 +295,7 @@ func (deployer *ContractDeployer) getDeployArguments(contractType string, metada
 			common.HexToAddress(meta.PlatformFeeRecipient),
 		}, nil
 	case "nft-drop":
-		meta, ok := metadata.(*NFTDropContractMetadata)
+		meta, ok := metadata.(*DeployNFTDropMetadata)
 		if !ok {
 			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
@@ -216,7 +313,7 @@ func (deployer *ContractDeployer) getDeployArguments(contractType string, metada
 			common.HexToAddress(meta.PlatformFeeRecipient),
 		}, nil
 	case "edition":
-		meta, ok := metadata.(*EditionContractMetadata)
+		meta, ok := metadata.(*DeployEditionMetadata)
 		if !ok {
 			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
@@ -234,7 +331,7 @@ func (deployer *ContractDeployer) getDeployArguments(contractType string, metada
 			common.HexToAddress(meta.PlatformFeeRecipient),
 		}, nil
 	case "edition-drop":
-		meta, ok := metadata.(*EditionDropContractMetadata)
+		meta, ok := metadata.(*DeployEditionDropMetadata)
 		if !ok {
 			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
@@ -252,7 +349,7 @@ func (deployer *ContractDeployer) getDeployArguments(contractType string, metada
 			common.HexToAddress(meta.PlatformFeeRecipient),
 		}, nil
 	case "token":
-		meta, ok := metadata.(*TokenContractMetadata)
+		meta, ok := metadata.(*DeployTokenMetadata)
 		if !ok {
 			return nil, fmt.Errorf("Unsupported metadata type for contract type: %s", contractType)
 		}
@@ -268,7 +365,7 @@ func (deployer *ContractDeployer) getDeployArguments(contractType string, metada
 			big.NewInt(int64(meta.PlatformFeeBasisPoints)),
 		}, nil
 	case "multiwrap":
-		meta, ok := metadata.(*MultiwrapContractMetadata)
+		meta, ok := metadata.(*DeployMultiwrapMetadata)
 		if !ok {
 			return nil, err
 		}

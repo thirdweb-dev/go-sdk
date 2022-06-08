@@ -181,13 +181,13 @@ type NFTMetadata struct {
 
 ```go
 type NFTMetadataInput struct {
-    Name            string      `json:"name"`
-    Description     string      `json:"description"`
-    Image           interface{} `json:"image"`
-    ExternalUrl     string      `json:"external_url"`
-    AnimationUrl    string      `json:"animation_url"`
-    BackgroundColor string      `json:"background_color"`
-    Properties      interface{} `json:"properties,omitempty"`
+    Name            string      `mapstructure:"name" json:"name"`
+    Description     string      `mapstructure:"description" json:"description"`
+    Image           interface{} `mapstructure:"image" json:"image"`
+    ExternalUrl     string      `mapstructure:"external_url" json:"external_url"`
+    AnimationUrl    string      `mapstructure:"animation_url" json:"animation_url"`
+    BackgroundColor string      `mapstructure:"background_color" json:"background_color"`
+    Properties      interface{} `mapstructure:"properties,omitempty" json:"properties,omitempty"`
 }
 ```
 
