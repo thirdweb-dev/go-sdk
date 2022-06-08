@@ -1,4 +1,4 @@
-.PHONY: abi test docs publish
+.PHONY: abi docs publish
 
 SHELL := /bin/bash
 
@@ -114,7 +114,7 @@ test-cmd:
 
 test: FORCE
 	docker start hh-node || docker run --name hh-node -d -p 8545:8545 ethereumoptimism/hardhat 
-	./scripts/wait-for-hardhat.sh
+	sudo ./scripts/wait-for-hardhat.sh
 	go test ./thirdweb
 
 publish:
