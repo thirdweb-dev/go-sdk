@@ -120,9 +120,11 @@ test: FORCE
 	docker build . -t hardhat-mainnet-fork
 	docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
 	sudo bash ./scripts/test/await-hardhat.sh
+	go clean -testcache
 	go test -v ./thirdweb
 
 local-test:
+	go clean -testcache
 	go test -v ./thirdweb
 
 publish:
