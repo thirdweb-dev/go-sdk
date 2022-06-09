@@ -81,7 +81,7 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 		return nil, err
 	} else {
 		tokenIds := []*big.Int{}
-		for i := 0; i < int(totalCount.Int64()); i++ {
+		for i := 0; i < totalCount; i++ {
 			tokenIds = append(tokenIds, big.NewInt(int64(i)))
 		}
 		return erc721.fetchNFTsByTokenId(tokenIds)
@@ -91,8 +91,13 @@ func (erc721 *ERC721) GetAll() ([]*NFTMetadataOwner, error) {
 // Get the total number of NFTs on this contract.
 //
 // returns: the total number of NFTs on this contract
-func (erc721 *ERC721) GetTotalCount() (*big.Int, error) {
-	return erc721.abi.NextTokenIdToMint(&bind.CallOpts{})
+func (erc721 *ERC721) GetTotalCount() (int, error) {
+	count, err := erc721.abi.NextTokenIdToMint(&bind.CallOpts{})
+	if err != nil {
+		return 0, err
+	}
+
+	return int(count.Int64()), nil
 }
 
 // Get the owner of an NFT.
@@ -111,8 +116,13 @@ func (erc721 *ERC721) OwnerOf(tokenId int) (string, error) {
 // Get the total number of NFTs on this contract.
 //
 // returns: the supply of NFTs on this contract
-func (erc721 *ERC721) TotalSupply() (*big.Int, error) {
-	return erc721.abi.TotalSupply(&bind.CallOpts{})
+func (erc721 *ERC721) TotalSupply() (int, error) {
+	supply, err := erc721.abi.TotalSupply(&bind.CallOpts{})
+	if err != nil {
+		return 0, err
+	}
+
+	return int(supply.Int64()), nil
 }
 
 // Get the NFT balance of the connected wallet.
@@ -189,7 +199,11 @@ func (erc721 *ERC721) Transfer(to string, tokenId int) (*types.Transaction, erro
 // 	tokenId := 0
 // 	tx, err := contract.Burn(tokenId)
 func (erc721 *ERC721) Burn(tokenId int) (*types.Transaction, error) {
-	if tx, err := erc721.abi.Burn(&bind.TransactOpts{}, big.NewInt(int64(tokenId))); err != nil {
+	txOpts, err := erc721.helper.getTxOptions()
+	if err != nil {
+		return nil, err
+	}
+	if tx, err := erc721.abi.Burn(txOpts, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
 		return erc721.helper.awaitTx(tx.Hash())

@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/fxamacker/cbor"
+	"github.com/shopspring/decimal"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
@@ -55,13 +56,19 @@ func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]stri
 // TOKEN
 
 func isNativeToken(tokenAddress string) bool {
-	isZero := tokenAddress == "0x0000000000000000000000000000000000000000"
-	isNative := strings.ToLower(tokenAddress) == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+	isZero := tokenAddress == zeroAddress
+	isNative := strings.ToLower(tokenAddress) == nativeTokenAddress
 	return isZero || isNative
 }
 
-func parseUnits(value float64, decimals int) *big.Int {
-	return big.NewInt(int64(value * math.Pow10(decimals)))
+func parseUnits(value float64, decimals int) (*big.Int, error) {
+	floatValue := value * math.Pow(10, float64(decimals))
+	bigNumber, ok := new(big.Int).SetString(fmt.Sprintf("%.0f", floatValue), 10)
+	if !ok {
+		return nil, fmt.Errorf("Failed to parse %f to big.Int", floatValue)
+	}
+
+	return bigNumber, nil
 }
 
 func normalizePriceValue(provider *ethclient.Client, price float64, currencyAddress string) (*big.Int, error) {
@@ -70,17 +77,20 @@ func normalizePriceValue(provider *ethclient.Client, price float64, currencyAddr
 		return nil, err
 	}
 
-	return parseUnits(price, metadata.Decimals), nil
+	value, err := parseUnits(price, metadata.Decimals)
+	if err != nil {
+		return nil, err
+	}
+
+	return value, nil
 }
 
 func formatUnits(value *big.Int, decimals int) float64 {
-	// Importantly copy value to a new variable so big.Div doesn't mutate it
-	bigNumber := big.NewInt(value.Int64())
+	mul := decimal.NewFromFloat(float64(10)).Pow(decimal.NewFromFloat(float64(decimals)))
+	num, _ := decimal.NewFromString(value.String())
+	formatted := num.Div(mul)
 
-	divisor := big.NewInt(int64(math.Pow10(decimals)))
-
-	// Cast big number values to floats for float division
-	return float64(bigNumber.Int64()) / float64(divisor.Int64())
+	return formatted.InexactFloat64()
 }
 
 func fetchCurrencyMetadata(provider *ethclient.Client, asset string) (*Currency, error) {

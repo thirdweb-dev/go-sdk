@@ -11,7 +11,10 @@ import (
 	"math/big"
 	"mime/multipart"
 	"net/http"
+	"reflect"
 	"strings"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 type baseUriWithUris struct {
@@ -134,6 +137,7 @@ func (ipfs *IpfsStorage) getUploadToken(contractAddress string) (string, error) 
 	return text, nil
 }
 
+// TODO: Take map as inputs instead of structs
 func (ipfs *IpfsStorage) uploadBatchWithCid(
 	data []interface{},
 	fileStartNumber int,
@@ -161,15 +165,38 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 			part, _ := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
 			io.Copy(part, file)
 		} else {
-			assetToUpload := asset
-			assetMetadata := assetToUpload.(*NFTMetadataInput)
+			assetToUpload := map[string]interface{}{}
+			err := mapstructure.Decode(asset, &assetToUpload)
+			if err != nil {
+				return nil, err
+			}
 
-			if _, ok := (assetMetadata.Image).(io.Reader); ok {
-				uri, err := ipfs.Upload(assetMetadata.Image, contractAddress, signerAddress)
-				if err != nil {
-					return nil, err
+			// Omit null fields from map
+			assetMetadata := map[string]interface{}{}
+			for k, v := range assetToUpload {
+				if v != nil {
+					assetMetadata[k] = v
 				}
-				assetMetadata.Image = uri
+			}
+
+			// If there is an image field that has a file, upload image to IPFS
+			if image, ok := assetMetadata["image"]; ok && image != nil {
+				if _, ok := image.(io.Reader); ok {
+					uri, err := ipfs.Upload(assetMetadata["image"], contractAddress, signerAddress)
+					if err != nil {
+						return nil, err
+					}
+					assetMetadata["image"] = uri
+					assetToUpload = assetMetadata
+				} else if reflect.TypeOf(image).String() != "string" {
+					assetMetadata["image"] = ""
+				}
+			}
+
+			// Necessary fix for dashboard bug on deployment, but should be outside when
+			// we refactor this function to take a map instead
+			if externalLink, ok := assetMetadata["external_link"]; ok && externalLink == "" {
+				delete(assetMetadata, "external_link")
 				assetToUpload = assetMetadata
 			}
 

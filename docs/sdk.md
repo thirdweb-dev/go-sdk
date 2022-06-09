@@ -4,11 +4,12 @@
 ```go
 type ThirdwebSDK struct {
     *ProviderHandler
-    Storage IpfsStorage
+    Storage  IpfsStorage
+    Deployer ContractDeployer
 }
 ```
 
-### func [NewThirdwebSDK](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L23>)
+### func [NewThirdwebSDK](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L25>)
 
 ```go
 func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK, error)
@@ -22,7 +23,7 @@ rpcUrlOrName: the name of the chain to connection to \(e\.g\. "rinkeby", "mumbai
 
 options: an SDKOptions instance to specify a private key and/or an IPFS gateway URL
 
-### func \(\*ThirdwebSDK\) [GetContract](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L158>)
+### func \(\*ThirdwebSDK\) [GetContract](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L166>)
 
 ```go
 func (sdk *ThirdwebSDK) GetContract(address string) (*SmartContract, error)
@@ -34,7 +35,7 @@ Get an instance of a custom contract deployed with thirdweb deploy
 
 address: the address of the contract
 
-### func \(\*ThirdwebSDK\) [GetContractFromAbi](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L174>)
+### func \(\*ThirdwebSDK\) [GetContractFromAbi](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L182>)
 
 ```go
 func (sdk *ThirdwebSDK) GetContractFromAbi(address string, abi string) (*SmartContract, error)
@@ -48,7 +49,7 @@ address: the address of the contract
 
 abi: the ABI of the contract
 
-### func \(\*ThirdwebSDK\) [GetEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L86>)
+### func \(\*ThirdwebSDK\) [GetEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L94>)
 
 ```go
 func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error)
@@ -60,7 +61,7 @@ Get an Edition contract SDK instance
 
 address: the address of the Edition contract
 
-### func \(\*ThirdwebSDK\) [GetEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L130>)
+### func \(\*ThirdwebSDK\) [GetEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L138>)
 
 ```go
 func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error)
@@ -72,7 +73,7 @@ Get an Edition Drop contract SDK instance
 
 address: the address of the Edition Drop contract
 
-### func \(\*ThirdwebSDK\) [GetMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L144>)
+### func \(\*ThirdwebSDK\) [GetMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L152>)
 
 ```go
 func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error)
@@ -84,7 +85,7 @@ Get a Multiwrap contract SDK instance
 
 address: the address of the Multiwrap contract
 
-### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L72>)
+### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L80>)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
@@ -96,7 +97,7 @@ Get an NFT Collection contract SDK instance
 
 address: the address of the NFT Collection contract
 
-### func \(\*ThirdwebSDK\) [GetNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L116>)
+### func \(\*ThirdwebSDK\) [GetNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L124>)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error)
@@ -108,7 +109,7 @@ Get an NFT Drop contract SDK instance
 
 address: the address of the NFT Drop contract
 
-### func \(\*ThirdwebSDK\) [GetToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L102>)
+### func \(\*ThirdwebSDK\) [GetToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L110>)
 
 ```go
 func (sdk *ThirdwebSDK) GetToken(address string) (*Token, error)

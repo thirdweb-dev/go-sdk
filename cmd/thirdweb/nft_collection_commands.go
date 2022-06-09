@@ -79,7 +79,7 @@ var nftMintCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		if tx, err := nftCollection.Mint(&thirdweb.NFTMetadataInput{
-			Name:  "NFT Test",
+			Name:  "Special NFT",
 			Image: imageFile,
 		}); err != nil {
 			panic(err)

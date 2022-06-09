@@ -256,7 +256,7 @@ func (erc20 *ERC20) TransferBatch(args []*TokenAmount) (*types.Transaction, erro
 			return nil, err
 		}
 
-		txOpts, err := erc20.helper.getTxOptions()
+		txOpts, err := erc20.helper.getEncodedTxOptions()
 		if err != nil {
 			return nil, err
 		}
@@ -354,5 +354,5 @@ func (erc20 *ERC20) normalizeAmount(amount float64) (*big.Int, error) {
 		return nil, err
 	}
 
-	return parseUnits(amount, currency.Decimals), nil
+	return parseUnits(amount, currency.Decimals)
 }

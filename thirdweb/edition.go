@@ -207,7 +207,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 	encoded := [][]byte{}
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 	for index, uri := range uris {
-		txOpts, err := edition.helper.getTxOptions()
+		txOpts, err := edition.helper.getEncodedTxOptions()
 		if err != nil {
 			return nil, err
 		}

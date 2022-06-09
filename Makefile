@@ -1,4 +1,6 @@
-.PHONY: abi test docs publish
+.PHONY: abi docs publish
+
+SHELL := /bin/bash
 
 abi:
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC20.json --out internal/abi/token_erc20.go --type TokenERC20
@@ -9,7 +11,7 @@ abi:
 	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC1155.json --out internal/abi/drop_erc1155.go --type DropERC1155
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Multiwrap.json --out internal/abi/multiwrap.go --type Multiwrap
 
-
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TWFactory.json --out internal/abi/twfactory.go --type TWFactory
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC20.json --out internal/abi/ierc20.go --type IERC20
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC721.json --out internal/abi/ierc721.go --type IERC721
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC1155.json --out internal/abi/ierc1155.go --type IERC1155
@@ -86,7 +88,15 @@ test-storage:
 test-custom:
 	./bin/thirdweb custom set -a ${GO_CUSTOM} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
-test:
+test-deploy:
+	./bin/thirdweb deploy nft -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb deploy edition -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb deploy token -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb deploy nftdrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb deploy editiondrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb deploy multiwrap -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+
+test-cmd:
 	make cmd
 	make test-nft-read
 	make test-nft-write
@@ -101,6 +111,19 @@ test:
 	make test-multiwrap-read
 	make test-multiwrap-write
 	make test-storage
+
+stop-docker:
+	docker stop hardhat-node
+	docker rm hardhat-node
+
+test: FORCE
+	docker build . -t hardhat-mainnet-fork
+	docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
+	sudo bash ./scripts/test/await-hardhat.sh
+	go test -v ./thirdweb
+
+local-test:
+	go test -v ./thirdweb
 
 publish:
 	# Make sure to pass the TAG variable to this command ex: `make publish TAG=v2.0.0`

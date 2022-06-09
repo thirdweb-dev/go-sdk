@@ -81,7 +81,7 @@ func (erc1155 *ERC1155) GetAll() ([]*EditionMetadata, error) {
 		return nil, err
 	} else {
 		tokenIds := []*big.Int{}
-		for i := 0; i < int(totalCount.Int64()); i++ {
+		for i := 0; i < totalCount; i++ {
 			tokenIds = append(tokenIds, big.NewInt(int64(i)))
 		}
 		return fetchEditionsByTokenId(erc1155, tokenIds)
@@ -91,8 +91,13 @@ func (erc1155 *ERC1155) GetAll() ([]*EditionMetadata, error) {
 // Get the total number of NFTs on this contract.
 //
 // returns: the total number of NFTs on this contract
-func (erc1155 *ERC1155) GetTotalCount() (*big.Int, error) {
-	return erc1155.abi.NextTokenIdToMint(&bind.CallOpts{})
+func (erc1155 *ERC1155) GetTotalCount() (int, error) {
+	count, err := erc1155.abi.NextTokenIdToMint(&bind.CallOpts{})
+	if err != nil {
+		return 0, err
+	}
+
+	return int(count.Int64()), nil
 }
 
 // Get the metadatas of all the NFTs owned by a specific address.
@@ -154,8 +159,13 @@ func (erc1155 *ERC1155) GetOwned(address string) ([]*EditionMetadataOwner, error
 // tokenId: the token ID to check the total supply of
 //
 // returns: the supply of NFTs on the specified token ID
-func (erc1155 *ERC1155) TotalSupply(tokenId int) (*big.Int, error) {
-	return erc1155.abi.TotalSupply(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+func (erc1155 *ERC1155) TotalSupply(tokenId int) (int, error) {
+	supply, err := erc1155.abi.TotalSupply(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+	if err != nil {
+		return 0, err
+	}
+
+	return int(supply.Int64()), nil
 }
 
 // Get the NFT balance of the connected wallet for a specific token ID.
@@ -163,7 +173,7 @@ func (erc1155 *ERC1155) TotalSupply(tokenId int) (*big.Int, error) {
 // tokenId: the token ID of a specific token to check the balance of
 //
 // returns: the number of NFTs of the specified token ID owned by the connected wallet
-func (erc1155 *ERC1155) Balance(tokenId int) (*big.Int, error) {
+func (erc1155 *ERC1155) Balance(tokenId int) (int, error) {
 	address := erc1155.helper.GetSignerAddress().String()
 	return erc1155.BalanceOf(address, tokenId)
 }
@@ -179,8 +189,13 @@ func (erc1155 *ERC1155) Balance(tokenId int) (*big.Int, error) {
 // 	address := "{{wallet_address}}"
 // 	tokenId := 0
 // 	balance, err := contract.BalanceOf(address, tokenId)
-func (erc1155 *ERC1155) BalanceOf(address string, tokenId int) (*big.Int, error) {
-	return erc1155.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(tokenId)))
+func (erc1155 *ERC1155) BalanceOf(address string, tokenId int) (int, error) {
+	balance, err := erc1155.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(tokenId)))
+	if err != nil {
+		return 0, err
+	}
+
+	return int(balance.Int64()), nil
 }
 
 // Check whether an operator address is approved for all operations of a specifc addresses assets.

@@ -153,7 +153,7 @@ func (token *Token) MintBatchTo(args []*TokenAmount) (*types.Transaction, error)
 			return nil, err
 		}
 
-		txOpts, err := token.helper.getTxOptions()
+		txOpts, err := token.helper.getEncodedTxOptions()
 		if err != nil {
 			return nil, err
 		}
