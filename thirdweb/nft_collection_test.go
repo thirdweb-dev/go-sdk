@@ -44,6 +44,36 @@ func TestMintNft(t *testing.T) {
 	assert.Equal(t, 1, balance)
 }
 
+func TestBatchMintNft(t *testing.T) {
+	nft := getNft()
+
+	balance, _ := nft.Balance()
+	assert.Equal(t, 0, balance)
+
+	_, err := nft.MintBatch([]*NFTMetadataInput{
+		{
+			Name: "NFT 1",
+		},
+		{
+			Name: "NFT 2",
+		},
+	})
+	assert.Nil(t, err)
+
+	balance, _ = nft.Balance()
+	assert.Equal(t, 2, balance)
+
+	nfts, _ := nft.GetAll()
+	assert.Equal(t, 2, len(nfts))
+	assert.Equal(t, "NFT 1", nfts[0].Metadata.Name)
+	assert.Equal(t, "NFT 2", nfts[1].Metadata.Name)
+
+	nfts, _ = nft.GetOwned(nft.helper.GetSignerAddress().String())
+	assert.Equal(t, 2, len(nfts))
+	assert.Equal(t, "NFT 1", nfts[0].Metadata.Name)
+	assert.Equal(t, "NFT 2", nfts[1].Metadata.Name)
+}
+
 func TestBurnNft(t *testing.T) {
 	nft := getNft()
 
@@ -76,4 +106,42 @@ func TestTransferNft(t *testing.T) {
 
 	balance, _ = nft.Balance()
 	assert.Equal(t, 0, balance)
+}
+
+func TestSignatureMintNft(t *testing.T) {
+	nft := getNft()
+
+	balance, _ := nft.Balance()
+	assert.Equal(t, 0, balance)
+
+	payload, err := nft.Signature.Generate(
+		&Signature721PayloadInput{
+			To:                   nft.helper.GetSignerAddress().String(),
+			Price:                0,
+			CurrencyAddress:      "0x0000000000000000000000000000000000000000",
+			MintStartTime:        0,
+			MintEndTime:          100000000000000,
+			PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
+			Metadata: &NFTMetadataInput{
+				Name: "Sigmint",
+			},
+			RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
+			RoyaltyBps:       0,
+		},
+	)
+	assert.Nil(t, err)
+
+	valid, err := nft.Signature.Verify(payload)
+	assert.Nil(t, err)
+
+	assert.True(t, valid)
+
+	_, err = nft.Signature.Mint(payload)
+	assert.Nil(t, err)
+
+	balance, _ = nft.Balance()
+	assert.Equal(t, 1, balance)
+
+	metadata, _ := nft.Get(0)
+	assert.Equal(t, "Sigmint", metadata.Metadata.Name)
 }

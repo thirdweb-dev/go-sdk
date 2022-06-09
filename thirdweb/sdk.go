@@ -1,7 +1,6 @@
 package thirdweb
 
 import (
-	"context"
 	"fmt"
 	"strings"
 
@@ -32,9 +31,6 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 	if err != nil {
 		return nil, err
 	}
-
-	chainId, _ := provider.ChainID(context.Background())
-	fmt.Println("Connected to chain", chainId)
 
 	// Define defaults for all the options
 	privateKey := ""

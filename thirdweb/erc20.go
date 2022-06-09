@@ -256,7 +256,7 @@ func (erc20 *ERC20) TransferBatch(args []*TokenAmount) (*types.Transaction, erro
 			return nil, err
 		}
 
-		txOpts, err := erc20.helper.getTxOptions()
+		txOpts, err := erc20.helper.getEncodedTxOptions()
 		if err != nil {
 			return nil, err
 		}

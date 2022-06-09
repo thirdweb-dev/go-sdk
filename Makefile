@@ -122,6 +122,9 @@ test: FORCE
 	sudo bash ./scripts/test/await-hardhat.sh
 	go test -v ./thirdweb
 
+local-test:
+	go test -v ./thirdweb
+
 publish:
 	# Make sure to pass the TAG variable to this command ex: `make publish TAG=v2.0.0`
 	# Publish following https://go.dev/doc/modules/publishing

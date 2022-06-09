@@ -39,7 +39,15 @@ func (helper *contractHelper) getAddress() common.Address {
 	return helper.address
 }
 
+func (helper *contractHelper) getEncodedTxOptions() (*bind.TransactOpts, error) {
+	return helper.getRawTxOptions(true)
+}
+
 func (helper *contractHelper) getTxOptions() (*bind.TransactOpts, error) {
+	return helper.getRawTxOptions(false)
+}
+
+func (helper *contractHelper) getRawTxOptions(noSend bool) (*bind.TransactOpts, error) {
 	if helper.GetRawPrivateKey() == "" {
 		return nil, fmt.Errorf("You need to set a private key to use this function!")
 	}
@@ -55,7 +63,7 @@ func (helper *contractHelper) getTxOptions() (*bind.TransactOpts, error) {
 	}
 
 	txOpts := &bind.TransactOpts{
-		NoSend:    false,
+		NoSend:    noSend,
 		From:      helper.GetSignerAddress(),
 		Signer:    helper.getSigner(),
 		GasTipCap: tipCap,

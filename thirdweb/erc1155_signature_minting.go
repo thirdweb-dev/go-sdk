@@ -101,7 +101,7 @@ func (signature *ERC1155SignatureMinting) MintBatch(signedPayloads []*SignedPayl
 
 	encoded := [][]byte{}
 	for i, payload := range contractPayloads {
-		txOpts, err := signature.helper.getTxOptions()
+		txOpts, err := signature.helper.getEncodedTxOptions()
 		if err != nil {
 			return nil, err
 		}
