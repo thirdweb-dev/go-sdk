@@ -81,8 +81,8 @@ func (ipfs *IpfsStorage) Get(uri string) ([]byte, error) {
 // signerAddress: the optional signerAddress upload is being called from
 //
 // returns: the URI of the IPFS upload
-func (ipfs *IpfsStorage) Upload(data interface{}, contractAddress string, signerAddress string) (string, error) {
-	baseUriWithUris, err := ipfs.UploadBatch([]interface{}{data}, 0, contractAddress, signerAddress)
+func (ipfs *IpfsStorage) Upload(data map[string]interface{}, contractAddress string, signerAddress string) (string, error) {
+	baseUriWithUris, err := ipfs.UploadBatch([]map[string]interface{}{data}, 0, contractAddress, signerAddress)
 	if err != nil {
 		return "", err
 	}
@@ -102,7 +102,7 @@ func (ipfs *IpfsStorage) Upload(data interface{}, contractAddress string, signer
 // signerAddress: the optional signerAddress upload is being called from
 //
 // returns: the base URI of the IPFS upload folder with the URIs of each subfile
-func (ipfs *IpfsStorage) UploadBatch(data []interface{}, fileStartNumber int, contractAddress string, signerAddress string) (*baseUriWithUris, error) {
+func (ipfs *IpfsStorage) UploadBatch(data []map[string]interface{}, fileStartNumber int, contractAddress string, signerAddress string) (*baseUriWithUris, error) {
 	baseUriWithUris, err := ipfs.uploadBatchWithCid(data, fileStartNumber, contractAddress, signerAddress)
 	if err != nil {
 		return nil, err
@@ -138,8 +138,92 @@ func (ipfs *IpfsStorage) getUploadToken(contractAddress string) (string, error) 
 }
 
 // TODO: Take map as inputs instead of structs
+func (ipfs *IpfsStorage) _uploadBatchWithCid(
+	data []map[string]interface{},
+	fileStartNumber int,
+	contractAddress string,
+	signerAddress string,
+) (*baseUriWithUris, error) {
+	uploadToken, err := ipfs.getUploadToken(contractAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	client := &http.Client{}
+	fileNames := []string{}
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	for i, metadata := range data {
+		jsonData, err := json.Marshal(metadata)
+		if err != nil {
+			return nil, err
+		}
+
+		fileName := fmt.Sprintf("%v", i+fileStartNumber)
+		fileNames = append(fileNames, fileName)
+
+		part, err := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
+		part.Write(jsonData)
+	}
+
+	_ = writer.Close()
+
+	req, err := http.NewRequest("POST", pinataIpfsUrl, body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", uploadToken))
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	if result, err := client.Do(req); err != nil {
+		return nil, err
+	} else {
+		if result.StatusCode != http.StatusOK {
+			return nil, &failedToUploadError{
+				statusCode: result.StatusCode,
+				Payload:    data,
+			}
+		}
+
+		var uploadMeta uploadResponse
+		bodyBytes, err := ioutil.ReadAll(result.Body)
+		if err != nil {
+			return nil, &failedToUploadError{
+				statusCode:      result.StatusCode,
+				Payload:         data,
+				UnderlyingError: err,
+			}
+		}
+
+		if err := json.Unmarshal(bodyBytes, &uploadMeta); err != nil {
+			return nil, &unmarshalError{
+				body:            string(bodyBytes),
+				typeName:        "UploadResponse",
+				UnderlyingError: err,
+			}
+		}
+
+		baseUri := "ipfs://" + uploadMeta.IpfsHash + "/"
+
+		uris := []string{}
+		for _, fileName := range fileNames {
+			uri := baseUri + fileName
+			uris = append(uris, uri)
+		}
+
+		return &baseUriWithUris{
+			baseUri: baseUri,
+			uris:    uris,
+		}, nil
+	}
+}
+
+// TODO: Take map as inputs instead of structs
 func (ipfs *IpfsStorage) uploadBatchWithCid(
-	data []interface{},
+	data []map[string]interface{},
 	fileStartNumber int,
 	contractAddress string,
 	signerAddress string,
