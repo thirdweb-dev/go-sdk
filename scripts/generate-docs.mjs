@@ -73,6 +73,10 @@ const delimiters = {
     name: "token.md",
     header: "Token",
   },
+  "WalletAuthenticator": {
+    name: "wallet_authenticator.md",
+    header: "Wallet Authenticator",
+  },
   "WrappedToken": {
     name: "finish.md",
     header: "",

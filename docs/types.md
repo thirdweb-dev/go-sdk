@@ -8,7 +8,7 @@ type SDKOptions struct {
 }
 ```
 
-## type [Signature1155PayloadInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L151-L162>)
+## type [Signature1155PayloadInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L152-L163>)
 
 ```go
 type Signature1155PayloadInput struct {
@@ -25,7 +25,7 @@ type Signature1155PayloadInput struct {
 }
 ```
 
-## type [Signature1155PayloadInputWithTokenId](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L164-L176>)
+## type [Signature1155PayloadInputWithTokenId](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L165-L177>)
 
 ```go
 type Signature1155PayloadInputWithTokenId struct {
@@ -43,7 +43,7 @@ type Signature1155PayloadInputWithTokenId struct {
 }
 ```
 
-## type [Signature1155PayloadOutput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L178-L192>)
+## type [Signature1155PayloadOutput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L179-L193>)
 
 ```go
 type Signature1155PayloadOutput struct {
@@ -63,7 +63,7 @@ type Signature1155PayloadOutput struct {
 }
 ```
 
-## type [Signature721PayloadInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L120-L130>)
+## type [Signature721PayloadInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L121-L131>)
 
 ```go
 type Signature721PayloadInput struct {
@@ -79,7 +79,7 @@ type Signature721PayloadInput struct {
 }
 ```
 
-## type [Signature721PayloadOutput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L132-L144>)
+## type [Signature721PayloadOutput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L133-L145>)
 
 ```go
 type Signature721PayloadOutput struct {
@@ -97,7 +97,7 @@ type Signature721PayloadOutput struct {
 }
 ```
 
-## type [SignedPayload1155](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L194-L197>)
+## type [SignedPayload1155](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L195-L198>)
 
 ```go
 type SignedPayload1155 struct {
@@ -106,7 +106,7 @@ type SignedPayload1155 struct {
 }
 ```
 
-## type [SignedPayload721](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L146-L149>)
+## type [SignedPayload721](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L147-L150>)
 
 ```go
 type SignedPayload721 struct {

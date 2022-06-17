@@ -57,7 +57,38 @@ signerAddress: the optional signerAddress upload is being called from
 
 returns: the base URI of the IPFS upload folder with the URIs of each subfile
 
-## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L12-L15>)
+## type [LoginOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L224-L228>)
+
+```go
+type LoginOptions struct {
+    Nonce          *string
+    ExpirationTime *time.Time
+    ChainId        *int
+}
+```
+
+## type [LoginPayload](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L238-L241>)
+
+```go
+type LoginPayload struct {
+    Payload   *LoginPayloadData
+    Signature []byte
+}
+```
+
+## type [LoginPayloadData](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L230-L236>)
+
+```go
+type LoginPayloadData struct {
+    Domain         string
+    Address        string
+    Nonce          string
+    ExpirationTime time.Time
+    ChainId        *int
+}
+```
+
+## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L13-L16>)
 
 ```go
 type Metadata struct {

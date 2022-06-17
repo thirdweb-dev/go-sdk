@@ -138,11 +138,19 @@ returns: transaction receipt of the mint
 tx, err := contract.MintTo("{{wallet_address}}", 1)
 ```
 
-## type [TokenAmount](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L102-L105>)
+## type [TokenAmount](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L103-L106>)
 
 ```go
 type TokenAmount struct {
     ToAddress string
     Amount    float64
+}
+```
+
+## type [VerifyOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L243-L245>)
+
+```go
+type VerifyOptions struct {
+    ChainId *int
 }
 ```
