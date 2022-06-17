@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"math/big"
+	"time"
 )
 
 type SDKOptions struct {
@@ -216,6 +217,51 @@ type MultiwrapBundle struct {
 	ERC20Tokens   []*MultiwrapERC20
 	ERC721Tokens  []*MultiwrapERC721
 	ERC1155Tokens []*MultiwrapERC1155
+}
+
+// Wallet Authenticator
+
+type LoginOptions struct {
+	Nonce          *string
+	ExpirationTime *time.Time
+	ChainId        *int
+}
+
+type LoginPayloadData struct {
+	Domain         string
+	Address        string
+	Nonce          string
+	ExpirationTime time.Time
+	ChainId        *int
+}
+
+type LoginPayload struct {
+	Payload   *LoginPayloadData
+	Signature []byte
+}
+
+type VerifyOptions struct {
+	ChainId *int
+}
+
+type AuthenticationOptions struct {
+	InvalidBefore  *time.Time
+	ExpirationTime *time.Time
+}
+
+type AuthenticationPayloadData struct {
+	Iss string `json:"iss"`
+	Sub string `json:"sub"`
+	Aud string `json:"aud"`
+	Exp int64  `json:"exp"`
+	Nbf int64  `json:"nbf"`
+	Iat int64  `json:"iat"`
+	Jti string `json:"jti"`
+}
+
+type AuthenticationPayload struct {
+	Payload   *AuthenticationPayloadData
+	Signature []byte
 }
 
 // Contract Metadata

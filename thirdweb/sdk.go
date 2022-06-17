@@ -12,6 +12,7 @@ type ThirdwebSDK struct {
 	*ProviderHandler
 	Storage  IpfsStorage
 	Deployer ContractDeployer
+	Auth     WalletAuthenticator
 }
 
 // NewThirdwebSDK
@@ -59,10 +60,16 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 		return nil, err
 	}
 
+	auth, err := newWalletAuthenticator(provider, privateKey)
+	if err != nil {
+		return nil, err
+	}
+
 	sdk := &ThirdwebSDK{
 		ProviderHandler: handler,
 		Storage:         *storage,
 		Deployer:        *deployer,
+		Auth:            *auth,
 	}
 
 	return sdk, nil
