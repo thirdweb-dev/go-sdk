@@ -1,4 +1,4 @@
-.PHONY: abi docs publish
+.PHONY: abi docs publish local-test
 
 SHELL := /bin/bash
 
@@ -22,7 +22,7 @@ docs:
 	mkdir docs
 	gomarkdoc --output docs/doc.md --repository.default-branch main ./thirdweb
 	node ./scripts/generate-docs.mjs
-	rm ./docs/doc.md ./docs/start.md ./docs/finish.md
+	rm ./docs/doc.md ./docs/start.md ./docs/delete.md
 	node ./scripts/generate-snippets.mjs
 
 cmd: FORCE
@@ -122,8 +122,11 @@ test: FORCE
 	sudo bash ./scripts/test/await-hardhat.sh
 	go clean -testcache
 	go test -v ./thirdweb
+	docker stop hardhat-node
+	docker rm hardhat-node
 
 local-test:
+  # Needs to be run along with npx hardhat node from this repo
 	go clean -testcache
 	go test -v ./thirdweb
 

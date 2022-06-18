@@ -146,11 +146,3 @@ type TokenAmount struct {
     Amount    float64
 }
 ```
-
-## type [VerifyOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L243-L245>)
-
-```go
-type VerifyOptions struct {
-    ChainId *int
-}
-```

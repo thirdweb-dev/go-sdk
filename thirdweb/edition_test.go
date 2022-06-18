@@ -11,6 +11,7 @@ func getEdition() *Edition {
 	address, _ := sdk.Deployer.DeployEdition(&DeployEditionMetadata{
 		Name: "Edition",
 	})
+
 	edition, _ := sdk.GetEdition(address)
 
 	return edition

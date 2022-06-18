@@ -32,7 +32,7 @@ type WalletAuthenticator struct {
 }
 ```
 
-### func \(\*WalletAuthenticator\) [Authenticate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L262-L265>)
+### func \(\*WalletAuthenticator\) [Authenticate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L273-L276>)
 
 ```go
 func (auth *WalletAuthenticator) Authenticate(domain string, token string) (string, error)
@@ -57,10 +57,10 @@ token, err := sdk.Auth.GenerateAuthToken(domain, payload)
 address, err := sdk.Auth.Authenticate(domain, token)
 ```
 
-### func \(\*WalletAuthenticator\) [GenerateAuthToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L189-L193>)
+### func \(\*WalletAuthenticator\) [GenerateAuthToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L190-L194>)
 
 ```go
-func (auth *WalletAuthenticator) GenerateAuthToken(domain string, payload *LoginPayload, options *AuthenticationOptions) (string, error)
+func (auth *WalletAuthenticator) GenerateAuthToken(domain string, payload *WalletLoginPayload, options *WalletAuthenticationOptions) (string, error)
 ```
 
 Server\-side function that generates a JWT token from the provided login request that the client\-side wallet can use to authenticate to the server\-side application\.
@@ -86,7 +86,7 @@ token, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)
 ### func \(\*WalletAuthenticator\) [Login](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L70-L73>)
 
 ```go
-func (auth *WalletAuthenticator) Login(domain string, options *LoginOptions) (*LoginPayload, error)
+func (auth *WalletAuthenticator) Login(domain string, options *WalletLoginOptions) (*WalletLoginPayload, error)
 ```
 
 Client\-side function that allows the connected wallet to login to a server\-side application\. Generates a login payload that can be sent to the server\-side for verification or authentication\.
@@ -107,10 +107,10 @@ domain := "thirdweb.com"
 payload, err := sdk.Auth.Login(domain, nil)
 ```
 
-### func \(\*WalletAuthenticator\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L125-L129>)
+### func \(\*WalletAuthenticator\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L127-L131>)
 
 ```go
-func (auth *WalletAuthenticator) Verify(domain string, payload *LoginPayload, options *VerifyOptions) (string, error)
+func (auth *WalletAuthenticator) Verify(domain string, payload *WalletLoginPayload, options *WalletVerifyOptions) (string, error)
 ```
 
 Server\-side function to securely verify the address of the logged in client\-side wallet by validating the provided client\-side login request\.
@@ -129,4 +129,43 @@ payload, err := sdk.Auth.Login(domain, nil)
 
 // Verify the login request
 address, err := sdk.Auth.Verify(domain, payload, nil)
+```
+
+## type [WalletLoginOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L224-L228>)
+
+```go
+type WalletLoginOptions struct {
+    Nonce          string
+    ExpirationTime time.Time
+    ChainId        int
+}
+```
+
+## type [WalletLoginPayload](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L238-L241>)
+
+```go
+type WalletLoginPayload struct {
+    Payload   *WalletLoginPayloadData
+    Signature []byte
+}
+```
+
+## type [WalletLoginPayloadData](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L230-L236>)
+
+```go
+type WalletLoginPayloadData struct {
+    Domain         string
+    Address        string
+    Nonce          string
+    ExpirationTime time.Time
+    ChainId        int
+}
+```
+
+## type [WalletVerifyOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L243-L245>)
+
+```go
+type WalletVerifyOptions struct {
+    ChainId int
+}
 ```

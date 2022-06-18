@@ -69,38 +69,40 @@ func newWalletAuthenticator(provider *ethclient.Client, privateKey string) (*Wal
 // 	payload, err := sdk.Auth.Login(domain, nil)
 func (auth *WalletAuthenticator) Login(
 	domain string,
-	options *LoginOptions,
-) (*LoginPayload, error) {
+	options *WalletLoginOptions,
+) (*WalletLoginPayload, error) {
 	err := auth.requireSigner()
 	if err != nil {
 		return nil, err
 	}
 
 	signerAddress := auth.GetSignerAddress().String()
-	payloadData := &LoginPayloadData{
+	payloadData := &WalletLoginPayloadData{
 		Domain:         domain,
 		ExpirationTime: time.Now().Add(time.Minute * 5),
 		Address:        signerAddress,
 		Nonce:          uuid.New().String(),
-		ChainId:        nil,
+		ChainId:        0,
 	}
 
-	if options.ExpirationTime != nil {
-		payloadData.ExpirationTime = *options.ExpirationTime
-	}
+	if options != nil {
+		if !options.ExpirationTime.IsZero() {
+			payloadData.ExpirationTime = options.ExpirationTime
+		}
 
-	if options.Nonce != nil {
-		payloadData.Nonce = *options.Nonce
-	}
+		if options.Nonce != "" {
+			payloadData.Nonce = options.Nonce
+		}
 
-	if options.ChainId != nil {
-		payloadData.ChainId = options.ChainId
+		if options.ChainId != 0 {
+			payloadData.ChainId = options.ChainId
+		}
 	}
 
 	message := auth.generateMessage(payloadData)
 	signature, err := auth.signMessage(message)
 
-	return &LoginPayload{
+	return &WalletLoginPayload{
 		Payload:   payloadData,
 		Signature: signature,
 	}, nil
@@ -124,8 +126,8 @@ func (auth *WalletAuthenticator) Login(
 // 	address, err := sdk.Auth.Verify(domain, payload, nil)
 func (auth *WalletAuthenticator) Verify(
 	domain string,
-	payload *LoginPayload,
-	options *VerifyOptions,
+	payload *WalletLoginPayload,
+	options *WalletVerifyOptions,
 ) (string, error) {
 	// Check that the intended domain matches the domain of the payload
 	if payload.Payload.Domain != domain {
@@ -143,11 +145,11 @@ func (auth *WalletAuthenticator) Verify(
 	}
 
 	// If chain ID is specified, check that it matches the chain ID of the signature
-	if options.ChainId != nil && options.ChainId != payload.Payload.ChainId {
+	if options != nil && options.ChainId != 0 && options.ChainId != payload.Payload.ChainId {
 		return "", fmt.Errorf(
 			"Chain ID '%d' does not match payload chain ID '%d'",
-			*options.ChainId,
-			*payload.Payload.ChainId,
+			options.ChainId,
+			payload.Payload.ChainId,
 		)
 	}
 
@@ -159,8 +161,7 @@ func (auth *WalletAuthenticator) Verify(
 
 	if strings.ToLower(userAddress) != strings.ToLower(payload.Payload.Address) {
 		return "", fmt.Errorf(
-			"Signer address '%s' does not match payload address '%s'",
-			strings.ToLower(userAddress),
+			"The intended payload address '%s' is not the payload signer",
 			strings.ToLower(payload.Payload.Address),
 		)
 	}
@@ -188,8 +189,8 @@ func (auth *WalletAuthenticator) Verify(
 // 	token, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)
 func (auth *WalletAuthenticator) GenerateAuthToken(
 	domain string,
-	payload *LoginPayload,
-	options *AuthenticationOptions,
+	payload *WalletLoginPayload,
+	options *WalletAuthenticationOptions,
 ) (string, error) {
 	err := auth.requireSigner()
 	if err != nil {
@@ -201,7 +202,7 @@ func (auth *WalletAuthenticator) GenerateAuthToken(
 		return "", err
 	}
 	adminAddress := auth.GetSignerAddress().String()
-	payloadData := &AuthenticationPayloadData{
+	payloadData := &WalletAuthenticationPayloadData{
 		Iss: adminAddress,
 		Sub: userAddress,
 		Aud: domain,
@@ -209,6 +210,16 @@ func (auth *WalletAuthenticator) GenerateAuthToken(
 		Exp: time.Now().Add(time.Hour * 5).Unix(),
 		Iat: time.Now().Unix(),
 		Jti: uuid.New().String(),
+	}
+
+	if options != nil {
+		if !options.ExpirationTime.IsZero() {
+			payloadData.Exp = options.ExpirationTime.Unix()
+		}
+
+		if !options.InvalidBefore.IsZero() {
+			payloadData.Nbf = options.InvalidBefore.Unix()
+		}
 	}
 
 	message, err := json.Marshal(payloadData)
@@ -281,7 +292,7 @@ func (auth *WalletAuthenticator) Authenticate(
 		return "", err
 	}
 
-	payload := &AuthenticationPayloadData{}
+	payload := &WalletAuthenticationPayloadData{}
 	err = json.Unmarshal([]byte(decodedPayload), &payload)
 	if err != nil {
 		return "", err
@@ -346,7 +357,7 @@ func (auth *WalletAuthenticator) Authenticate(
 }
 
 func (auth *WalletAuthenticator) generateMessage(
-	payload *LoginPayloadData,
+	payload *WalletLoginPayloadData,
 ) string {
 	message := ""
 
@@ -357,8 +368,8 @@ func (auth *WalletAuthenticator) generateMessage(
 	message += "Make sure that the requesting domain above matches the URL of the current website.\n\n"
 
 	// Add data fields in compliance with the EIP-4361 standard
-	if payload.ChainId != nil {
-		message += fmt.Sprintf("Chain ID: %d\n", *payload.ChainId)
+	if payload.ChainId != 0 {
+		message += fmt.Sprintf("Chain ID: %d\n", payload.ChainId)
 	}
 
 	message += fmt.Sprintf("Nonce: %s\n", payload.Nonce)
