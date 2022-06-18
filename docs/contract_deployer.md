@@ -160,7 +160,7 @@ address, err := sdk.Deployer.DeployToken(
 })
 ```
 
-## type [Currency](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L88-L92>)
+## type [Currency](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L89-L93>)
 
 ```go
 type Currency struct {
@@ -170,7 +170,7 @@ type Currency struct {
 }
 ```
 
-## type [CurrencyValue](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L94-L100>)
+## type [CurrencyValue](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L95-L101>)
 
 ```go
 type CurrencyValue struct {
@@ -182,7 +182,7 @@ type CurrencyValue struct {
 }
 ```
 
-## type [DeployEditionDropMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L346-L359>)
+## type [DeployEditionDropMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L392-L405>)
 
 ```go
 type DeployEditionDropMetadata struct {
@@ -201,7 +201,7 @@ type DeployEditionDropMetadata struct {
 }
 ```
 
-## type [DeployEditionMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L255-L267>)
+## type [DeployEditionMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L301-L313>)
 
 ```go
 type DeployEditionMetadata struct {
@@ -219,7 +219,7 @@ type DeployEditionMetadata struct {
 }
 ```
 
-## type [DeployMultiwrapMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L379-L388>)
+## type [DeployMultiwrapMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L425-L434>)
 
 ```go
 type DeployMultiwrapMetadata struct {
@@ -234,7 +234,7 @@ type DeployMultiwrapMetadata struct {
 }
 ```
 
-## type [DeployNFTCollectionMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L223-L235>)
+## type [DeployNFTCollectionMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L269-L281>)
 
 ```go
 type DeployNFTCollectionMetadata struct {
@@ -252,7 +252,7 @@ type DeployNFTCollectionMetadata struct {
 }
 ```
 
-## type [DeployNFTDropMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L313-L326>)
+## type [DeployNFTDropMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L359-L372>)
 
 ```go
 type DeployNFTDropMetadata struct {
@@ -271,7 +271,7 @@ type DeployNFTDropMetadata struct {
 }
 ```
 
-## type [DeployTokenMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L287-L297>)
+## type [DeployTokenMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L333-L343>)
 
 ```go
 type DeployTokenMetadata struct {

@@ -37,6 +37,10 @@ const delimiters = {
     name: "edition_drop.md",
     header: "Edition Drop",
   },
+  "LoginOptions": {
+    name: "delete.md",
+    header: "Delete",
+  },
   "IpfsStorage": {
     name: "storage.md",
     header: `IPFS Storage`,
@@ -58,8 +62,8 @@ const delimiters = {
     header: "Provider",
   },
   "SDKOptions": {
-    name: "types.md",
-    header: "Types",
+    name: "delete.md",
+    header: "Delete",
   },
   "SmartContract": {
     name: "custom.md",
@@ -73,9 +77,17 @@ const delimiters = {
     name: "token.md",
     header: "Token",
   },
+  "WalletAuthenticationOptions": {
+    name: "delete.md",
+    header: "Delete"
+  },
+  "WalletAuthenticator": {
+    name: "wallet_authenticator.md",
+    header: "Wallet Authenticator",
+  },
   "WrappedToken": {
-    name: "finish.md",
-    header: "",
+    name: "delete.md",
+    header: "Delete",
   },
 }
 

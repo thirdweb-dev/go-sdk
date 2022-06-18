@@ -221,35 +221,35 @@ type MultiwrapBundle struct {
 
 // Wallet Authenticator
 
-type LoginOptions struct {
-	Nonce          *string
-	ExpirationTime *time.Time
-	ChainId        *int
+type WalletLoginOptions struct {
+	Nonce          string
+	ExpirationTime time.Time
+	ChainId        int
 }
 
-type LoginPayloadData struct {
+type WalletLoginPayloadData struct {
 	Domain         string
 	Address        string
 	Nonce          string
 	ExpirationTime time.Time
-	ChainId        *int
+	ChainId        int
 }
 
-type LoginPayload struct {
-	Payload   *LoginPayloadData
+type WalletLoginPayload struct {
+	Payload   *WalletLoginPayloadData
 	Signature []byte
 }
 
-type VerifyOptions struct {
-	ChainId *int
+type WalletVerifyOptions struct {
+	ChainId int
 }
 
-type AuthenticationOptions struct {
-	InvalidBefore  *time.Time
-	ExpirationTime *time.Time
+type WalletAuthenticationOptions struct {
+	InvalidBefore  time.Time
+	ExpirationTime time.Time
 }
 
-type AuthenticationPayloadData struct {
+type WalletAuthenticationPayloadData struct {
 	Iss string `json:"iss"`
 	Sub string `json:"sub"`
 	Aud string `json:"aud"`
@@ -259,8 +259,8 @@ type AuthenticationPayloadData struct {
 	Jti string `json:"jti"`
 }
 
-type AuthenticationPayload struct {
-	Payload   *AuthenticationPayloadData
+type WalletAuthenticationPayload struct {
+	Payload   *WalletAuthenticationPayloadData
 	Signature []byte
 }
 

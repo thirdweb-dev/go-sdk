@@ -1,4 +1,4 @@
-.PHONY: abi docs publish
+.PHONY: abi docs publish local-test
 
 SHELL := /bin/bash
 
@@ -22,7 +22,7 @@ docs:
 	mkdir docs
 	gomarkdoc --output docs/doc.md --repository.default-branch main ./thirdweb
 	node ./scripts/generate-docs.mjs
-	rm ./docs/doc.md ./docs/start.md ./docs/finish.md
+	rm ./docs/doc.md ./docs/start.md ./docs/delete.md
 	node ./scripts/generate-snippets.mjs
 
 cmd: FORCE
@@ -118,12 +118,15 @@ stop-docker:
 
 test: FORCE
 	docker build . -t hardhat-mainnet-fork
-	docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
+	docker start hardhat-node || docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
 	sudo bash ./scripts/test/await-hardhat.sh
 	go clean -testcache
 	go test -v ./thirdweb
+	docker stop hardhat-node
+	docker rm hardhat-node
 
 local-test:
+  # Needs to be run along with npx hardhat node from this repo
 	go clean -testcache
 	go test -v ./thirdweb
 

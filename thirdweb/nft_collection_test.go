@@ -8,12 +8,15 @@ import (
 
 // Hardhat wallet addresses
 const adminWallet = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+const adminPrivateKey = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 const secondaryWallet = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+const secondaryPrivateKey = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
 const tertiaryWallet = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+const tertiaryPrivateKey = "5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"
 
 func getSDK() *ThirdwebSDK {
 	sdk, _ := NewThirdwebSDK("http://localhost:8545", &SDKOptions{
-		PrivateKey: "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+		PrivateKey: adminPrivateKey,
 	})
 
 	return sdk

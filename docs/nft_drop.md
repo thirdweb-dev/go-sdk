@@ -161,7 +161,7 @@ address: the address of the owner of the NFTs
 
 returns: the tokenIds of all the NFTs owned by the address
 
-## type [NFTMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L17-L27>)
+## type [NFTMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L18-L28>)
 
 ```go
 type NFTMetadata struct {
@@ -177,7 +177,7 @@ type NFTMetadata struct {
 }
 ```
 
-## type [NFTMetadataInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L29-L37>)
+## type [NFTMetadataInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L30-L38>)
 
 ```go
 type NFTMetadataInput struct {
@@ -191,7 +191,7 @@ type NFTMetadataInput struct {
 }
 ```
 
-## type [NFTMetadataOwner](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L39-L42>)
+## type [NFTMetadataOwner](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L40-L43>)
 
 ```go
 type NFTMetadataOwner struct {
@@ -206,7 +206,7 @@ type NFTMetadataOwner struct {
 type NFTResult struct {}
 ```
 
-## type [NativeToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L113-L118>)
+## type [NativeToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L114-L119>)
 
 ```go
 type NativeToken struct {}
