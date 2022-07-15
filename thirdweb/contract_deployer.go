@@ -184,6 +184,24 @@ func (deployer *ContractDeployer) DeployMultiwrap(metadata *DeployMultiwrapMetad
 	return deployer.deployContract("multiwrap", metadata)
 }
 
+// Deploy a new Marketplace contract.
+//
+// metadata: the contract metadata
+//
+// returns: the address of the deployed contract
+//
+// Example
+//
+//	address, err := sdk.Deployer.DeployMarketplace(
+// 		&thirdweb.DeployMarketplaceMetadata{
+// 			Name: "Go Marketplace",
+// 		}
+// 	})
+func (deployer *ContractDeployer) DeployMarketplace(metadata *DeployMarketplaceMetadata) (string, error) {
+	metadata.fillDefaults()
+	return deployer.deployContract("marketplace", metadata)
+}
+
 func (deployer *ContractDeployer) deployContract(contractType string, metadata interface{}) (string, error) {
 	contractUri, err := deployer.storage.Upload(
 		metadata, deployer.helper.getAddress().String(),
@@ -258,6 +276,8 @@ func (deployer *ContractDeployer) getEncodedType(contractType string) ([32]byte,
 		remoteName = "DropERC1155"
 	case "multiwrap":
 		remoteName = "Multiwrap"
+	case "marketplace":
+		remoteName = "Marketplace"
 	default:
 		return [32]byte{}, fmt.Errorf("Unsupported contract type: %s", contractType)
 	}
@@ -379,6 +399,19 @@ func (deployer *ContractDeployer) getDeployArguments(contractType string, metada
 			common.HexToAddress(meta.FeeRecipient),
 			big.NewInt(int64(meta.SellerFeeBasisPoints)),
 		}, nil
+	case "marketplace":
+		meta, ok := metadata.(*DeployMarketplaceMetadata)
+		if !ok {
+			return nil, err
+		}
+
+		return []interface{}{
+			deployer.GetSignerAddress(),
+			contractUri,
+			trustedForwarders,
+			meta.PlatformFeeRecipient,
+			meta.PlatformFeeBasisPoints,
+		}, nil
 	default:
 		return nil, fmt.Errorf("Unsupported contract type: %s", contractType)
 	}
@@ -423,6 +456,8 @@ func (deployer *ContractDeployer) getContractAbiByContractType(contractType stri
 		contractAbi = abi.DropERC1155ABI
 	case "multiwrap":
 		contractAbi = abi.MultiwrapABI
+	case "marketplace":
+		contractAbi = abi.MarketplaceABI
 	default:
 		return nil, fmt.Errorf("Unsupported contract type: %s", contractType)
 	}

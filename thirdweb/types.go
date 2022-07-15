@@ -442,3 +442,23 @@ func (metadata *DeployMultiwrapMetadata) fillDefaults() {
 		metadata.TrustedForwarders = []string{}
 	}
 }
+
+type DeployMarketplaceMetadata struct {
+	Name                   string      `mapstructure:"name" json:"name"`
+	Description            string      `mapstructure:"description" json:"description"`
+	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
+	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
+	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+}
+
+func (metadata *DeployMarketplaceMetadata) fillDefaults() {
+	if metadata.PlatformFeeRecipient == "" {
+		metadata.PlatformFeeRecipient = "0x0000000000000000000000000000000000000000"
+	}
+
+	if metadata.TrustedForwarders == nil {
+		metadata.TrustedForwarders = []string{}
+	}
+}

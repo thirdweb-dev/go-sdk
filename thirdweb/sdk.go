@@ -161,6 +161,20 @@ func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error) {
 	)
 }
 
+// GetMarketplace
+//
+// Get a Marketplace contract SDK instance
+//
+// address: the address of the Marketplace contract
+func (sdk *ThirdwebSDK) GetMarketplace(address string) (*Marketplace, error) {
+	return newMarketplace(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
+}
+
 // GetContract
 //
 // Get an instance of a custom contract deployed with thirdweb deploy

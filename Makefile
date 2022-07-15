@@ -10,6 +10,7 @@ abi:
 	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC721.json --out internal/abi/drop_erc721.go --type DropERC721
 	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC1155.json --out internal/abi/drop_erc1155.go --type DropERC1155
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Multiwrap.json --out internal/abi/multiwrap.go --type Multiwrap
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Marketplace.json --out internal/abi/marketplace.go --type Marketplace
 
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TWFactory.json --out internal/abi/twfactory.go --type TWFactory
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC20.json --out internal/abi/ierc20.go --type IERC20
