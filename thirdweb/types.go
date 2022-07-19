@@ -462,3 +462,43 @@ func (metadata *DeployMarketplaceMetadata) fillDefaults() {
 		metadata.TrustedForwarders = []string{}
 	}
 }
+
+type DirectListing struct {
+	Id                          string
+	AssetContractAddress        string
+	TokenId                     int
+	Asset                       *NFTMetadata
+	StartTimeInEpochSeconds     int
+	EndTimeInEpochSeconds       int
+	Quantity                    int
+	CurrencyContractAddress     string
+	BuyoutCurrencyValuePerToken *CurrencyValue
+	BuyoutPrice                 int
+	SellerAddress               string
+}
+
+type NewDirectListing struct {
+	AssetContractAddress     string
+	TokenId                  int
+	StartTimeInEpochSeconds  int
+	ListingDurationInSeconds int
+	Quantity                 int
+	CurrencyContractAddress  string
+	BuyoutPricePerToken      float64
+}
+
+type AuctionListing struct {
+	Id                                string
+	AssetContractAddress              string
+	TokenId                           int
+	Asset                             *NFTMetadata
+	StartTimeInEpochSeconds           int
+	EndTimeInEpochSeconds             int
+	Quantity                          int
+	CurrencyContractAddress           string
+	ReservePrice                      int
+	BuyoutPrice                       int
+	BuyoutCurrencyValuePerToken       *CurrencyValue
+	ReservePriceCurrencyValuePerToken *CurrencyValue
+	SellerAddress                     string
+}
