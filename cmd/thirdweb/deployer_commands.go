@@ -173,6 +173,26 @@ var deployMultiwrapCmd = &cobra.Command{
 	},
 }
 
+var deployMarketplaceCmd = &cobra.Command{
+	Use:   "marketplace",
+	Short: "Deploy a marketplace",
+	Run: func(cmd *cobra.Command, args []string) {
+		if thirdwebSDK == nil {
+			initSdk()
+		}
+
+		address, err := thirdwebSDK.Deployer.DeployMarketplace(&thirdweb.DeployMarketplaceMetadata{
+			Name: "Go Marketplace",
+		})
+		if err != nil {
+			panic(err)
+		}
+
+		log.Println("Address:")
+		log.Println(address)
+	},
+}
+
 func init() {
 	deployCmd.AddCommand(deployNftCmd)
 	deployCmd.AddCommand(deployEditionCmd)
@@ -180,4 +200,5 @@ func init() {
 	deployCmd.AddCommand(deployNFTDropCmd)
 	deployCmd.AddCommand(deployEditionDropCmd)
 	deployCmd.AddCommand(deployMultiwrapCmd)
+	deployCmd.AddCommand(deployMarketplaceCmd)
 }

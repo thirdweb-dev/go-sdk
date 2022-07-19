@@ -96,6 +96,7 @@ test-deploy:
 	./bin/thirdweb deploy nftdrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb deploy editiondrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb deploy multiwrap -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb deploy marketplace -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test-cmd:
 	make cmd
