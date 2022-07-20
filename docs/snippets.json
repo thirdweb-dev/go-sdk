@@ -389,6 +389,46 @@
     "properties": [],
     "reference": "https://docs.thirdweb.com/go/multiwrap"
   },
+  "Marketplace": {
+    "name": "Marketplace",
+    "summary": "",
+    "description": "",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetMarketplace(\"{{contract_address}}\")\n",
+    "methods": [
+      {
+        "name": "BuyoutListingTo",
+        "summary": "",
+        "example": "listingId := 0\nquantityDesired := 1\nreceiver := \"0x...\"\nreceipt, err := marketplace.BuyoutListingTo(listingId, quantityDesired, receiver)\n",
+        "reference": "https://docs.thirdweb.com/go/marketplace#func-marketplace-buyoutlistingto"
+      },
+      {
+        "name": "CancelListing",
+        "summary": "",
+        "example": "listingId := 0\nreceipt, err := marketplace.CancelListing(listingId)\n",
+        "reference": "https://docs.thirdweb.com/go/marketplace#func-marketplace-cancellisting"
+      },
+      {
+        "name": "CreateListing",
+        "summary": "",
+        "example": "listing := &NewDirectListing{\n\tAssetContractAddress: \"0x...\", // Address of the asset contract\n\tTokenId: 0, // Token ID of the asset to list\n\tStartTimeInEpochSeconds: int(time.Now().Unix()), // Defaults to current time\n\tListingDurationInSeconds: int(time.Now().Unix() + 3600), // Defaults to current time + 1 hour\n\tQuantity: 1, // Quantity of the asset to list\n\tCurrencyContractAddress: \"0x...\", // Contract address of currency to sell for, defaults to native token\n\tBuyoutPricePerToken: 1, // Price per token of the asset to list\n}\n\nlistingId, err := marketplace.CreateListing(listing)\n",
+        "reference": "https://docs.thirdweb.com/go/marketplace#func-marketplace-createlisting"
+      },
+      {
+        "name": "GetActiveListings",
+        "summary": "",
+        "example": "listings, err := marketplace.GetActiveListings()\n// Price per token of the first listing\nlistings[0].BuyoutCurrencyValuePerToken.DisplayValue\n",
+        "reference": "https://docs.thirdweb.com/go/marketplace#func-marketplace-getactivelistings"
+      },
+      {
+        "name": "GetListing",
+        "summary": "",
+        "example": "listingId := 0\nlisting, err := marketplace.GetListing(listingId)\n",
+        "reference": "https://docs.thirdweb.com/go/marketplace#func-marketplace-getlisting"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/go/marketplace"
+  },
   "WalletAuthenticator": {
     "name": "WalletAuthenticator",
     "summary": "",

@@ -45,6 +45,10 @@ const delimiters = {
     name: "storage.md",
     header: `IPFS Storage`,
   },
+  "Marketplace": {
+    name: "marketplace.md",
+    header: "Marketplace",
+  },
   "Multiwrap": {
     name: "multiwrap.md",
     header: "Multiwrap",

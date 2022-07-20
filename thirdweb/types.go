@@ -487,6 +487,20 @@ type NewDirectListing struct {
 	BuyoutPricePerToken      float64
 }
 
+func (listing *NewDirectListing) fillDefaults() {
+	if listing.CurrencyContractAddress == "" {
+		listing.CurrencyContractAddress = "0x0000000000000000000000000000000000000000"
+	}
+
+	if listing.StartTimeInEpochSeconds == 0 {
+		listing.StartTimeInEpochSeconds = int(time.Now().Unix())
+	}
+
+	if listing.ListingDurationInSeconds == 0 {
+		listing.ListingDurationInSeconds = int(time.Now().Unix() + 3600)
+	}
+}
+
 type AuctionListing struct {
 	Id                                string
 	AssetContractAddress              string

@@ -24,7 +24,7 @@ rpcUrlOrName: the name of the chain to connection to \(e\.g\. "rinkeby", "mumbai
 
 options: an SDKOptions instance to specify a private key and/or an IPFS gateway URL
 
-### func \(\*ThirdwebSDK\) [GetContract](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L169>)
+### func \(\*ThirdwebSDK\) [GetContract](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L183>)
 
 ```go
 func (sdk *ThirdwebSDK) GetContract(address string) (*SmartContract, error)
@@ -36,7 +36,7 @@ Get an instance of a custom contract deployed with thirdweb deploy
 
 address: the address of the contract
 
-### func \(\*ThirdwebSDK\) [GetContractFromAbi](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L185>)
+### func \(\*ThirdwebSDK\) [GetContractFromAbi](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L199>)
 
 ```go
 func (sdk *ThirdwebSDK) GetContractFromAbi(address string, abi string) (*SmartContract, error)
@@ -73,6 +73,18 @@ func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error)
 Get an Edition Drop contract SDK instance
 
 address: the address of the Edition Drop contract
+
+### func \(\*ThirdwebSDK\) [GetMarketplace](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L169>)
+
+```go
+func (sdk *ThirdwebSDK) GetMarketplace(address string) (*Marketplace, error)
+```
+
+#### GetMarketplace
+
+Get a Marketplace contract SDK instance
+
+address: the address of the Marketplace contract
 
 ### func \(\*ThirdwebSDK\) [GetMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L155>)
 

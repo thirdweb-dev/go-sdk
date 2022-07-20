@@ -72,6 +72,28 @@ address, err := sdk.Deployer.DeployEditionDrop(
 })
 ```
 
+### func \(\*ContractDeployer\) [DeployMarketplace](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L200>)
+
+```go
+func (deployer *ContractDeployer) DeployMarketplace(metadata *DeployMarketplaceMetadata) (string, error)
+```
+
+Deploy a new Marketplace contract\.
+
+metadata: the contract metadata
+
+returns: the address of the deployed contract
+
+#### Example
+
+```
+address, err := sdk.Deployer.DeployMarketplace(
+	&thirdweb.DeployMarketplaceMetadata{
+		Name: "Go Marketplace",
+	}
+})
+```
+
 ### func \(\*ContractDeployer\) [DeployMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L182>)
 
 ```go
@@ -219,6 +241,20 @@ type DeployEditionMetadata struct {
 }
 ```
 
+## type [DeployMarketplaceMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L446-L454>)
+
+```go
+type DeployMarketplaceMetadata struct {
+    Name                   string      `mapstructure:"name" json:"name"`
+    Description            string      `mapstructure:"description" json:"description"`
+    Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
+    ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+    PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
+    PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
+    TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+}
+```
+
 ## type [DeployMultiwrapMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L425-L434>)
 
 ```go
@@ -284,5 +320,23 @@ type DeployTokenMetadata struct {
     PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
     PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
     TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+}
+```
+
+## type [DirectListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L466-L478>)
+
+```go
+type DirectListing struct {
+    Id                          string
+    AssetContractAddress        string
+    TokenId                     int
+    Asset                       *NFTMetadata
+    StartTimeInEpochSeconds     int
+    EndTimeInEpochSeconds       int
+    Quantity                    int
+    CurrencyContractAddress     string
+    BuyoutCurrencyValuePerToken *CurrencyValue
+    BuyoutPrice                 int
+    SellerAddress               string
 }
 ```

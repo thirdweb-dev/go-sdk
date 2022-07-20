@@ -38,6 +38,11 @@ const contracts = [
     docName: "multiwrap",
   },
   {
+    name: "Marketplace",
+    files: ["marketplace.md"],
+    docName: "marketplace",
+  },
+  {
     name: "WalletAuthenticator",
     files: ["wallet_authenticator.md"],
     docName: "wallet_authenticator",

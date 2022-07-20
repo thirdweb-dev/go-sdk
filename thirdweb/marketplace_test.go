@@ -136,3 +136,44 @@ func TestListToken(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, listing.CurrencyContractAddress, token.helper.getAddress().Hex())
 }
+
+func TestBuyoutListing(t *testing.T) {
+	marketplace := getMarketplace()
+	token := getMarketplaceToken()
+	edition := getEdition()
+
+	adminBalance, _ := edition.BalanceOf(adminWallet, 0)
+	secondaryBalance, _ := edition.BalanceOf(secondaryWallet, 0)
+	assert.Equal(t, adminBalance, 100)
+	assert.Equal(t, secondaryBalance, 0)
+
+	adminTokens, _ := token.BalanceOf(adminWallet)
+	secondaryTokens, _ := token.BalanceOf(secondaryWallet)
+	assert.Equal(t, adminTokens, 100)
+	assert.Equal(t, secondaryTokens, 100)
+
+	listingId, err := marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     edition.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 10,
+		CurrencyContractAddress:  token.helper.getAddress().Hex(),
+		BuyoutPricePerToken:      1.0,
+	})
+
+	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
+	marketplace.BuyoutListing(listingId, 10)
+
+	adminBalance, _ = edition.BalanceOf(adminWallet, 0)
+	secondaryBalance, _ = edition.BalanceOf(secondaryWallet, 0)
+	assert.Equal(t, adminBalance, 90)
+	assert.Equal(t, secondaryBalance, 10)
+
+	adminTokens, _ = token.BalanceOf(adminWallet)
+	secondaryTokens, _ = token.BalanceOf(secondaryWallet)
+	assert.Equal(t, adminTokens, 110)
+	assert.Equal(t, secondaryTokens, 90)
+
+	assert.Nil(t, err)
+}
