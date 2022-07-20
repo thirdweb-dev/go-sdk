@@ -162,8 +162,11 @@ func TestBuyoutListing(t *testing.T) {
 		BuyoutPricePerToken:      1.0,
 	})
 
+	assert.Nil(t, err)
+
 	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
-	marketplace.BuyoutListing(listingId, 10)
+	_, err = marketplace.BuyoutListing(listingId, 10)
+	assert.Nil(t, err)
 
 	adminBalance, _ = edition.BalanceOf(adminWallet, 0)
 	secondaryBalance, _ = edition.BalanceOf(secondaryWallet, 0)
@@ -174,6 +177,4 @@ func TestBuyoutListing(t *testing.T) {
 	secondaryTokens, _ = token.BalanceOf(secondaryWallet)
 	assert.Equal(t, adminTokens.DisplayValue, 110)
 	assert.Equal(t, secondaryTokens.DisplayValue, 90)
-
-	assert.Nil(t, err)
 }
