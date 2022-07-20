@@ -45,9 +45,17 @@ const delimiters = {
     name: "storage.md",
     header: `IPFS Storage`,
   },
+  "Marketplace": {
+    name: "marketplace.md",
+    header: "Marketplace",
+  },
   "Multiwrap": {
     name: "multiwrap.md",
     header: "Multiwrap",
+  },
+  "NewDirectListing": {
+    name: "delete.md",
+    header: "Delete",
   },
   "NFTCollection": {
     name: "nft_collection.md",

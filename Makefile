@@ -10,6 +10,7 @@ abi:
 	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC721.json --out internal/abi/drop_erc721.go --type DropERC721
 	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC1155.json --out internal/abi/drop_erc1155.go --type DropERC1155
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Multiwrap.json --out internal/abi/multiwrap.go --type Multiwrap
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Marketplace.json --out internal/abi/marketplace.go --type Marketplace
 
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TWFactory.json --out internal/abi/twfactory.go --type TWFactory
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC20.json --out internal/abi/ierc20.go --type IERC20
@@ -95,6 +96,7 @@ test-deploy:
 	./bin/thirdweb deploy nftdrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb deploy editiondrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb deploy multiwrap -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb deploy marketplace -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test-cmd:
 	make cmd
@@ -126,7 +128,7 @@ test: FORCE
 	docker rm hardhat-node
 
 local-test:
-  # Needs to be run along with npx hardhat node from this repo
+  # Needs to be run along with npx hardhat node from this repo, and needs to be a mainnet fork hardhat
 	go clean -testcache
 	go test -v ./thirdweb
 

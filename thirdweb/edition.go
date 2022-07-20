@@ -160,7 +160,16 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 	return edition.helper.awaitTx(tx.Hash())
 }
 
-// Mint a batch of tokens to various wallets.
+// Mint a batch of NFTs to the connected wallet.
+//
+// metadatasWithSupply: list of NFT metadatas with supplies to mint
+//
+// returns: the transaction receipt of the mint
+func (edition *Edition) MintBatch(metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
+	return edition.MintBatchTo(edition.helper.GetSignerAddress().String(), metadatasWithSupply)
+}
+
+// Mint a batch of NFTs to a specific wallet.
 //
 // to: address of the wallet to mint NFTs to
 //

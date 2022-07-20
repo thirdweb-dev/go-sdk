@@ -66,13 +66,25 @@ additionalySupply: additional supply to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*Edition\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L191>)
+### func \(\*Edition\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L168>)
+
+```go
+func (edition *Edition) MintBatch(metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error)
+```
+
+Mint a batch of NFTs to the connected wallet\.
+
+metadatasWithSupply: list of NFT metadatas with supplies to mint
+
+returns: the transaction receipt of the mint
+
+### func \(\*Edition\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition.go#L200>)
 
 ```go
 func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error)
 ```
 
-Mint a batch of tokens to various wallets\.
+Mint a batch of NFTs to a specific wallet\.
 
 to: address of the wallet to mint NFTs to
 

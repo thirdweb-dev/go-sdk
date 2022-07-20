@@ -442,3 +442,77 @@ func (metadata *DeployMultiwrapMetadata) fillDefaults() {
 		metadata.TrustedForwarders = []string{}
 	}
 }
+
+type DeployMarketplaceMetadata struct {
+	Name                   string      `mapstructure:"name" json:"name"`
+	Description            string      `mapstructure:"description" json:"description"`
+	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
+	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
+	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+}
+
+func (metadata *DeployMarketplaceMetadata) fillDefaults() {
+	if metadata.PlatformFeeRecipient == "" {
+		metadata.PlatformFeeRecipient = "0x0000000000000000000000000000000000000000"
+	}
+
+	if metadata.TrustedForwarders == nil {
+		metadata.TrustedForwarders = []string{}
+	}
+}
+
+type DirectListing struct {
+	Id                          string
+	AssetContractAddress        string
+	TokenId                     int
+	Asset                       *NFTMetadata
+	StartTimeInEpochSeconds     int
+	EndTimeInEpochSeconds       int
+	Quantity                    int
+	CurrencyContractAddress     string
+	BuyoutCurrencyValuePerToken *CurrencyValue
+	BuyoutPrice                 int
+	SellerAddress               string
+}
+
+type NewDirectListing struct {
+	AssetContractAddress     string
+	TokenId                  int
+	StartTimeInEpochSeconds  int
+	ListingDurationInSeconds int
+	Quantity                 int
+	CurrencyContractAddress  string
+	BuyoutPricePerToken      float64
+}
+
+func (listing *NewDirectListing) fillDefaults() {
+	if listing.CurrencyContractAddress == "" {
+		listing.CurrencyContractAddress = "0x0000000000000000000000000000000000000000"
+	}
+
+	if listing.StartTimeInEpochSeconds == 0 {
+		listing.StartTimeInEpochSeconds = int(time.Now().Unix())
+	}
+
+	if listing.ListingDurationInSeconds == 0 {
+		listing.ListingDurationInSeconds = int(time.Now().Unix() + 3600)
+	}
+}
+
+type AuctionListing struct {
+	Id                                string
+	AssetContractAddress              string
+	TokenId                           int
+	Asset                             *NFTMetadata
+	StartTimeInEpochSeconds           int
+	EndTimeInEpochSeconds             int
+	Quantity                          int
+	CurrencyContractAddress           string
+	ReservePrice                      int
+	BuyoutPrice                       int
+	BuyoutCurrencyValuePerToken       *CurrencyValue
+	ReservePriceCurrencyValuePerToken *CurrencyValue
+	SellerAddress                     string
+}

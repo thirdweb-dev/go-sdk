@@ -3,6 +3,7 @@ package thirdweb
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"math/big"
@@ -168,7 +169,21 @@ func setErc20Allowance(
 		}
 
 		if allowance.Cmp(value) < 0 {
-			erc20.Approve(&bind.TransactOpts{}, spender, value)
+			// We can get options from the contract instead of ERC20 because they will be the same
+			approvalOpts, err := contractToApprove.getTxOptions()
+			if err != nil {
+				return err
+			}
+
+			tx, err := erc20.Approve(approvalOpts, spender, value)
+			if err != nil {
+				return err
+			}
+
+			_, err = contractToApprove.awaitTx(tx.Hash())
+			if err != nil {
+				return err
+			}
 		}
 
 		return nil
@@ -401,4 +416,138 @@ func fetchContractMetadata(uri string, storage storage) (string, error) {
 	}
 
 	return string(abiBytes), nil
+}
+
+// MARKETPLACE
+
+func fetchTokenMetadataForContract(
+	contractAddress string,
+	provider *ethclient.Client,
+	tokenId int,
+	storage storage,
+) (*NFTMetadata, error) {
+	erc165, err := abi.NewIERC165(common.HexToAddress(contractAddress), provider)
+	if err != nil {
+		return nil, err
+	}
+
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	if err != nil {
+		return nil, err
+	}
+
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	if err != nil {
+		return nil, err
+	}
+
+	uri := ""
+	if isErc721 {
+		contract, err := abi.NewTokenERC721(common.HexToAddress(contractAddress), provider)
+		if err != nil {
+			return nil, err
+		}
+
+		uri, err = contract.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+	} else if isErc1155 {
+		contract, err := abi.NewTokenERC1155(common.HexToAddress(contractAddress), provider)
+		if err != nil {
+			return nil, err
+		}
+
+		uri, err = contract.Uri(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+	}
+
+	return fetchTokenMetadata(tokenId, uri, storage)
+}
+
+func handleTokenApproval(
+	provider *ethclient.Client,
+	helper *contractHelper,
+	marketplaceAddress string,
+	assetContract string,
+	tokenId int,
+	from string,
+) error {
+	erc165, err := abi.NewIERC165(common.HexToAddress(assetContract), provider)
+	if err != nil {
+		return err
+	}
+
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	if err != nil {
+		return err
+	}
+
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	if err != nil {
+		return err
+	}
+
+	if isErc721 {
+		contract, err := abi.NewTokenERC721(common.HexToAddress(assetContract), provider)
+		if err != nil {
+			return err
+		}
+
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		if err != nil {
+			return err
+		}
+
+		if !approved {
+			tokenApproved, err := contract.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+			if err != nil {
+				return err
+			}
+
+			txOpts, err := helper.getTxOptions()
+			if err != nil {
+				return err
+			}
+
+			if strings.ToLower(tokenApproved.String()) != strings.ToLower(marketplaceAddress) {
+				tx, err := contract.SetApprovalForAll(txOpts, common.HexToAddress(marketplaceAddress), true)
+				if err != nil {
+					return err
+				}
+
+				_, err = helper.awaitTx(tx.Hash())
+				if err != nil {
+					return err
+				}
+			}
+		}
+	} else if isErc1155 {
+		contract, err := abi.NewTokenERC1155(common.HexToAddress(assetContract), provider)
+		if err != nil {
+			return err
+		}
+
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		if err != nil {
+			return err
+		}
+
+		if !approved {
+			txOpts, err := helper.getTxOptions()
+			if err != nil {
+				return err
+			}
+
+			tx, err := contract.SetApprovalForAll(txOpts, common.HexToAddress(marketplaceAddress), true)
+			if err != nil {
+				return err
+			}
+
+			_, err = helper.awaitTx(tx.Hash())
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		return errors.New("Contract does not implement ERC721 or ERC1155")
+	}
+
+	return nil
 }
