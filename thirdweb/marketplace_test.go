@@ -140,7 +140,7 @@ func TestListToken(t *testing.T) {
 func TestBuyoutListing(t *testing.T) {
 	marketplace := getMarketplace()
 	token := getMarketplaceToken()
-	edition := getEdition()
+	edition := getMarketplaceEdition()
 
 	adminBalance, _ := edition.BalanceOf(adminWallet, 0)
 	secondaryBalance, _ := edition.BalanceOf(secondaryWallet, 0)
@@ -149,8 +149,8 @@ func TestBuyoutListing(t *testing.T) {
 
 	adminTokens, _ := token.BalanceOf(adminWallet)
 	secondaryTokens, _ := token.BalanceOf(secondaryWallet)
-	assert.Equal(t, adminTokens, 100)
-	assert.Equal(t, secondaryTokens, 100)
+	assert.Equal(t, adminTokens.DisplayValue, 100)
+	assert.Equal(t, secondaryTokens.DisplayValue, 100)
 
 	listingId, err := marketplace.CreateListing(&NewDirectListing{
 		AssetContractAddress:     edition.helper.getAddress().Hex(),
@@ -172,8 +172,8 @@ func TestBuyoutListing(t *testing.T) {
 
 	adminTokens, _ = token.BalanceOf(adminWallet)
 	secondaryTokens, _ = token.BalanceOf(secondaryWallet)
-	assert.Equal(t, adminTokens, 110)
-	assert.Equal(t, secondaryTokens, 90)
+	assert.Equal(t, adminTokens.DisplayValue, 110)
+	assert.Equal(t, secondaryTokens.DisplayValue, 90)
 
 	assert.Nil(t, err)
 }
