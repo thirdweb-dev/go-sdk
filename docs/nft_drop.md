@@ -211,17 +211,3 @@ type NFTResult struct {}
 ```go
 type NativeToken struct {}
 ```
-
-## type [NewDirectListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L480-L488>)
-
-```go
-type NewDirectListing struct {
-    AssetContractAddress     string
-    TokenId                  int
-    StartTimeInEpochSeconds  int
-    ListingDurationInSeconds int
-    Quantity                 int
-    CurrencyContractAddress  string
-    BuyoutPricePerToken      float64
-}
-```

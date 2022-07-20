@@ -53,6 +53,10 @@ const delimiters = {
     name: "multiwrap.md",
     header: "Multiwrap",
   },
+  "NewDirectListing": {
+    name: "delete.md",
+    header: "Delete",
+  },
   "NFTCollection": {
     name: "nft_collection.md",
     header: "NFT Collection",

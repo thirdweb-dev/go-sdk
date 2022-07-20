@@ -79,7 +79,7 @@ listingId := 0
 receipt, err := marketplace.CancelListing(listingId)
 ```
 
-### func \(\*Marketplace\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L235>)
+### func \(\*Marketplace\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L238>)
 
 ```go
 func (marketplace *Marketplace) CreateListing(listing *NewDirectListing) (int, error)
