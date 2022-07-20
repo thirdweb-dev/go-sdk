@@ -409,8 +409,8 @@ func (deployer *ContractDeployer) getDeployArguments(contractType string, metada
 			deployer.GetSignerAddress(),
 			contractUri,
 			trustedForwarders,
-			meta.PlatformFeeRecipient,
-			meta.PlatformFeeBasisPoints,
+			common.HexToAddress(meta.PlatformFeeRecipient),
+			big.NewInt(int64(meta.PlatformFeeBasisPoints)),
 		}, nil
 	default:
 		return nil, fmt.Errorf("Unsupported contract type: %s", contractType)

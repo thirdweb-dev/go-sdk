@@ -181,8 +181,14 @@ var deployMarketplaceCmd = &cobra.Command{
 			initSdk()
 		}
 
+		imageFile, err := os.Open("internal/test/0.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
 		address, err := thirdwebSDK.Deployer.DeployMarketplace(&thirdweb.DeployMarketplaceMetadata{
-			Name: "Go Marketplace",
+			Name: "Go SDK",
 		})
 		if err != nil {
 			panic(err)
