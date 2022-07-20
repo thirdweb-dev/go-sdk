@@ -89,4 +89,50 @@ func TestListNft(t *testing.T) {
 	listing, err := marketplace.GetListing(listingId)
 	assert.Nil(t, err)
 	assert.Equal(t, listing.Quantity, 1)
+	assert.Equal(t, listing.AssetContractAddress, nft.helper.getAddress().Hex())
+}
+
+func TestListEdition(t *testing.T) {
+	marketplace := getMarketplace()
+	edition := getMarketplaceEdition()
+
+	listingId, err := marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     edition.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 2,
+		CurrencyContractAddress:  "0x0000000000000000000000000000000000000000",
+		BuyoutPricePerToken:      1.0,
+	})
+	assert.Nil(t, err)
+
+	assert.Equal(t, listingId, 0)
+	listing, err := marketplace.GetListing(listingId)
+	assert.Nil(t, err)
+	assert.Equal(t, listing.Quantity, 2)
+	assert.Equal(t, listing.AssetContractAddress, edition.helper.getAddress().Hex())
+}
+
+func TestListToken(t *testing.T) {
+	marketplace := getMarketplace()
+	nft := getMarketpaceNft()
+	token := getMarketplaceToken()
+
+	listingId, err := marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     nft.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 1,
+		CurrencyContractAddress:  token.helper.getAddress().Hex(),
+		BuyoutPricePerToken:      1.0,
+	})
+	assert.Nil(t, err)
+
+	assert.Equal(t, listingId, 0)
+
+	listing, err := marketplace.GetListing(listingId)
+	assert.Nil(t, err)
+	assert.Equal(t, listing.CurrencyContractAddress, token.helper.getAddress().Hex())
 }
