@@ -20,13 +20,19 @@ type ChainID int
 type ChainName string
 
 const (
-	MAINNET   ChainID = 1
-	RINKEBY           = 4
-	GOERLI            = 5
-	POLYGON           = 137
-	FANTOM            = 250
-	AVALANCHE         = 43114
-	MUMBAI            = 80001
+	MAINNET           ChainID = 1
+	RINKEBY                   = 4
+	GOERLI                    = 5
+	POLYGON                   = 137
+	FANTOM                    = 250
+	FANTOM_TESTNET            = 4002
+	AVALANCHE_TESTNET         = 43113
+	AVALANCHE                 = 43114
+	MUMBAI                    = 80001
+	OPTIMISM                  = 10
+	OPTIMISM_TESTNET          = 69
+	ARBITRUM                  = 42161
+	ARBITRUM_TESTNET          = 421611
 )
 
 func getNativeTokenByChainId(chainId ChainID) (*NativeToken, error) {
@@ -97,6 +103,17 @@ func getNativeTokenByChainId(chainId ChainID) (*NativeToken, error) {
 				"WAVAX",
 			},
 		}, nil
+	case AVALANCHE_TESTNET:
+		return &NativeToken{
+			"Avalanche",
+			"AVAX",
+			18,
+			&WrappedToken{
+				"0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
+				"Wrapped AVAX",
+				"WAVAX",
+			},
+		}, nil
 	case FANTOM:
 		return &NativeToken{
 			"Fantom",
@@ -106,6 +123,61 @@ func getNativeTokenByChainId(chainId ChainID) (*NativeToken, error) {
 				"0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
 				"Wrapped Fantom",
 				"WFTM",
+			},
+		}, nil
+	case FANTOM_TESTNET:
+		return &NativeToken{
+			"Fantom",
+			"FTM",
+			18,
+			&WrappedToken{
+				"0xf1277d1Ed8AD466beddF92ef448A132661956621",
+				"Wrapped Fantom",
+				"WFTM",
+			},
+		}, nil
+	case ARBITRUM:
+		return &NativeToken{
+			"Ether",
+			"ETH",
+			18,
+			&WrappedToken{
+				"0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+				"Wrapped Ether",
+				"WETH",
+			},
+		}, nil
+	case ARBITRUM_TESTNET:
+		return &NativeToken{
+			"Arbitrum Rinkeby Ether",
+			"ARETH",
+			18,
+			&WrappedToken{
+				"0xEBbc3452Cc911591e4F18f3b36727Df45d6bd1f9",
+				"Wrapped Ether",
+				"WETH",
+			},
+		}, nil
+	case OPTIMISM:
+		return &NativeToken{
+			"Ether",
+			"ETH",
+			18,
+			&WrappedToken{
+				"0x4200000000000000000000000000000000000006",
+				"Wrapped Ether",
+				"WETH",
+			},
+		}, nil
+	case OPTIMISM_TESTNET:
+		return &NativeToken{
+			"Kovan Ether",
+			"KOR",
+			18,
+			&WrappedToken{
+				"0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
+				"Wrapped Ether",
+				"WETH",
 			},
 		}, nil
 	default:
@@ -159,11 +231,47 @@ func getContractAddressByChainId(chainId ChainID, contractName string) (string, 
 			"TWFactory":         twFactoryAddress,
 			"TWRegistry":        twRegistryAddress,
 		}
+	case AVALANCHE_TESTNET:
+		addresses = map[string]string{
+			"BiconomyForwarder": "0x6271Ca63D30507f2Dcbf99B52787032506D75BBF",
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
 	case FANTOM:
 		addresses = map[string]string{
 			"BiconomyForwarder": zeroAddress,
 			"TWFactory":         twFactoryAddress,
 			"TWRegistry":        twRegistryAddress,
+		}
+	case FANTOM_TESTNET:
+		addresses = map[string]string{
+			"BiconomyForwarder": zeroAddress,
+			"TWFactory":         twFactoryAddress,
+			"TWRegistry":        twRegistryAddress,
+		}
+	case ARBITRUM:
+		addresses = map[string]string{
+			"BiconomyForwarder": zeroAddress,
+			"TWFactory":         "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
+			"TWRegistry":        "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+		}
+	case ARBITRUM_TESTNET:
+		addresses = map[string]string{
+			"BiconomyForwarder": zeroAddress,
+			"TWFactory":         "0xb0435b47ad26115A39c59735b814f3769F07C2c1",
+			"TWRegistry":        "0xcF4c511551aE4dab1F997866FC3900cd2aaeC40D",
+		}
+	case OPTIMISM:
+		addresses = map[string]string{
+			"BiconomyForwarder": zeroAddress,
+			"TWFactory":         "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
+			"TWRegistry":        "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+		}
+	case OPTIMISM_TESTNET:
+		addresses = map[string]string{
+			"BiconomyForwarder": zeroAddress,
+			"TWFactory":         "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
+			"TWRegistry":        "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
 		}
 	default:
 		return "", errors.New("Unsupported chain id")
