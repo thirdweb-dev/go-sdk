@@ -128,7 +128,7 @@ test: FORCE
 	docker rm hardhat-node
 
 local-test:
-  # Needs to be run along with npx hardhat node from this repo
+  # Needs to be run along with npx hardhat node from this repo, and needs to be a mainnet fork hardhat
 	go clean -testcache
 	go test -v ./thirdweb
 

@@ -184,19 +184,22 @@ func (marketplace *Marketplace) BuyoutListingTo(listingId int, quantityDesired i
 	}
 
 	quantity := big.NewInt(int64(quantityDesired))
-	value := big.NewInt(0).Mul(big.NewInt(int64(listing.BuyoutPrice)), quantity)
+	value := big.NewInt(int64(listing.BuyoutPrice)).Mul(big.NewInt(int64(listing.BuyoutPrice)), quantity)
 
 	txOpts, err := marketplace.helper.getTxOptions()
 	if err != nil {
 		return nil, err
 	}
 
-	setErc20Allowance(
+	err = setErc20Allowance(
 		marketplace.helper,
 		value,
 		listing.CurrencyContractAddress,
 		txOpts,
 	)
+	if err != nil {
+		return nil, err
+	}
 
 	tx, err := marketplace.abi.Buy(
 		txOpts,

@@ -169,7 +169,21 @@ func setErc20Allowance(
 		}
 
 		if allowance.Cmp(value) < 0 {
-			erc20.Approve(&bind.TransactOpts{}, spender, value)
+			// We can get options from the contract instead of ERC20 because they will be the same
+			approvalOpts, err := contractToApprove.getTxOptions()
+			if err != nil {
+				return err
+			}
+
+			tx, err := erc20.Approve(approvalOpts, spender, value)
+			if err != nil {
+				return err
+			}
+
+			_, err = contractToApprove.awaitTx(tx.Hash())
+			if err != nil {
+				return err
+			}
 		}
 
 		return nil
