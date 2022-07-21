@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"encoding/hex"
 	"testing"
 	"time"
 
@@ -222,4 +223,95 @@ func TestBuyoutListingUnapprovedEncoder(t *testing.T) {
 	assert.Contains(t, err.Error(), token.helper.getAddress().Hex())
 	assert.Contains(t, err.Error(), adminWallet)
 	assert.Contains(t, err.Error(), "marketplace.Encoder.ApproveBuyoutListing")
+}
+
+func TestCreateListingApprovedEncoder(t *testing.T) {
+	marketplace := getMarketplace()
+	nft := getMarketpaceNft()
+
+	tx, err := marketplace.Encoder.ApproveCreateListing(adminWallet, &NewDirectListing{
+		AssetContractAddress:     nft.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 1,
+		CurrencyContractAddress:  "0x0000000000000000000000000000000000000000",
+		BuyoutPricePerToken:      1.0,
+	})
+	assert.Nil(t, err)
+	toAddress := tx.To()
+	assert.Equal(t, toAddress.Hex(), nft.helper.getAddress().Hex())
+
+	isApproved, err := nft.IsApproved(adminWallet, marketplace.helper.getAddress().Hex())
+	assert.Equal(t, isApproved, false)
+
+	nft.SetApprovalForAll(marketplace.helper.getAddress().Hex(), true)
+
+	isApproved, err = nft.IsApproved(adminWallet, marketplace.helper.getAddress().Hex())
+	assert.Equal(t, isApproved, true)
+
+	tx, err = marketplace.Encoder.CreateListing(adminWallet, &NewDirectListing{
+		AssetContractAddress:     nft.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 1,
+		CurrencyContractAddress:  "0x0000000000000000000000000000000000000000",
+		BuyoutPricePerToken:      1.0,
+	})
+	assert.Nil(t, err)
+	toAddress = tx.To()
+	assert.Equal(t, toAddress.Hex(), marketplace.helper.getAddress().Hex())
+}
+
+func TestBuyoutListingApprovedEncoder(t *testing.T) {
+	marketplace := getMarketplace()
+	token := getMarketplaceToken()
+	edition := getMarketplaceEdition()
+
+	listingId, err := marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     edition.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 10,
+		CurrencyContractAddress:  token.helper.getAddress().Hex(),
+		BuyoutPricePerToken:      1.0,
+	})
+	assert.Nil(t, err)
+
+	tx, err := marketplace.Encoder.ApproveBuyoutListing(adminWallet, listingId, 10, adminWallet)
+	assert.Nil(t, err)
+	toAddress := tx.To()
+	assert.Equal(t, toAddress.Hex(), token.helper.getAddress().Hex())
+
+	token.SetAllowance(marketplace.helper.getAddress().Hex(), 1000000)
+
+	tx, err = marketplace.Encoder.BuyoutListing(adminWallet, listingId, 10, adminWallet)
+	assert.Nil(t, err)
+	toAddress = tx.To()
+	assert.Equal(t, toAddress.Hex(), marketplace.helper.getAddress().Hex())
+}
+
+func TestGenericEncoder(t *testing.T) {
+	marketplace := getMarketplace()
+	token := getMarketplaceToken()
+	edition := getMarketplaceEdition()
+
+	listingId, err := marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     edition.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 10,
+		CurrencyContractAddress:  token.helper.getAddress().Hex(),
+		BuyoutPricePerToken:      1.0,
+	})
+	assert.Nil(t, err)
+
+	tx, err := marketplace.Encoder.Encode(adminWallet, "cancelDirectListing", listingId)
+	assert.Nil(t, err)
+	toAddress := tx.To()
+	assert.Equal(t, toAddress.Hex(), marketplace.helper.getAddress().Hex())
+	assert.Equal(t, hex.EncodeToString(tx.Data()), "7506c84a0000000000000000000000000000000000000000000000000000000000000000")
 }

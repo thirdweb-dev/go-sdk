@@ -39,7 +39,10 @@ func newMarketplace(provider *ethclient.Client, address common.Address, privateK
 	} else if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 		return nil, err
 	} else {
-		encoder := newMarketplaceEncoder(contractAbi, helper, storage)
+		encoder, err := newMarketplaceEncoder(contractAbi, helper, storage)
+		if err != nil {
+			return nil, err
+		}
 
 		marketplace := &Marketplace{
 			abi:     contractAbi,

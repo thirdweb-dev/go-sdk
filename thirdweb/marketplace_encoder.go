@@ -38,14 +38,21 @@ type MarketplaceEncoder struct {
 	abi     *abi.Marketplace
 	helper  *contractHelper
 	storage storage
+	*ContractEncoder
 }
 
-func newMarketplaceEncoder(abi *abi.Marketplace, helper *contractHelper, storage storage) *MarketplaceEncoder {
-	return &MarketplaceEncoder{
-		abi:     abi,
-		helper:  helper,
-		storage: storage,
+func newMarketplaceEncoder(contractAbi *abi.Marketplace, helper *contractHelper, storage storage) (*MarketplaceEncoder, error) {
+	encoder, err := newContractEncoder(abi.MarketplaceABI, helper)
+	if err != nil {
+		return nil, err
 	}
+
+	return &MarketplaceEncoder{
+		abi:             contractAbi,
+		helper:          helper,
+		storage:         storage,
+		ContractEncoder: encoder,
+	}, nil
 }
 
 // Get the data for the transaction required to cancel a listing on the marketplace
