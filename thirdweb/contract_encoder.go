@@ -37,6 +37,8 @@ func newContractEncoder(contractAbi string, helper *contractHelper) (*ContractEn
 
 // Get the unsigned transaction data for any contract call on a contract.
 //
+// signerAddress: the address expected to sign this transaction
+//
 // method: the name of the contract function to encode transaction data for
 //
 // args: the arguments to pass to the contract function.
@@ -53,7 +55,7 @@ func newContractEncoder(contractAbi string, helper *contractHelper) (*ContractEn
 //  fmt.Println(tx.Data()) // Now you can access all transaction data, like the following fields
 // 	fmt.Println(tx.Nonce())
 //  fmt.Println(tx.Value())
-func (encoder *ContractEncoder) Encode(method string, args ...interface{}) (*types.Transaction, error) {
+func (encoder *ContractEncoder) Encode(signerAddress string, method string, args ...interface{}) (*types.Transaction, error) {
 	abiMethod, exist := encoder.abi.Methods[method]
 	if !exist {
 		return nil, fmt.Errorf("function '%s' not found in contract '%s'", method, encoder.helper.getAddress().String())
@@ -105,7 +107,7 @@ func (encoder *ContractEncoder) Encode(method string, args ...interface{}) (*typ
 		typedArgs = append(typedArgs, arg)
 	}
 
-	txOpts, err := encoder.helper.getUnsignedTxOptions("0x0000000000000000000000000000000000000000")
+	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
 	if err != nil {
 		return nil, err
 	}

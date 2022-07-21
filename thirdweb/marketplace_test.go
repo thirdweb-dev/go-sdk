@@ -309,7 +309,7 @@ func TestGenericEncoder(t *testing.T) {
 	})
 	assert.Nil(t, err)
 
-	tx, err := marketplace.Encoder.Encode("cancelDirectListing", listingId)
+	tx, err := marketplace.Encoder.Encode(adminWallet, "cancelDirectListing", listingId)
 	assert.Nil(t, err)
 	toAddress := tx.To()
 	assert.Equal(t, toAddress.Hex(), marketplace.helper.getAddress().Hex())
