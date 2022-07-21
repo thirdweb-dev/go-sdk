@@ -30,6 +30,7 @@ type Multiwrap struct {
 	abi    *abi.Multiwrap
 	helper *contractHelper
 	*ERC721
+	Encoder *ContractEncoder
 }
 
 func newMultiwrap(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Multiwrap, error) {
@@ -42,10 +43,16 @@ func newMultiwrap(provider *ethclient.Client, address common.Address, privateKey
 			if erc721, err := newERC721(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
+				encoder, err := newContractEncoder(abi.MultiwrapABI, helper)
+				if err != nil {
+					return nil, err
+				}
+
 				multiwrap := &Multiwrap{
 					contractAbi,
 					helper,
 					erc721,
+					encoder,
 				}
 				return multiwrap, nil
 			}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -41,7 +42,28 @@ var marketplaceListCmd = &cobra.Command{
 	},
 }
 
+var marketplaceEncodeCancelCmd = &cobra.Command{
+	Use:   "encode",
+	Short: "Encode cancel listing `ADDRESS`",
+	Run: func(cmd *cobra.Command, args []string) {
+		marketplace, err := getMarketplace()
+		if err != nil {
+			panic(err)
+		}
+
+		tx, err := marketplace.Encoder.CancelListing("0x0000000000000000000000000000000000000000", 0)
+
+		fmt.Println("Nonce:", tx.Nonce())
+		fmt.Println("To:", tx.To())
+		fmt.Println("GasLimit:", tx.Gas())
+		fmt.Println("GasPrice:", tx.GasPrice())
+		fmt.Println("Value:", tx.Value())
+		fmt.Println("Data:", hex.EncodeToString(tx.Data()))
+	},
+}
+
 func init() {
 	marketplaceCmd.PersistentFlags().StringVarP(&marketplaceAddress, "address", "a", "", "marketplace contract address")
 	marketplaceCmd.AddCommand(marketplaceListCmd)
+	marketplaceCmd.AddCommand(marketplaceEncodeCancelCmd)
 }

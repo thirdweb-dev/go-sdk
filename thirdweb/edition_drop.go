@@ -28,6 +28,7 @@ type EditionDrop struct {
 	helper *contractHelper
 	*ERC1155
 	claimConditions *editionDropClaimConditions
+	Encoder         *ContractEncoder
 }
 
 func newEditionDrop(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*EditionDrop, error) {
@@ -45,11 +46,17 @@ func newEditionDrop(provider *ethclient.Client, address common.Address, privateK
 					return nil, err
 				}
 
+				encoder, err := newContractEncoder(abi.DropERC1155ABI, helper)
+				if err != nil {
+					return nil, err
+				}
+
 				edition := &EditionDrop{
 					contractAbi,
 					helper,
 					erc1155,
 					claimConditions,
+					encoder,
 				}
 				return edition, nil
 			}

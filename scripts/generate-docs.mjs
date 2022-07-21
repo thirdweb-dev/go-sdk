@@ -9,6 +9,14 @@ const delimiters = {
     name: "contract_deployer.md",
     header: "Contract Deployments"
   },
+  "ContractEncoder": {
+    name: "contract_encoder.md",
+    header: "Contract Encoder"
+  },
+  "Currency": {
+    name: "delete.md",
+    header: "Delete"
+  },
   "ERC20": {
     name: "erc20.md",
     header: "ERC20",
@@ -48,6 +56,10 @@ const delimiters = {
   "Marketplace": {
     name: "marketplace.md",
     header: "Marketplace",
+  },
+  "MarketplaceEncoder": {
+    name: "marketplace_encoder.md",
+    header: "Marketplace Encoder",
   },
   "Multiwrap": {
     name: "multiwrap.md",
