@@ -28,6 +28,7 @@ type NFTDrop struct {
 	helper *contractHelper
 	*ERC721
 	claimConditions *nftDropClaimConditions
+	Encoder         *ContractEncoder
 }
 
 func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*NFTDrop, error) {
@@ -45,11 +46,17 @@ func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey s
 					return nil, err
 				}
 
+				encoder, err := newContractEncoder(abi.DropERC721ABI, helper)
+				if err != nil {
+					return nil, err
+				}
+
 				nftCollection := &NFTDrop{
 					contractAbi,
 					helper,
 					erc721,
 					claimConditions,
+					encoder,
 				}
 				return nftCollection, nil
 			}

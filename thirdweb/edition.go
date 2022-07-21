@@ -27,6 +27,7 @@ type Edition struct {
 	helper *contractHelper
 	*ERC1155
 	Signature *ERC1155SignatureMinting
+	Encoder   *ContractEncoder
 }
 
 func newEdition(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Edition, error) {
@@ -46,11 +47,17 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 				return nil, err
 			}
 
+			encoder, err := newContractEncoder(abi.TokenERC1155ABI, helper)
+			if err != nil {
+				return nil, err
+			}
+
 			edition := &Edition{
 				contractAbi,
 				helper,
 				erc1155,
 				signature,
+				encoder,
 			}
 			return edition, nil
 		}

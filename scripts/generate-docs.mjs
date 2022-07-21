@@ -49,6 +49,10 @@ const delimiters = {
     name: "marketplace.md",
     header: "Marketplace",
   },
+  "MarketplaceEncoder": {
+    name: "marketplace_encoder.md",
+    header: "Marketplace Encoder",
+  },
   "Multiwrap": {
     name: "multiwrap.md",
     header: "Multiwrap",
