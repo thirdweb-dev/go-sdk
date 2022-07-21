@@ -182,6 +182,20 @@ address, err := sdk.Deployer.DeployToken(
 })
 ```
 
+## type [ContractEncoder](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_encoder.go#L17-L21>)
+
+This interface is currently supported by all contract encoder classes and provides a generic method to encode write function calls\.
+
+```go
+type ContractEncoder struct {}
+```
+
+### func \(\*ContractEncoder\) [Encode](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_encoder.go#L38>)
+
+```go
+func (encoder *ContractEncoder) Encode(signerAddress string, method string, args ...interface{}) (*types.Transaction, error)
+```
+
 ## type [Currency](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L89-L93>)
 
 ```go
