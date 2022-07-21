@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -50,9 +51,14 @@ var marketplaceEncodeCancelCmd = &cobra.Command{
 			panic(err)
 		}
 
-		data, err := marketplace.Encoder.CancelListing("0x0000000000000000000000000000000000000000", 0)
+		tx, err := marketplace.Encoder.CancelListing("0x0000000000000000000000000000000000000000", 0)
 
-		fmt.Println(data)
+		fmt.Println("Nonce:", tx.Nonce())
+		fmt.Println("To:", tx.To())
+		fmt.Println("GasLimit:", tx.Gas())
+		fmt.Println("GasPrice:", tx.GasPrice())
+		fmt.Println("Value:", tx.Value())
+		fmt.Println("Data:", hex.EncodeToString(tx.Data()))
 	},
 }
 
