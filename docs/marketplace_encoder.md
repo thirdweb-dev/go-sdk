@@ -51,11 +51,23 @@ returns: the transaction data for the token approval if an approval is needed, o
 
 #### Example
 
-// Address of the wallet we expect to sign this message signerAddress := "0x\.\.\." // ID of the listing to buyout listingId := 1 // Quantity of the listed tokens to purchase quantityDesired := 1 // receiver address to receive the purchased tokens receiver := "0x\.\.\."
+```
+// Address of the wallet we expect to sign this message
+signerAddress := "0x..."
+// ID of the listing to buyout
+listingId := 1
+// Quantity of the listed tokens to purchase
+quantityDesired := 1
+// receiver address to receive the purchased tokens
+receiver := "0x..."
 
-// Transaction data required for this request tx, err := marketplace\.Encoder\.ApproveBuyoutListing\(signerAddress, listingId, quantityDesired, receiver\)
+// Transaction data required for this request
+tx, err := marketplace.Encoder.ApproveBuyoutListing(signerAddress, listingId, quantityDesired, receiver)
 
-// Now you can get transaction all the standard data as needed fmt\.Println\(tx\.Data\(\)\) // Ex: get the data field or the nonce field \(others are available\) fmt\.Println\(tx\.Nonce\(\)\)
+// Now you can get transaction all the standard data as needed
+fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+fmt.Println(tx.Nonce())
+```
 
 ### func \(\*MarketplaceEncoder\) [ApproveCreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L258>)
 
@@ -73,9 +85,10 @@ returns: the transaction data for the create listing transaction
 
 #### Example
 
-// Address of the wallet we expect to sign this message signerAddress := "0x\.\.\."
-
 ```
+// Address of the wallet we expect to sign this message
+signerAddress := "0x..."
+
 listing := &NewDirectListing{
 	AssetContractAddress: "0x...", // Address of the asset contract
 	TokenId: 0, // Token ID of the asset to list
@@ -85,11 +98,14 @@ listing := &NewDirectListing{
 	CurrencyContractAddress: "0x...", // Contract address of currency to sell for, defaults to native token
 	BuyoutPricePerToken: 1, // Price per token of the asset to list
 }
+
+// Transaction data required for this request
+tx, err := marketplace.Encoder.ApproveCreateListing(signerAddress, listing)
+
+// Now you can get transaction data as needed
+fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+fmt.Println(tx.Nonce())
 ```
-
-// Transaction data required for this request tx, err := marketplace\.Encoder\.ApproveCreateListing\(signerAddress, listing\)
-
-// Now you can get transaction data as needed fmt\.Println\(tx\.Data\(\)\) // Ex: get the data field or the nonce field \(others are available\) fmt\.Println\(tx\.Nonce\(\)\)
 
 ### func \(\*MarketplaceEncoder\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L185-L190>)
 
@@ -111,11 +127,23 @@ returns: the transaction data for this purchase
 
 #### Example
 
-// Address of the wallet we expect to sign this message signerAddress := "0x\.\.\." // ID of the listing to buyout listingId := 1 // Quantity of the listed tokens to purchase quantityDesired := 1 // receiver address to receive the purchased tokens receiver := "0x\.\.\."
+```
+// Address of the wallet we expect to sign this message
+signerAddress := "0x..."
+// ID of the listing to buyout
+listingId := 1
+// Quantity of the listed tokens to purchase
+quantityDesired := 1
+// receiver address to receive the purchased tokens
+receiver := "0x..."
 
-// Transaction data required for this request tx, err := marketplace\.Encoder\.BuyoutListing\(signerAddress, listingId, quantityDesired, receiver\)
+// Transaction data required for this request
+tx, err := marketplace.Encoder.BuyoutListing(signerAddress, listingId, quantityDesired, receiver)
 
-// Now you can get transaction all the standard data as needed fmt\.Println\(tx\.Data\(\)\) // Ex: get the data field or the nonce field \(others are available\) fmt\.Println\(tx\.Nonce\(\)\)
+// Now you can get transaction all the standard data as needed
+fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+fmt.Println(tx.Nonce())
+```
 
 ### func \(\*MarketplaceEncoder\) [CancelListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L79>)
 
@@ -133,11 +161,19 @@ returns: the transaction data for the cancellation
 
 #### Example
 
-// Address of the wallet we expect to sign this message signerAddress := "0x\.\.\." // ID of the listing to cancel listingId := 1
+```
+// Address of the wallet we expect to sign this message
+signerAddress := "0x..."
+// ID of the listing to cancel
+listingId := 1
 
-// Transaction data required for this request tx, err := marketplace\.Encoder\.CancelListing\(signerAddress, listingId\)
+// Transaction data required for this request
+tx, err := marketplace.Encoder.CancelListing(signerAddress, listingId)
 
-// Now you can get transaction all the standard data as needed fmt\.Println\(tx\.Data\(\)\) // Ex: get the data field or the nonce field \(others are available\) fmt\.Println\(tx\.Nonce\(\)\)
+// Now you can get transaction all the standard data as needed
+fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+fmt.Println(tx.Nonce())
+```
 
 ### func \(\*MarketplaceEncoder\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L302>)
 
@@ -155,9 +191,10 @@ returns: the transaction data for the create listing transaction
 
 #### Example
 
-// Address of the wallet we expect to sign this message signerAddress := "0x\.\.\."
-
 ```
+// Address of the wallet we expect to sign this message
+signerAddress := "0x..."
+
 listing := &NewDirectListing{
 	AssetContractAddress: "0x...", // Address of the asset contract
 	TokenId: 0, // Token ID of the asset to list
@@ -167,11 +204,14 @@ listing := &NewDirectListing{
 	CurrencyContractAddress: "0x...", // Contract address of currency to sell for, defaults to native token
 	BuyoutPricePerToken: 1, // Price per token of the asset to list
 }
+
+// Transaction data required for this request
+tx, err := marketplace.Encoder.CreateListing(signerAddress, listing)
+
+// Now you can get transaction data as needed
+fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+fmt.Println(tx.Nonce())
 ```
-
-// Transaction data required for this request tx, err := marketplace\.Encoder\.CreateListing\(signerAddress, listing\)
-
-// Now you can get transaction data as needed fmt\.Println\(tx\.Data\(\)\) // Ex: get the data field or the nonce field \(others are available\) fmt\.Println\(tx\.Nonce\(\)\)
 
 ## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L13-L16>)
 
