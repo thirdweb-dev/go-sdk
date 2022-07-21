@@ -52,9 +52,9 @@ func newContractEncoder(contractAbi string, helper *contractHelper) (*ContractEn
 //
 // 	// Now you can get the transaction data for the contract call.
 // 	tx, err := contract.Encoder.Encode("transfer", toAddress, amount)
-//  fmt.Println(tx.Data()) // Now you can access all transaction data, like the following fields
+// 	fmt.Println(tx.Data()) // Now you can access all transaction data, like the following fields
 // 	fmt.Println(tx.Nonce())
-//  fmt.Println(tx.Value())
+// 	fmt.Println(tx.Value())
 func (encoder *ContractEncoder) Encode(signerAddress string, method string, args ...interface{}) (*types.Transaction, error) {
 	abiMethod, exist := encoder.abi.Methods[method]
 	if !exist {
