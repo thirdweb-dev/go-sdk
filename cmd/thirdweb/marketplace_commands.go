@@ -52,7 +52,7 @@ var marketplaceEncodeCancelCmd = &cobra.Command{
 
 		data, err := marketplace.Encoder.CancelListing("0x0000000000000000000000000000000000000000", 0)
 
-		fmt.Println(string(data))
+		fmt.Println(data)
 	},
 }
 

@@ -40,16 +40,26 @@ func (helper *contractHelper) getAddress() common.Address {
 }
 
 func (helper *contractHelper) getUnsignedTxOptions(signerAddress string) (*bind.TransactOpts, error) {
-	txOpts, err := helper.getRawTxOptions(true)
-	if err != nil {
-		return nil, err
+	var tipCap, feeCap *big.Int
+
+	provider := helper.GetProvider()
+	block, err := provider.BlockByNumber(context.Background(), nil)
+	if err == nil && block.BaseFee() != nil {
+		tipCap, _ = big.NewInt(0).SetString("2500000000", 10)
+		baseFee := big.NewInt(0).Mul(block.BaseFee(), big.NewInt(2))
+		feeCap = big.NewInt(0).Add(baseFee, tipCap)
+	}
+
+	txOpts := &bind.TransactOpts{
+		NoSend:    true,
+		From:      common.HexToAddress(signerAddress),
+		GasTipCap: tipCap,
+		GasFeeCap: feeCap,
 	}
 
 	txOpts.Signer = func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		return transaction, nil
 	}
-
-	txOpts.From = common.HexToAddress(signerAddress)
 
 	return txOpts, nil
 }

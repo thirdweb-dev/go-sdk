@@ -98,6 +98,9 @@ test-deploy:
 	./bin/thirdweb deploy multiwrap -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb deploy marketplace -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
+test-encoder:
+	./bin/thirdweb marketplace encode -a ${GO_MARKETPLACE} -k ${GO_PRIVATE_KEY} -u ${GO_AVAX_RPC}
+
 test-cmd:
 	make cmd
 	make test-nft-read
