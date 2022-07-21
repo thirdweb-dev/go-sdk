@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
-	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -31,6 +30,7 @@ type Marketplace struct {
 	abi     *abi.Marketplace
 	helper  *contractHelper
 	storage storage
+	Encoder *MarketplaceEncoder
 }
 
 func newMarketplace(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Marketplace, error) {
@@ -39,10 +39,13 @@ func newMarketplace(provider *ethclient.Client, address common.Address, privateK
 	} else if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 		return nil, err
 	} else {
+		encoder := newMarketplaceEncoder(contractAbi, helper, storage)
+
 		marketplace := &Marketplace{
-			contractAbi,
-			helper,
-			storage,
+			abi:     contractAbi,
+			helper:  helper,
+			storage: storage,
+			Encoder: encoder,
 		}
 		return marketplace, nil
 	}
@@ -69,7 +72,7 @@ func (marketplace *Marketplace) GetListing(listingId int) (*DirectListing, error
 	}
 
 	if listing.ListingType == 0 {
-		return marketplace.mapListing(listing)
+		return mapListing(marketplace.helper, marketplace.storage, listing)
 	} else {
 		return nil, fmt.Errorf("Unknown listing type: %d", listingId)
 	}
@@ -174,7 +177,7 @@ func (marketplace *Marketplace) BuyoutListingTo(listingId int, quantityDesired i
 		return nil, err
 	}
 
-	valid, err := marketplace.isStillValidListing(listing, quantityDesired)
+	valid, err := isStillValidListing(marketplace.helper, listing, quantityDesired)
 	if err != nil {
 		return nil, err
 	}
@@ -301,108 +304,6 @@ func (marketplace *Marketplace) validateListing(listingId int) (*DirectListing, 
 	}
 
 	return listing, nil
-}
-
-func (marketplace *Marketplace) isStillValidListing(listing *DirectListing, quantity int) (bool, error) {
-	approved, err := isTokenApprovedForTransfer(
-		marketplace.helper.GetProvider(),
-		marketplace.helper.getAddress().Hex(),
-		listing.AssetContractAddress,
-		listing.TokenId,
-		listing.SellerAddress,
-	)
-	if err != nil {
-		return false, err
-	}
-
-	if !approved {
-		return false, nil
-	}
-
-	erc165, err := abi.NewIERC165(common.HexToAddress(listing.AssetContractAddress), marketplace.helper.GetProvider())
-	if err != nil {
-		return false, err
-	}
-
-	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
-	if err != nil {
-		return false, err
-	}
-
-	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
-	if err != nil {
-		return false, err
-	}
-
-	if isErc721 {
-		contract, err := abi.NewTokenERC721(
-			common.HexToAddress(listing.AssetContractAddress),
-			marketplace.helper.GetProvider(),
-		)
-		if err != nil {
-			return false, err
-		}
-
-		ownerOf, err := contract.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(listing.TokenId)))
-		if err != nil {
-			return false, err
-		}
-
-		return strings.ToLower(ownerOf.Hex()) == strings.ToLower(listing.SellerAddress), nil
-	} else if isErc1155 {
-		contract, err := abi.NewTokenERC1155(
-			common.HexToAddress(listing.AssetContractAddress),
-			marketplace.helper.GetProvider(),
-		)
-		if err != nil {
-			return false, err
-		}
-
-		balance, err := contract.BalanceOf(
-			&bind.CallOpts{},
-			common.HexToAddress(listing.SellerAddress),
-			big.NewInt(int64(listing.TokenId)),
-		)
-
-		return balance.Int64() >= int64(quantity), nil
-	} else {
-		return false, errors.New("Contract does not implement ERC721 or ERC1155")
-	}
-}
-
-func (marketplace *Marketplace) mapListing(listing abi.IMarketplaceListing) (*DirectListing, error) {
-	currencyValue, err := fetchCurrencyValue(
-		marketplace.helper.GetProvider(),
-		listing.Currency.String(),
-		listing.BuyoutPricePerToken,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	asset, err := fetchTokenMetadataForContract(
-		listing.AssetContract.String(),
-		marketplace.helper.GetProvider(),
-		int(listing.TokenId.Int64()),
-		marketplace.storage,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &DirectListing{
-		AssetContractAddress:        listing.AssetContract.String(),
-		BuyoutPrice:                 int(listing.BuyoutPricePerToken.Int64()),
-		CurrencyContractAddress:     listing.Currency.String(),
-		BuyoutCurrencyValuePerToken: currencyValue,
-		Id:                          listing.ListingId.String(),
-		TokenId:                     int(listing.TokenId.Int64()),
-		Quantity:                    int(listing.Quantity.Int64()),
-		StartTimeInEpochSeconds:     int(listing.StartTime.Int64()),
-		EndTimeInEpochSeconds:       int(listing.EndTime.Int64()),
-		SellerAddress:               listing.TokenOwner.String(),
-		Asset:                       asset,
-	}, nil
 }
 
 func (marketplace *Marketplace) getAllListingsNoFilter() ([]*DirectListing, error) {

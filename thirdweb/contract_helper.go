@@ -39,6 +39,21 @@ func (helper *contractHelper) getAddress() common.Address {
 	return helper.address
 }
 
+func (helper *contractHelper) getUnsignedTxOptions(signerAddress string) (*bind.TransactOpts, error) {
+	txOpts, err := helper.getRawTxOptions(true)
+	if err != nil {
+		return nil, err
+	}
+
+	txOpts.Signer = func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+		return transaction, nil
+	}
+
+	txOpts.From = common.HexToAddress(signerAddress)
+
+	return txOpts, nil
+}
+
 func (helper *contractHelper) getEncodedTxOptions() (*bind.TransactOpts, error) {
 	return helper.getRawTxOptions(true)
 }
