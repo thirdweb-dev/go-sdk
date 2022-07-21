@@ -508,7 +508,7 @@ func (encoder *MarketplaceEncoder) checkTokenApproval(
 			)
 		}
 	} else {
-		return errors.New("Contract does not implement ERC721 or ERC1155")
+		return errors.New("Contract does not implement ERC721 or ERC1155.")
 	}
 
 	return nil
