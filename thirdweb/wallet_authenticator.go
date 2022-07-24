@@ -387,6 +387,7 @@ func (auth *WalletAuthenticator) generateMessage(
 }
 
 func (auth *WalletAuthenticator) recoverAddress(message string, signature []byte) (string, error) {
+	// Support both formats of recovery bit (27/28 or 0/1)
 	if signature[64] == 27 || signature[64] == 28 {
 		signature[64] -= 27
 	}
