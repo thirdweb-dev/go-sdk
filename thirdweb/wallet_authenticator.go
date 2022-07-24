@@ -159,7 +159,6 @@ func (auth *WalletAuthenticator) Verify(
 	if err != nil {
 		return "", err
 	}
-	fmt.Println(decodedSignature)
 
 	message := auth.generateMessage(payload.Payload)
 	userAddress, err := auth.recoverAddress(message, decodedSignature)
@@ -388,6 +387,10 @@ func (auth *WalletAuthenticator) generateMessage(
 }
 
 func (auth *WalletAuthenticator) recoverAddress(message string, signature []byte) (string, error) {
+	if signature[64] == 27 || signature[64] == 28 {
+		signature[64] -= 27
+	}
+
 	messageByte := []byte(message)
 	messageHash := crypto.Keccak256Hash(messageByte)
 	publicKey, err := crypto.SigToPub(messageHash.Bytes(), signature)
