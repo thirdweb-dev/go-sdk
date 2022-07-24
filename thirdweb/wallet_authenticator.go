@@ -362,7 +362,7 @@ func (auth *WalletAuthenticator) generateMessage(
 	message := ""
 
 	// Add the domain and login address for transparency
-	message += fmt.Sprintf("%s wants you to sign in with your account:\n%s", payload.Domain, payload.Address)
+	message += fmt.Sprintf("%s wants you to sign in with your account:\n%s\n\n", payload.Domain, payload.Address)
 
 	// Prompt user to make sure that domain is correct to prevent phishing attacks
 	message += "Make sure that the requesting domain above matches the URL of the current website.\n\n"
@@ -373,9 +373,10 @@ func (auth *WalletAuthenticator) generateMessage(
 	}
 
 	message += fmt.Sprintf("Nonce: %s\n", payload.Nonce)
-	message += fmt.Sprintf("Expiration Time: %s\n", payload.ExpirationTime.Format(time.RFC3339))
+	message += fmt.Sprintf("Expiration Time: %s\n", payload.ExpirationTime.Format("2006-01-02T15:04:05.999Z"))
 
-	return message
+	fullMessage := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)
+	return fullMessage
 }
 
 func (auth *WalletAuthenticator) recoverAddress(message string, signature []byte) (string, error) {
