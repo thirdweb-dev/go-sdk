@@ -382,6 +382,12 @@ func (auth *WalletAuthenticator) generateMessage(
 func (auth *WalletAuthenticator) recoverAddress(message string, signature []byte) (string, error) {
 	messageByte := []byte(message)
 	messageHash := crypto.Keccak256Hash(messageByte)
+
+	// Support both ECDSA and ECDSA-recoverable signatures
+	if signature[64] == 27 || signature[64] == 28 {
+		signature[64] -= 27
+	}
+
 	publicKey, err := crypto.SigToPub(messageHash.Bytes(), signature)
 	if err != nil {
 		return "", err
