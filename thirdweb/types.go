@@ -228,16 +228,16 @@ type WalletLoginOptions struct {
 }
 
 type WalletLoginPayloadData struct {
-	Domain         string
-	Address        string
-	Nonce          string
-	ExpirationTime time.Time
-	ChainId        int
+	Domain         string    `json:"domain"`
+	Address        string    `json:"address"`
+	Nonce          string    `json:"nonce"`
+	ExpirationTime time.Time `json:"expiration_time"`
+	ChainId        int       `json:"chain_id"`
 }
 
 type WalletLoginPayload struct {
-	Payload   *WalletLoginPayloadData
-	Signature []byte
+	Payload   *WalletLoginPayloadData `json:"payload"`
+	Signature []byte                  `json:"signature"`
 }
 
 type WalletVerifyOptions struct {
