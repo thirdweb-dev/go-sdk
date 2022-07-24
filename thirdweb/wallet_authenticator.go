@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/google/uuid"
@@ -104,7 +105,7 @@ func (auth *WalletAuthenticator) Login(
 
 	return &WalletLoginPayload{
 		Payload:   payloadData,
-		Signature: signature,
+		Signature: fmt.Sprintf("0x%s", string(signature)),
 	}, nil
 }
 
@@ -153,8 +154,13 @@ func (auth *WalletAuthenticator) Verify(
 		)
 	}
 
+	decodedSignature, err := hexutil.Decode(payload.Signature)
+	if err != nil {
+		return "", err
+	}
+
 	message := auth.generateMessage(payload.Payload)
-	userAddress, err := auth.recoverAddress(message, payload.Signature)
+	userAddress, err := auth.recoverAddress(message, decodedSignature)
 	if err != nil {
 		return "", err
 	}
