@@ -237,7 +237,7 @@ type WalletLoginPayloadData struct {
 
 type WalletLoginPayload struct {
 	Payload   *WalletLoginPayloadData `json:"payload"`
-	Signature []byte                  `json:"signature"`
+	Signature string                  `json:"signature"`
 }
 
 type WalletVerifyOptions struct {
@@ -257,11 +257,6 @@ type WalletAuthenticationPayloadData struct {
 	Nbf int64  `json:"nbf"`
 	Iat int64  `json:"iat"`
 	Jti string `json:"jti"`
-}
-
-type WalletAuthenticationPayload struct {
-	Payload   *WalletAuthenticationPayloadData
-	Signature []byte
 }
 
 // Contract Metadata
