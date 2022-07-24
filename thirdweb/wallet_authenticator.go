@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -105,7 +106,7 @@ func (auth *WalletAuthenticator) Login(
 
 	return &WalletLoginPayload{
 		Payload:   payloadData,
-		Signature: fmt.Sprintf("0x%s", string(signature)),
+		Signature: fmt.Sprintf("0x%s", hex.EncodeToString(signature)),
 	}, nil
 }
 
@@ -158,6 +159,7 @@ func (auth *WalletAuthenticator) Verify(
 	if err != nil {
 		return "", err
 	}
+	fmt.Println(decodedSignature)
 
 	message := auth.generateMessage(payload.Payload)
 	userAddress, err := auth.recoverAddress(message, decodedSignature)
