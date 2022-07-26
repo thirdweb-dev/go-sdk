@@ -32,7 +32,7 @@ type WalletAuthenticator struct {
 }
 ```
 
-### func \(\*WalletAuthenticator\) [Authenticate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L273-L276>)
+### func \(\*WalletAuthenticator\) [Authenticate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L280-L283>)
 
 ```go
 func (auth *WalletAuthenticator) Authenticate(domain string, token string) (string, error)
@@ -57,7 +57,7 @@ token, err := sdk.Auth.GenerateAuthToken(domain, payload)
 address, err := sdk.Auth.Authenticate(domain, token)
 ```
 
-### func \(\*WalletAuthenticator\) [GenerateAuthToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L190-L194>)
+### func \(\*WalletAuthenticator\) [GenerateAuthToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L197-L201>)
 
 ```go
 func (auth *WalletAuthenticator) GenerateAuthToken(domain string, payload *WalletLoginPayload, options *WalletAuthenticationOptions) (string, error)
@@ -83,7 +83,7 @@ payload, err := sdk.Auth.Login(domain, nil)
 token, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)
 ```
 
-### func \(\*WalletAuthenticator\) [Login](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L70-L73>)
+### func \(\*WalletAuthenticator\) [Login](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L72-L75>)
 
 ```go
 func (auth *WalletAuthenticator) Login(domain string, options *WalletLoginOptions) (*WalletLoginPayload, error)
@@ -107,7 +107,7 @@ domain := "thirdweb.com"
 payload, err := sdk.Auth.Login(domain, nil)
 ```
 
-### func \(\*WalletAuthenticator\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L127-L131>)
+### func \(\*WalletAuthenticator\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/wallet_authenticator.go#L129-L133>)
 
 ```go
 func (auth *WalletAuthenticator) Verify(domain string, payload *WalletLoginPayload, options *WalletVerifyOptions) (string, error)
@@ -145,8 +145,8 @@ type WalletLoginOptions struct {
 
 ```go
 type WalletLoginPayload struct {
-    Payload   *WalletLoginPayloadData
-    Signature []byte
+    Payload   *WalletLoginPayloadData `json:"payload"`
+    Signature string                  `json:"signature"`
 }
 ```
 
@@ -154,11 +154,11 @@ type WalletLoginPayload struct {
 
 ```go
 type WalletLoginPayloadData struct {
-    Domain         string
-    Address        string
-    Nonce          string
-    ExpirationTime time.Time
-    ChainId        int
+    Domain         string    `json:"domain"`
+    Address        string    `json:"address"`
+    Nonce          string    `json:"nonce"`
+    ExpirationTime time.Time `json:"expiration_time"`
+    ChainId        int       `json:"chain_id"`
 }
 ```
 
