@@ -286,8 +286,13 @@ func (auth *WalletAuthenticator) Authenticate(
 		return "", err
 	}
 
-	encodedPayload := strings.Split(token, ".")[1]
-	encodedSignature := strings.Split(token, ".")[2]
+	tokenParts := strings.Split(token, ".")
+	if len(tokenParts) != 3 {
+		return "", fmt.Errorf("Invalid authentication token format")
+	}
+
+	encodedPayload := tokenParts[1]
+	encodedSignature := tokenParts[2]
 
 	decodedPayload, err := auth.base64Decode(encodedPayload)
 	if err != nil {
