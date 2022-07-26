@@ -84,6 +84,8 @@ func (marketplace *Marketplace) GetListing(listingId int) (*DirectListing, error
 
 // Get all active listings from the marketplace.
 //
+// filter: optional filter parameters
+//
 // returns: all active listings in the marketplace
 //
 // Example
@@ -113,6 +115,8 @@ func (marketplace *Marketplace) GetActiveListings(filter *MarketplaceFilter) ([]
 }
 
 // Get all the listings from the marketplace.
+//
+// filter: optional filter parameters
 //
 // returns: all listings in the marketplace
 //
@@ -208,7 +212,7 @@ func (marketplace *Marketplace) BuyoutListingTo(listingId int, quantityDesired i
 	}
 
 	quantity := big.NewInt(int64(quantityDesired))
-	value := big.NewInt(int64(listing.BuyoutPrice)).Mul(big.NewInt(int64(listing.BuyoutPrice)), quantity)
+	value := listing.BuyoutCurrencyValuePerToken.Value.Mul(listing.BuyoutCurrencyValuePerToken.Value, quantity)
 
 	txOpts, err := marketplace.helper.getTxOptions()
 	if err != nil {
@@ -350,6 +354,34 @@ func (marketplace *Marketplace) applyFilter(listings []*DirectListing, filter *M
 		return listings, nil
 	}
 
+	filteredListings := listings
+
+	if filter.Seller != "" {
+		rawListings := []*DirectListing{}
+		for _, listing := range filteredListings {
+			if strings.ToLower(listing.SellerAddress) == strings.ToLower(filter.Seller) {
+				rawListings = append(rawListings, listing)
+			}
+		}
+
+		filteredListings = rawListings
+	}
+
+	if filter.TokenContract != "" {
+		rawListings := []*DirectListing{}
+		for _, listing := range filteredListings {
+			if strings.ToLower(listing.AssetContractAddress) == strings.ToLower(filter.TokenContract) {
+				rawListings = append(rawListings, listing)
+			}
+		}
+
+		filteredListings = rawListings
+	}
+
+	if len(filteredListings) == 0 {
+		return filteredListings, nil
+	}
+
 	start := 0
 	count := 100
 
@@ -361,30 +393,15 @@ func (marketplace *Marketplace) applyFilter(listings []*DirectListing, filter *M
 		count = filter.Count
 	}
 
-	filteredListings := []*DirectListing{}
-
-	rawListings := []*DirectListing{}
-	if filter.Seller != "" {
-		for _, listing := range listings {
-			if strings.ToLower(listing.SellerAddress) == strings.ToLower(filter.Seller) {
-				rawListings = append(filteredListings, listing)
-			}
-
-			filteredListings = rawListings
-		}
+	if start > len(filteredListings)-1 {
+		return nil, fmt.Errorf("Start index %d is out of bounds for %d total listings", start, len(filteredListings))
 	}
 
-	rawListings = []*DirectListing{}
-	if filter.TokenContract != "" {
-		for _, listing := range listings {
-			if strings.ToLower(listing.AssetContractAddress) == strings.ToLower(filter.TokenContract) {
-				rawListings = append(filteredListings, listing)
-			}
-
-			filteredListings = rawListings
-		}
+	end := start + count
+	if start+count > len(filteredListings) {
+		end = len(filteredListings)
 	}
 
-	filteredListings = filteredListings[start : start+count]
+	filteredListings = filteredListings[start:end]
 	return filteredListings, nil
 }

@@ -468,7 +468,7 @@ type DirectListing struct {
 	Quantity                    int
 	CurrencyContractAddress     string
 	BuyoutCurrencyValuePerToken *CurrencyValue
-	BuyoutPrice                 int
+	BuyoutPrice                 string
 	SellerAddress               string
 }
 
@@ -505,8 +505,8 @@ type AuctionListing struct {
 	EndTimeInEpochSeconds             int
 	Quantity                          int
 	CurrencyContractAddress           string
-	ReservePrice                      int
-	BuyoutPrice                       int
+	ReservePrice                      string
+	BuyoutPrice                       string
 	BuyoutCurrencyValuePerToken       *CurrencyValue
 	ReservePriceCurrencyValuePerToken *CurrencyValue
 	SellerAddress                     string

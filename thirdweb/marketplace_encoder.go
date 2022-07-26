@@ -136,7 +136,7 @@ func (encoder *MarketplaceEncoder) ApproveBuyoutListing(
 	}
 
 	quantity := big.NewInt(int64(quantityDesired))
-	value := big.NewInt(int64(listing.BuyoutPrice)).Mul(big.NewInt(int64(listing.BuyoutPrice)), quantity)
+	value := listing.BuyoutCurrencyValuePerToken.Value.Mul(listing.BuyoutCurrencyValuePerToken.Value, quantity)
 
 	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
 	if err != nil {
@@ -203,7 +203,7 @@ func (encoder *MarketplaceEncoder) BuyoutListing(
 	}
 
 	quantity := big.NewInt(int64(quantityDesired))
-	value := big.NewInt(int64(listing.BuyoutPrice)).Mul(big.NewInt(int64(listing.BuyoutPrice)), quantity)
+	value := listing.BuyoutCurrencyValuePerToken.Value.Mul(listing.BuyoutCurrencyValuePerToken.Value, quantity)
 
 	err = encoder.checkErc20Allowance(
 		signerAddress,

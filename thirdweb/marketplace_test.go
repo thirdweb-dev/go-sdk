@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func getMarketpaceNft() *NFTCollection {
+func getMarketplaceNft() *NFTCollection {
 	nft := getNft()
 	nft.MintBatch([]*NFTMetadataInput{
 		{
@@ -72,7 +72,7 @@ func getMarketplace() *Marketplace {
 
 func TestListNft(t *testing.T) {
 	marketplace := getMarketplace()
-	nft := getMarketpaceNft()
+	nft := getMarketplaceNft()
 
 	listingId, err := marketplace.CreateListing(&NewDirectListing{
 		AssetContractAddress:     nft.helper.getAddress().Hex(),
@@ -117,7 +117,7 @@ func TestListEdition(t *testing.T) {
 
 func TestListToken(t *testing.T) {
 	marketplace := getMarketplace()
-	nft := getMarketpaceNft()
+	nft := getMarketplaceNft()
 	token := getMarketplaceToken()
 
 	listingId, err := marketplace.CreateListing(&NewDirectListing{
@@ -138,7 +138,48 @@ func TestListToken(t *testing.T) {
 	assert.Equal(t, listing.CurrencyContractAddress, token.helper.getAddress().Hex())
 }
 
-func TestBuyoutListing(t *testing.T) {
+func TestBuyoutListingNft(t *testing.T) {
+	marketplace := getMarketplace()
+	nft := getMarketplaceNft()
+	token := getMarketplaceToken()
+
+	adminBalance, _ := nft.BalanceOf(adminWallet)
+	secondaryBalance, _ := nft.BalanceOf(secondaryWallet)
+	assert.Equal(t, adminBalance, 2)
+	assert.Equal(t, secondaryBalance, 0)
+
+	adminTokens, _ := token.BalanceOf(adminWallet)
+	secondaryTokens, _ := token.BalanceOf(secondaryWallet)
+	assert.Equal(t, adminTokens.DisplayValue, float64(100))
+	assert.Equal(t, secondaryTokens.DisplayValue, float64(100))
+
+	listingId, err := marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     nft.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 1,
+		CurrencyContractAddress:  token.helper.getAddress().Hex(),
+		BuyoutPricePerToken:      10.0,
+	})
+	assert.Nil(t, err)
+
+	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
+	_, err = marketplace.BuyoutListing(listingId, 1)
+	assert.Nil(t, err)
+
+	adminBalance, _ = nft.BalanceOf(adminWallet)
+	secondaryBalance, _ = nft.BalanceOf(secondaryWallet)
+	assert.Equal(t, adminBalance, 1)
+	assert.Equal(t, secondaryBalance, 1)
+
+	adminTokens, _ = token.BalanceOf(adminWallet)
+	secondaryTokens, _ = token.BalanceOf(secondaryWallet)
+	assert.Equal(t, adminTokens.DisplayValue, float64(110))
+	assert.Equal(t, secondaryTokens.DisplayValue, float64(90))
+}
+
+func TestBuyoutListingEdition(t *testing.T) {
 	marketplace := getMarketplace()
 	token := getMarketplaceToken()
 	edition := getMarketplaceEdition()
@@ -180,9 +221,82 @@ func TestBuyoutListing(t *testing.T) {
 	assert.Equal(t, secondaryTokens.DisplayValue, float64(90))
 }
 
+func TestGetListingFilters(t *testing.T) {
+	marketplace := getMarketplace()
+	nft := getMarketplaceNft()
+	edition := getMarketplaceEdition()
+	token := getMarketplaceToken()
+
+	listingId, err := marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     nft.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 1,
+		CurrencyContractAddress:  "0x0000000000000000000000000000000000000000",
+		BuyoutPricePerToken:      0,
+	})
+	assert.Nil(t, err)
+	assert.Equal(t, listingId, 0)
+
+	listingId, err = marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     nft.helper.getAddress().Hex(),
+		TokenId:                  1,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 1,
+		CurrencyContractAddress:  "0x0000000000000000000000000000000000000000",
+		BuyoutPricePerToken:      1.0,
+	})
+	assert.Nil(t, err)
+	assert.Equal(t, listingId, 1)
+
+	listingId, err = marketplace.CreateListing(&NewDirectListing{
+		AssetContractAddress:     edition.helper.getAddress().Hex(),
+		TokenId:                  0,
+		StartTimeInEpochSeconds:  int(time.Now().Unix()) - 1000,
+		ListingDurationInSeconds: 10000,
+		Quantity:                 10,
+		CurrencyContractAddress:  token.helper.getAddress().Hex(),
+		BuyoutPricePerToken:      1.0,
+	})
+	assert.Nil(t, err)
+	assert.Equal(t, listingId, 2)
+
+	listings, err := marketplace.GetAllListings(nil)
+	assert.Nil(t, err)
+	assert.Equal(t, len(listings), 3)
+
+	listings, err = marketplace.GetAllListings(&MarketplaceFilter{
+		TokenContract: nft.helper.getAddress().Hex(),
+	})
+	assert.Nil(t, err)
+	assert.Equal(t, len(listings), 2)
+
+	listings, err = marketplace.GetAllListings(&MarketplaceFilter{
+		Seller: adminWallet,
+	})
+	assert.Nil(t, err)
+	assert.Equal(t, len(listings), 3)
+
+	listings, err = marketplace.GetAllListings(&MarketplaceFilter{
+		Seller: secondaryWallet,
+	})
+	assert.Nil(t, err)
+	assert.Equal(t, len(listings), 0)
+
+	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
+	_, err = marketplace.BuyoutListing(2, 10)
+	assert.Nil(t, err)
+
+	listings, err = marketplace.GetActiveListings(nil)
+	assert.Nil(t, err)
+	assert.Equal(t, len(listings), 2)
+}
+
 func TestCreateListingUnapprovedEncoder(t *testing.T) {
 	marketplace := getMarketplace()
-	nft := getMarketpaceNft()
+	nft := getMarketplaceNft()
 
 	_, err := marketplace.Encoder.CreateListing(adminWallet, &NewDirectListing{
 		AssetContractAddress:     nft.helper.getAddress().Hex(),
@@ -227,7 +341,7 @@ func TestBuyoutListingUnapprovedEncoder(t *testing.T) {
 
 func TestCreateListingApprovedEncoder(t *testing.T) {
 	marketplace := getMarketplace()
-	nft := getMarketpaceNft()
+	nft := getMarketplaceNft()
 
 	tx, err := marketplace.Encoder.ApproveCreateListing(adminWallet, &NewDirectListing{
 		AssetContractAddress:     nft.helper.getAddress().Hex(),

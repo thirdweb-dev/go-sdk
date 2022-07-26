@@ -23,7 +23,7 @@ type Marketplace struct {
 }
 ```
 
-### func \(\*Marketplace\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L157>)
+### func \(\*Marketplace\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L179>)
 
 ```go
 func (marketplace *Marketplace) BuyoutListing(listingId int, quantityDesired int) (*types.Transaction, error)
@@ -37,7 +37,7 @@ quantityDesired: the quantity of the asset to buy from the listing
 
 returns: transaction receipt of the purchase
 
-### func \(\*Marketplace\) [BuyoutListingTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L177>)
+### func \(\*Marketplace\) [BuyoutListingTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L199>)
 
 ```go
 func (marketplace *Marketplace) BuyoutListingTo(listingId int, quantityDesired int, receiver string) (*types.Transaction, error)
@@ -62,7 +62,7 @@ receiver := "0x..."
 receipt, err := marketplace.BuyoutListingTo(listingId, quantityDesired, receiver)
 ```
 
-### func \(\*Marketplace\) [CancelListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L136>)
+### func \(\*Marketplace\) [CancelListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L158>)
 
 ```go
 func (marketplace *Marketplace) CancelListing(listingId int) (*types.Transaction, error)
@@ -81,7 +81,7 @@ listingId := 0
 receipt, err := marketplace.CancelListing(listingId)
 ```
 
-### func \(\*Marketplace\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L244>)
+### func \(\*Marketplace\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L266>)
 
 ```go
 func (marketplace *Marketplace) CreateListing(listing *NewDirectListing) (int, error)
@@ -109,13 +109,15 @@ listing := &NewDirectListing{
 listingId, err := marketplace.CreateListing(listing)
 ```
 
-### func \(\*Marketplace\) [GetActiveListings](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L93>)
+### func \(\*Marketplace\) [GetActiveListings](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L96>)
 
 ```go
-func (marketplace *Marketplace) GetActiveListings() ([]*DirectListing, error)
+func (marketplace *Marketplace) GetActiveListings(filter *MarketplaceFilter) ([]*DirectListing, error)
 ```
 
 Get all active listings from the marketplace\.
+
+filter: optional filter parameters
 
 returns: all active listings in the marketplace
 
@@ -127,19 +129,21 @@ listings, err := marketplace.GetActiveListings()
 listings[0].BuyoutCurrencyValuePerToken.DisplayValue
 ```
 
-### func \(\*Marketplace\) [GetAllListings](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L110>)
+### func \(\*Marketplace\) [GetAllListings](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L127>)
 
 ```go
-func (marketplace *Marketplace) GetAllListings() ([]*DirectListing, error)
+func (marketplace *Marketplace) GetAllListings(filter *MarketplaceFilter) ([]*DirectListing, error)
 ```
 
 Get all the listings from the marketplace\.
+
+filter: optional filter parameters
 
 returns: all listings in the marketplace
 
 Example listings, err := marketplace\.GetAllListings\(\) // Price per token of the first listing listings\[0\]\.BuyoutCurrencyValuePerToken\.DisplayValue
 
-### func \(\*Marketplace\) [GetListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L67>)
+### func \(\*Marketplace\) [GetListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L68>)
 
 ```go
 func (marketplace *Marketplace) GetListing(listingId int) (*DirectListing, error)
@@ -158,7 +162,7 @@ listingId := 0
 listing, err := marketplace.GetListing(listingId)
 ```
 
-### func \(\*Marketplace\) [GetTotalCount](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L117>)
+### func \(\*Marketplace\) [GetTotalCount](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L139>)
 
 ```go
 func (marketplace *Marketplace) GetTotalCount() (int, error)

@@ -649,7 +649,7 @@ func mapListing(
 
 	return &DirectListing{
 		AssetContractAddress:        listing.AssetContract.String(),
-		BuyoutPrice:                 int(listing.BuyoutPricePerToken.Int64()),
+		BuyoutPrice:                 listing.BuyoutPricePerToken.String(),
 		CurrencyContractAddress:     listing.Currency.String(),
 		BuyoutCurrencyValuePerToken: currencyValue,
 		Id:                          listing.ListingId.String(),

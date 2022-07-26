@@ -213,6 +213,17 @@ fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are 
 fmt.Println(tx.Nonce())
 ```
 
+## type [MarketplaceFilter](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L515-L520>)
+
+```go
+type MarketplaceFilter struct {
+    Start         int
+    Count         int
+    Seller        string
+    TokenContract string
+}
+```
+
 ## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L13-L16>)
 
 ```go
