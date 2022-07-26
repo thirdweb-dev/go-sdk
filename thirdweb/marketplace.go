@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -77,7 +78,7 @@ func (marketplace *Marketplace) GetListing(listingId int) (*DirectListing, error
 	if listing.ListingType == 0 {
 		return mapListing(marketplace.helper, marketplace.storage, listing)
 	} else {
-		return nil, fmt.Errorf("Unknown listing type: %d", listingId)
+		return nil, fmt.Errorf("Unsupported listing type: %d. Currently only direct listings are supported.", listingId)
 	}
 }
 
@@ -90,13 +91,25 @@ func (marketplace *Marketplace) GetListing(listingId int) (*DirectListing, error
 // 	listings, err := marketplace.GetActiveListings()
 // 	// Price per token of the first listing
 // 	listings[0].BuyoutCurrencyValuePerToken.DisplayValue
-func (marketplace *Marketplace) GetActiveListings() ([]*DirectListing, error) {
+func (marketplace *Marketplace) GetActiveListings(filter *MarketplaceFilter) ([]*DirectListing, error) {
 	listings, err := marketplace.getAllListingsNoFilter()
 	if err != nil {
 		return nil, err
 	}
 
-	return listings, err
+	listings, err = marketplace.applyFilter(listings, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	activeListings := []*DirectListing{}
+	for _, listing := range listings {
+		if listing.Quantity > 0 {
+			activeListings = append(activeListings, listing)
+		}
+	}
+
+	return activeListings, nil
 }
 
 // Get all the listings from the marketplace.
@@ -107,8 +120,13 @@ func (marketplace *Marketplace) GetActiveListings() ([]*DirectListing, error) {
 // 	listings, err := marketplace.GetAllListings()
 // 	// Price per token of the first listing
 // 	listings[0].BuyoutCurrencyValuePerToken.DisplayValue
-func (marketplace *Marketplace) GetAllListings() ([]*DirectListing, error) {
-	return marketplace.getAllListingsNoFilter()
+func (marketplace *Marketplace) GetAllListings(filter *MarketplaceFilter) ([]*DirectListing, error) {
+	listings, err := marketplace.getAllListingsNoFilter()
+	if err != nil {
+		return nil, err
+	}
+
+	return marketplace.applyFilter(listings, filter)
 }
 
 // Get the total number of listings in the marketplace.
@@ -325,4 +343,48 @@ func (marketplace *Marketplace) getAllListingsNoFilter() ([]*DirectListing, erro
 	}
 
 	return listings, nil
+}
+
+func (marketplace *Marketplace) applyFilter(listings []*DirectListing, filter *MarketplaceFilter) ([]*DirectListing, error) {
+	if filter == nil {
+		return listings, nil
+	}
+
+	start := 0
+	count := 100
+
+	if filter.Start != 0 {
+		start = filter.Start
+	}
+
+	if filter.Count != 0 {
+		count = filter.Count
+	}
+
+	filteredListings := []*DirectListing{}
+
+	rawListings := []*DirectListing{}
+	if filter.Seller != "" {
+		for _, listing := range listings {
+			if strings.ToLower(listing.SellerAddress) == strings.ToLower(filter.Seller) {
+				rawListings = append(filteredListings, listing)
+			}
+
+			filteredListings = rawListings
+		}
+	}
+
+	rawListings = []*DirectListing{}
+	if filter.TokenContract != "" {
+		for _, listing := range listings {
+			if strings.ToLower(listing.AssetContractAddress) == strings.ToLower(filter.TokenContract) {
+				rawListings = append(filteredListings, listing)
+			}
+
+			filteredListings = rawListings
+		}
+	}
+
+	filteredListings = filteredListings[start : start+count]
+	return filteredListings, nil
 }

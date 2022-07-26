@@ -511,3 +511,10 @@ type AuctionListing struct {
 	ReservePriceCurrencyValuePerToken *CurrencyValue
 	SellerAddress                     string
 }
+
+type MarketplaceFilter struct {
+	Start         int
+	Count         int
+	Seller        string
+	TokenContract string
+}
