@@ -45,6 +45,14 @@ const delimiters = {
     name: "edition_drop.md",
     header: "Edition Drop",
   },
+  "EditionDropClaimConditions": {
+    name: "edition_drop_claim_conditions.md",
+    header: "Edition Drop",
+  },
+  "EditionMetadata": {
+    name: "delete.md",
+    header: "Delete",
+  },
   "LoginOptions": {
     name: "delete.md",
     header: "Delete",

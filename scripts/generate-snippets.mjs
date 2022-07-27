@@ -24,7 +24,7 @@ const contracts = [
   },
   {
     name: "NFTDrop",
-    files: ["nft_drop.md", "erc721.md", "nft_drop_claim_conditions.md"],
+    files: ["nft_drop.md", "erc721.md"],
     docName: "nft_drop",
   },
   {

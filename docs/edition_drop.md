@@ -20,8 +20,8 @@ contract, err := sdk.GetEditionDrop("{{contract_address}}")
 ```go
 type EditionDrop struct {
     *ERC1155
-
-    Encoder *ContractEncoder
+    ClaimConditions *EditionDropClaimConditions
+    Encoder         *ContractEncoder
 }
 ```
 
@@ -106,39 +106,4 @@ metadatasWithSupply := []*thirdweb.EditionMetadataInput{
 }
 
 tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
-```
-
-## type [EditionMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L45-L48>)
-
-```go
-type EditionMetadata struct {
-    Metadata *NFTMetadata
-    Supply   int
-}
-```
-
-## type [EditionMetadataInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L57-L60>)
-
-```go
-type EditionMetadataInput struct {
-    Metadata *NFTMetadataInput
-    Supply   int
-}
-```
-
-## type [EditionMetadataOwner](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L50-L55>)
-
-```go
-type EditionMetadataOwner struct {
-    Metadata      *NFTMetadata
-    Supply        int
-    Owner         string
-    QuantityOwned int
-}
-```
-
-## type [EditionResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155.go#L23-L26>)
-
-```go
-type EditionResult struct {}
 ```
