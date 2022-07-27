@@ -27,7 +27,7 @@ type NFTDrop struct {
 	abi    *abi.DropERC721
 	helper *contractHelper
 	*ERC721
-	ClaimConditions *nftDropClaimConditions
+	ClaimConditions *NFTDropClaimConditions
 	Encoder         *ContractEncoder
 }
 

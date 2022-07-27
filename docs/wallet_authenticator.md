@@ -131,7 +131,7 @@ payload, err := sdk.Auth.Login(domain, nil)
 address, err := sdk.Auth.Verify(domain, payload, nil)
 ```
 
-## type [WalletLoginOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L224-L228>)
+## type [WalletLoginOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L215-L219>)
 
 ```go
 type WalletLoginOptions struct {
@@ -141,7 +141,7 @@ type WalletLoginOptions struct {
 }
 ```
 
-## type [WalletLoginPayload](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L238-L241>)
+## type [WalletLoginPayload](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L229-L232>)
 
 ```go
 type WalletLoginPayload struct {
@@ -150,7 +150,7 @@ type WalletLoginPayload struct {
 }
 ```
 
-## type [WalletLoginPayloadData](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L230-L236>)
+## type [WalletLoginPayloadData](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L221-L227>)
 
 ```go
 type WalletLoginPayloadData struct {
@@ -162,7 +162,7 @@ type WalletLoginPayloadData struct {
 }
 ```
 
-## type [WalletVerifyOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L243-L245>)
+## type [WalletVerifyOptions](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L234-L236>)
 
 ```go
 type WalletVerifyOptions struct {

@@ -257,15 +257,15 @@ func prepareClaim(
 	storage storage,
 ) (*ClaimVerification, error) {
 	maxClaimable := 0
-	price := activeClaimCondition.price
-	currencyAddress := activeClaimCondition.currencyAddress
+	price := activeClaimCondition.Price
+	currencyAddress := activeClaimCondition.CurrencyAddress
 	proofs := [][32]byte{}
 
 	if price > 0 && !isNativeToken(currencyAddress) {
 		approveErc20Allowance(
 			contractHelper,
 			currencyAddress,
-			big.NewInt(int64(activeClaimCondition.price)),
+			big.NewInt(int64(activeClaimCondition.Price)),
 			quantity,
 		)
 	}
@@ -292,14 +292,14 @@ func transformResultToClaimCondition(
 	price := formatUnits(pm.PricePerToken, currencyValue.Decimals)
 
 	return &ClaimConditionOutput{
-		startTime:                   int(pm.StartTimestamp.Int64()),
-		maxQuantity:                 int(pm.MaxClaimableSupply.Int64()),
-		availableSupply:             int(pm.MaxClaimableSupply.Int64()) - int(pm.SupplyClaimed.Int64()),
-		quantityLimitPerTransaction: int(pm.QuantityLimitPerTransaction.Int64()),
-		waitInSeconds:               int(pm.WaitTimeInSecondsBetweenClaims.Int64()),
-		price:                       price,
-		currencyAddress:             pm.Currency.String(),
-		currencyMetadata:            currencyValue,
+		StartTime:                   pm.StartTimestamp,
+		MaxQuantity:                 pm.MaxClaimableSupply,
+		AvailableSupply:             big.NewInt(0).Sub(pm.MaxClaimableSupply, pm.SupplyClaimed),
+		QuantityLimitPerTransaction: pm.QuantityLimitPerTransaction,
+		WaitInSeconds:               pm.WaitTimeInSecondsBetweenClaims,
+		Price:                       price,
+		CurrencyAddress:             pm.Currency.String(),
+		CurrencyMetadata:            currencyValue,
 	}, nil
 }
 

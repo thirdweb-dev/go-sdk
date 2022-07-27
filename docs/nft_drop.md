@@ -20,8 +20,8 @@ contract, err := sdk.GetNFTDrop("{{contract_address}}")
 ```go
 type NFTDrop struct {
     *ERC721
-
-    Encoder *ContractEncoder
+    ClaimConditions *NFTDropClaimConditions
+    Encoder         *ContractEncoder
 }
 ```
 
@@ -162,54 +162,3 @@ Get the tokenIds of all the NFTs owned by a specific address\.
 address: the address of the owner of the NFTs
 
 returns: the tokenIds of all the NFTs owned by the address
-
-## type [NFTMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L18-L28>)
-
-```go
-type NFTMetadata struct {
-    Id              *big.Int    `json:"id"`
-    Uri             string      `json:"uri"`
-    Name            string      `json:"name"`
-    Description     string      `json:"description"`
-    Image           interface{} `json:"image"`
-    ExternalUrl     string      `json:"external_url"`
-    AnimationUrl    string      `json:"animation_url"`
-    BackgroundColor string      `json:"background_color"`
-    Properties      interface{} `json:"properties,omitempty"`
-}
-```
-
-## type [NFTMetadataInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L30-L38>)
-
-```go
-type NFTMetadataInput struct {
-    Name            string      `mapstructure:"name" json:"name"`
-    Description     string      `mapstructure:"description" json:"description"`
-    Image           interface{} `mapstructure:"image" json:"image"`
-    ExternalUrl     string      `mapstructure:"external_url" json:"external_url"`
-    AnimationUrl    string      `mapstructure:"animation_url" json:"animation_url"`
-    BackgroundColor string      `mapstructure:"background_color" json:"background_color"`
-    Properties      interface{} `mapstructure:"properties,omitempty" json:"properties,omitempty"`
-}
-```
-
-## type [NFTMetadataOwner](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L40-L43>)
-
-```go
-type NFTMetadataOwner struct {
-    Metadata *NFTMetadata
-    Owner    string
-}
-```
-
-## type [NFTResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721.go#L23-L26>)
-
-```go
-type NFTResult struct {}
-```
-
-## type [NativeToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L114-L119>)
-
-```go
-type NativeToken struct {}
-```
