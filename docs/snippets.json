@@ -238,6 +238,18 @@
         "summary": "",
         "example": "to := \"0x...\"\ntokenId := 0\n\ntx, err := contract.Transfer(to, tokenId)\n",
         "reference": "https://docs.thirdweb.com/go/nft_drop#func-nftdrop-transfer"
+      },
+      {
+        "name": "GetActive",
+        "summary": "",
+        "example": "condition, err := contract.ClaimConditions.GetActive()\n\n// Now you have access to all the claim condition metadata\nfmt.Println(\"Start Time:\", condition.StartTime)\nfmt.Println(\"Available:\", condition.AvailableSupply)\nfmt.Println(\"Quantity:\", condition.MaxQuantity)\nfmt.Println(\"Quantity Limit:\", condition.QuantityLimitPerTransaction)\nfmt.Println(\"Price:\", condition.Price)\nfmt.Println(\"Wait In Seconds\", condition.WaitInSeconds)\n",
+        "reference": "https://docs.thirdweb.com/go/nft_drop#func-nftdrop-getactive"
+      },
+      {
+        "name": "GetAll",
+        "summary": "",
+        "example": "conditions, err := contract.ClaimConditions.GetAll()\n\n// Now you have access to all the claim condition metadata\ncondition := conditions[0]\nfmt.Println(\"Start Time:\", condition.StartTime)\nfmt.Println(\"Available:\", condition.AvailableSupply)\nfmt.Println(\"Quantity:\", condition.MaxQuantity)\nfmt.Println(\"Quantity Limit:\", condition.QuantityLimitPerTransaction)\nfmt.Println(\"Price:\", condition.Price)\nfmt.Println(\"Wait In Seconds\", condition.WaitInSeconds)\n",
+        "reference": "https://docs.thirdweb.com/go/nft_drop#func-nftdrop-getall"
       }
     ],
     "properties": [],

@@ -66,24 +66,15 @@ type ClaimVerification struct {
 	currencyAddress           string
 }
 
-type ClaimCondition struct {
-	startTime                   int
-	quantityLimitPerTransaction int
-	maxQuantity                 int
-	waitInSeconds               int
-	currencyAddress             string
-	price                       float64
-}
-
 type ClaimConditionOutput struct {
-	price                       float64
-	maxQuantity                 int
-	quantityLimitPerTransaction int
-	waitInSeconds               int
-	startTime                   int
-	availableSupply             int
-	currencyAddress             string
-	currencyMetadata            *CurrencyValue
+	Price                       float64
+	MaxQuantity                 *big.Int
+	QuantityLimitPerTransaction *big.Int
+	WaitInSeconds               *big.Int
+	StartTime                   *big.Int
+	AvailableSupply             *big.Int
+	CurrencyAddress             string
+	CurrencyMetadata            *CurrencyValue
 }
 
 type Currency struct {

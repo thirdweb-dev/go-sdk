@@ -27,7 +27,7 @@ type NFTDrop struct {
 	abi    *abi.DropERC721
 	helper *contractHelper
 	*ERC721
-	claimConditions *nftDropClaimConditions
+	ClaimConditions *NFTDropClaimConditions
 	Encoder         *ContractEncoder
 }
 
@@ -281,7 +281,7 @@ func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Tr
 }
 
 func (drop *NFTDrop) prepareClaim(quantity int) (*ClaimVerification, error) {
-	claimCondition, err := drop.claimConditions.GetActive()
+	claimCondition, err := drop.ClaimConditions.GetActive()
 	if err != nil {
 		return nil, err
 	}
