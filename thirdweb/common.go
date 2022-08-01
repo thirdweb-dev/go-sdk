@@ -303,6 +303,15 @@ func transformResultToClaimCondition(
 	}, nil
 }
 
+func processClaimConditionInputs(
+	claimConditionInputs []*ClaimConditionInput,
+	tokenDecimals int,
+	provider *ethclient.Client,
+	storage storage,
+) {
+	return
+}
+
 // MULTIWRAP
 
 func isTokenApprovedForTransfer(

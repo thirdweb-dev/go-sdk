@@ -11,6 +11,7 @@ require (
 require (
 	github.com/btcsuite/btcd v0.22.0-beta // indirect
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
+	github.com/cbergoon/merkletree v0.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fxamacker/cbor v1.5.1
 	github.com/go-stack/stack v1.8.1 // indirect

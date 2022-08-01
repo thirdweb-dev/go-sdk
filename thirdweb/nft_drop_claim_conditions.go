@@ -5,6 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
@@ -115,4 +116,34 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 	}
 
 	return conditions, nil
+}
+
+func (claim *NFTDropClaimConditions) CanClaim(
+	quantity int,
+	addressToCheck string,
+) (bool, error) {
+	reasons, err := claim.GetClaimIneligibilityReasons(quantity, addressToCheck)
+	if err != nil {
+		return false, err
+	}
+
+	if len(reasons) > 0 {
+		return false, nil
+	} else {
+		return true, nil
+	}
+}
+
+func (claim *NFTDropClaimConditions) GetClaimIneligibilityReasons(
+	quantity int,
+	addressToCheck string,
+) ([]*ClaimEligibility, error) {
+	return nil, nil
+}
+
+func (claim *NFTDropClaimConditions) Set(
+	claimConditionInputs []*ClaimConditionInput,
+	resetClaimEligibilityForAll bool,
+) (*types.Transaction, error) {
+	return nil, nil
 }

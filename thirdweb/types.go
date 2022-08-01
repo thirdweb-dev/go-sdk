@@ -509,3 +509,22 @@ type MarketplaceFilter struct {
 	Seller        string
 	TokenContract string
 }
+
+// CLAIM CONDITIONS
+
+type ClaimConditionInput struct {
+	StartTime                   *time.Time
+	CurrencyAddress             string
+	Price                       float64
+	MaxQuantity                 int
+	QuantityLimitPerTransaction int
+	WaitInSeconds               int
+	MerkleRootHash              []byte
+	Snapshot                    []*SnapshotInput
+}
+
+func (condition *ClaimConditionInput) fillDefaults() {
+	if condition.CurrencyAddress == "" {
+		condition.CurrencyAddress = "0x0000000000000000000000000000000000000000"
+	}
+}
