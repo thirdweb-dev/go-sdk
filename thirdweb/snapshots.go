@@ -48,7 +48,7 @@ func (t MerkleContent) Equals(other merkletree.Content) (bool, error) {
 }
 
 func createSnapshot(
-	snapshotInput []SnapshotInput,
+	snapshotInput []*SnapshotInput,
 	tokenDecimals int,
 	storage storage,
 ) (*SnapshotInfos, error) {
@@ -95,6 +95,8 @@ func createSnapshot(
 		MerkleRoot: merkleRoot,
 		Claims:     claims,
 	}
+
+	// TODO: Hash address and max claimable into content
 
 	// TODO: Upload metadata to IPFS
 	uri, err := storage.Upload(snapshotToUpload, "", "")

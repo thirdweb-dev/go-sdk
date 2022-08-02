@@ -308,8 +308,53 @@ func processClaimConditionInputs(
 	tokenDecimals int,
 	provider *ethclient.Client,
 	storage storage,
-) {
-	return
+) (*SnapshotInfo, error) {
+	snapshotInfos := []*SnapshotInfos{}
+	inputsWithSnapshots := []*ClaimConditionInput{}
+	copy(inputsWithSnapshots, claimConditionInputs)
+
+	for _, claimCondition := range inputsWithSnapshots {
+		if len(claimCondition.Snapshot) > 0 {
+			snapshotInfo, err := createSnapshot(
+				claimCondition.Snapshot,
+				tokenDecimals,
+				storage,
+			)
+			if err != nil {
+				return nil, err
+			}
+
+			snapshotInfos = append(snapshotInfos, snapshotInfo)
+			claimCondition.MerkleRootHash = snapshotInfo.MerkleRoot
+		} else {
+			claimCondition.MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000"
+		}
+	}
+
+	parsedConditions := []*abi.IDropClaimConditionClaimCondition{}
+	for _, claimCondition := range inputsWithSnapshots {
+		condition := convertToContractModel(claimCondition, tokenDecimals, provider)
+		parsedConditions = append(parsedConditions, condition)
+	}
+
+	return nil, nil
+}
+
+func convertToContractModel(
+	c *ClaimConditionInput,
+	tokenDecimals int,
+	provider *ethclient.Client,
+) *abi.IDropClaimConditionClaimCondition {
+	currency := nativeTokenAddress
+	if !isNativeToken(c.CurrencyAddress) {
+		currency = c.CurrencyAddress
+	}
+
+	fmt.Println(currency)
+
+	// TODO: Finish
+
+	return nil
 }
 
 // MULTIWRAP

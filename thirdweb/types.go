@@ -519,7 +519,7 @@ type ClaimConditionInput struct {
 	MaxQuantity                 int
 	QuantityLimitPerTransaction int
 	WaitInSeconds               int
-	MerkleRootHash              []byte
+	MerkleRootHash              string
 	Snapshot                    []*SnapshotInput
 }
 
