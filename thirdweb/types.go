@@ -25,6 +25,7 @@ type NFTMetadata struct {
 	AnimationUrl    string      `json:"animation_url"`
 	BackgroundColor string      `json:"background_color"`
 	Properties      interface{} `json:"properties,omitempty"`
+	Attributes      interface{} `json:"attributes,omitempty"`
 }
 
 type NFTMetadataInput struct {
@@ -35,6 +36,7 @@ type NFTMetadataInput struct {
 	AnimationUrl    string      `mapstructure:"animation_url" json:"animation_url"`
 	BackgroundColor string      `mapstructure:"background_color" json:"background_color"`
 	Properties      interface{} `mapstructure:"properties,omitempty" json:"properties,omitempty"`
+	Attributes      interface{} `mapstructure:"attributes,omitempty" json:"attributes,omitempty"`
 }
 
 type NFTMetadataOwner struct {
