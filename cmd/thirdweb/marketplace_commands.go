@@ -62,8 +62,27 @@ var marketplaceEncodeCancelCmd = &cobra.Command{
 	},
 }
 
+var marketplaceGetCmd = &cobra.Command{
+	Use:   "get",
+	Short: "Get listing `ADDRESS`",
+	Run: func(cmd *cobra.Command, args []string) {
+		marketplace, err := getMarketplace()
+		if err != nil {
+			panic(err)
+		}
+
+		listing, err := marketplace.GetListing(0)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("%#v", listing.Asset)
+	},
+}
+
 func init() {
 	marketplaceCmd.PersistentFlags().StringVarP(&marketplaceAddress, "address", "a", "", "marketplace contract address")
 	marketplaceCmd.AddCommand(marketplaceListCmd)
 	marketplaceCmd.AddCommand(marketplaceEncodeCancelCmd)
+	marketplaceCmd.AddCommand(marketplaceGetCmd)
 }
