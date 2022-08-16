@@ -76,6 +76,7 @@ var marketplaceGetCmd = &cobra.Command{
 			panic(err)
 		}
 
+		fmt.Printf("%#v", listing)
 		fmt.Printf("%#v", listing.Asset)
 	},
 }
