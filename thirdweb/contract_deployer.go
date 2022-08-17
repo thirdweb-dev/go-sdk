@@ -9,6 +9,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/mitchellh/mapstructure"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 
 	gethAbi "github.com/ethereum/go-ethereum/accounts/abi"
@@ -203,8 +204,16 @@ func (deployer *ContractDeployer) DeployMarketplace(metadata *DeployMarketplaceM
 }
 
 func (deployer *ContractDeployer) deployContract(contractType string, metadata interface{}) (string, error) {
+
+	metadataToUpload := map[string]interface{}{}
+	err := mapstructure.Decode(metadata, &metadataToUpload)
+	if err != nil {
+		return "", err
+	}
+
 	contractUri, err := deployer.storage.Upload(
-		metadata, deployer.helper.getAddress().String(),
+		metadataToUpload,
+		deployer.helper.getAddress().String(),
 		deployer.helper.GetSignerAddress().String(),
 	)
 	if err != nil {

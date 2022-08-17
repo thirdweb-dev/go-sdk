@@ -14,6 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/fxamacker/cbor"
+	"github.com/mitchellh/mapstructure"
 	"github.com/shopspring/decimal"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
@@ -36,7 +37,9 @@ func fetchTokenMetadata(tokenId int, uri string, storage storage) (*NFTMetadata,
 }
 
 func uploadOrExtractUri(metadata *NFTMetadataInput, storage storage) (string, error) {
-	return storage.Upload(metadata, "", "")
+	metadataToUpload := map[string]interface{}{}
+	mapstructure.Decode(metadata, &metadataToUpload)
+	return storage.Upload(metadataToUpload, "", "")
 }
 
 func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]string, error) {
@@ -46,7 +49,10 @@ func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]stri
 		data = append(data, metadata)
 	}
 
-	baseUriWithUris, err := storage.UploadBatch(data, 0, "", "")
+	dataToUpload := []map[string]interface{}{}
+	mapstructure.Decode(data, &dataToUpload)
+
+	baseUriWithUris, err := storage.UploadBatch(dataToUpload, 0, "", "")
 	if err != nil {
 		return nil, err
 	}

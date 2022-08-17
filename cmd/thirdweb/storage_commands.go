@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/cobra"
 	"github.com/thirdweb-dev/go-sdk/thirdweb"
 )
@@ -24,10 +25,14 @@ var storageUploadCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		storage := getStorage()
 
-		uri, err := storage.Upload(&thirdweb.NFTMetadataInput{
+		asset := &thirdweb.NFTMetadataInput{
 			Name:        "Test NFT 1",
 			Description: "Description 1",
-		}, "", "")
+		}
+		assetToUpload := map[string]interface{}{}
+		err := mapstructure.Decode(asset, &assetToUpload)
+
+		uri, err := storage.Upload(assetToUpload, "", "")
 		if err != nil {
 			panic(err)
 		}
@@ -42,11 +47,29 @@ var storageUploadBatchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		storage := getStorage()
 
-		uriWithBaseUris, err := storage.UploadBatch(
-			[]interface{}{
-				&thirdweb.NFTMetadataInput{Name: "Test NFT 2", Description: "Description 2"},
-				&thirdweb.NFTMetadataInput{Name: "Test NFT 3", Description: "Description 3"},
+		imageFile, err := os.Open("internal/test/0.jpg")
+		if err != nil {
+			panic(err)
+		}
+		defer imageFile.Close()
+
+		asset := []interface{}{
+			&thirdweb.NFTMetadataInput{
+				Name:        "Test NFT 2",
+				Description: "Description 2",
+				Image:       imageFile,
+				Properties: map[string]interface{}{
+					"health": "100",
+					"image":  imageFile,
+				},
 			},
+			&thirdweb.NFTMetadataInput{Name: "Test NFT 3", Description: "Description 3"},
+		}
+		assetToUpload := []map[string]interface{}{}
+		err = mapstructure.Decode(asset, &assetToUpload)
+
+		uriWithBaseUris, err := storage.UploadBatch(
+			assetToUpload,
 			0,
 			"",
 			"",
@@ -72,10 +95,14 @@ var storageUploadImageCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		uri, err := storage.Upload(&thirdweb.NFTMetadataInput{
+		asset := &thirdweb.NFTMetadataInput{
 			Name:  "Test NFT 1",
 			Image: imageFile,
-		}, "", "")
+		}
+		assetToUpload := map[string]interface{}{}
+		err = mapstructure.Decode(asset, &assetToUpload)
+
+		uri, err := storage.Upload(assetToUpload, "", "")
 		if err != nil {
 			panic(err)
 		}
@@ -96,10 +123,14 @@ var storageUploadImageLinkCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		uri, err := storage.Upload(&thirdweb.NFTMetadataInput{
+		asset := &thirdweb.NFTMetadataInput{
 			Name:  "Test NFT 1",
 			Image: "ipfs://QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0",
-		}, "", "")
+		}
+		assetToUpload := map[string]interface{}{}
+		err = mapstructure.Decode(asset, &assetToUpload)
+
+		uri, err := storage.Upload(assetToUpload, "", "")
 		if err != nil {
 			panic(err)
 		}

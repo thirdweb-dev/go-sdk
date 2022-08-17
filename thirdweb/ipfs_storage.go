@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/big"
 	"mime/multipart"
 	"net/http"
+	"reflect"
 	"strings"
 )
 
@@ -32,12 +34,12 @@ type uploadResponse struct {
 }
 
 type IpfsStorage struct {
-	Url string
+	GatewayUrl string
 }
 
-func newIpfsStorage(uri string) *IpfsStorage {
+func newIpfsStorage(gatewayUrl string) *IpfsStorage {
 	return &IpfsStorage{
-		Url: uri,
+		GatewayUrl: gatewayUrl,
 	}
 }
 
@@ -49,7 +51,7 @@ func newIpfsStorage(uri string) *IpfsStorage {
 //
 // returns: byte data of the IPFS data at the URI
 func (ipfs *IpfsStorage) Get(uri string) ([]byte, error) {
-	gatewayUrl := replaceHashWithGatewayUrl(uri, ipfs.Url)
+	gatewayUrl := replaceHashWithGatewayUrl(uri, ipfs.GatewayUrl)
 	resp, err := http.Get(gatewayUrl)
 	if err != nil {
 		return nil, err
@@ -99,9 +101,18 @@ func (ipfs *IpfsStorage) Upload(data map[string]interface{}, contractAddress str
 //
 // returns: the base URI of the IPFS upload folder with the URIs of each subfile
 func (ipfs *IpfsStorage) UploadBatch(data []map[string]interface{}, fileStartNumber int, contractAddress string, signerAddress string) (*baseUriWithUris, error) {
-	dataToUpload, err := ipfs.batchUploadProperties(data)
+	preparedData, err := ipfs.batchUploadProperties(data)
 	if err != nil {
 		return nil, err
+	}
+
+	dataToUpload := []interface{}{}
+	for _, d := range preparedData {
+		jsonData, err := json.Marshal(d)
+		if err != nil {
+			return nil, err
+		}
+		dataToUpload = append(dataToUpload, jsonData)
 	}
 
 	baseUriWithUris, err := ipfs.uploadBatchWithCid(dataToUpload, fileStartNumber, contractAddress, signerAddress)
@@ -138,9 +149,9 @@ func (ipfs *IpfsStorage) getUploadToken(contractAddress string) (string, error) 
 	return text, nil
 }
 
-// TODO: Take map as inputs instead of structs
 func (ipfs *IpfsStorage) uploadBatchWithCid(
-	data []map[string]interface{},
+	// data (string | io.Reader)[] - file or JSON string
+	data []interface{},
 	fileStartNumber int,
 	contractAddress string,
 	signerAddress string,
@@ -156,17 +167,33 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
-	for i, metadata := range data {
-		jsonData, err := json.Marshal(metadata)
-		if err != nil {
-			return nil, err
+	for i, obj := range data {
+		if jsonData, ok := obj.([]byte); ok {
+			fileName := fmt.Sprintf("%v", i+fileStartNumber)
+			fileNames = append(fileNames, fileName)
+
+			part, err := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
+			if err != nil {
+				return nil, err
+			}
+
+			part.Write(jsonData)
+		} else if fileData, ok := obj.(io.Reader); ok {
+			fileName := fmt.Sprintf("%v", i+fileStartNumber)
+			fileNames = append(fileNames, fileName)
+
+			part, err := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
+			if err != nil {
+				return nil, err
+			}
+
+			_, err = io.Copy(part, fileData)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			return nil, errors.New("Data to upload must be either JSON ([]byte) or a file (io.Reader)")
 		}
-
-		fileName := fmt.Sprintf("%v", i+fileStartNumber)
-		fileNames = append(fileNames, fileName)
-
-		part, err := writer.CreateFormFile("file", fmt.Sprintf("files/%v", fileName))
-		part.Write(jsonData)
 	}
 
 	_ = writer.Close()
@@ -222,23 +249,139 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 	}
 }
 
-func (ipfs *IpfsStorage) batchUploadProperties(data []map[string]interface{}) ([]map[string]interface{}, error) {
-	return nil, nil
+// returns - map[string]interface{}
+func (ipfs *IpfsStorage) batchUploadProperties(data []map[string]interface{}) ([]interface{}, error) {
+	sanitizedMetadatas, err := ipfs.replaceGatewayUrlWithHash(data, "ipfs://", ipfs.GatewayUrl)
+	if err != nil {
+		return nil, err
+	}
+
+	filesToUpload, err := ipfs.buildFilePropertiesMap(sanitizedMetadatas, []interface{}{})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(filesToUpload) == 0 {
+		sanitizedMetadatas, ok := sanitizedMetadatas.([]interface{})
+		if !ok {
+			return nil, errors.New("Could not cast to []interface{}")
+		}
+		return sanitizedMetadatas, nil
+	}
+
+	baseUriWithUris, err := ipfs.uploadBatchWithCid(filesToUpload, 0, "", "")
+	if err != nil {
+		return nil, err
+	}
+
+	replacedMetadatas, err := ipfs.replaceFilePropertiesWithHashes(sanitizedMetadatas, baseUriWithUris.uris)
+	if err != nil {
+		return nil, err
+	}
+
+	castMetadatas, ok := replacedMetadatas.([]interface{})
+	if !ok {
+		return nil, errors.New("Could not cast to []interface{}")
+	}
+
+	return castMetadatas, nil
 }
 
-func replaceFilePropertiesWithHashes(data []map[string]interface{}) ([]map[string]interface{}, error) {
-	return nil, nil
+// data - array or map or strings
+// Returns []io.Reader files to upload
+func (ipfs *IpfsStorage) buildFilePropertiesMap(data interface{}, files []interface{}) ([]interface{}, error) {
+	v := reflect.ValueOf(data)
+	switch v.Kind() {
+	case reflect.Array, reflect.Slice:
+		for i := 0; i < v.Len(); i++ {
+			builtFiles, err := ipfs.buildFilePropertiesMap(v.Index(i).Interface(), files)
+			if err != nil {
+				return nil, err
+			}
+
+			files = builtFiles
+		}
+		break
+	case reflect.Map:
+		for _, k := range v.MapKeys() {
+			builtFiles, err := ipfs.buildFilePropertiesMap(v.MapIndex(k).Interface(), files)
+			if err != nil {
+				return nil, err
+			}
+
+			files = builtFiles
+		}
+		break
+	default:
+		file, ok := data.(io.Reader)
+		if ok {
+			files = append(files, file)
+		}
+	}
+
+	return files, nil
 }
 
-func replaceGatewayUrlWithHash(data []map[string]interface{}, scheme string, gatewayUrl string) ([]map[string]interface{}, error) {
-	return nil, nil
+func (ipfs *IpfsStorage) replaceFilePropertiesWithHashes(data interface{}, cids []string) (interface{}, error) {
+	v := reflect.ValueOf(data)
+	switch v.Kind() {
+	case reflect.Array, reflect.Slice:
+		updated := []interface{}{}
+		for i := 0; i < v.Len(); i++ {
+			val, err := ipfs.replaceFilePropertiesWithHashes(v.Index(i).Interface(), cids)
+			if err != nil {
+				return nil, err
+			}
+
+			updated = append(updated, val)
+		}
+
+		return updated, nil
+	case reflect.Map:
+		updated := map[string]interface{}{}
+		for _, k := range v.MapKeys() {
+			val, err := ipfs.replaceFilePropertiesWithHashes(v.MapIndex(k).Interface(), cids)
+			if err != nil {
+				return nil, err
+			}
+
+			updated[k.String()] = val
+		}
+
+		return updated, nil
+	default:
+		_, ok := data.(io.Reader)
+		if ok {
+			data, cids = cids[0], cids[1:]
+		}
+
+		return data, nil
+	}
+}
+
+func (ipfs *IpfsStorage) replaceGatewayUrlWithHash(data interface{}, scheme string, gatewayUrl string) (interface{}, error) {
+	v := reflect.ValueOf(data)
+	switch v.Kind() {
+	case reflect.Array, reflect.Slice:
+		for i := 0; i < v.Len(); i++ {
+			ipfs.replaceGatewayUrlWithHash(v.Index(i), scheme, gatewayUrl)
+		}
+		break
+	case reflect.Map:
+		for _, k := range v.MapKeys() {
+			ipfs.replaceGatewayUrlWithHash(v.MapIndex(k), scheme, gatewayUrl)
+		}
+		break
+	case reflect.String:
+		if strings.Contains(v.String(), gatewayUrl) {
+			data = strings.Replace(v.String(), gatewayUrl, scheme, 1)
+		}
+	}
+
+	return data, nil
 }
 
 func resolveGatewayUrl(data interface{}, scheme string, gatewayUrl string) interface{} {
-	return data
-}
-
-func toIpfsHash(data interface{}, scheme string, gatewayUrl string) interface{} {
 	return data
 }
 
