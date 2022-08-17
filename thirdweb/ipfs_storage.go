@@ -106,18 +106,20 @@ func (ipfs *IpfsStorage) UploadBatch(data []map[string]interface{}, fileStartNum
 		return nil, err
 	}
 
-	castData, ok := preparedData.([]map[string]interface{})
-	if !ok {
-		return nil, errors.New("Failed to cast preparedData to []map[string]interface{}")
-	}
-
 	dataToUpload := []interface{}{}
-	for _, d := range castData {
-		jsonData, err := json.Marshal(d)
-		if err != nil {
-			return nil, err
+	dataValue := reflect.ValueOf(preparedData)
+	switch dataValue.Kind() {
+	case reflect.Array, reflect.Slice:
+		for i := 0; i < dataValue.Len(); i++ {
+			jsonData, err := json.Marshal(dataValue.Index(i).Interface())
+			if err != nil {
+				return nil, err
+			}
+			dataToUpload = append(dataToUpload, jsonData)
 		}
-		dataToUpload = append(dataToUpload, jsonData)
+		break
+	default:
+		return nil, errors.New("data must be an array or slice")
 	}
 
 	baseUriWithUris, err := ipfs.uploadBatchWithCid(dataToUpload, fileStartNumber, contractAddress, signerAddress)
