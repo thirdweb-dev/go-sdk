@@ -30,11 +30,11 @@ type NFTMetadata struct {
 
 type NFTMetadataInput struct {
 	Name            string      `mapstructure:"name" json:"name"`
-	Description     string      `mapstructure:"description" json:"description"`
-	Image           interface{} `mapstructure:"image" json:"image"`
-	ExternalUrl     string      `mapstructure:"external_url" json:"external_url"`
-	AnimationUrl    string      `mapstructure:"animation_url" json:"animation_url"`
-	BackgroundColor string      `mapstructure:"background_color" json:"background_color"`
+	Description     string      `mapstructure:"description,omitempty" json:"description"`
+	Image           interface{} `mapstructure:"image,omitempty" json:"image"`
+	ExternalUrl     string      `mapstructure:"external_url,omitempty" json:"external_url"`
+	AnimationUrl    string      `mapstructure:"animation_url,omitempty" json:"animation_url"`
+	BackgroundColor string      `mapstructure:"background_color,omitempty" json:"background_color"`
 	Properties      interface{} `mapstructure:"properties,omitempty" json:"properties,omitempty"`
 	Attributes      interface{} `mapstructure:"attributes,omitempty" json:"attributes,omitempty"`
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/mitchellh/mapstructure"
 	"github.com/thirdweb-dev/go-sdk/internal/abi"
 )
 
@@ -206,8 +207,12 @@ func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transact
 	for _, metadata := range metadatas {
 		data = append(data, metadata)
 	}
+
+	dataToUpload := []map[string]interface{}{}
+	mapstructure.Decode(data, &dataToUpload)
+
 	batch, err := drop.storage.UploadBatch(
-		data,
+		dataToUpload,
 		fileStartNumber,
 		contractAddress,
 		signerAddress,
