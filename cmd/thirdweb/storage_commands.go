@@ -25,12 +25,17 @@ var storageUploadCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		storage := getStorage()
 
-		asset := &thirdweb.NFTMetadataInput{
-			Name:        "Test NFT 1",
-			Description: "Description 1",
+		assetToUpload := map[string]interface{}{
+			"psilocybin": map[string]interface{}{
+				"strength": 5,
+				"dosage":   "1mg",
+				"potency":  "strong",
+				"side_effects": []interface{}{
+					"headache",
+					"nausea",
+				},
+			},
 		}
-		assetToUpload := map[string]interface{}{}
-		err := mapstructure.Decode(asset, &assetToUpload)
 
 		uri, err := storage.Upload(assetToUpload, "", "")
 		if err != nil {

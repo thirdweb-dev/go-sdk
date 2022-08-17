@@ -106,8 +106,13 @@ func (ipfs *IpfsStorage) UploadBatch(data []map[string]interface{}, fileStartNum
 		return nil, err
 	}
 
+	castData, ok := preparedData.([]map[string]interface{})
+	if !ok {
+		return nil, errors.New("Failed to cast preparedData to []map[string]interface{}")
+	}
+
 	dataToUpload := []interface{}{}
-	for _, d := range preparedData {
+	for _, d := range castData {
 		jsonData, err := json.Marshal(d)
 		if err != nil {
 			return nil, err
@@ -250,7 +255,7 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 }
 
 // returns - map[string]interface{}
-func (ipfs *IpfsStorage) batchUploadProperties(data []map[string]interface{}) ([]interface{}, error) {
+func (ipfs *IpfsStorage) batchUploadProperties(data []map[string]interface{}) (interface{}, error) {
 	sanitizedMetadatas, err := ipfs.replaceGatewayUrlWithHash(data, "ipfs://", ipfs.GatewayUrl)
 	if err != nil {
 		return nil, err
@@ -262,10 +267,6 @@ func (ipfs *IpfsStorage) batchUploadProperties(data []map[string]interface{}) ([
 	}
 
 	if len(filesToUpload) == 0 {
-		sanitizedMetadatas, ok := sanitizedMetadatas.([]interface{})
-		if !ok {
-			return nil, errors.New("Could not cast to []interface{}")
-		}
 		return sanitizedMetadatas, nil
 	}
 
@@ -279,12 +280,7 @@ func (ipfs *IpfsStorage) batchUploadProperties(data []map[string]interface{}) ([
 		return nil, err
 	}
 
-	castMetadatas, ok := replacedMetadatas.([]interface{})
-	if !ok {
-		return nil, errors.New("Could not cast to []interface{}")
-	}
-
-	return castMetadatas, nil
+	return replacedMetadatas, nil
 }
 
 // data - array or map or strings
