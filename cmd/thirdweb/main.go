@@ -40,6 +40,7 @@ func init() {
 	rootCmd.AddCommand(storageCmd)
 	rootCmd.AddCommand(customCmd)
 	rootCmd.AddCommand(deployCmd)
+	rootCmd.AddCommand(marketplaceCmd)
 }
 
 func initConfig() {

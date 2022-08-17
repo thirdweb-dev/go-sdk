@@ -21,10 +21,11 @@ contract, err := sdk.GetNFTCollection("{{contract_address}}")
 type NFTCollection struct {
     *ERC721
     Signature *ERC721SignatureMinting
+    Encoder   *ContractEncoder
 }
 ```
 
-### func \(\*NFTCollection\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L71>)
+### func \(\*NFTCollection\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L78>)
 
 ```go
 func (nft *NFTCollection) GetOwned(address string) ([]*NFTMetadataOwner, error)
@@ -44,7 +45,7 @@ nfts, err := contract.GetOwned(owner)
 name := nfts[0].Metadata.Name
 ```
 
-### func \(\*NFTCollection\) [GetOwnedTokenIDs](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L88>)
+### func \(\*NFTCollection\) [GetOwnedTokenIDs](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L95>)
 
 ```go
 func (nft *NFTCollection) GetOwnedTokenIDs(address string) ([]*big.Int, error)
@@ -56,7 +57,7 @@ address: the address of the owner of the NFTs
 
 returns: the tokenIds of all the NFTs owned by the address
 
-### func \(\*NFTCollection\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L113>)
+### func \(\*NFTCollection\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L120>)
 
 ```go
 func (nft *NFTCollection) Mint(metadata *NFTMetadataInput) (*types.Transaction, error)
@@ -68,7 +69,7 @@ metadata: metadata of the NFT to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*NFTCollection\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L165>)
+### func \(\*NFTCollection\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L172>)
 
 ```go
 func (nft *NFTCollection) MintBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
@@ -80,7 +81,7 @@ metadatas: list of metadata of the NFTs to mint
 
 returns: the transaction receipt of the mint
 
-### func \(\*NFTCollection\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L192>)
+### func \(\*NFTCollection\) [MintBatchTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L199>)
 
 ```go
 func (nft *NFTCollection) MintBatchTo(address string, metadatas []*NFTMetadataInput) (*types.Transaction, error)
@@ -111,7 +112,7 @@ metadatas := []*thirdweb.NFTMetadataInput{
 tx, err := contract.MintBatchTo("{{wallet_address}}", metadatas)
 ```
 
-### func \(\*NFTCollection\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L138>)
+### func \(\*NFTCollection\) [MintTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_collection.go#L145>)
 
 ```go
 func (nft *NFTCollection) MintTo(address string, metadata *NFTMetadataInput) (*types.Transaction, error)

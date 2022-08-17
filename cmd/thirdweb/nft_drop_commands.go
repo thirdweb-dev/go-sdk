@@ -43,6 +43,44 @@ var nftDropGetAllCmd = &cobra.Command{
 	},
 }
 
+var nftDropGetActiveCmd = &cobra.Command{
+	Use:   "getActive",
+	Short: "Get the active claim condition in a contract `ADDRESS`",
+	Run: func(cmd *cobra.Command, args []string) {
+		nftDrop, err := getNftDrop()
+		if err != nil {
+			panic(err)
+		}
+
+		active, err := nftDrop.ClaimConditions.GetActive()
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Start Time:", active.StartTime)
+		fmt.Println("Available:", active.AvailableSupply)
+		fmt.Println("Quantity:", active.MaxQuantity)
+		fmt.Println("Quantity Limit:", active.QuantityLimitPerTransaction)
+		fmt.Println("Price:", active.Price)
+		fmt.Println("Wait In Seconds", active.WaitInSeconds)
+
+		all, err := nftDrop.ClaimConditions.GetAll()
+		if err != nil {
+			panic(err)
+		}
+
+		for i, c := range all {
+			fmt.Printf(fmt.Sprintf("\n\nClaim Condition %d\n================\n", i))
+			fmt.Println("Start Time:", c.StartTime)
+			fmt.Println("Available:", c.AvailableSupply)
+			fmt.Println("Quantity:", c.MaxQuantity)
+			fmt.Println("Quantity Limit:", c.QuantityLimitPerTransaction)
+			fmt.Println("Price:", c.Price)
+			fmt.Println("Wait In Seconds", c.WaitInSeconds)
+		}
+	},
+}
+
 var nftDropClaimCmd = &cobra.Command{
 	Use:   "claim",
 	Short: "Claim an nft",
@@ -117,6 +155,7 @@ var nftDropCreateBatchCmd = &cobra.Command{
 func init() {
 	nftDropCmd.PersistentFlags().StringVarP(&nftDropContractAddress, "address", "a", "", "nft drop contract address")
 	nftDropCmd.AddCommand(nftDropGetAllCmd)
+	nftDropCmd.AddCommand(nftDropGetActiveCmd)
 	nftDropCmd.AddCommand(nftDropClaimCmd)
 	nftDropCmd.AddCommand(nftDropCreateBatchCmd)
 }

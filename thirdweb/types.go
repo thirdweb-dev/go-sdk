@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"math/big"
+	"time"
 )
 
 type SDKOptions struct {
@@ -24,6 +25,7 @@ type NFTMetadata struct {
 	AnimationUrl    string      `json:"animation_url"`
 	BackgroundColor string      `json:"background_color"`
 	Properties      interface{} `json:"properties,omitempty"`
+	Attributes      interface{} `json:"attributes,omitempty"`
 }
 
 type NFTMetadataInput struct {
@@ -34,6 +36,7 @@ type NFTMetadataInput struct {
 	AnimationUrl    string      `mapstructure:"animation_url" json:"animation_url"`
 	BackgroundColor string      `mapstructure:"background_color" json:"background_color"`
 	Properties      interface{} `mapstructure:"properties,omitempty" json:"properties,omitempty"`
+	Attributes      interface{} `mapstructure:"attributes,omitempty" json:"attributes,omitempty"`
 }
 
 type NFTMetadataOwner struct {
@@ -65,24 +68,15 @@ type ClaimVerification struct {
 	currencyAddress           string
 }
 
-type ClaimCondition struct {
-	startTime                   int
-	quantityLimitPerTransaction int
-	maxQuantity                 int
-	waitInSeconds               int
-	currencyAddress             string
-	price                       float64
-}
-
 type ClaimConditionOutput struct {
-	price                       float64
-	maxQuantity                 int
-	quantityLimitPerTransaction int
-	waitInSeconds               int
-	startTime                   int
-	availableSupply             int
-	currencyAddress             string
-	currencyMetadata            *CurrencyValue
+	Price                       float64
+	MaxQuantity                 *big.Int
+	QuantityLimitPerTransaction *big.Int
+	WaitInSeconds               *big.Int
+	StartTime                   *big.Int
+	AvailableSupply             *big.Int
+	CurrencyAddress             string
+	CurrencyMetadata            *CurrencyValue
 }
 
 type Currency struct {
@@ -216,6 +210,46 @@ type MultiwrapBundle struct {
 	ERC20Tokens   []*MultiwrapERC20
 	ERC721Tokens  []*MultiwrapERC721
 	ERC1155Tokens []*MultiwrapERC1155
+}
+
+// Wallet Authenticator
+
+type WalletLoginOptions struct {
+	Nonce          string
+	ExpirationTime time.Time
+	ChainId        int
+}
+
+type WalletLoginPayloadData struct {
+	Domain         string    `json:"domain"`
+	Address        string    `json:"address"`
+	Nonce          string    `json:"nonce"`
+	ExpirationTime time.Time `json:"expiration_time"`
+	ChainId        int       `json:"chain_id"`
+}
+
+type WalletLoginPayload struct {
+	Payload   *WalletLoginPayloadData `json:"payload"`
+	Signature string                  `json:"signature"`
+}
+
+type WalletVerifyOptions struct {
+	ChainId int
+}
+
+type WalletAuthenticationOptions struct {
+	InvalidBefore  time.Time
+	ExpirationTime time.Time
+}
+
+type WalletAuthenticationPayloadData struct {
+	Iss string `json:"iss"`
+	Sub string `json:"sub"`
+	Aud string `json:"aud"`
+	Exp int64  `json:"exp"`
+	Nbf int64  `json:"nbf"`
+	Iat int64  `json:"iat"`
+	Jti string `json:"jti"`
 }
 
 // Contract Metadata
@@ -395,4 +429,85 @@ func (metadata *DeployMultiwrapMetadata) fillDefaults() {
 	if metadata.TrustedForwarders == nil {
 		metadata.TrustedForwarders = []string{}
 	}
+}
+
+type DeployMarketplaceMetadata struct {
+	Name                   string      `mapstructure:"name" json:"name"`
+	Description            string      `mapstructure:"description" json:"description"`
+	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
+	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
+	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+}
+
+func (metadata *DeployMarketplaceMetadata) fillDefaults() {
+	if metadata.PlatformFeeRecipient == "" {
+		metadata.PlatformFeeRecipient = "0x0000000000000000000000000000000000000000"
+	}
+
+	if metadata.TrustedForwarders == nil {
+		metadata.TrustedForwarders = []string{}
+	}
+}
+
+type DirectListing struct {
+	Id                          string
+	AssetContractAddress        string
+	TokenId                     int
+	Asset                       *NFTMetadata
+	StartTimeInEpochSeconds     int
+	EndTimeInEpochSeconds       int
+	Quantity                    int
+	CurrencyContractAddress     string
+	BuyoutCurrencyValuePerToken *CurrencyValue
+	BuyoutPrice                 string
+	SellerAddress               string
+}
+
+type NewDirectListing struct {
+	AssetContractAddress     string
+	TokenId                  int
+	StartTimeInEpochSeconds  int
+	ListingDurationInSeconds int
+	Quantity                 int
+	CurrencyContractAddress  string
+	BuyoutPricePerToken      float64
+}
+
+func (listing *NewDirectListing) fillDefaults() {
+	if listing.CurrencyContractAddress == "" {
+		listing.CurrencyContractAddress = "0x0000000000000000000000000000000000000000"
+	}
+
+	if listing.StartTimeInEpochSeconds == 0 {
+		listing.StartTimeInEpochSeconds = int(time.Now().Unix())
+	}
+
+	if listing.ListingDurationInSeconds == 0 {
+		listing.ListingDurationInSeconds = int(time.Now().Unix() + 3600)
+	}
+}
+
+type AuctionListing struct {
+	Id                                string
+	AssetContractAddress              string
+	TokenId                           int
+	Asset                             *NFTMetadata
+	StartTimeInEpochSeconds           int
+	EndTimeInEpochSeconds             int
+	Quantity                          int
+	CurrencyContractAddress           string
+	ReservePrice                      string
+	BuyoutPrice                       string
+	BuyoutCurrencyValuePerToken       *CurrencyValue
+	ReservePriceCurrencyValuePerToken *CurrencyValue
+	SellerAddress                     string
+}
+
+type MarketplaceFilter struct {
+	Start         int
+	Count         int
+	Seller        string
+	TokenContract string
 }

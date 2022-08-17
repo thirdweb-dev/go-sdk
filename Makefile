@@ -1,4 +1,4 @@
-.PHONY: abi docs publish
+.PHONY: abi docs publish local-test
 
 SHELL := /bin/bash
 
@@ -10,6 +10,7 @@ abi:
 	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC721.json --out internal/abi/drop_erc721.go --type DropERC721
 	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC1155.json --out internal/abi/drop_erc1155.go --type DropERC1155
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Multiwrap.json --out internal/abi/multiwrap.go --type Multiwrap
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Marketplace.json --out internal/abi/marketplace.go --type Marketplace
 
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TWFactory.json --out internal/abi/twfactory.go --type TWFactory
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC20.json --out internal/abi/ierc20.go --type IERC20
@@ -22,7 +23,7 @@ docs:
 	mkdir docs
 	gomarkdoc --output docs/doc.md --repository.default-branch main ./thirdweb
 	node ./scripts/generate-docs.mjs
-	rm ./docs/doc.md ./docs/start.md ./docs/finish.md
+	rm ./docs/doc.md ./docs/start.md ./docs/delete.md
 	node ./scripts/generate-snippets.mjs
 
 cmd: FORCE
@@ -67,6 +68,7 @@ test-multiwrap-write:
 
 test-drop-read:
 	./bin/thirdweb nftdrop getAll -a ${GO_NFT_DROP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb nftdrop getActive -a ${GO_NFT_DROP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 
 test-drop-write:
 	./bin/thirdweb nftdrop createBatch -a ${GO_NFT_DROP} -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
@@ -95,6 +97,10 @@ test-deploy:
 	./bin/thirdweb deploy nftdrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb deploy editiondrop -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
 	./bin/thirdweb deploy multiwrap -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+	./bin/thirdweb deploy marketplace -k ${GO_PRIVATE_KEY} -u ${GO_ALCHEMY_RPC}
+
+test-encoder:
+	./bin/thirdweb marketplace encode -a ${GO_MARKETPLACE} -k ${GO_PRIVATE_KEY} -u ${GO_AVAX_RPC}
 
 test-cmd:
 	make cmd
@@ -118,12 +124,15 @@ stop-docker:
 
 test: FORCE
 	docker build . -t hardhat-mainnet-fork
-	docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
+	docker start hardhat-node || docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
 	sudo bash ./scripts/test/await-hardhat.sh
 	go clean -testcache
 	go test -v ./thirdweb
+	docker stop hardhat-node
+	docker rm hardhat-node
 
 local-test:
+  # Needs to be run along with npx hardhat node from this repo, and needs to be a mainnet fork hardhat
 	go clean -testcache
 	go test -v ./thirdweb
 

@@ -27,6 +27,7 @@ type Edition struct {
 	helper *contractHelper
 	*ERC1155
 	Signature *ERC1155SignatureMinting
+	Encoder   *ContractEncoder
 }
 
 func newEdition(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Edition, error) {
@@ -46,11 +47,17 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 				return nil, err
 			}
 
+			encoder, err := newContractEncoder(abi.TokenERC1155ABI, helper)
+			if err != nil {
+				return nil, err
+			}
+
 			edition := &Edition{
 				contractAbi,
 				helper,
 				erc1155,
 				signature,
+				encoder,
 			}
 			return edition, nil
 		}
@@ -160,7 +167,16 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 	return edition.helper.awaitTx(tx.Hash())
 }
 
-// Mint a batch of tokens to various wallets.
+// Mint a batch of NFTs to the connected wallet.
+//
+// metadatasWithSupply: list of NFT metadatas with supplies to mint
+//
+// returns: the transaction receipt of the mint
+func (edition *Edition) MintBatch(metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
+	return edition.MintBatchTo(edition.helper.GetSignerAddress().String(), metadatasWithSupply)
+}
+
+// Mint a batch of NFTs to a specific wallet.
 //
 // to: address of the wallet to mint NFTs to
 //

@@ -113,6 +113,21 @@ func getMultiwrap() (*thirdweb.Multiwrap, error) {
 	}
 }
 
+func getMarketplace() (*thirdweb.Marketplace, error) {
+	if thirdwebSDK == nil {
+		initSdk()
+	}
+
+	log.Printf("Obtaining a Marketplace on chain %v, contract %v\n", chainRpcUrl, marketplaceAddress)
+
+	if contract, err := thirdwebSDK.GetMarketplace(marketplaceAddress); err != nil {
+		log.Println("Failed to create a Marketplace object")
+		return nil, err
+	} else {
+		return contract, nil
+	}
+}
+
 func getCustom() (*thirdweb.SmartContract, error) {
 	if thirdwebSDK == nil {
 		initSdk()

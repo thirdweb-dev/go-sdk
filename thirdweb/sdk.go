@@ -12,6 +12,7 @@ type ThirdwebSDK struct {
 	*ProviderHandler
 	Storage  IpfsStorage
 	Deployer ContractDeployer
+	Auth     WalletAuthenticator
 }
 
 // NewThirdwebSDK
@@ -59,10 +60,16 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 		return nil, err
 	}
 
+	auth, err := newWalletAuthenticator(provider, privateKey)
+	if err != nil {
+		return nil, err
+	}
+
 	sdk := &ThirdwebSDK{
 		ProviderHandler: handler,
 		Storage:         *storage,
 		Deployer:        *deployer,
+		Auth:            *auth,
 	}
 
 	return sdk, nil
@@ -147,6 +154,20 @@ func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error) {
 // address: the address of the Multiwrap contract
 func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error) {
 	return newMultiwrap(
+		sdk.GetProvider(),
+		common.HexToAddress(address),
+		sdk.GetRawPrivateKey(),
+		&sdk.Storage,
+	)
+}
+
+// GetMarketplace
+//
+// Get a Marketplace contract SDK instance
+//
+// address: the address of the Marketplace contract
+func (sdk *ThirdwebSDK) GetMarketplace(address string) (*Marketplace, error) {
+	return newMarketplace(
 		sdk.GetProvider(),
 		common.HexToAddress(address),
 		sdk.GetRawPrivateKey(),

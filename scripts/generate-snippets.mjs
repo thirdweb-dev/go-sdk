@@ -36,6 +36,16 @@ const contracts = [
     name: "Multiwrap",
     files: ["multiwrap.md", "erc721.md"],
     docName: "multiwrap",
+  },
+  {
+    name: "Marketplace",
+    files: ["marketplace.md"],
+    docName: "marketplace",
+  },
+  {
+    name: "WalletAuthenticator",
+    files: ["wallet_authenticator.md"],
+    docName: "wallet_authenticator",
   }
 ]
 

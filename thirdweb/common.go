@@ -3,6 +3,7 @@ package thirdweb
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"math/big"
@@ -168,7 +169,21 @@ func setErc20Allowance(
 		}
 
 		if allowance.Cmp(value) < 0 {
-			erc20.Approve(&bind.TransactOpts{}, spender, value)
+			// We can get options from the contract instead of ERC20 because they will be the same
+			approvalOpts, err := contractToApprove.getTxOptions()
+			if err != nil {
+				return err
+			}
+
+			tx, err := erc20.Approve(approvalOpts, spender, value)
+			if err != nil {
+				return err
+			}
+
+			_, err = contractToApprove.awaitTx(tx.Hash())
+			if err != nil {
+				return err
+			}
 		}
 
 		return nil
@@ -242,15 +257,15 @@ func prepareClaim(
 	storage storage,
 ) (*ClaimVerification, error) {
 	maxClaimable := 0
-	price := activeClaimCondition.price
-	currencyAddress := activeClaimCondition.currencyAddress
+	price := activeClaimCondition.Price
+	currencyAddress := activeClaimCondition.CurrencyAddress
 	proofs := [][32]byte{}
 
 	if price > 0 && !isNativeToken(currencyAddress) {
 		approveErc20Allowance(
 			contractHelper,
 			currencyAddress,
-			big.NewInt(int64(activeClaimCondition.price)),
+			big.NewInt(int64(activeClaimCondition.Price)),
 			quantity,
 		)
 	}
@@ -277,14 +292,14 @@ func transformResultToClaimCondition(
 	price := formatUnits(pm.PricePerToken, currencyValue.Decimals)
 
 	return &ClaimConditionOutput{
-		startTime:                   int(pm.StartTimestamp.Int64()),
-		maxQuantity:                 int(pm.MaxClaimableSupply.Int64()),
-		availableSupply:             int(pm.MaxClaimableSupply.Int64()) - int(pm.SupplyClaimed.Int64()),
-		quantityLimitPerTransaction: int(pm.QuantityLimitPerTransaction.Int64()),
-		waitInSeconds:               int(pm.WaitTimeInSecondsBetweenClaims.Int64()),
-		price:                       price,
-		currencyAddress:             pm.Currency.String(),
-		currencyMetadata:            currencyValue,
+		StartTime:                   pm.StartTimestamp,
+		MaxQuantity:                 pm.MaxClaimableSupply,
+		AvailableSupply:             big.NewInt(0).Sub(pm.MaxClaimableSupply, pm.SupplyClaimed),
+		QuantityLimitPerTransaction: pm.QuantityLimitPerTransaction,
+		WaitInSeconds:               pm.WaitTimeInSecondsBetweenClaims,
+		Price:                       price,
+		CurrencyAddress:             pm.Currency.String(),
+		CurrencyMetadata:            currencyValue,
 	}, nil
 }
 
@@ -401,4 +416,248 @@ func fetchContractMetadata(uri string, storage storage) (string, error) {
 	}
 
 	return string(abiBytes), nil
+}
+
+// MARKETPLACE
+
+func fetchTokenMetadataForContract(
+	contractAddress string,
+	provider *ethclient.Client,
+	tokenId int,
+	storage storage,
+) (*NFTMetadata, error) {
+	erc165, err := abi.NewIERC165(common.HexToAddress(contractAddress), provider)
+	if err != nil {
+		return nil, err
+	}
+
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	if err != nil {
+		return nil, err
+	}
+
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	if err != nil {
+		return nil, err
+	}
+
+	uri := ""
+	if isErc721 {
+		contract, err := abi.NewTokenERC721(common.HexToAddress(contractAddress), provider)
+		if err != nil {
+			return nil, err
+		}
+
+		uri, err = contract.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+	} else if isErc1155 {
+		contract, err := abi.NewTokenERC1155(common.HexToAddress(contractAddress), provider)
+		if err != nil {
+			return nil, err
+		}
+
+		uri, err = contract.Uri(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+	}
+
+	return fetchTokenMetadata(tokenId, uri, storage)
+}
+
+func handleTokenApproval(
+	provider *ethclient.Client,
+	helper *contractHelper,
+	marketplaceAddress string,
+	assetContract string,
+	tokenId int,
+	from string,
+) error {
+	erc165, err := abi.NewIERC165(common.HexToAddress(assetContract), provider)
+	if err != nil {
+		return err
+	}
+
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	if err != nil {
+		return err
+	}
+
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	if err != nil {
+		return err
+	}
+
+	if isErc721 {
+		contract, err := abi.NewTokenERC721(common.HexToAddress(assetContract), provider)
+		if err != nil {
+			return err
+		}
+
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		if err != nil {
+			return err
+		}
+
+		if !approved {
+			tokenApproved, err := contract.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+			if err != nil {
+				return err
+			}
+
+			txOpts, err := helper.getTxOptions()
+			if err != nil {
+				return err
+			}
+
+			if strings.ToLower(tokenApproved.String()) != strings.ToLower(marketplaceAddress) {
+				tx, err := contract.SetApprovalForAll(txOpts, common.HexToAddress(marketplaceAddress), true)
+				if err != nil {
+					return err
+				}
+
+				_, err = helper.awaitTx(tx.Hash())
+				if err != nil {
+					return err
+				}
+			}
+		}
+	} else if isErc1155 {
+		contract, err := abi.NewTokenERC1155(common.HexToAddress(assetContract), provider)
+		if err != nil {
+			return err
+		}
+
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		if err != nil {
+			return err
+		}
+
+		if !approved {
+			txOpts, err := helper.getTxOptions()
+			if err != nil {
+				return err
+			}
+
+			tx, err := contract.SetApprovalForAll(txOpts, common.HexToAddress(marketplaceAddress), true)
+			if err != nil {
+				return err
+			}
+
+			_, err = helper.awaitTx(tx.Hash())
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		return errors.New("Contract does not implement ERC721 or ERC1155")
+	}
+
+	return nil
+}
+
+func isStillValidListing(
+	helper *contractHelper,
+	listing *DirectListing,
+	quantity int,
+) (bool, error) {
+	approved, err := isTokenApprovedForTransfer(
+		helper.GetProvider(),
+		helper.getAddress().Hex(),
+		listing.AssetContractAddress,
+		listing.TokenId,
+		listing.SellerAddress,
+	)
+	if err != nil {
+		return false, err
+	}
+
+	if !approved {
+		return false, nil
+	}
+
+	erc165, err := abi.NewIERC165(common.HexToAddress(listing.AssetContractAddress), helper.GetProvider())
+	if err != nil {
+		return false, err
+	}
+
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	if err != nil {
+		return false, err
+	}
+
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	if err != nil {
+		return false, err
+	}
+
+	if isErc721 {
+		contract, err := abi.NewTokenERC721(
+			common.HexToAddress(listing.AssetContractAddress),
+			helper.GetProvider(),
+		)
+		if err != nil {
+			return false, err
+		}
+
+		ownerOf, err := contract.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(listing.TokenId)))
+		if err != nil {
+			return false, err
+		}
+
+		return strings.ToLower(ownerOf.Hex()) == strings.ToLower(listing.SellerAddress), nil
+	} else if isErc1155 {
+		contract, err := abi.NewTokenERC1155(
+			common.HexToAddress(listing.AssetContractAddress),
+			helper.GetProvider(),
+		)
+		if err != nil {
+			return false, err
+		}
+
+		balance, err := contract.BalanceOf(
+			&bind.CallOpts{},
+			common.HexToAddress(listing.SellerAddress),
+			big.NewInt(int64(listing.TokenId)),
+		)
+
+		return balance.Int64() >= int64(quantity), nil
+	} else {
+		return false, errors.New("Contract does not implement ERC721 or ERC1155")
+	}
+}
+
+func mapListing(
+	helper *contractHelper,
+	storage storage,
+	listing abi.IMarketplaceListing,
+) (*DirectListing, error) {
+	currencyValue, err := fetchCurrencyValue(
+		helper.GetProvider(),
+		listing.Currency.String(),
+		listing.BuyoutPricePerToken,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	asset, err := fetchTokenMetadataForContract(
+		listing.AssetContract.String(),
+		helper.GetProvider(),
+		int(listing.TokenId.Int64()),
+		storage,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &DirectListing{
+		AssetContractAddress:        listing.AssetContract.String(),
+		BuyoutPrice:                 listing.BuyoutPricePerToken.String(),
+		CurrencyContractAddress:     listing.Currency.String(),
+		BuyoutCurrencyValuePerToken: currencyValue,
+		Id:                          listing.ListingId.String(),
+		TokenId:                     int(listing.TokenId.Int64()),
+		Quantity:                    int(listing.Quantity.Int64()),
+		StartTimeInEpochSeconds:     int(listing.StartTime.Int64()),
+		EndTimeInEpochSeconds:       int(listing.EndTime.Int64()),
+		SellerAddress:               listing.TokenOwner.String(),
+		Asset:                       asset,
+	}, nil
 }

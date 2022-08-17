@@ -20,10 +20,11 @@ contract, err := sdk.GetMultiwrap("{{contract_address}}")
 ```go
 type Multiwrap struct {
     *ERC721
+    Encoder *ContractEncoder
 }
 ```
 
-### func \(\*Multiwrap\) [GetWrappedContents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L69>)
+### func \(\*Multiwrap\) [GetWrappedContents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L76>)
 
 ```go
 func (multiwrap *Multiwrap) GetWrappedContents(wrappedTokenId int) (*MultiwrapBundle, error)
@@ -45,7 +46,7 @@ erc721Tokens := contents.Erc721Tokens
 erc1155Tokens := contents.Erc1155Tokens
 ```
 
-### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L205>)
+### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L212>)
 
 ```go
 func (multiwrap *Multiwrap) Unwrap(wrappedTokenId int, recipientAddress string) (*types.Transaction, error)
@@ -66,7 +67,7 @@ tokenId := 0
 tx, err := contract.Unwrap(tokenId, "")
 ```
 
-### func \(\*Multiwrap\) [Wrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L156>)
+### func \(\*Multiwrap\) [Wrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L163>)
 
 ```go
 func (multiwrap *Multiwrap) Wrap(contents *MultiwrapBundle, wrappedTokenMetadata interface{}, recipientAddress string) (*types.Transaction, error)
@@ -115,7 +116,7 @@ wrappedTokenMetadata := &thirdweb.NFTMetadataInput{
 tx, err := contract.Wrap(contents, wrappedTokenMetadata, "")
 ```
 
-## type [MultiwrapBundle](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L215-L219>)
+## type [MultiwrapBundle](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L207-L211>)
 
 ```go
 type MultiwrapBundle struct {
@@ -125,7 +126,7 @@ type MultiwrapBundle struct {
 }
 ```
 
-## type [MultiwrapERC1155](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L209-L213>)
+## type [MultiwrapERC1155](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L201-L205>)
 
 ```go
 type MultiwrapERC1155 struct {
@@ -135,7 +136,7 @@ type MultiwrapERC1155 struct {
 }
 ```
 
-## type [MultiwrapERC20](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L199-L202>)
+## type [MultiwrapERC20](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L191-L194>)
 
 ```go
 type MultiwrapERC20 struct {
@@ -144,7 +145,7 @@ type MultiwrapERC20 struct {
 }
 ```
 
-## type [MultiwrapERC721](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L204-L207>)
+## type [MultiwrapERC721](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L196-L199>)
 
 ```go
 type MultiwrapERC721 struct {

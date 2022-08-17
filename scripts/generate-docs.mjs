@@ -9,6 +9,14 @@ const delimiters = {
     name: "contract_deployer.md",
     header: "Contract Deployments"
   },
+  "ContractEncoder": {
+    name: "contract_encoder.md",
+    header: "Contract Encoder"
+  },
+  "Currency": {
+    name: "delete.md",
+    header: "Delete"
+  },
   "ERC20": {
     name: "erc20.md",
     header: "ERC20",
@@ -37,13 +45,37 @@ const delimiters = {
     name: "edition_drop.md",
     header: "Edition Drop",
   },
+  "EditionDropClaimConditions": {
+    name: "edition_drop_claim_conditions.md",
+    header: "Edition Drop",
+  },
+  "EditionMetadata": {
+    name: "delete.md",
+    header: "Delete",
+  },
+  "LoginOptions": {
+    name: "delete.md",
+    header: "Delete",
+  },
   "IpfsStorage": {
     name: "storage.md",
     header: `IPFS Storage`,
   },
+  "Marketplace": {
+    name: "marketplace.md",
+    header: "Marketplace",
+  },
+  "MarketplaceEncoder": {
+    name: "marketplace_encoder.md",
+    header: "Marketplace Encoder",
+  },
   "Multiwrap": {
     name: "multiwrap.md",
     header: "Multiwrap",
+  },
+  "NewDirectListing": {
+    name: "delete.md",
+    header: "Delete",
   },
   "NFTCollection": {
     name: "nft_collection.md",
@@ -53,13 +85,21 @@ const delimiters = {
     name: "nft_drop.md",
     header: "NFT Drop",
   },
+  "NFTDropClaimConditions": {
+    name: "nft_drop_claim_conditions.md",
+    header: "NFT Drop Claim Conditions",
+  },
+  "NFTMetadata": {
+    name: "delete.md",
+    header: "Delete",
+  },
   "ProviderHandler": {
     name: "provider.md",
     header: "Provider",
   },
   "SDKOptions": {
-    name: "types.md",
-    header: "Types",
+    name: "delete.md",
+    header: "Delete",
   },
   "SmartContract": {
     name: "custom.md",
@@ -73,9 +113,17 @@ const delimiters = {
     name: "token.md",
     header: "Token",
   },
+  "WalletAuthenticationOptions": {
+    name: "delete.md",
+    header: "Delete"
+  },
+  "WalletAuthenticator": {
+    name: "wallet_authenticator.md",
+    header: "Wallet Authenticator",
+  },
   "WrappedToken": {
-    name: "finish.md",
-    header: "",
+    name: "delete.md",
+    header: "Delete",
   },
 }
 

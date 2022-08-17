@@ -43,6 +43,46 @@ var editionDropGetAllCmd = &cobra.Command{
 	},
 }
 
+var editionDropGetActiveCmd = &cobra.Command{
+	Use:   "getActive",
+	Short: "Get active claim in a contract `ADDRESS`",
+	Run: func(cmd *cobra.Command, args []string) {
+		editionDrop, err := getEditionDrop()
+		if err != nil {
+			panic(err)
+		}
+		all, err := editionDrop.ClaimConditions.GetAll(0)
+		if err != nil {
+			panic(err)
+		}
+
+		for i, c := range all {
+			fmt.Printf(fmt.Sprintf("\n\nClaim Condition %d\n================\n", i))
+			fmt.Println("Start Time:", c.StartTime)
+			fmt.Println("Available:", c.AvailableSupply)
+			fmt.Println("Quantity:", c.MaxQuantity)
+			fmt.Println("Quantity Limit:", c.QuantityLimitPerTransaction)
+			fmt.Println("Price:", c.Price)
+			fmt.Println("Wait In Seconds", c.WaitInSeconds)
+		}
+
+		all, err = editionDrop.ClaimConditions.GetAll(1)
+		if err != nil {
+			panic(err)
+		}
+
+		for i, c := range all {
+			fmt.Printf(fmt.Sprintf("\n\nClaim Condition %d\n================\n", i))
+			fmt.Println("Start Time:", c.StartTime)
+			fmt.Println("Available:", c.AvailableSupply)
+			fmt.Println("Quantity:", c.MaxQuantity)
+			fmt.Println("Quantity Limit:", c.QuantityLimitPerTransaction)
+			fmt.Println("Price:", c.Price)
+			fmt.Println("Wait In Seconds", c.WaitInSeconds)
+		}
+	},
+}
+
 var editionDropClaimCmd = &cobra.Command{
 	Use:   "claim",
 	Short: "Claim an nft",
@@ -103,6 +143,7 @@ var editionDropCreateBatchCmd = &cobra.Command{
 func init() {
 	editionDropCmd.PersistentFlags().StringVarP(&editionDropContractAddress, "address", "a", "", "edition drop contract address")
 	editionDropCmd.AddCommand(editionDropGetAllCmd)
+	editionDropCmd.AddCommand(editionDropGetActiveCmd)
 	editionDropCmd.AddCommand(editionDropClaimCmd)
 	editionDropCmd.AddCommand(editionDropCreateBatchCmd)
 }

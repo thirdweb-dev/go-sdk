@@ -56,12 +56,3 @@ contractAddress: the optional contractAddress upload is being called from
 signerAddress: the optional signerAddress upload is being called from
 
 returns: the base URI of the IPFS upload folder with the URIs of each subfile
-
-## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L12-L15>)
-
-```go
-type Metadata struct {
-    MetadataUri    string
-    MetadataObject interface{}
-}
-```

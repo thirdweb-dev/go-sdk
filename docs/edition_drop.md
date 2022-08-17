@@ -20,10 +20,12 @@ contract, err := sdk.GetEditionDrop("{{contract_address}}")
 ```go
 type EditionDrop struct {
     *ERC1155
+    ClaimConditions *EditionDropClaimConditions
+    Encoder         *ContractEncoder
 }
 ```
 
-### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L138>)
+### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L145>)
 
 ```go
 func (drop *EditionDrop) Claim(tokenId int, quantity int) (*types.Transaction, error)
@@ -37,7 +39,7 @@ quantity: the number of NFTs to claim
 
 returns: the transaction receipt of the claim
 
-### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L160>)
+### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L167>)
 
 ```go
 func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantity int) (*types.Transaction, error)
@@ -63,7 +65,7 @@ quantity = 1
 tx, err := contract.ClaimTo(address, tokenId, quantity)
 ```
 
-### func \(\*EditionDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L94>)
+### func \(\*EditionDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L101>)
 
 ```go
 func (drop *EditionDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
@@ -104,39 +106,4 @@ metadatasWithSupply := []*thirdweb.EditionMetadataInput{
 }
 
 tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
-```
-
-## type [EditionMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L44-L47>)
-
-```go
-type EditionMetadata struct {
-    Metadata *NFTMetadata
-    Supply   int
-}
-```
-
-## type [EditionMetadataInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L56-L59>)
-
-```go
-type EditionMetadataInput struct {
-    Metadata *NFTMetadataInput
-    Supply   int
-}
-```
-
-## type [EditionMetadataOwner](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L49-L54>)
-
-```go
-type EditionMetadataOwner struct {
-    Metadata      *NFTMetadata
-    Supply        int
-    Owner         string
-    QuantityOwned int
-}
-```
-
-## type [EditionResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155.go#L23-L26>)
-
-```go
-type EditionResult struct {}
 ```

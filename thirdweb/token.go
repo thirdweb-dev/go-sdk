@@ -25,6 +25,7 @@ type Token struct {
 	abi    *abi.TokenERC20
 	helper *contractHelper
 	*ERC20
+	Encoder *ContractEncoder
 }
 
 func newToken(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Token, error) {
@@ -36,10 +37,16 @@ func newToken(provider *ethclient.Client, address common.Address, privateKey str
 		if erc20, err := newERC20(provider, address, privateKey, storage); err != nil {
 			return nil, err
 		} else {
+			encoder, err := newContractEncoder(abi.TokenERC20ABI, helper)
+			if err != nil {
+				return nil, err
+			}
+
 			token := &Token{
 				contractAbi,
 				helper,
 				erc20,
+				encoder,
 			}
 			return token, nil
 		}

@@ -20,10 +20,12 @@ contract, err := sdk.GetNFTDrop("{{contract_address}}")
 ```go
 type NFTDrop struct {
     *ERC721
+    ClaimConditions *NFTDropClaimConditions
+    Encoder         *ContractEncoder
 }
 ```
 
-### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L231>)
+### func \(\*NFTDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L238>)
 
 ```go
 func (drop *NFTDrop) Claim(quantity int) (*types.Transaction, error)
@@ -35,7 +37,7 @@ quantity: the number of NFTs to claim
 
 returns: the transaction receipt of the claim
 
-### func \(\*NFTDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L250>)
+### func \(\*NFTDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L257>)
 
 ```go
 func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Transaction, error)
@@ -58,7 +60,7 @@ quantity = 1
 tx, err := contract.ClaimTo(address, quantity)
 ```
 
-### func \(\*NFTDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L188>)
+### func \(\*NFTDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L195>)
 
 ```go
 func (drop *NFTDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
@@ -95,7 +97,7 @@ metadatas := []*thirdweb.NFTMetadataInput{
 tx, err := contract.CreateBatch(metadatas)
 ```
 
-### func \(\*NFTDrop\) [GetAllClaimed](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L116>)
+### func \(\*NFTDrop\) [GetAllClaimed](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L123>)
 
 ```go
 func (drop *NFTDrop) GetAllClaimed() ([]*NFTMetadataOwner, error)
@@ -112,7 +114,7 @@ claimedNfts, err := contract.GetAllClaimed()
 firstOwner := claimedNfts[0].Owner
 ```
 
-### func \(\*NFTDrop\) [GetAllUnclaimed](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L140>)
+### func \(\*NFTDrop\) [GetAllUnclaimed](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L147>)
 
 ```go
 func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error)
@@ -129,7 +131,7 @@ unclaimedNfts, err := contract.GetAllUnclaimed()
 firstNftName := unclaimedNfts[0].Name
 ```
 
-### func \(\*NFTDrop\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L71>)
+### func \(\*NFTDrop\) [GetOwned](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L78>)
 
 ```go
 func (nft *NFTDrop) GetOwned(address string) ([]*NFTMetadataOwner, error)
@@ -149,7 +151,7 @@ nfts, err := contract.GetOwned(owner)
 name := nfts[0].Metadata.Name
 ```
 
-### func \(\*NFTDrop\) [GetOwnedTokenIDs](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L88>)
+### func \(\*NFTDrop\) [GetOwnedTokenIDs](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop.go#L95>)
 
 ```go
 func (nft *NFTDrop) GetOwnedTokenIDs(address string) ([]*big.Int, error)
@@ -160,54 +162,3 @@ Get the tokenIds of all the NFTs owned by a specific address\.
 address: the address of the owner of the NFTs
 
 returns: the tokenIds of all the NFTs owned by the address
-
-## type [NFTMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L17-L27>)
-
-```go
-type NFTMetadata struct {
-    Id              *big.Int    `json:"id"`
-    Uri             string      `json:"uri"`
-    Name            string      `json:"name"`
-    Description     string      `json:"description"`
-    Image           interface{} `json:"image"`
-    ExternalUrl     string      `json:"external_url"`
-    AnimationUrl    string      `json:"animation_url"`
-    BackgroundColor string      `json:"background_color"`
-    Properties      interface{} `json:"properties,omitempty"`
-}
-```
-
-## type [NFTMetadataInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L29-L37>)
-
-```go
-type NFTMetadataInput struct {
-    Name            string      `mapstructure:"name" json:"name"`
-    Description     string      `mapstructure:"description" json:"description"`
-    Image           interface{} `mapstructure:"image" json:"image"`
-    ExternalUrl     string      `mapstructure:"external_url" json:"external_url"`
-    AnimationUrl    string      `mapstructure:"animation_url" json:"animation_url"`
-    BackgroundColor string      `mapstructure:"background_color" json:"background_color"`
-    Properties      interface{} `mapstructure:"properties,omitempty" json:"properties,omitempty"`
-}
-```
-
-## type [NFTMetadataOwner](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L39-L42>)
-
-```go
-type NFTMetadataOwner struct {
-    Metadata *NFTMetadata
-    Owner    string
-}
-```
-
-## type [NFTResult](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721.go#L23-L26>)
-
-```go
-type NFTResult struct {}
-```
-
-## type [NativeToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L113-L118>)
-
-```go
-type NativeToken struct {}
-```
