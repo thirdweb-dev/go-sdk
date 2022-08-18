@@ -25,7 +25,7 @@ type EditionDrop struct {
 }
 ```
 
-### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L145>)
+### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L149>)
 
 ```go
 func (drop *EditionDrop) Claim(tokenId int, quantity int) (*types.Transaction, error)
@@ -39,7 +39,7 @@ quantity: the number of NFTs to claim
 
 returns: the transaction receipt of the claim
 
-### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L167>)
+### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L171>)
 
 ```go
 func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantity int) (*types.Transaction, error)
@@ -65,7 +65,7 @@ quantity = 1
 tx, err := contract.ClaimTo(address, tokenId, quantity)
 ```
 
-### func \(\*EditionDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L101>)
+### func \(\*EditionDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L102>)
 
 ```go
 func (drop *EditionDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)

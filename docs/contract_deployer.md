@@ -28,7 +28,7 @@ type ContractDeployer struct {
 }
 ```
 
-### func \(\*ContractDeployer\) [DeployEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L110>)
+### func \(\*ContractDeployer\) [DeployEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L111>)
 
 ```go
 func (deployer *ContractDeployer) DeployEdition(metadata *DeployEditionMetadata) (string, error)
@@ -50,7 +50,7 @@ address, err := sdk.Deployer.DeployEdition(
 })
 ```
 
-### func \(\*ContractDeployer\) [DeployEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L164>)
+### func \(\*ContractDeployer\) [DeployEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L165>)
 
 ```go
 func (deployer *ContractDeployer) DeployEditionDrop(metadata *DeployEditionDropMetadata) (string, error)
@@ -72,7 +72,7 @@ address, err := sdk.Deployer.DeployEditionDrop(
 })
 ```
 
-### func \(\*ContractDeployer\) [DeployMarketplace](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L200>)
+### func \(\*ContractDeployer\) [DeployMarketplace](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L201>)
 
 ```go
 func (deployer *ContractDeployer) DeployMarketplace(metadata *DeployMarketplaceMetadata) (string, error)
@@ -94,7 +94,7 @@ address, err := sdk.Deployer.DeployMarketplace(
 })
 ```
 
-### func \(\*ContractDeployer\) [DeployMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L182>)
+### func \(\*ContractDeployer\) [DeployMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L183>)
 
 ```go
 func (deployer *ContractDeployer) DeployMultiwrap(metadata *DeployMultiwrapMetadata) (string, error)
@@ -116,7 +116,7 @@ address, err := sdk.Deployer.DeployMultiwrap(
 })
 ```
 
-### func \(\*ContractDeployer\) [DeployNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L92>)
+### func \(\*ContractDeployer\) [DeployNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L93>)
 
 ```go
 func (deployer *ContractDeployer) DeployNFTCollection(metadata *DeployNFTCollectionMetadata) (string, error)
@@ -138,7 +138,7 @@ address, err := sdk.Deployer.DeployNFTCollection(
 })
 ```
 
-### func \(\*ContractDeployer\) [DeployNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L146>)
+### func \(\*ContractDeployer\) [DeployNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L147>)
 
 ```go
 func (deployer *ContractDeployer) DeployNFTDrop(metadata *DeployNFTDropMetadata) (string, error)
@@ -160,7 +160,7 @@ address, err := sdk.Deployer.DeployNFTDrop(
 })
 ```
 
-### func \(\*ContractDeployer\) [DeployToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L128>)
+### func \(\*ContractDeployer\) [DeployToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L129>)
 
 ```go
 func (deployer *ContractDeployer) DeployToken(metadata *DeployTokenMetadata) (string, error)

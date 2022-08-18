@@ -43,6 +43,29 @@ var nftDropGetAllCmd = &cobra.Command{
 	},
 }
 
+var nftDropEncoderCmd = &cobra.Command{
+	Use:   "encoder",
+	Short: "Get encoded claim transaction",
+	Run: func(cmd *cobra.Command, args []string) {
+		nftDrop, err := getNftDrop()
+		if err != nil {
+			panic(err)
+		}
+
+		tx, err := nftDrop.Encoder.ClaimTo(
+			thirdwebSDK.GetSignerAddress().String(),
+			thirdwebSDK.GetSignerAddress().String(),
+			1,
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		log.Println(tx.Data())
+		log.Println(tx.To())
+	},
+}
+
 var nftDropGetActiveCmd = &cobra.Command{
 	Use:   "getActive",
 	Short: "Get the active claim condition in a contract `ADDRESS`",
@@ -155,6 +178,7 @@ var nftDropCreateBatchCmd = &cobra.Command{
 func init() {
 	nftDropCmd.PersistentFlags().StringVarP(&nftDropContractAddress, "address", "a", "", "nft drop contract address")
 	nftDropCmd.AddCommand(nftDropGetAllCmd)
+	nftDropCmd.AddCommand(nftDropEncoderCmd)
 	nftDropCmd.AddCommand(nftDropGetActiveCmd)
 	nftDropCmd.AddCommand(nftDropClaimCmd)
 	nftDropCmd.AddCommand(nftDropCreateBatchCmd)

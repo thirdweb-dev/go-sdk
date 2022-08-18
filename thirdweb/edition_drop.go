@@ -184,7 +184,7 @@ func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantit
 		big.NewInt(int64(tokenId)),
 		big.NewInt(int64(quantity)),
 		common.HexToAddress(claimVerification.currencyAddress),
-		big.NewInt(int64(claimVerification.price)),
+		claimVerification.price,
 		claimVerification.proofs,
 		big.NewInt(int64(claimVerification.maxQuantityPerTransaction)),
 	)
