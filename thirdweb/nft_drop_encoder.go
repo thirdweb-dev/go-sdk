@@ -30,7 +30,7 @@ import (
 //	contract, err := sdk.GetNFTDrop("{{contract_address}}")
 //
 // 	// Now the encoder can be accessed from the contract
-//  contract.Encoder.ClaimTo(...)
+// 	contract.Encoder.ClaimTo(...)
 type NFTDropEncoder struct {
 	abi             *abi.DropERC721
 	helper          *contractHelper

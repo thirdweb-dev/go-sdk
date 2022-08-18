@@ -21,9 +21,8 @@ sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
 contract, err := sdk.GetNFTDrop("{{contract_address}}")
 
 // Now the encoder can be accessed from the contract
+contract.Encoder.ClaimTo(...)
 ```
-
-contract\.Encoder\.ClaimTo\(\.\.\.\)
 
 ```go
 type NFTDropEncoder struct {
