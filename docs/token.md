@@ -139,7 +139,7 @@ returns: transaction receipt of the mint
 tx, err := contract.MintTo("{{wallet_address}}", 1)
 ```
 
-## type [TokenAmount](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L94-L97>)
+## type [TokenAmount](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L97-L100>)
 
 ```go
 type TokenAmount struct {

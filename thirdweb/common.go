@@ -12,6 +12,7 @@ import (
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/fxamacker/cbor"
 	"github.com/mitchellh/mapstructure"
@@ -151,6 +152,40 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 	return currencyValue, nil
 }
 
+func setErc20AllowanceEncoder(
+	contractToApprove *contractHelper,
+	signerAddress string,
+	value *big.Int,
+	currencyAddress string,
+) (*types.Transaction, error) {
+	if !isNativeToken(currencyAddress) {
+		provider := contractToApprove.GetProvider()
+		erc20, err := abi.NewIERC20(common.HexToAddress(currencyAddress), provider)
+		if err != nil {
+			return nil, err
+		}
+
+		owner := common.HexToAddress(signerAddress)
+		spender := contractToApprove.getAddress()
+		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
+		if err != nil {
+			return nil, err
+		}
+
+		if allowance.Cmp(value) < 0 {
+			// We can get options from the contract instead of ERC20 because they will be the same
+			approvalOpts, err := contractToApprove.getUnsignedTxOptions(signerAddress)
+			if err != nil {
+				return nil, err
+			}
+
+			return erc20.Approve(approvalOpts, spender, value)
+		}
+	}
+
+	return nil, nil
+}
+
 func setErc20Allowance(
 	contractToApprove *contractHelper,
 	value *big.Int,
@@ -266,14 +301,19 @@ func prepareClaim(
 	price := activeClaimCondition.Price
 	currencyAddress := activeClaimCondition.CurrencyAddress
 	proofs := [][32]byte{}
+	value := big.NewInt(0)
 
-	if price > 0 && !isNativeToken(currencyAddress) {
-		approveErc20Allowance(
-			contractHelper,
-			currencyAddress,
-			big.NewInt(int64(activeClaimCondition.Price)),
-			quantity,
-		)
+	if price.Cmp(big.NewInt(0)) > 0 {
+		if isNativeToken(currencyAddress) {
+			value = big.NewInt(0).Mul(big.NewInt(int64(quantity)), price)
+		} else {
+			approveErc20Allowance(
+				contractHelper,
+				currencyAddress,
+				price,
+				quantity,
+			)
+		}
 	}
 
 	claimVerification := &ClaimVerification{
@@ -281,6 +321,7 @@ func prepareClaim(
 		maxQuantityPerTransaction: maxClaimable,
 		price:                     price,
 		currencyAddress:           currencyAddress,
+		value:                     value,
 	}
 	return claimVerification, nil
 }
@@ -295,15 +336,13 @@ func transformResultToClaimCondition(
 		return nil, err
 	}
 
-	price := formatUnits(pm.PricePerToken, currencyValue.Decimals)
-
 	return &ClaimConditionOutput{
 		StartTime:                   pm.StartTimestamp,
 		MaxQuantity:                 pm.MaxClaimableSupply,
 		AvailableSupply:             big.NewInt(0).Sub(pm.MaxClaimableSupply, pm.SupplyClaimed),
 		QuantityLimitPerTransaction: pm.QuantityLimitPerTransaction,
 		WaitInSeconds:               pm.WaitTimeInSecondsBetweenClaims,
-		Price:                       price,
+		Price:                       pm.PricePerToken,
 		CurrencyAddress:             pm.Currency.String(),
 		CurrencyMetadata:            currencyValue,
 	}, nil

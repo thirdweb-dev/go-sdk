@@ -138,16 +138,11 @@ func (encoder *MarketplaceEncoder) ApproveBuyoutListing(
 	quantity := big.NewInt(int64(quantityDesired))
 	value := listing.BuyoutCurrencyValuePerToken.Value.Mul(listing.BuyoutCurrencyValuePerToken.Value, quantity)
 
-	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
-	if err != nil {
-		return nil, err
-	}
-
-	return encoder.setErc20Allowance(
+	return setErc20AllowanceEncoder(
+		encoder.helper,
 		signerAddress,
 		value,
 		listing.CurrencyContractAddress,
-		txOpts,
 	)
 }
 
@@ -356,43 +351,6 @@ func (encoder *MarketplaceEncoder) validateListing(listingId int) (*DirectListin
 		return mapListing(encoder.helper, encoder.storage, listing)
 	} else {
 		return nil, fmt.Errorf("Unknown listing type: %d", listingId)
-	}
-}
-
-func (encoder *MarketplaceEncoder) setErc20Allowance(
-	signerAddress string,
-	value *big.Int,
-	currencyAddress string,
-	txOpts *bind.TransactOpts,
-) (*types.Transaction, error) {
-	if isNativeToken(currencyAddress) {
-		txOpts.Value = value
-		return nil, nil
-	} else {
-		provider := encoder.helper.GetProvider()
-		erc20, err := abi.NewIERC20(common.HexToAddress(currencyAddress), provider)
-		if err != nil {
-			return nil, err
-		}
-
-		owner := common.HexToAddress(signerAddress)
-		spender := encoder.helper.getAddress()
-		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
-		if err != nil {
-			return nil, err
-		}
-
-		if allowance.Cmp(value) < 0 {
-			// We can get options from the contract instead of ERC20 because they will be the same
-			approvalOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
-			if err != nil {
-				return nil, err
-			}
-
-			return erc20.Approve(approvalOpts, spender, value)
-		}
-
-		return nil, nil
 	}
 }
 

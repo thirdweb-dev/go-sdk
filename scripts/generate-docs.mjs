@@ -89,6 +89,10 @@ const delimiters = {
     name: "nft_drop_claim_conditions.md",
     header: "NFT Drop Claim Conditions",
   },
+  "NFTDropEncoder": {
+    name: "nft_drop_encoder.md",
+    header: "NFT Drop Encoder",
+  },
   "NFTMetadata": {
     name: "delete.md",
     header: "Delete",

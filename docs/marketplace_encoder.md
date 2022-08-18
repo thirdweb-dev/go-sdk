@@ -69,7 +69,7 @@ fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are 
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*MarketplaceEncoder\) [ApproveCreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L258>)
+### func \(\*MarketplaceEncoder\) [ApproveCreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L253>)
 
 ```go
 func (encoder *MarketplaceEncoder) ApproveCreateListing(signerAddress string, listing *NewDirectListing) (*types.Transaction, error)
@@ -107,7 +107,7 @@ fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are 
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*MarketplaceEncoder\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L185-L190>)
+### func \(\*MarketplaceEncoder\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L180-L185>)
 
 ```go
 func (encoder *MarketplaceEncoder) BuyoutListing(signerAddress string, listingId int, quantityDesired int, receiver string) (*types.Transaction, error)
@@ -175,7 +175,7 @@ fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are 
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*MarketplaceEncoder\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L302>)
+### func \(\*MarketplaceEncoder\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L297>)
 
 ```go
 func (encoder *MarketplaceEncoder) CreateListing(signerAddress string, listing *NewDirectListing) (*types.Transaction, error)
@@ -213,7 +213,7 @@ fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are 
 fmt.Println(tx.Nonce())
 ```
 
-## type [MarketplaceFilter](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L506-L511>)
+## type [MarketplaceFilter](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L509-L514>)
 
 ```go
 type MarketplaceFilter struct {

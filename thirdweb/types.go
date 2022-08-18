@@ -64,12 +64,13 @@ type EditionMetadataInput struct {
 type ClaimVerification struct {
 	proofs                    [][32]byte
 	maxQuantityPerTransaction int
-	price                     float64
+	price                     *big.Int
 	currencyAddress           string
+	value                     *big.Int
 }
 
 type ClaimConditionOutput struct {
-	Price                       float64
+	Price                       *big.Int
 	MaxQuantity                 *big.Int
 	QuantityLimitPerTransaction *big.Int
 	WaitInSeconds               *big.Int

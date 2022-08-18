@@ -29,7 +29,7 @@ type NFTDrop struct {
 	helper *contractHelper
 	*ERC721
 	ClaimConditions *NFTDropClaimConditions
-	Encoder         *ContractEncoder
+	Encoder         *NFTDropEncoder
 }
 
 func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*NFTDrop, error) {
@@ -47,7 +47,7 @@ func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey s
 					return nil, err
 				}
 
-				encoder, err := newContractEncoder(abi.DropERC721ABI, helper)
+				encoder, err := newNFTDropEncoder(contractAbi, helper, claimConditions, storage)
 				if err != nil {
 					return nil, err
 				}
@@ -269,12 +269,15 @@ func (drop *NFTDrop) ClaimTo(destinationAddress string, quantity int) (*types.Tr
 	if err != nil {
 		return nil, err
 	}
+
+	txOpts.Value = claimVerification.value
+
 	tx, err := drop.abi.Claim(
 		txOpts,
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(quantity)),
 		common.HexToAddress(claimVerification.currencyAddress),
-		big.NewInt(int64(claimVerification.price)),
+		claimVerification.price,
 		claimVerification.proofs,
 		big.NewInt(int64(claimVerification.maxQuantityPerTransaction)),
 	)
