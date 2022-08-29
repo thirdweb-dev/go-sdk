@@ -157,12 +157,39 @@ func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 
 	nfts := []*NFTMetadata{}
 	for i := int(unmintedId.Int64()); i < int(maxId.Int64()); i++ {
-		if nft, err := drop.getTokenMetadata(int(unmintedId.Int64()) + i); err == nil {
+		if nft, err := drop.getTokenMetadata(i); err == nil {
 			nfts = append(nfts, nft)
 		}
 	}
 
 	return nfts, nil
+}
+
+// Get the total number of NFTs that have been claimed.
+func (drop *NFTDrop) TotalClaimedSupply() (int, error) {
+	claimed, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	if err != nil {
+		return 0, err
+	}
+
+	return int(claimed.Int64()), nil
+}
+
+// Get the total number of NFTs that have not yet been claimed.
+func (drop *NFTDrop) TotalUnclaimedSupply() (int, error) {
+	claimed, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	if err != nil {
+		return 0, err
+	}
+
+	total, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	if err != nil {
+		return 0, err
+	}
+
+	unclaimed := big.NewInt(0).Sub(total, claimed)
+
+	return int(unclaimed.Int64()), nil
 }
 
 // Create a batch of NFTs on this contract.
