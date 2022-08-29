@@ -167,7 +167,7 @@ func (drop *NFTDrop) GetAllUnclaimed() ([]*NFTMetadata, error) {
 
 // Get the total number of NFTs that have been claimed.
 func (drop *NFTDrop) TotalClaimedSupply() (int, error) {
-	claimed, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	claimed, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{})
 	if err != nil {
 		return 0, err
 	}
@@ -177,7 +177,7 @@ func (drop *NFTDrop) TotalClaimedSupply() (int, error) {
 
 // Get the total number of NFTs that have not yet been claimed.
 func (drop *NFTDrop) TotalUnclaimedSupply() (int, error) {
-	claimed, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	claimed, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{})
 	if err != nil {
 		return 0, err
 	}
@@ -188,7 +188,6 @@ func (drop *NFTDrop) TotalUnclaimedSupply() (int, error) {
 	}
 
 	unclaimed := big.NewInt(0).Sub(total, claimed)
-
 	return int(unclaimed.Int64()), nil
 }
 
