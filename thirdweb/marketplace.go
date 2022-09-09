@@ -71,6 +71,7 @@ func (marketplace *Marketplace) GetListing(listingId int) (*DirectListing, error
 		return nil, err
 	}
 
+	// If listing does not exist or is cancelled, return nil as the listing
 	if listing.AssetContract.String() == zeroAddress {
 		return nil, fmt.Errorf("Failed to find listing with ID %d", listingId)
 	}
@@ -341,7 +342,9 @@ func (marketplace *Marketplace) getAllListingsNoFilter() ([]*DirectListing, erro
 	for id := 0; id < int(totalCount.Int64()); id++ {
 		listing, err := marketplace.GetListing(id)
 		if err != nil {
-			return nil, err
+			if !strings.Contains(err.Error(), "Failed to find listing") {
+				return nil, err
+			}
 		}
 		listings = append(listings, listing)
 	}
