@@ -342,7 +342,9 @@ func (marketplace *Marketplace) getAllListingsNoFilter() ([]*DirectListing, erro
 	for id := 0; id < int(totalCount.Int64()); id++ {
 		listing, err := marketplace.GetListing(id)
 		if err != nil {
-			if !strings.Contains(err.Error(), "Failed to find listing") {
+			if strings.Contains(err.Error(), "Failed to find listing") {
+				continue;
+			} else {
 				return nil, err
 			}
 		}
