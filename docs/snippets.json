@@ -433,30 +433,30 @@
     "name": "WalletAuthenticator",
     "summary": "",
     "description": "",
-    "example": "\n// First we specify the domain of the application to authenticate to\ndomain := \"thirdweb.com\"\n\n// We can then generate a payload for the connected wallet to login\n// This can also be done on the client side with the thirdweb TypeScript SDK\npayload, err := sdk.Auth.Login(domain, nil)\n\n// Then, on the server, we can securely verify the connected address that signed the payload\naddress, err := sdk.Auth.Verify(domain, payload, nil)\n\n// And we can also generate an authentication token to send back to the original payload sender\ntoken, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)\n\n// Finally, the token can be use dby the original payload sender to authenticate to the backend\n// And the server can use the following function to authenticate the token and verify the address\naddress, err := sdk.Auth.Authenticate(domain, token)\n",
+    "example": "\n// First we specify the domain of the application to authenticate to\ndomain := \"example.com\"\n\n// We can then generate a payload for the connected wallet to login\n// This can also be done on the client side with the thirdweb TypeScript SDK\npayload, err := sdk.Auth.Login(domain, nil)\n\n// Then, on the server, we can securely verify the connected address that signed the payload\naddress, err := sdk.Auth.Verify(domain, payload, nil)\n\n// And we can also generate an authentication token to send back to the original payload sender\ntoken, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)\n\n// Finally, the token can be use dby the original payload sender to authenticate to the backend\n// And the server can use the following function to authenticate the token and verify the address\naddress, err := sdk.Auth.Authenticate(domain, token)\n",
     "methods": [
       {
         "name": "Authenticate",
         "summary": "",
-        "example": "domain := \"thirdweb.com\"\npayload, err := sdk.Auth.Login(domain)\ntoken, err := sdk.Auth.GenerateAuthToken(domain, payload)\n\n// Authenticate the token and get the address of the authenticating wallet\naddress, err := sdk.Auth.Authenticate(domain, token)\n",
+        "example": "domain := \"example.com\"\npayload, err := sdk.Auth.Login(domain)\ntoken, err := sdk.Auth.GenerateAuthToken(domain, payload)\n\n// Authenticate the token and get the address of the authenticating wallet\naddress, err := sdk.Auth.Authenticate(domain, token)\n",
         "reference": "https://docs.thirdweb.com/go/wallet_authenticator#func-walletauthenticator-authenticate"
       },
       {
         "name": "GenerateAuthToken",
         "summary": "",
-        "example": "domain := \"thirdweb.com\"\npayload, err := sdk.Auth.Login(domain, nil)\n\n// Generate an authentication token for the logged in wallet\ntoken, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)\n",
+        "example": "domain := \"example.com\"\npayload, err := sdk.Auth.Login(domain, nil)\n\n// Generate an authentication token for the logged in wallet\ntoken, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)\n",
         "reference": "https://docs.thirdweb.com/go/wallet_authenticator#func-walletauthenticator-generateauthtoken"
       },
       {
         "name": "Login",
         "summary": "",
-        "example": "// Add the domain of the application that you want to log in to\ndomain := \"thirdweb.com\"\n\n// Generate a signed login payload for the connected wallet to authenticate with\npayload, err := sdk.Auth.Login(domain, nil)\n",
+        "example": "// Add the domain of the application that you want to log in to\ndomain := \"example.com\"\n\n// Generate a signed login payload for the connected wallet to authenticate with\npayload, err := sdk.Auth.Login(domain, nil)\n",
         "reference": "https://docs.thirdweb.com/go/wallet_authenticator#func-walletauthenticator-login"
       },
       {
         "name": "Verify",
         "summary": "",
-        "example": "domain := \"thirdweb.com\"\npayload, err := sdk.Auth.Login(domain, nil)\n\n// Verify the login request\naddress, err := sdk.Auth.Verify(domain, payload, nil)\n",
+        "example": "domain := \"example.com\"\npayload, err := sdk.Auth.Login(domain, nil)\n\n// Verify the login request\naddress, err := sdk.Auth.Verify(domain, payload, nil)\n",
         "reference": "https://docs.thirdweb.com/go/wallet_authenticator#func-walletauthenticator-verify"
       }
     ],
