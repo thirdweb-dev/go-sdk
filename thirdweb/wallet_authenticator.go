@@ -25,7 +25,7 @@ import (
 // You can use the wallet authenticator as follows:
 //
 // 	// First we specify the domain of the application to authenticate to
-// 	domain := "thirdweb.com"
+// 	domain := "example.com"
 //
 // 	// We can then generate a payload for the connected wallet to login
 // 	// This can also be done on the client side with the thirdweb TypeScript SDK
@@ -65,7 +65,7 @@ func newWalletAuthenticator(provider *ethclient.Client, privateKey string) (*Wal
 // Example
 //
 // 	// Add the domain of the application that you want to log in to
-// 	domain := "thirdweb.com"
+// 	domain := "example.com"
 //
 // 	// Generate a signed login payload for the connected wallet to authenticate with
 // 	payload, err := sdk.Auth.Login(domain, nil)
@@ -121,7 +121,7 @@ func (auth *WalletAuthenticator) Login(
 //
 // Example
 //
-// 	domain := "thirdweb.com"
+// 	domain := "example.com"
 // 	payload, err := sdk.Auth.Login(domain, nil)
 //
 // 	// Verify the login request
@@ -189,7 +189,7 @@ func (auth *WalletAuthenticator) Verify(
 //
 // Example
 //
-// 	domain := "thirdweb.com"
+// 	domain := "example.com"
 // 	payload, err := sdk.Auth.Login(domain, nil)
 //
 // 	// Generate an authentication token for the logged in wallet
@@ -271,7 +271,7 @@ func (auth *WalletAuthenticator) GenerateAuthToken(
 //
 // Example
 //
-// 	domain := "thirdweb.com"
+// 	domain := "example.com"
 // 	payload, err := sdk.Auth.Login(domain)
 // 	token, err := sdk.Auth.GenerateAuthToken(domain, payload)
 //
