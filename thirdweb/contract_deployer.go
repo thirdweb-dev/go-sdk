@@ -204,11 +204,15 @@ func (deployer *ContractDeployer) DeployMarketplace(metadata *DeployMarketplaceM
 }
 
 func (deployer *ContractDeployer) deployContract(contractType string, metadata interface{}) (string, error) {
-
 	metadataToUpload := map[string]interface{}{}
 	err := mapstructure.Decode(metadata, &metadataToUpload)
 	if err != nil {
 		return "", err
+	}
+
+	// Set merkle default to {} for drop contracts
+	if _, ok := metadataToUpload["merkle"]; ok {
+		metadataToUpload["merkle"] = map[string]interface{}{}
 	}
 
 	contractUri, err := deployer.storage.Upload(
@@ -216,6 +220,10 @@ func (deployer *ContractDeployer) deployContract(contractType string, metadata i
 		deployer.helper.getAddress().String(),
 		deployer.helper.GetSignerAddress().String(),
 	)
+
+	// fmt.Println(contractUri)
+	// panic("Error!")
+
 	if err != nil {
 		return "", err
 	}
