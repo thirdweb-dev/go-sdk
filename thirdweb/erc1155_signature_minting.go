@@ -12,7 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	signerTypes "github.com/ethereum/go-ethereum/signer/core/apitypes"
 	"github.com/google/uuid"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // You can access this interface from the edition contract under the

@@ -17,7 +17,7 @@ import (
 	"github.com/fxamacker/cbor"
 	"github.com/mitchellh/mapstructure"
 	"github.com/shopspring/decimal"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // NFT
