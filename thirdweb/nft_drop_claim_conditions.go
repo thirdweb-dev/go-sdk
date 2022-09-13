@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // This interface is currently accessible from the NFT Drop contract contract type

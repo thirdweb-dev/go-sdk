@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // You can access the Multiwrap interface from the SDK as follows:

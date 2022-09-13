@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // The nft drop encoder class is used to get the unsigned transaction data for nft drop contract
