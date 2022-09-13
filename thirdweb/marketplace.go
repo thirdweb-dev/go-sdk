@@ -69,7 +69,6 @@ func (marketplace *Marketplace) GetListing(ctx context.Context, listingId int) (
 	listing, err := marketplace.Abi.Listings(&bind.CallOpts{
 		Context: ctx,
 	}, big.NewInt(int64(listingId)))
-
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +141,7 @@ func (marketplace *Marketplace) GetAllListings(ctx context.Context, filter *Mark
 //
 // returns: total number of listings in the marketplace
 func (marketplace *Marketplace) GetTotalCount(ctx context.Context) (int, error) {
-	total, err := marketplace.bi.TotalListings(&bind.CallOpts{
+	total, err := marketplace.Abi.TotalListings(&bind.CallOpts{
 		Context: ctx,
 	})
 	if err != nil {
