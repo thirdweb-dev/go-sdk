@@ -28,7 +28,7 @@ import (
 //
 //	contract, err := sdk.GetMarketplace("{{contract_address}}")
 type Marketplace struct {
-	abi     *abi.Marketplace
+	Abi     *abi.Marketplace
 	helper  *contractHelper
 	storage storage
 	Encoder *MarketplaceEncoder
@@ -46,7 +46,7 @@ func newMarketplace(provider *ethclient.Client, address common.Address, privateK
 		}
 
 		marketplace := &Marketplace{
-			abi:     contractAbi,
+			Abi:     contractAbi,
 			helper:  helper,
 			storage: storage,
 			Encoder: encoder,
@@ -66,9 +66,10 @@ func newMarketplace(provider *ethclient.Client, address common.Address, privateK
 //	listingId := 0
 //	listing, err := marketplace.GetListing(listingId)
 func (marketplace *Marketplace) GetListing(ctx context.Context, listingId int) (*DirectListing, error) {
-	listing, err := marketplace.abi.Listings(&bind.CallOpts{
+	listing, err := marketplace.Abi.Listings(&bind.CallOpts{
 		Context: ctx,
 	}, big.NewInt(int64(listingId)))
+
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +142,7 @@ func (marketplace *Marketplace) GetAllListings(ctx context.Context, filter *Mark
 //
 // returns: total number of listings in the marketplace
 func (marketplace *Marketplace) GetTotalCount(ctx context.Context) (int, error) {
-	total, err := marketplace.abi.TotalListings(&bind.CallOpts{
+	total, err := marketplace.bi.TotalListings(&bind.CallOpts{
 		Context: ctx,
 	})
 	if err != nil {
@@ -167,7 +168,7 @@ func (marketplace *Marketplace) CancelListing(listingId int) (*types.Transaction
 		return nil, err
 	}
 
-	tx, err := marketplace.abi.CancelDirectListing(txOpts, big.NewInt(int64(listingId)))
+	tx, err := marketplace.Abi.CancelDirectListing(txOpts, big.NewInt(int64(listingId)))
 	if err != nil {
 		return nil, err
 	}
@@ -235,7 +236,7 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 		return nil, err
 	}
 
-	tx, err := marketplace.abi.Buy(
+	tx, err := marketplace.Abi.Buy(
 		txOpts,
 		big.NewInt(int64(listingId)),
 		common.HexToAddress(receiver),
@@ -297,7 +298,7 @@ func (marketplace *Marketplace) CreateListing(listing *NewDirectListing) (int, e
 	if err != nil {
 		return 0, err
 	}
-	tx, err := marketplace.abi.CreateListing(txOpts, abi.IMarketplaceListingParameters{
+	tx, err := marketplace.Abi.CreateListing(txOpts, abi.IMarketplaceListingParameters{
 		AssetContract:        common.HexToAddress(listing.AssetContractAddress),
 		TokenId:              big.NewInt(int64(listing.TokenId)),
 		StartTime:            big.NewInt(int64(listing.StartTimeInEpochSeconds)),
@@ -317,7 +318,7 @@ func (marketplace *Marketplace) CreateListing(listing *NewDirectListing) (int, e
 	}
 
 	for _, log := range txReceipt.Logs {
-		event, err := marketplace.abi.ParseListingAdded(*log)
+		event, err := marketplace.Abi.ParseListingAdded(*log)
 		if err != nil {
 			continue
 		}
@@ -338,7 +339,7 @@ func (marketplace *Marketplace) validateListing(ctx context.Context, listingId i
 }
 
 func (marketplace *Marketplace) getAllListingsNoFilter(ctx context.Context) ([]*DirectListing, error) {
-	totalCount, err := marketplace.abi.TotalListings(&bind.CallOpts{
+	totalCount, err := marketplace.Abi.TotalListings(&bind.CallOpts{
 		Context: ctx,
 	})
 	if err != nil {

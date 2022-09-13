@@ -32,7 +32,7 @@ var deployNftCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		address, err := thirdwebSDK.Deployer.DeployNFTCollection(&thirdweb.DeployNFTCollectionMetadata{
-			Name: "Go SDK",
+			Name: "Goku NFT",
 		})
 		if err != nil {
 			panic(err)
@@ -110,7 +110,7 @@ var deployNFTDropCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		address, err := thirdwebSDK.Deployer.DeployNFTDrop(&thirdweb.DeployNFTDropMetadata{
-			Name: "Go SDK",
+			Name: "Go Script Drop",
 		})
 		if err != nil {
 			panic(err)
