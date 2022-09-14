@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -71,7 +72,7 @@ var marketplaceGetCmd = &cobra.Command{
 			panic(err)
 		}
 
-		listing, err := marketplace.GetListing(0)
+		listing, err := marketplace.GetListing(context.Background(), 0)
 		if err != nil {
 			panic(err)
 		}

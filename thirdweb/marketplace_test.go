@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"encoding/hex"
 	"testing"
 	"time"
@@ -87,7 +88,7 @@ func TestListNft(t *testing.T) {
 
 	assert.Equal(t, listingId, 0)
 
-	listing, err := marketplace.GetListing(listingId)
+	listing, err := marketplace.GetListing(context.Background(), listingId)
 	assert.Nil(t, err)
 	assert.Equal(t, listing.Quantity, 1)
 	assert.Equal(t, listing.AssetContractAddress, nft.helper.getAddress().Hex())
@@ -109,7 +110,7 @@ func TestListEdition(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, listingId, 0)
-	listing, err := marketplace.GetListing(listingId)
+	listing, err := marketplace.GetListing(context.Background(), listingId)
 	assert.Nil(t, err)
 	assert.Equal(t, listing.Quantity, 2)
 	assert.Equal(t, listing.AssetContractAddress, edition.helper.getAddress().Hex())
@@ -133,7 +134,7 @@ func TestListToken(t *testing.T) {
 
 	assert.Equal(t, listingId, 0)
 
-	listing, err := marketplace.GetListing(listingId)
+	listing, err := marketplace.GetListing(context.Background(), listingId)
 	assert.Nil(t, err)
 	assert.Equal(t, listing.CurrencyContractAddress, token.helper.getAddress().Hex())
 }
@@ -165,7 +166,7 @@ func TestBuyoutListingNft(t *testing.T) {
 	assert.Nil(t, err)
 
 	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
-	_, err = marketplace.BuyoutListing(listingId, 1)
+	_, err = marketplace.BuyoutListing(context.Background(), listingId, 1)
 	assert.Nil(t, err)
 
 	adminBalance, _ = nft.BalanceOf(adminWallet)
@@ -207,7 +208,7 @@ func TestBuyoutListingEdition(t *testing.T) {
 	assert.Nil(t, err)
 
 	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
-	_, err = marketplace.BuyoutListing(listingId, 10)
+	_, err = marketplace.BuyoutListing(context.Background(), listingId, 10)
 	assert.Nil(t, err)
 
 	adminBalance, _ = edition.BalanceOf(adminWallet, 0)
@@ -263,33 +264,33 @@ func TestGetListingFilters(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, listingId, 2)
 
-	listings, err := marketplace.GetAllListings(nil)
+	listings, err := marketplace.GetAllListings(context.Background(), nil)
 	assert.Nil(t, err)
 	assert.Equal(t, len(listings), 3)
 
-	listings, err = marketplace.GetAllListings(&MarketplaceFilter{
+	listings, err = marketplace.GetAllListings(context.Background(), &MarketplaceFilter{
 		TokenContract: nft.helper.getAddress().Hex(),
 	})
 	assert.Nil(t, err)
 	assert.Equal(t, len(listings), 2)
 
-	listings, err = marketplace.GetAllListings(&MarketplaceFilter{
+	listings, err = marketplace.GetAllListings(context.Background(), &MarketplaceFilter{
 		Seller: adminWallet,
 	})
 	assert.Nil(t, err)
 	assert.Equal(t, len(listings), 3)
 
-	listings, err = marketplace.GetAllListings(&MarketplaceFilter{
+	listings, err = marketplace.GetAllListings(context.Background(), &MarketplaceFilter{
 		Seller: secondaryWallet,
 	})
 	assert.Nil(t, err)
 	assert.Equal(t, len(listings), 0)
 
 	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
-	_, err = marketplace.BuyoutListing(2, 10)
+	_, err = marketplace.BuyoutListing(context.Background(), 2, 10)
 	assert.Nil(t, err)
 
-	listings, err = marketplace.GetActiveListings(nil)
+	listings, err = marketplace.GetActiveListings(context.Background(), nil)
 	assert.Nil(t, err)
 	assert.Equal(t, len(listings), 2)
 }
