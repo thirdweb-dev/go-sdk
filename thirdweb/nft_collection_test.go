@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -24,7 +25,7 @@ func getSDK() *ThirdwebSDK {
 
 func getNft() *NFTCollection {
 	sdk := getSDK()
-	address, _ := sdk.Deployer.DeployNFTCollection(&DeployNFTCollectionMetadata{
+	address, _ := sdk.Deployer.DeployNFTCollection(context.Background(), &DeployNFTCollectionMetadata{
 		Name: "NFT Collection",
 	})
 	nft, _ := sdk.GetNFTCollection(address)
@@ -35,25 +36,25 @@ func getNft() *NFTCollection {
 func TestMintNft(t *testing.T) {
 	nft := getNft()
 
-	balance, _ := nft.Balance()
+	balance, _ := nft.Balance(context.Background())
 	assert.Equal(t, 0, balance)
 
-	_, err := nft.Mint(&NFTMetadataInput{
+	_, err := nft.Mint(context.Background(), &NFTMetadataInput{
 		Name: "NFT",
 	})
 	assert.Nil(t, err)
 
-	balance, _ = nft.Balance()
+	balance, _ = nft.Balance(context.Background())
 	assert.Equal(t, 1, balance)
 }
 
 func TestBatchMintNft(t *testing.T) {
 	nft := getNft()
 
-	balance, _ := nft.Balance()
+	balance, _ := nft.Balance(context.Background())
 	assert.Equal(t, 0, balance)
 
-	_, err := nft.MintBatch([]*NFTMetadataInput{
+	_, err := nft.MintBatch(context.Background(), []*NFTMetadataInput{
 		{
 			Name: "NFT 1",
 		},
@@ -63,15 +64,15 @@ func TestBatchMintNft(t *testing.T) {
 	})
 	assert.Nil(t, err)
 
-	balance, _ = nft.Balance()
+	balance, _ = nft.Balance(context.Background())
 	assert.Equal(t, 2, balance)
 
-	nfts, _ := nft.GetAll()
+	nfts, _ := nft.GetAll(context.Background())
 	assert.Equal(t, 2, len(nfts))
 	assert.Equal(t, "NFT 1", nfts[0].Metadata.Name)
 	assert.Equal(t, "NFT 2", nfts[1].Metadata.Name)
 
-	nfts, _ = nft.GetOwned(nft.helper.GetSignerAddress().String())
+	nfts, _ = nft.GetOwned(context.Background(), nft.helper.GetSignerAddress().String())
 	assert.Equal(t, 2, len(nfts))
 	assert.Equal(t, "NFT 1", nfts[0].Metadata.Name)
 	assert.Equal(t, "NFT 2", nfts[1].Metadata.Name)
@@ -80,41 +81,41 @@ func TestBatchMintNft(t *testing.T) {
 func TestBurnNft(t *testing.T) {
 	nft := getNft()
 
-	nft.Mint(&NFTMetadataInput{
+	nft.Mint(context.Background(), &NFTMetadataInput{
 		Name: "NFT",
 	})
 
-	balance, _ := nft.Balance()
+	balance, _ := nft.Balance(context.Background())
 	assert.Equal(t, 1, balance)
 
-	_, err := nft.Burn(0)
+	_, err := nft.Burn(context.Background(), 0)
 	assert.Nil(t, err)
 
-	balance, _ = nft.Balance()
+	balance, _ = nft.Balance(context.Background())
 	assert.Equal(t, 0, balance)
 }
 
 func TestTransferNft(t *testing.T) {
 	nft := getNft()
 
-	nft.Mint(&NFTMetadataInput{
+	nft.Mint(context.Background(), &NFTMetadataInput{
 		Name: "NFT",
 	})
 
-	balance, _ := nft.Balance()
+	balance, _ := nft.Balance(context.Background())
 	assert.Equal(t, 1, balance)
 
-	_, err := nft.Transfer(secondaryWallet, 0)
+	_, err := nft.Transfer(context.Background(), secondaryWallet, 0)
 	assert.Nil(t, err)
 
-	balance, _ = nft.Balance()
+	balance, _ = nft.Balance(context.Background())
 	assert.Equal(t, 0, balance)
 }
 
 func TestSignatureMintNft(t *testing.T) {
 	nft := getNft()
 
-	balance, _ := nft.Balance()
+	balance, _ := nft.Balance(context.Background())
 	assert.Equal(t, 0, balance)
 
 	payload, err := nft.Signature.Generate(
@@ -139,12 +140,12 @@ func TestSignatureMintNft(t *testing.T) {
 
 	assert.True(t, valid)
 
-	_, err = nft.Signature.Mint(payload)
+	_, err = nft.Signature.Mint(context.Background(), payload)
 	assert.Nil(t, err)
 
-	balance, _ = nft.Balance()
+	balance, _ = nft.Balance(context.Background())
 	assert.Equal(t, 1, balance)
 
-	metadata, _ := nft.Get(0)
+	metadata, _ := nft.Get(context.Background(), 0)
 	assert.Equal(t, "Sigmint", metadata.Metadata.Name)
 }

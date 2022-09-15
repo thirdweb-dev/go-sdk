@@ -161,8 +161,8 @@ func (marketplace *Marketplace) GetTotalCount(ctx context.Context) (int, error) 
 //
 //	listingId := 0
 //	receipt, err := marketplace.CancelListing(listingId)
-func (marketplace *Marketplace) CancelListing(listingId int) (*types.Transaction, error) {
-	txOpts, err := marketplace.helper.getTxOptions()
+func (marketplace *Marketplace) CancelListing(ctx context.Context, listingId int) (*types.Transaction, error) {
+	txOpts, err := marketplace.helper.getTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -220,7 +220,7 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 	quantity := big.NewInt(int64(quantityDesired))
 	value := listing.BuyoutCurrencyValuePerToken.Value.Mul(listing.BuyoutCurrencyValuePerToken.Value, quantity)
 
-	txOpts, err := marketplace.helper.getTxOptions()
+	txOpts, err := marketplace.helper.getTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -269,10 +269,11 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 //	}
 //
 //	listingId, err := marketplace.CreateListing(listing)
-func (marketplace *Marketplace) CreateListing(listing *NewDirectListing) (int, error) {
+func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewDirectListing) (int, error) {
 	listing.fillDefaults()
 
 	err := handleTokenApproval(
+		ctx,
 		marketplace.helper.GetProvider(),
 		marketplace.helper,
 		marketplace.helper.getAddress().Hex(),
@@ -293,7 +294,7 @@ func (marketplace *Marketplace) CreateListing(listing *NewDirectListing) (int, e
 		return 0, err
 	}
 
-	txOpts, err := marketplace.helper.getTxOptions()
+	txOpts, err := marketplace.helper.getTxOptions(ctx)
 	if err != nil {
 		return 0, err
 	}

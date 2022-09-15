@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"fmt"
 	"math/big"
 
@@ -17,20 +18,20 @@ import (
 //
 // You can access the NFTDrop interface from the SDK as follows:
 //
-// 	import (
-// 		"github.com/thirdweb-dev/go-sdk/thirdweb"
-// 	)
+//	import (
+//		"github.com/thirdweb-dev/go-sdk/thirdweb"
+//	)
 //
-// 	privateKey = "..."
+//	privateKey = "..."
 //
-// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
 //		PrivateKey: privateKey,
-// 	})
+//	})
 //
 //	contract, err := sdk.GetNFTDrop("{{contract_address}}")
 //
-// 	// Now the encoder can be accessed from the contract
-// 	contract.Encoder.ClaimTo(...)
+//	// Now the encoder can be accessed from the contract
+//	contract.Encoder.ClaimTo(...)
 type NFTDropEncoder struct {
 	abi             *abi.DropERC721
 	helper          *contractHelper
@@ -72,25 +73,26 @@ func newNFTDropEncoder(
 //
 // Example
 //
-// 	// Address of the wallet we expect to sign this message
-// 	signerAddress := "0x..."
-// 	// Address of the wallet we want to claim the NFTs to
-// 	destinationAddress := "{{wallet_address}}"
-// 	// Number of NFTs to claim
-// 	quantity = 1
+//	// Address of the wallet we expect to sign this message
+//	signerAddress := "0x..."
+//	// Address of the wallet we want to claim the NFTs to
+//	destinationAddress := "{{wallet_address}}"
+//	// Number of NFTs to claim
+//	quantity = 1
 //
-// 	tx, err := contract.Encoder.ApproveClaimTo(signerAddress, destinationAddress, quantity)
+//	tx, err := contract.Encoder.ApproveClaimTo(signerAddress, destinationAddress, quantity)
 //
-// 	// Now you can get all the standard transaction data as needed
-// 	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
-// 	fmt.Println(tx.Nonce())
-func (encoder *NFTDropEncoder) ApproveClaimTo(signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
+//	// Now you can get all the standard transaction data as needed
+//	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+//	fmt.Println(tx.Nonce())
+func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
 	claimVerification, err := encoder.prepareClaim(quantity)
 	if err != nil {
 		return nil, err
 	}
 
 	return setErc20AllowanceEncoder(
+		ctx,
 		encoder.helper,
 		signerAddress,
 		claimVerification.value,
@@ -110,25 +112,25 @@ func (encoder *NFTDropEncoder) ApproveClaimTo(signerAddress string, destinationA
 //
 // Example
 //
-// 	// Address of the wallet we expect to sign this message
-// 	signerAddress := "0x..."
-// 	// Address of the wallet we want to claim the NFTs to
-// 	destinationAddress := "{{wallet_address}}"
-// 	// Number of NFTs to claim
-// 	quantity = 1
+//	// Address of the wallet we expect to sign this message
+//	signerAddress := "0x..."
+//	// Address of the wallet we want to claim the NFTs to
+//	destinationAddress := "{{wallet_address}}"
+//	// Number of NFTs to claim
+//	quantity = 1
 //
-// 	tx, err := contract.Encoder.ClaimTo(signerAddress, destinationAddress, quantity)
+//	tx, err := contract.Encoder.ClaimTo(signerAddress, destinationAddress, quantity)
 //
-// 	// Now you can get all the standard transaction data as needed
-// 	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
-// 	fmt.Println(tx.Nonce())
-func (encoder *NFTDropEncoder) ClaimTo(signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
+//	// Now you can get all the standard transaction data as needed
+//	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+//	fmt.Println(tx.Nonce())
+func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
 	claimVerification, err := encoder.prepareClaim(quantity)
 	if err != nil {
 		return nil, err
 	}
 
-	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
+	txOpts, err := encoder.helper.getUnsignedTxOptions(ctx, signerAddress)
 	if err != nil {
 		return nil, err
 	}
