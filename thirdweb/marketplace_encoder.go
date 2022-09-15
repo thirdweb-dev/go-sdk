@@ -72,7 +72,7 @@ func newMarketplaceEncoder(contractAbi *abi.Marketplace, helper *contractHelper,
 //	listingId := 1
 //
 //	// Transaction data required for this request
-//	tx, err := marketplace.Encoder.CancelListing(signerAddress, listingId)
+//	tx, err := marketplace.Encoder.CancelListing(context.Background(), signerAddress, listingId)
 //
 //	// Now you can get transaction all the standard data as needed
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
@@ -111,7 +111,7 @@ func (encoder *MarketplaceEncoder) CancelListing(ctx context.Context, signerAddr
 //	receiver := "0x..."
 //
 //	// Transaction data required for this request
-//	tx, err := marketplace.Encoder.ApproveBuyoutListing(signerAddress, listingId, quantityDesired, receiver)
+//	tx, err := marketplace.Encoder.ApproveBuyoutListing(context.Background(), signerAddress, listingId, quantityDesired, receiver)
 //
 //	// Now you can get transaction all the standard data as needed
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
@@ -175,7 +175,7 @@ func (encoder *MarketplaceEncoder) ApproveBuyoutListing(
 //	receiver := "0x..."
 //
 //	// Transaction data required for this request
-//	tx, err := marketplace.Encoder.BuyoutListing(signerAddress, listingId, quantityDesired, receiver)
+//	tx, err := marketplace.Encoder.BuyoutListing(context.Background(), signerAddress, listingId, quantityDesired, receiver)
 //
 //	// Now you can get transaction all the standard data as needed
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
@@ -249,7 +249,7 @@ func (encoder *MarketplaceEncoder) BuyoutListing(
 //	}
 //
 //	// Transaction data required for this request
-//	tx, err := marketplace.Encoder.ApproveCreateListing(signerAddress, listing)
+//	tx, err := marketplace.Encoder.ApproveCreateListing(context.Background(), signerAddress, listing)
 //
 //	// Now you can get transaction data as needed
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
@@ -294,7 +294,7 @@ func (encoder *MarketplaceEncoder) ApproveCreateListing(ctx context.Context, sig
 //	}
 //
 //	// Transaction data required for this request
-//	tx, err := marketplace.Encoder.CreateListing(signerAddress, listing)
+//	tx, err := marketplace.Encoder.CreateListing(context.Background(), signerAddress, listing)
 //
 //	// Now you can get transaction data as needed
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)

@@ -209,7 +209,7 @@ func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle,
 // Example
 //
 //	tokenId := 0
-//	tx, err := contract.Unwrap(tokenId, "")
+//	tx, err := contract.Unwrap(context.Background(), tokenId, "")
 func (multiwrap *Multiwrap) Unwrap(ctx context.Context, wrappedTokenId int, recipientAddress string) (*types.Transaction, error) {
 	if recipientAddress == "" {
 		recipientAddress = multiwrap.helper.GetSignerAddress().String()

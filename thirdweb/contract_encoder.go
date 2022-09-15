@@ -52,7 +52,7 @@ func newContractEncoder(contractAbi string, helper *contractHelper) (*ContractEn
 //	amount := 1
 //
 //	// Now you can get the transaction data for the contract call.
-//	tx, err := contract.Encoder.Encode("transfer", toAddress, amount)
+//	tx, err := contract.Encoder.Encode(context.Background(), "transfer", toAddress, amount)
 //	fmt.Println(tx.Data()) // Now you can access all transaction data, like the following fields
 //	fmt.Println(tx.Nonce())
 //	fmt.Println(tx.Value())

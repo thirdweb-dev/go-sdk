@@ -114,7 +114,7 @@ func newSmartContract(provider *ethclient.Client, address common.Address, contra
 //	balance, err := contract.Call("balanceOf", "{{wallet_address}}")
 //
 //	// You can also make a transaction to your contract with the call method
-//	tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
+//	tx, err := contract.Call(context.Background(), "mintTo", "{{wallet_address}}", "ipfs://...")
 func (c *SmartContract) Call(ctx context.Context, method string, args ...interface{}) (interface{}, error) {
 	abiMethod, exist := c.abi.Methods[method]
 	if !exist {

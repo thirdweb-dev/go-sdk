@@ -64,7 +64,7 @@ func newMarketplace(provider *ethclient.Client, address common.Address, privateK
 // Example
 //
 //	listingId := 0
-//	listing, err := marketplace.GetListing(listingId)
+//	listing, err := marketplace.GetListing(context.Background(), listingId)
 func (marketplace *Marketplace) GetListing(ctx context.Context, listingId int) (*DirectListing, error) {
 	listing, err := marketplace.Abi.Listings(&bind.CallOpts{
 		Context: ctx,
@@ -93,7 +93,7 @@ func (marketplace *Marketplace) GetListing(ctx context.Context, listingId int) (
 //
 // Example
 //
-//	listings, err := marketplace.GetActiveListings()
+//	listings, err := marketplace.GetActiveListings(context.Background(), nil)
 //	// Price per token of the first listing
 //	listings[0].BuyoutCurrencyValuePerToken.DisplayValue
 func (marketplace *Marketplace) GetActiveListings(ctx context.Context, filter *MarketplaceFilter) ([]*DirectListing, error) {
@@ -125,7 +125,7 @@ func (marketplace *Marketplace) GetActiveListings(ctx context.Context, filter *M
 //
 // Example
 //
-//	listings, err := marketplace.GetAllListings()
+//	listings, err := marketplace.GetAllListings(context.Background(), nil)
 //	// Price per token of the first listing
 //	listings[0].BuyoutCurrencyValuePerToken.DisplayValue
 func (marketplace *Marketplace) GetAllListings(ctx context.Context, filter *MarketplaceFilter) ([]*DirectListing, error) {
@@ -160,7 +160,7 @@ func (marketplace *Marketplace) GetTotalCount(ctx context.Context) (int, error) 
 // Example
 //
 //	listingId := 0
-//	receipt, err := marketplace.CancelListing(listingId)
+//	receipt, err := marketplace.CancelListing(context.Background(), listingId)
 func (marketplace *Marketplace) CancelListing(ctx context.Context, listingId int) (*types.Transaction, error) {
 	txOpts, err := marketplace.helper.getTxOptions(ctx)
 	if err != nil {
@@ -201,7 +201,7 @@ func (marketplace *Marketplace) BuyoutListing(ctx context.Context, listingId int
 //	listingId := 0
 //	quantityDesired := 1
 //	receiver := "0x..."
-//	receipt, err := marketplace.BuyoutListingTo(listingId, quantityDesired, receiver)
+//	receipt, err := marketplace.BuyoutListingTo(context.Background(), listingId, quantityDesired, receiver)
 func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId int, quantityDesired int, receiver string) (*types.Transaction, error) {
 	listing, err := marketplace.validateListing(ctx, listingId)
 	if err != nil {
@@ -268,7 +268,7 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 //		BuyoutPricePerToken: 1, // Price per token of the asset to list
 //	}
 //
-//	listingId, err := marketplace.CreateListing(listing)
+//	listingId, err := marketplace.CreateListing(context.Background(), listing)
 func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewDirectListing) (int, error) {
 	listing.fillDefaults()
 

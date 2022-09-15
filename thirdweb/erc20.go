@@ -142,7 +142,7 @@ func (erc20 *ERC20) AllowanceOf(owner string, spender string) (*CurrencyValue, e
 //	to := "0x..."
 //	amount := 1
 //
-//	tx, err := contract.Transfer(to, amount)
+//	tx, err := contract.Transfer(context.Background(), to, amount)
 func (erc20 *ERC20) Transfer(ctx context.Context, to string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {
@@ -177,7 +177,7 @@ func (erc20 *ERC20) Transfer(ctx context.Context, to string, amount float64) (*t
 //	to := "0x..."
 //	amount := 1
 //
-//	tx, err := contract.TransferFrom(from, to, amount)
+//	tx, err := contract.TransferFrom(context.Background(), from, to, amount)
 func (erc20 *ERC20) TransferFrom(ctx context.Context, from string, to string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {
@@ -209,7 +209,7 @@ func (erc20 *ERC20) TransferFrom(ctx context.Context, from string, to string, am
 //	spender := "0x..."
 //	amount := 1
 //
-//	tx, err := contract.SetAllowance(spender, amount)
+//	tx, err := contract.SetAllowance(context.Background(), spender, amount)
 func (erc20 *ERC20) SetAllowance(ctx context.Context, spender string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {
@@ -247,7 +247,7 @@ func (erc20 *ERC20) SetAllowance(ctx context.Context, spender string, amount flo
 //		}
 //	}
 //
-//	tx, err := contract.TransferBatch(args)
+//	tx, err := contract.TransferBatch(context.Background(), args)
 func (erc20 *ERC20) TransferBatch(ctx context.Context, args []*TokenAmount) (*types.Transaction, error) {
 	encoded := [][]byte{}
 
@@ -290,7 +290,7 @@ func (erc20 *ERC20) TransferBatch(ctx context.Context, args []*TokenAmount) (*ty
 // Example
 //
 //	amount := 1
-//	tx, err := contract.Burn(amount)
+//	tx, err := contract.Burn(context.Background(), amount)
 func (erc20 *ERC20) Burn(ctx context.Context, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {
@@ -322,7 +322,7 @@ func (erc20 *ERC20) Burn(ctx context.Context, amount float64) (*types.Transactio
 //	holder := "0x..."
 //	amount := 1
 //
-//	tx, err := contract.BurnFrom(holder, amount)
+//	tx, err := contract.BurnFrom(context.Background(), holder, amount)
 func (erc20 *ERC20) BurnFrom(ctx context.Context, holder string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := erc20.normalizeAmount(amount)
 	if err != nil {

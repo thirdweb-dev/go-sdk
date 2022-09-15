@@ -48,7 +48,7 @@ func newERC721SignatureMinting(provider *ethclient.Client, address common.Addres
 //
 //	// Learn more about how to craft a payload in the Generate() function
 //	signedPayload, err := contract.Signature.Generate(payload)
-//	tx, err := contract.Signature.Mint(signedPayload)
+//	tx, err := contract.Signature.Mint(context.Background(), signedPayload)
 func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error) {
 	message, err := signature.mapPayloadToContractStruct(signedPayload.Payload)
 	if err != nil {
@@ -84,7 +84,7 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 //
 //	// Learn more about how to craft multiple payloads in the GenerateBatch() function
 //	signedPayloads, err := contract.Signature.GenerateBatch(payloads)
-//	tx, err := contract.Signature.MintBatch(signedPayloads)
+//	tx, err := contract.Signature.MintBatch(context.Background(), signedPayloads)
 func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPayloads []*SignedPayload721) (*types.Transaction, error) {
 	contractPayloads := []*abi.ITokenERC721MintRequest{}
 	for _, signedPayload := range signedPayloads {

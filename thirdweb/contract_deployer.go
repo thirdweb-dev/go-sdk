@@ -85,11 +85,12 @@ func newContractDeployer(provider *ethclient.Client, privateKey string, storage 
 //
 // Example
 //
-//	address, err := sdk.Deployer.DeployNFTCollection(
-//		&thirdweb.DeployNFTCollectionMetadata{
-//			Name: "Go NFT",
-//		}
-//	})
+//		address, err := sdk.Deployer.DeployNFTCollection(
+//	     context.Background(),
+//			&thirdweb.DeployNFTCollectionMetadata{
+//				Name: "Go NFT",
+//			}
+//		})
 func (deployer *ContractDeployer) DeployNFTCollection(ctx context.Context, metadata *DeployNFTCollectionMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract(ctx, "nft-collection", metadata)
@@ -103,11 +104,12 @@ func (deployer *ContractDeployer) DeployNFTCollection(ctx context.Context, metad
 //
 // Example
 //
-//	address, err := sdk.Deployer.DeployEdition(
-//		&thirdweb.DeployEditionMetadata{
-//			Name: "Go Edition",
-//		}
-//	})
+//		address, err := sdk.Deployer.DeployEdition(
+//	     context.Background(),
+//			&thirdweb.DeployEditionMetadata{
+//				Name: "Go Edition",
+//			}
+//		})
 func (deployer *ContractDeployer) DeployEdition(ctx context.Context, metadata *DeployEditionMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract(ctx, "edition", metadata)
@@ -121,11 +123,12 @@ func (deployer *ContractDeployer) DeployEdition(ctx context.Context, metadata *D
 //
 // Example
 //
-//	address, err := sdk.Deployer.DeployToken(
-//		&thirdweb.DeployTokenMetadata{
-//			Name: "Go Token",
-//		}
-//	})
+//		address, err := sdk.Deployer.DeployToken(
+//	     context.Background(),
+//			&thirdweb.DeployTokenMetadata{
+//				Name: "Go Token",
+//			}
+//		})
 func (deployer *ContractDeployer) DeployToken(ctx context.Context, metadata *DeployTokenMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract(ctx, "token", metadata)
@@ -139,11 +142,12 @@ func (deployer *ContractDeployer) DeployToken(ctx context.Context, metadata *Dep
 //
 // Example
 //
-//	address, err := sdk.Deployer.DeployNFTDrop(
-//		&thirdweb.DeployNFTDropMetadata{
-//			Name: "Go NFT Drop",
-//		}
-//	})
+//		address, err := sdk.Deployer.DeployNFTDrop(
+//	     context.Background(),
+//			&thirdweb.DeployNFTDropMetadata{
+//				Name: "Go NFT Drop",
+//			}
+//		})
 func (deployer *ContractDeployer) DeployNFTDrop(ctx context.Context, metadata *DeployNFTDropMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract(ctx, "nft-drop", metadata)
@@ -157,11 +161,12 @@ func (deployer *ContractDeployer) DeployNFTDrop(ctx context.Context, metadata *D
 //
 // Example
 //
-//	address, err := sdk.Deployer.DeployEditionDrop(
-//		&thirdweb.DeployEditionDropMetadata{
-//			Name: "Go Edition Drop",
-//		}
-//	})
+//		address, err := sdk.Deployer.DeployEditionDrop(
+//	     context.Background(),
+//			&thirdweb.DeployEditionDropMetadata{
+//				Name: "Go Edition Drop",
+//			}
+//		})
 func (deployer *ContractDeployer) DeployEditionDrop(ctx context.Context, metadata *DeployEditionDropMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract(ctx, "edition-drop", metadata)
@@ -175,11 +180,12 @@ func (deployer *ContractDeployer) DeployEditionDrop(ctx context.Context, metadat
 //
 // Example
 //
-//	address, err := sdk.Deployer.DeployMultiwrap(
-//		&thirdweb.DeployMultiwrapMetadata{
-//			Name: "Go Multiwrap",
-//		}
-//	})
+//		address, err := sdk.Deployer.DeployMultiwrap(
+//	     context.Background()
+//			&thirdweb.DeployMultiwrapMetadata{
+//				Name: "Go Multiwrap",
+//			}
+//		})
 func (deployer *ContractDeployer) DeployMultiwrap(ctx context.Context, metadata *DeployMultiwrapMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract(ctx, "multiwrap", metadata)
@@ -193,11 +199,12 @@ func (deployer *ContractDeployer) DeployMultiwrap(ctx context.Context, metadata 
 //
 // Example
 //
-//	address, err := sdk.Deployer.DeployMarketplace(
-//		&thirdweb.DeployMarketplaceMetadata{
-//			Name: "Go Marketplace",
-//		}
-//	})
+//		address, err := sdk.Deployer.DeployMarketplace(
+//	     context.Background()
+//			&thirdweb.DeployMarketplaceMetadata{
+//				Name: "Go Marketplace",
+//			}
+//		})
 func (deployer *ContractDeployer) DeployMarketplace(ctx context.Context, metadata *DeployMarketplaceMetadata) (string, error) {
 	metadata.fillDefaults()
 	return deployer.deployContract(ctx, "marketplace", metadata)

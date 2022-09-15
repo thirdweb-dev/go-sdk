@@ -226,7 +226,7 @@ func (erc1155 *ERC1155) IsApproved(address string, operator string) (bool, error
 //	tokenId := 0
 //	amount := 1
 //
-//	tx, err := contract.Transfer(to, tokenId, amount)
+//	tx, err := contract.Transfer(context.Background(), to, tokenId, amount)
 func (erc1155 *ERC1155) Transfer(ctx context.Context, to string, tokenId int, amount int) (*types.Transaction, error) {
 	txOpts, err := erc1155.helper.getTxOptions(ctx)
 	if err != nil {
@@ -258,7 +258,7 @@ func (erc1155 *ERC1155) Transfer(ctx context.Context, to string, tokenId int, am
 //
 //	tokenId := 0
 //	amount := 1
-//	tx, err := contract.Burn(tokenId, amount)
+//	tx, err := contract.Burn(context.Background(), tokenId, amount)
 func (erc1155 *ERC1155) Burn(ctx context.Context, tokenId int, amount int) (*types.Transaction, error) {
 	address := erc1155.helper.GetSignerAddress()
 	txOpts, err := erc1155.helper.getTxOptions(ctx)

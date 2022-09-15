@@ -48,7 +48,7 @@ func newERC721(provider *ethclient.Client, address common.Address, privateKey st
 //
 // Example
 //
-//		nft, err := contract.Get(0)
+//		nft, err := contract.Get(context.Background(), 0)
 //	 owner := nft.Owner
 //		name := nft.Metadata.Name
 func (erc721 *ERC721) Get(ctx context.Context, tokenId int) (*NFTMetadataOwner, error) {
@@ -74,7 +74,7 @@ func (erc721 *ERC721) Get(ctx context.Context, tokenId int) (*NFTMetadataOwner, 
 //
 // Example
 //
-//	nfts, err := contract.GetAll()
+//	nfts, err := contract.GetAll(context.Background())
 //	ownerOne := nfts[0].Owner
 //	nameOne := nfts[0].Metadata.Name
 func (erc721 *ERC721) GetAll(ctx context.Context) ([]*NFTMetadataOwner, error) {
@@ -146,7 +146,7 @@ func (erc721 *ERC721) Balance(ctx context.Context) (int, error) {
 // Example
 //
 //	address := "{{wallet_address}}"
-//	balance, err := contract.BalanceOf(address)
+//	balance, err := contract.BalanceOf(context.Background(), address)
 func (erc721 *ERC721) BalanceOf(ctx context.Context, address string) (int, error) {
 	balance, err := erc721.abi.BalanceOf(&bind.CallOpts{
 		Context: ctx,
@@ -182,7 +182,7 @@ func (erc721 *ERC721) IsApproved(ctx context.Context, address string, operator s
 //	to := "0x..."
 //	tokenId := 0
 //
-//	tx, err := contract.Transfer(to, tokenId)
+//	tx, err := contract.Transfer(context.Background(), to, tokenId)
 func (erc721 *ERC721) Transfer(ctx context.Context, to string, tokenId int) (*types.Transaction, error) {
 	txOpts, err := erc721.helper.getTxOptions(ctx)
 	if err != nil {
@@ -204,7 +204,7 @@ func (erc721 *ERC721) Transfer(ctx context.Context, to string, tokenId int) (*ty
 // Example
 //
 //	tokenId := 0
-//	tx, err := contract.Burn(tokenId)
+//	tx, err := contract.Burn(context.Background(), tokenId)
 func (erc721 *ERC721) Burn(ctx context.Context, tokenId int) (*types.Transaction, error) {
 	txOpts, err := erc721.helper.getTxOptions(ctx)
 	if err != nil {

@@ -75,7 +75,7 @@ func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey s
 // Example
 //
 //	owner := "{{wallet_address}}"
-//	nfts, err := contract.GetOwned(owner)
+//	nfts, err := contract.GetOwned(context.Background(), owner)
 //	name := nfts[0].Metadata.Name
 func (nft *NFTDrop) GetOwned(ctx context.Context, address string) ([]*NFTMetadataOwner, error) {
 	if address == "" {
@@ -122,7 +122,7 @@ func (nft *NFTDrop) GetOwnedTokenIDs(ctx context.Context, address string) ([]*bi
 //
 // Example
 //
-//	claimedNfts, err := contract.GetAllClaimed()
+//	claimedNfts, err := contract.GetAllClaimed(context.Background())
 //	firstOwner := claimedNfts[0].Owner
 func (drop *NFTDrop) GetAllClaimed(ctx context.Context) ([]*NFTMetadataOwner, error) {
 	if maxId, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{}); err != nil {
@@ -146,7 +146,7 @@ func (drop *NFTDrop) GetAllClaimed(ctx context.Context) ([]*NFTMetadataOwner, er
 //
 // Example
 //
-//	unclaimedNfts, err := contract.GetAllUnclaimed()
+//	unclaimedNfts, err := contract.GetAllUnclaimed(context.Background())
 //	firstNftName := unclaimedNfts[0].Name
 func (drop *NFTDrop) GetAllUnclaimed(ctx context.Context) ([]*NFTMetadata, error) {
 	maxId, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
@@ -221,7 +221,7 @@ func (drop *NFTDrop) TotalUnclaimedSupply() (int, error) {
 //		}
 //	}
 //
-//	tx, err := contract.CreateBatch(metadatas)
+//	tx, err := contract.CreateBatch(context.Background(), metadatas)
 func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
@@ -287,7 +287,7 @@ func (drop *NFTDrop) Claim(ctx context.Context, quantity int) (*types.Transactio
 //	address := "{{wallet_address}}"
 //	quantity = 1
 //
-//	tx, err := contract.ClaimTo(address, quantity)
+//	tx, err := contract.ClaimTo(context.Background(), address, quantity)
 func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, quantity int) (*types.Transaction, error) {
 	claimVerification, err := drop.prepareClaim(ctx, quantity)
 	if err != nil {

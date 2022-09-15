@@ -99,7 +99,7 @@ func newEditionDrop(provider *ethclient.Client, address common.Address, privateK
 //		},
 //	}
 //
-//	tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
+//	tx, err := contract.MintBatchTo(context.Background(), "{{wallet_address}}", metadatasWithSupply)
 func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
@@ -168,7 +168,7 @@ func (drop *EditionDrop) Claim(ctx context.Context, tokenId int, quantity int) (
 //	tokenId = 0
 //	quantity = 1
 //
-//	tx, err := contract.ClaimTo(address, tokenId, quantity)
+//	tx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)
 func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string, tokenId int, quantity int) (*types.Transaction, error) {
 	claimVerification, err := drop.prepareClaim(ctx, tokenId, quantity)
 	if err != nil {

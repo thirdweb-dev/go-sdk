@@ -113,7 +113,7 @@ func (token *Token) Mint(ctx context.Context, amount float64) (*types.Transactio
 //
 // Example
 //
-//	tx, err := contract.MintTo("{{wallet_address}}", 1)
+//	tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", 1)
 func (token *Token) MintTo(ctx context.Context, to string, amount float64) (*types.Transaction, error) {
 	amountWithDecimals, err := token.normalizeAmount(amount)
 	if err != nil {
@@ -151,7 +151,7 @@ func (token *Token) MintTo(ctx context.Context, to string, amount float64) (*typ
 //		}
 //	}
 //
-//	tx, err := contract.MintBatchTo(args)
+//	tx, err := contract.MintBatchTo(context.Background(), args)
 func (token *Token) MintBatchTo(ctx context.Context, args []*TokenAmount) (*types.Transaction, error) {
 	encoded := [][]byte{}
 

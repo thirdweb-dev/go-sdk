@@ -74,7 +74,7 @@ func newNFTCollection(provider *ethclient.Client, address common.Address, privat
 // Example
 //
 //	owner := "{{wallet_address}}"
-//	nfts, err := contract.GetOwned(owner)
+//	nfts, err := contract.GetOwned(context.Background(), owner)
 //	name := nfts[0].Metadata.Name
 func (nft *NFTCollection) GetOwned(ctx context.Context, address string) ([]*NFTMetadataOwner, error) {
 	if address == "" {
@@ -142,7 +142,7 @@ func (nft *NFTCollection) Mint(ctx context.Context, metadata *NFTMetadataInput) 
 //		Image: image,
 //	}
 //
-//	tx, err := contract.MintTo("{{wallet_address}}", metadata)
+//	tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", metadata)
 func (nft *NFTCollection) MintTo(ctx context.Context, address string, metadata *NFTMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadata, nft.storage)
 	if err != nil {
@@ -196,7 +196,7 @@ func (nft *NFTCollection) MintBatch(ctx context.Context, metadatas []*NFTMetadat
 //		}
 //	}
 //
-//	tx, err := contract.MintBatchTo("{{wallet_address}}", metadatas)
+//	tx, err := contract.MintBatchTo(context.Background(), "{{wallet_address}}", metadatas)
 func (nft *NFTCollection) MintBatchTo(ctx context.Context, address string, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
 	uris, err := uploadOrExtractUris(metadatas, nft.storage)
 	if err != nil {

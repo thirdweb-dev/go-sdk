@@ -85,19 +85,20 @@ func (edition *Edition) Mint(ctx context.Context, metadataWithSupply *EditionMet
 //
 // Example
 //
-//	image, err := os.Open("path/to/image.jpg")
-//	defer image.Close()
+//		image, err := os.Open("path/to/image.jpg")
+//		defer image.Close()
 //
-//	metadataWithSupply := &thirdweb.EditionMetadataInput{
-//		Metadata: &thirdweb.NFTMetadataInput{
-//			Name: "Cool NFT",
-//			Description: "This is a cool NFT",
-//			Image: image,
-//		},
-//		Supply: 100,
-//	}
+//		metadataWithSupply := &thirdweb.EditionMetadataInput{
+//	     context.Background(),
+//			Metadata: &thirdweb.NFTMetadataInput{
+//				Name: "Cool NFT",
+//				Description: "This is a cool NFT",
+//				Image: image,
+//			},
+//			Supply: 100,
+//		}
 //
-//	tx, err := contract.MintTo("{{wallet_address}}", metadataWithSupply)
+//		tx, err := contract.MintTo("{{wallet_address}}", metadataWithSupply)
 func (edition *Edition) MintTo(ctx context.Context, address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadataWithSupply.Metadata, edition.storage)
 	if err != nil {
@@ -204,7 +205,7 @@ func (edition *Edition) MintBatch(ctx context.Context, metadatasWithSupply []*Ed
 //		},
 //	}
 //
-//	tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
+//	tx, err := contract.MintBatchTo(context.Background(), "{{wallet_address}}", metadatasWithSupply)
 func (edition *Edition) MintBatchTo(ctx context.Context, to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
 	metadatas := []*NFTMetadataInput{}
 	for _, metadataWithSupply := range metadatasWithSupply {
