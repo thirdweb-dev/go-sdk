@@ -89,7 +89,7 @@ func (edition *Edition) Mint(ctx context.Context, metadataWithSupply *EditionMet
 //		defer image.Close()
 //
 //		metadataWithSupply := &thirdweb.EditionMetadataInput{
-//	     context.Background(),
+//	        context.Background(),
 //			Metadata: &thirdweb.NFTMetadataInput{
 //				Name: "Cool NFT",
 //				Description: "This is a cool NFT",
@@ -98,7 +98,7 @@ func (edition *Edition) Mint(ctx context.Context, metadataWithSupply *EditionMet
 //			Supply: 100,
 //		}
 //
-//		tx, err := contract.MintTo("{{wallet_address}}", metadataWithSupply)
+//		tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", metadataWithSupply)
 func (edition *Edition) MintTo(ctx context.Context, address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadataWithSupply.Metadata, edition.storage)
 	if err != nil {
@@ -146,7 +146,7 @@ func (edition *Edition) MintAdditionalSupply(ctx context.Context, tokenId int, a
 //
 // returns: the transaction receipt of the mint
 func (edition *Edition) MintAdditionalSupplyTo(ctx context.Context, to string, tokenId int, additionalSupply int) (*types.Transaction, error) {
-	metadata, err := edition.getTokenMetadata(tokenId)
+	metadata, err := edition.getTokenMetadata(ctx, tokenId)
 	if err != nil {
 		return nil, err
 	}
