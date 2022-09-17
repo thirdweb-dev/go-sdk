@@ -3,7 +3,7 @@
 
 ### Custom Contracts
 
-With the thirdweb SDK, you can get a contract instance for any contract. Additionally, if you deployed your contract using thirdweb deploy, you can get a more explicit and intuitive interface to interact with your contracts.
+With the thirdweb SDK, you can get a contract instance for any contract\. Additionally, if you deployed your contract using thirdweb deploy, you can get a more explicit and intuitive interface to interact with your contracts\.
 
 \# Getting a Custom Contract Instance
 
@@ -67,13 +67,13 @@ tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
 type SmartContract struct {}
 ```
 
-### func \(\*SmartContract\) [Call](<https://github.com/ricebin/go-sdk/blob/main/thirdweb/smart_contract.go#L118>)
+### func \(\*SmartContract\) [Call](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/smart_contract.go#L118>)
 
 ```go
 func (c *SmartContract) Call(ctx context.Context, method string, args ...interface{}) (interface{}, error)
 ```
 
-Call any function on your contract.
+Call any function on your contract\.
 
 method: the name of the method on your contract you want to call
 
