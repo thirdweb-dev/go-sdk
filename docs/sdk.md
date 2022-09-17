@@ -18,7 +18,7 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 
 #### NewThirdwebSDK
 
-Create a new instance of the Thirdweb SDK
+\# Create a new instance of the Thirdweb SDK
 
 rpcUrlOrName: the name of the chain to connection to \(e\.g\. "rinkeby", "mumbai", "polygon", "mainnet", "fantom", "avalanche"\) or the RPC URL to connect to
 
@@ -32,7 +32,7 @@ func (sdk *ThirdwebSDK) GetContract(address string) (*SmartContract, error)
 
 #### GetContract
 
-Get an instance of a custom contract deployed with thirdweb deploy
+\# Get an instance of a custom contract deployed with thirdweb deploy
 
 address: the address of the contract
 
@@ -44,7 +44,7 @@ func (sdk *ThirdwebSDK) GetContractFromAbi(address string, abi string) (*SmartCo
 
 #### GetContractFromABI
 
-Get an instance of ant custom contract from its ABI
+\# Get an instance of ant custom contract from its ABI
 
 address: the address of the contract
 
@@ -58,7 +58,7 @@ func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error)
 
 #### GetEdition
 
-Get an Edition contract SDK instance
+\# Get an Edition contract SDK instance
 
 address: the address of the Edition contract
 
@@ -70,7 +70,7 @@ func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error)
 
 #### GetEditionDrop
 
-Get an Edition Drop contract SDK instance
+\# Get an Edition Drop contract SDK instance
 
 address: the address of the Edition Drop contract
 
@@ -82,7 +82,7 @@ func (sdk *ThirdwebSDK) GetMarketplace(address string) (*Marketplace, error)
 
 #### GetMarketplace
 
-Get a Marketplace contract SDK instance
+\# Get a Marketplace contract SDK instance
 
 address: the address of the Marketplace contract
 
@@ -94,7 +94,7 @@ func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error)
 
 #### GetMultiwrap
 
-Get a Multiwrap contract SDK instance
+\# Get a Multiwrap contract SDK instance
 
 address: the address of the Multiwrap contract
 
@@ -106,7 +106,7 @@ func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
 
 #### GetNFTCollection
 
-Get an NFT Collection contract SDK instance
+\# Get an NFT Collection contract SDK instance
 
 address: the address of the NFT Collection contract
 
@@ -118,7 +118,7 @@ func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error)
 
 #### GetNFTDrop
 
-Get an NFT Drop contract SDK instance
+\# Get an NFT Drop contract SDK instance
 
 address: the address of the NFT Drop contract
 
@@ -130,7 +130,7 @@ func (sdk *ThirdwebSDK) GetToken(address string) (*Token, error)
 
 #### GetToken
 
-Returns a Token contract SDK instance
+\# Returns a Token contract SDK instance
 
 address: address of the token contract
 

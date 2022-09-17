@@ -15,7 +15,7 @@ func (ipfs *IpfsStorage) Get(uri string) ([]byte, error)
 
 #### Get
 
-Get IPFS data at a given hash and return it as byte data
+\# Get IPFS data at a given hash and return it as byte data
 
 uri: the IPFS URI to fetch data from
 

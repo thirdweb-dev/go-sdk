@@ -30,10 +30,10 @@ type NFTDropEncoder struct {
 }
 ```
 
-### func \(\*NFTDropEncoder\) [ApproveClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L87>)
+### func \(\*NFTDropEncoder\) [ApproveClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L88>)
 
 ```go
-func (encoder *NFTDropEncoder) ApproveClaimTo(signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error)
+func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error)
 ```
 
 Get the data for the transaction data required to approve the ERC20 token transfers necessary to claim NFTs from this contract\.
@@ -56,17 +56,17 @@ destinationAddress := "{{wallet_address}}"
 // Number of NFTs to claim
 quantity = 1
 
-tx, err := contract.Encoder.ApproveClaimTo(signerAddress, destinationAddress, quantity)
+tx, err := contract.Encoder.ApproveClaimTo(context.Background(), signerAddress, destinationAddress, quantity)
 
 // Now you can get all the standard transaction data as needed
 fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*NFTDropEncoder\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L125>)
+### func \(\*NFTDropEncoder\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L127>)
 
 ```go
-func (encoder *NFTDropEncoder) ClaimTo(signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error)
+func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error)
 ```
 
 Get the data for the transaction required to claim NFTs from this contract\.
@@ -89,7 +89,7 @@ destinationAddress := "{{wallet_address}}"
 // Number of NFTs to claim
 quantity = 1
 
-tx, err := contract.Encoder.ClaimTo(signerAddress, destinationAddress, quantity)
+tx, err := contract.Encoder.ClaimTo(context.Background(), signerAddress, destinationAddress, quantity)
 
 // Now you can get all the standard transaction data as needed
 fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)

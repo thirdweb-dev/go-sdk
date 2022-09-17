@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,7 +9,7 @@ import (
 
 func getEdition() *Edition {
 	sdk := getSDK()
-	address, _ := sdk.Deployer.DeployEdition(&DeployEditionMetadata{
+	address, _ := sdk.Deployer.DeployEdition(context.Background(), &DeployEditionMetadata{
 		Name: "Edition",
 	})
 
@@ -23,12 +24,14 @@ func TestMintEdition(t *testing.T) {
 	balance, _ := edition.Balance(0)
 	assert.Equal(t, 0, balance)
 
-	_, err := edition.Mint(&EditionMetadataInput{
-		Metadata: &NFTMetadataInput{
-			Name: "NFT",
-		},
-		Supply: 10,
-	})
+	_, err := edition.Mint(
+		context.Background(),
+		&EditionMetadataInput{
+			Metadata: &NFTMetadataInput{
+				Name: "NFT",
+			},
+			Supply: 10,
+		})
 	assert.Nil(t, err)
 
 	balance, _ = edition.Balance(0)
@@ -42,6 +45,7 @@ func TestBatchMintEdition(t *testing.T) {
 	assert.Equal(t, 0, balance)
 
 	_, err := edition.MintBatchTo(
+		context.Background(),
 		edition.helper.GetSignerAddress().String(),
 		[]*EditionMetadataInput{
 			{
@@ -75,7 +79,7 @@ func TestBatchMintEdition(t *testing.T) {
 func TestBurnEdition(t *testing.T) {
 	edition := getEdition()
 
-	edition.Mint(&EditionMetadataInput{
+	edition.Mint(context.Background(), &EditionMetadataInput{
 		Metadata: &NFTMetadataInput{
 			Name: "NFT",
 		},
@@ -85,7 +89,7 @@ func TestBurnEdition(t *testing.T) {
 	balance, _ := edition.Balance(0)
 	assert.Equal(t, 10, balance)
 
-	_, err := edition.Burn(0, 10)
+	_, err := edition.Burn(context.Background(), 0, 10)
 	assert.Nil(t, err)
 
 	balance, _ = edition.Balance(0)
@@ -95,17 +99,19 @@ func TestBurnEdition(t *testing.T) {
 func TestTransferEdition(t *testing.T) {
 	edition := getEdition()
 
-	edition.Mint(&EditionMetadataInput{
-		Metadata: &NFTMetadataInput{
-			Name: "NFT",
-		},
-		Supply: 10,
-	})
+	edition.Mint(
+		context.Background(),
+		&EditionMetadataInput{
+			Metadata: &NFTMetadataInput{
+				Name: "NFT",
+			},
+			Supply: 10,
+		})
 
 	balance, _ := edition.Balance(0)
 	assert.Equal(t, 10, balance)
 
-	_, err := edition.Transfer(secondaryWallet, 0, 10)
+	_, err := edition.Transfer(context.Background(), secondaryWallet, 0, 10)
 	assert.Nil(t, err)
 
 	balance, _ = edition.Balance(0)
@@ -137,7 +143,7 @@ func TestSignatureMint(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, valid)
 
-	_, err = edition.Signature.Mint(payload)
+	_, err = edition.Signature.Mint(context.Background(), payload)
 	assert.Nil(t, err)
 
 	balance, _ := edition.Balance(0)

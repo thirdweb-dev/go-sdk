@@ -7,7 +7,7 @@ You can access this interface from the NFT Collection contract under the signatu
 type ERC721SignatureMinting struct {}
 ```
 
-### func \(\*ERC721SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L175>)
+### func \(\*ERC721SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L176>)
 
 ```go
 func (signature *ERC721SignatureMinting) Generate(payloadToSign *Signature721PayloadInput) (*SignedPayload721, error)
@@ -39,7 +39,7 @@ payload := &thirdweb.Signature721PayloadInput{
 signedPayload, err := contract.Signature.Generate(payload)
 ```
 
-### func \(\*ERC721SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L224>)
+### func \(\*ERC721SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L225>)
 
 ```go
 func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error)
@@ -88,10 +88,10 @@ payload := []*thirdweb.Signature721PayloadInput{
 signedPayload, err := contract.Signature.GenerateBatch(payload)
 ```
 
-### func \(\*ERC721SignatureMinting\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L51>)
+### func \(\*ERC721SignatureMinting\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L52>)
 
 ```go
-func (signature *ERC721SignatureMinting) Mint(signedPayload *SignedPayload721) (*types.Transaction, error)
+func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error)
 ```
 
 Mint a token with the data in given payload\.
@@ -105,13 +105,13 @@ returns: the transaction receipt of the mint
 ```
 // Learn more about how to craft a payload in the Generate() function
 signedPayload, err := contract.Signature.Generate(payload)
-tx, err := contract.Signature.Mint(signedPayload)
+tx, err := contract.Signature.Mint(context.Background(), signedPayload)
 ```
 
-### func \(\*ERC721SignatureMinting\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L87>)
+### func \(\*ERC721SignatureMinting\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L88>)
 
 ```go
-func (signature *ERC721SignatureMinting) MintBatch(signedPayloads []*SignedPayload721) (*types.Transaction, error)
+func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPayloads []*SignedPayload721) (*types.Transaction, error)
 ```
 
 Mint a batch of token with the data in given payload\.
@@ -125,10 +125,10 @@ returns: the transaction receipt of the batch mint
 ```
 // Learn more about how to craft multiple payloads in the GenerateBatch() function
 signedPayloads, err := contract.Signature.GenerateBatch(payloads)
-tx, err := contract.Signature.MintBatch(signedPayloads)
+tx, err := contract.Signature.MintBatch(context.Background(), signedPayloads)
 ```
 
-### func \(\*ERC721SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L139>)
+### func \(\*ERC721SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L140>)
 
 ```go
 func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721) (bool, error)

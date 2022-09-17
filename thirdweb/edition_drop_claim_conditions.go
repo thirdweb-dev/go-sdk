@@ -38,16 +38,16 @@ func newEditionDropClaimConditions(address common.Address, provider *ethclient.C
 //
 // Example
 //
-// 	tokenId := 0
-// 	condition, err := contract.ClaimConditions.GetActive(tokenId)
+//	tokenId := 0
+//	condition, err := contract.ClaimConditions.GetActive(tokenId)
 //
-// 	// Now you have access to all the claim condition metadata
-// 	fmt.Println("Start Time:", condition.StartTime)
-// 	fmt.Println("Available:", condition.AvailableSupply)
-// 	fmt.Println("Quantity:", condition.MaxQuantity)
-// 	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
-// 	fmt.Println("Price:", condition.Price)
-// 	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
+//	// Now you have access to all the claim condition metadata
+//	fmt.Println("Start Time:", condition.StartTime)
+//	fmt.Println("Available:", condition.AvailableSupply)
+//	fmt.Println("Quantity:", condition.MaxQuantity)
+//	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
+//	fmt.Println("Price:", condition.Price)
+//	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
 func (claim *EditionDropClaimConditions) GetActive(tokenId int) (*ClaimConditionOutput, error) {
 	id, err := claim.abi.GetActiveClaimConditionId(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
 	if err != nil {
@@ -80,17 +80,17 @@ func (claim *EditionDropClaimConditions) GetActive(tokenId int) (*ClaimCondition
 //
 // Example
 //
-// 	tokenId := 0
-// 	conditions, err := contract.ClaimConditions.GetAll(tokenId)
+//	tokenId := 0
+//	conditions, err := contract.ClaimConditions.GetAll(tokenId)
 //
-// 	// Now you have access to all the claim condition metadata
-// 	condition := conditions[0]
-// 	fmt.Println("Start Time:", condition.StartTime)
-// 	fmt.Println("Available:", condition.AvailableSupply)
-// 	fmt.Println("Quantity:", condition.MaxQuantity)
-// 	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
-// 	fmt.Println("Price:", condition.Price)
-// 	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
+//	// Now you have access to all the claim condition metadata
+//	condition := conditions[0]
+//	fmt.Println("Start Time:", condition.StartTime)
+//	fmt.Println("Available:", condition.AvailableSupply)
+//	fmt.Println("Quantity:", condition.MaxQuantity)
+//	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
+//	fmt.Println("Price:", condition.Price)
+//	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
 func (claim *EditionDropClaimConditions) GetAll(tokenId int) ([]*ClaimConditionOutput, error) {
 	condition, err := claim.abi.ClaimCondition(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
 	if err != nil {

@@ -7,7 +7,7 @@ You can access this interface from the edition contract under the signature inte
 type ERC1155SignatureMinting struct {}
 ```
 
-### func \(\*ERC1155SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L176>)
+### func \(\*ERC1155SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L177>)
 
 ```go
 func (signature *ERC1155SignatureMinting) Generate(payloadToSign *Signature1155PayloadInput) (*SignedPayload1155, error)
@@ -40,7 +40,7 @@ payload := &thirdweb.Signature721PayloadInput{
 signedPayload, err := contract.Signature.Generate(payload)
 ```
 
-### func \(\*ERC1155SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L271>)
+### func \(\*ERC1155SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L272>)
 
 ```go
 func (signature *ERC1155SignatureMinting) GenerateBatch(payloadsToSign []*Signature1155PayloadInput) ([]*SignedPayload1155, error)
@@ -89,7 +89,7 @@ payload := []*thirdweb.Signature1155PayloadInput{
 signedPayload, err := contract.Signature.GenerateBatch(payload)
 ```
 
-### func \(\*ERC1155SignatureMinting\) [GenerateBatchFromTokenIds](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L338>)
+### func \(\*ERC1155SignatureMinting\) [GenerateBatchFromTokenIds](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L339>)
 
 ```go
 func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(payloadsToSign []*Signature1155PayloadInputWithTokenId) ([]*SignedPayload1155, error)
@@ -138,7 +138,7 @@ payload := []*thirdweb.Signature1155PayloadInputWithTokenId{
 signedPayload, err := contract.Signature.GenerateBatchFromTokenIds(payload)
 ```
 
-### func \(\*ERC1155SignatureMinting\) [GenerateFromTokenId](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L222>)
+### func \(\*ERC1155SignatureMinting\) [GenerateFromTokenId](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L223>)
 
 ```go
 func (signature *ERC1155SignatureMinting) GenerateFromTokenId(payloadToSign *Signature1155PayloadInputWithTokenId) (*SignedPayload1155, error)
@@ -154,28 +154,26 @@ returns: the payload signed by the minter's private key
 
 ```
 payload := &thirdweb.Signature1155PayloadInputWithTokenId{
-	To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
-	Price:                0,
-	CurrencyAddress:      "0x0000000000000000000000000000000000000000",
-	MintStartTime:        0,
-	MintEndTime:          100000000000000,
-	PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
-	Metadata:             nil,                                          // we don't need to pass NFT metadata since we are minting an existing token
-	RoyaltyRecipient:     "0x0000000000000000000000000000000000000000",
-	RoyaltyBps:           0,
-	Quantity:             1,
+		To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+		Price:                0,
+		CurrencyAddress:      "0x0000000000000000000000000000000000000000",
+		MintStartTime:        0,
+		MintEndTime:          100000000000000,
+		PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
+		Metadata:             nil,                                          // we don't need to pass NFT metadata since we are minting an existing token
+		RoyaltyRecipient:     "0x0000000000000000000000000000000000000000",
+		RoyaltyBps:           0,
+		Quantity:             1,
+ 	TokenId:              0,                                            // now we need to specify the token ID to mint supply to
+	}
+
+	signedPayload, err := contract.Signature.GenerateFromTokenId(payload)
 ```
 
-TokenId:              0,                                            // now we need to specify the token ID to mint supply to \}
-
-```
-signedPayload, err := contract.Signature.GenerateFromTokenId(payload)
-```
-
-### func \(\*ERC1155SignatureMinting\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L51>)
+### func \(\*ERC1155SignatureMinting\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L52>)
 
 ```go
-func (signature *ERC1155SignatureMinting) Mint(signedPayload *SignedPayload1155) (*types.Transaction, error)
+func (signature *ERC1155SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload1155) (*types.Transaction, error)
 ```
 
 Mint a token with the data in given payload\.
@@ -192,10 +190,10 @@ signedPayload, err := contract.Signature.Generate(payload)
 tx, err := contract.Signature.Mint(signedPayload)
 ```
 
-### func \(\*ERC1155SignatureMinting\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L87>)
+### func \(\*ERC1155SignatureMinting\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L88>)
 
 ```go
-func (signature *ERC1155SignatureMinting) MintBatch(signedPayloads []*SignedPayload1155) (*types.Transaction, error)
+func (signature *ERC1155SignatureMinting) MintBatch(ctx context.Context, signedPayloads []*SignedPayload1155) (*types.Transaction, error)
 ```
 
 Mint a batch of token with the data in given payload\.
@@ -212,7 +210,7 @@ signedPayloads, err := contract.Signature.GenerateBatch(payloads)
 tx, err := contract.Signature.MintBatch(signedPayloads)
 ```
 
-### func \(\*ERC1155SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L139>)
+### func \(\*ERC1155SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L140>)
 
 ```go
 func (signature *ERC1155SignatureMinting) Verify(signedPayload *SignedPayload1155) (bool, error)

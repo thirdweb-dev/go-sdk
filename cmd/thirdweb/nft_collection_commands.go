@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -32,7 +33,7 @@ var nftGetAllCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := nftCollection.GetAll()
+		allNfts, err := nftCollection.GetAll(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -52,7 +53,7 @@ var nftGetOwnedCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := nftCollection.GetOwned("")
+		allNfts, err := nftCollection.GetOwned(context.Background(), "")
 		if err != nil {
 			panic(err)
 		}
@@ -78,7 +79,7 @@ var nftMintCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		if tx, err := nftCollection.Mint(&thirdweb.NFTMetadataInput{
+		if tx, err := nftCollection.Mint(context.Background(), &thirdweb.NFTMetadataInput{
 			Name:  "Special NFT",
 			Image: imageFile,
 		}); err != nil {
@@ -102,7 +103,7 @@ var nftMintLinkCmd = &cobra.Command{
 			panic(err)
 		}
 
-		if tx, err := nftCollection.Mint(&thirdweb.NFTMetadataInput{
+		if tx, err := nftCollection.Mint(context.Background(), &thirdweb.NFTMetadataInput{
 			Name:  "NFT Test",
 			Image: "ipfs://QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0",
 		}); err != nil {
@@ -159,7 +160,7 @@ var nftSigmintCmd = &cobra.Command{
 			panic("Invalid signature")
 		}
 
-		tx, err := nftCollection.Signature.Mint(payload)
+		tx, err := nftCollection.Signature.Mint(context.Background(), payload)
 		if err != nil {
 			panic(err)
 		}

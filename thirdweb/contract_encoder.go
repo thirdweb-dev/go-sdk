@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"fmt"
 	"math/big"
 	"reflect"
@@ -47,15 +48,15 @@ func newContractEncoder(contractAbi string, helper *contractHelper) (*ContractEn
 //
 // Example
 //
-// 	toAddress := "0x..."
-// 	amount := 1
+//	toAddress := "0x..."
+//	amount := 1
 //
-// 	// Now you can get the transaction data for the contract call.
-// 	tx, err := contract.Encoder.Encode("transfer", toAddress, amount)
-// 	fmt.Println(tx.Data()) // Now you can access all transaction data, like the following fields
-// 	fmt.Println(tx.Nonce())
-// 	fmt.Println(tx.Value())
-func (encoder *ContractEncoder) Encode(signerAddress string, method string, args ...interface{}) (*types.Transaction, error) {
+//	// Now you can get the transaction data for the contract call.
+//	tx, err := contract.Encoder.Encode(context.Background(), "transfer", toAddress, amount)
+//	fmt.Println(tx.Data()) // Now you can access all transaction data, like the following fields
+//	fmt.Println(tx.Nonce())
+//	fmt.Println(tx.Value())
+func (encoder *ContractEncoder) Encode(ctx context.Context, signerAddress string, method string, args ...interface{}) (*types.Transaction, error) {
 	abiMethod, exist := encoder.abi.Methods[method]
 	if !exist {
 		return nil, fmt.Errorf("function '%s' not found in contract '%s'", method, encoder.helper.getAddress().String())
@@ -107,7 +108,7 @@ func (encoder *ContractEncoder) Encode(signerAddress string, method string, args
 		typedArgs = append(typedArgs, arg)
 	}
 
-	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
+	txOpts, err := encoder.helper.getUnsignedTxOptions(ctx, signerAddress)
 	if err != nil {
 		return nil, err
 	}

@@ -9,21 +9,20 @@ You can access the Marketplace interface from the SDK as follows:
 
 ```
 import (
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
-)
+		"github.com/thirdweb-dev/go-sdk/thirdweb"
+	)
 
-privateKey = "..."
+	privateKey = "..."
 
-sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
-	PrivateKey: privateKey,
-})
+	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+		PrivateKey: privateKey,
+	})
 
-marketplace, err := sdk.GetMarketplace("{{contract_address}}")
+	marketplace, err := sdk.GetMarketplace("{{contract_address}}")
 
-// Now the encoder can be accessed from the contract
+	// Now the encoder can be accessed from the contract
+ marketplace.Encoder.CreateListing(...)
 ```
-
-marketplace\.Encoder\.CreateListing\(\.\.\.\)
 
 ```go
 type MarketplaceEncoder struct {
@@ -31,10 +30,10 @@ type MarketplaceEncoder struct {
 }
 ```
 
-### func \(\*MarketplaceEncoder\) [ApproveBuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L118-L123>)
+### func \(\*MarketplaceEncoder\) [ApproveBuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L119-L125>)
 
 ```go
-func (encoder *MarketplaceEncoder) ApproveBuyoutListing(signerAddress string, listingId int, quantityDesired int, receiver string) (*types.Transaction, error)
+func (encoder *MarketplaceEncoder) ApproveBuyoutListing(ctx context.Context, signerAddress string, listingId int, quantityDesired int, receiver string) (*types.Transaction, error)
 ```
 
 Get the transaction data to approve the tokens needed for a buyout listing transaction\. If the transaction wouldn't require any additional token approvals, this method will return nil\.
@@ -62,17 +61,17 @@ quantityDesired := 1
 receiver := "0x..."
 
 // Transaction data required for this request
-tx, err := marketplace.Encoder.ApproveBuyoutListing(signerAddress, listingId, quantityDesired, receiver)
+tx, err := marketplace.Encoder.ApproveBuyoutListing(context.Background(), signerAddress, listingId, quantityDesired, receiver)
 
 // Now you can get transaction all the standard data as needed
 fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*MarketplaceEncoder\) [ApproveCreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L253>)
+### func \(\*MarketplaceEncoder\) [ApproveCreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L257>)
 
 ```go
-func (encoder *MarketplaceEncoder) ApproveCreateListing(signerAddress string, listing *NewDirectListing) (*types.Transaction, error)
+func (encoder *MarketplaceEncoder) ApproveCreateListing(ctx context.Context, signerAddress string, listing *NewDirectListing) (*types.Transaction, error)
 ```
 
 Get the transaction data to approve the tokens needed for a create liting transaction\. If the transaction wouldn't require any additional token approvals, this method will return nil\.
@@ -100,17 +99,17 @@ listing := &NewDirectListing{
 }
 
 // Transaction data required for this request
-tx, err := marketplace.Encoder.ApproveCreateListing(signerAddress, listing)
+tx, err := marketplace.Encoder.ApproveCreateListing(context.Background(), signerAddress, listing)
 
 // Now you can get transaction data as needed
 fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*MarketplaceEncoder\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L180-L185>)
+### func \(\*MarketplaceEncoder\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L183-L189>)
 
 ```go
-func (encoder *MarketplaceEncoder) BuyoutListing(signerAddress string, listingId int, quantityDesired int, receiver string) (*types.Transaction, error)
+func (encoder *MarketplaceEncoder) BuyoutListing(ctx context.Context, signerAddress string, listingId int, quantityDesired int, receiver string) (*types.Transaction, error)
 ```
 
 Get the transaction data for the buyout listing transaction\. This method will throw an error if the listing requires payment in ERC20 tokens and the ERC20 tokens haven't yet been approved by the spender\. You can get the transaction data of this required approval transaction from the \`ApproveBuyoutListing\` method\.
@@ -138,17 +137,17 @@ quantityDesired := 1
 receiver := "0x..."
 
 // Transaction data required for this request
-tx, err := marketplace.Encoder.BuyoutListing(signerAddress, listingId, quantityDesired, receiver)
+tx, err := marketplace.Encoder.BuyoutListing(context.Background(), signerAddress, listingId, quantityDesired, receiver)
 
 // Now you can get transaction all the standard data as needed
 fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*MarketplaceEncoder\) [CancelListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L79>)
+### func \(\*MarketplaceEncoder\) [CancelListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L80>)
 
 ```go
-func (encoder *MarketplaceEncoder) CancelListing(signerAddress string, listingId int) (*types.Transaction, error)
+func (encoder *MarketplaceEncoder) CancelListing(ctx context.Context, signerAddress string, listingId int) (*types.Transaction, error)
 ```
 
 #### Get the data for the transaction required to cancel a listing on the marketplace
@@ -168,17 +167,17 @@ signerAddress := "0x..."
 listingId := 1
 
 // Transaction data required for this request
-tx, err := marketplace.Encoder.CancelListing(signerAddress, listingId)
+tx, err := marketplace.Encoder.CancelListing(context.Background(), signerAddress, listingId)
 
 // Now you can get transaction all the standard data as needed
 fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*MarketplaceEncoder\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L297>)
+### func \(\*MarketplaceEncoder\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace_encoder.go#L302>)
 
 ```go
-func (encoder *MarketplaceEncoder) CreateListing(signerAddress string, listing *NewDirectListing) (*types.Transaction, error)
+func (encoder *MarketplaceEncoder) CreateListing(ctx context.Context, signerAddress string, listing *NewDirectListing) (*types.Transaction, error)
 ```
 
 Get the data for the transaction required to create a direct listing\. This method will throw an error if the tokens needed for the listing have not yet been approved by the asset owner for the marketplace to spend\. You can get the transaction data of this required approval transaction from the \`ApproveCreateListing\` method\.
@@ -206,7 +205,7 @@ listing := &NewDirectListing{
 }
 
 // Transaction data required for this request
-tx, err := marketplace.Encoder.CreateListing(signerAddress, listing)
+tx, err := marketplace.Encoder.CreateListing(context.Background(), signerAddress, listing)
 
 // Now you can get transaction data as needed
 fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
