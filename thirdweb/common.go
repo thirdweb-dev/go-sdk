@@ -153,6 +153,7 @@ func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int
 }
 
 func setErc20AllowanceEncoder(
+	ctx context.Context,
 	contractToApprove *contractHelper,
 	signerAddress string,
 	value *big.Int,
@@ -167,14 +168,14 @@ func setErc20AllowanceEncoder(
 
 		owner := common.HexToAddress(signerAddress)
 		spender := contractToApprove.getAddress()
-		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
+		allowance, err := erc20.Allowance(&bind.CallOpts{Context: ctx}, owner, spender)
 		if err != nil {
 			return nil, err
 		}
 
 		if allowance.Cmp(value) < 0 {
 			// We can get options from the contract instead of ERC20 because they will be the same
-			approvalOpts, err := contractToApprove.getUnsignedTxOptions(signerAddress)
+			approvalOpts, err := contractToApprove.getUnsignedTxOptions(ctx, signerAddress)
 			if err != nil {
 				return nil, err
 			}
@@ -211,7 +212,7 @@ func setErc20Allowance(
 
 		if allowance.Cmp(value) < 0 {
 			// We can get options from the contract instead of ERC20 because they will be the same
-			approvalOpts, err := contractToApprove.getTxOptions()
+			approvalOpts, err := contractToApprove.getTxOptions(txOpts.Context)
 			if err != nil {
 				return err
 			}
@@ -232,6 +233,7 @@ func setErc20Allowance(
 }
 
 func approveErc20Allowance(
+	ctx context.Context,
 	contractToApprove *contractHelper,
 	currencyAddress string,
 	price *big.Int,
@@ -258,7 +260,7 @@ func approveErc20Allowance(
 	totalPrice := price.Mul(big.NewInt(int64(quantity)), price)
 
 	if allowance.Cmp(totalPrice) < 0 {
-		txOpts, err := erc20.getTxOptions()
+		txOpts, err := erc20.getTxOptions(ctx)
 		if err != nil {
 			return err
 		}
@@ -292,6 +294,7 @@ func hasErc20Allowance(contractToApprove *contractHelper, currencyAddress string
 // DROP
 
 func prepareClaim(
+	ctx context.Context,
 	quantity int,
 	activeClaimCondition *ClaimConditionOutput,
 	contractHelper *contractHelper,
@@ -308,6 +311,7 @@ func prepareClaim(
 			value = big.NewInt(0).Mul(big.NewInt(int64(quantity)), price)
 		} else {
 			approveErc20Allowance(
+				ctx,
 				contractHelper,
 				currencyAddress,
 				price,
@@ -507,6 +511,7 @@ func fetchTokenMetadataForContract(
 }
 
 func handleTokenApproval(
+	ctx context.Context,
 	provider *ethclient.Client,
 	helper *contractHelper,
 	marketplaceAddress string,
@@ -535,7 +540,9 @@ func handleTokenApproval(
 			return err
 		}
 
-		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{
+			Context: ctx,
+		}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
 		if err != nil {
 			return err
 		}
@@ -546,7 +553,7 @@ func handleTokenApproval(
 				return err
 			}
 
-			txOpts, err := helper.getTxOptions()
+			txOpts, err := helper.getTxOptions(ctx)
 			if err != nil {
 				return err
 			}
@@ -575,7 +582,7 @@ func handleTokenApproval(
 		}
 
 		if !approved {
-			txOpts, err := helper.getTxOptions()
+			txOpts, err := helper.getTxOptions(ctx)
 			if err != nil {
 				return err
 			}

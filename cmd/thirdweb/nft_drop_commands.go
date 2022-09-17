@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -32,7 +33,7 @@ var nftDropGetAllCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := nftDrop.GetAll()
+		allNfts, err := nftDrop.GetAll(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -53,6 +54,7 @@ var nftDropEncoderCmd = &cobra.Command{
 		}
 
 		tx, err := nftDrop.Encoder.ClaimTo(
+			context.Background(),
 			thirdwebSDK.GetSignerAddress().String(),
 			thirdwebSDK.GetSignerAddress().String(),
 			1,
@@ -113,7 +115,7 @@ var nftDropClaimCmd = &cobra.Command{
 			panic(err)
 		}
 
-		if tx, err := nftDrop.Claim(1); err != nil {
+		if tx, err := nftDrop.Claim(context.Background(), 1); err != nil {
 			panic(err)
 		} else {
 			log.Printf("Claimed nft successfully")
@@ -146,6 +148,7 @@ var nftDropCreateBatchCmd = &cobra.Command{
 		defer image1.Close()
 
 		if tx, err := nftDrop.CreateBatch(
+			context.Background(),
 			[]*thirdweb.NFTMetadataInput{
 				{
 					Name:  "Drop NFT 1",

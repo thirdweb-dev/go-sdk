@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -33,7 +34,7 @@ var multiwrapGetAllCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		tokens, err := multiwrap.GetAll()
+		tokens, err := multiwrap.GetAll(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -101,6 +102,7 @@ var multiwrapWrapCmd = &cobra.Command{
 		log.Println("Edition: ", multiwrapEdition)
 
 		if tx, err := multiwrap.Wrap(
+			context.Background(),
 			contents,
 			&thirdweb.NFTMetadataInput{
 				Name: "Wrapped Token",
@@ -126,7 +128,7 @@ var multiwrapUnwrapCmd = &cobra.Command{
 			panic(err)
 		}
 
-		if tx, err := multiwrap.Unwrap(3, ""); err != nil {
+		if tx, err := multiwrap.Unwrap(context.Background(), 3, ""); err != nil {
 			panic(err)
 		} else {
 			log.Printf("Wrapped tokens successfully")

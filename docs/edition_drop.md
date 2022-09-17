@@ -25,13 +25,13 @@ type EditionDrop struct {
 }
 ```
 
-### func \(\*EditionDrop\) [Claim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L149>)
+### func \(\*EditionDrop\) [Claim](<https://github.com/ricebin/go-sdk/blob/main/thirdweb/edition_drop.go#L150>)
 
 ```go
-func (drop *EditionDrop) Claim(tokenId int, quantity int) (*types.Transaction, error)
+func (drop *EditionDrop) Claim(ctx context.Context, tokenId int, quantity int) (*types.Transaction, error)
 ```
 
-Claim NFTs from this contract to the connect wallet\.
+Claim NFTs from this contract to the connect wallet.
 
 tokenId: the token ID of the NFT to claim
 
@@ -39,13 +39,13 @@ quantity: the number of NFTs to claim
 
 returns: the transaction receipt of the claim
 
-### func \(\*EditionDrop\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L171>)
+### func \(\*EditionDrop\) [ClaimTo](<https://github.com/ricebin/go-sdk/blob/main/thirdweb/edition_drop.go#L172>)
 
 ```go
-func (drop *EditionDrop) ClaimTo(destinationAddress string, tokenId int, quantity int) (*types.Transaction, error)
+func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string, tokenId int, quantity int) (*types.Transaction, error)
 ```
 
-Claim NFTs from this contract to the connect wallet\.
+Claim NFTs from this contract to the connect wallet.
 
 tokenId: the token ID of the NFT to claim
 
@@ -62,16 +62,16 @@ address = "{{wallet_address}}"
 tokenId = 0
 quantity = 1
 
-tx, err := contract.ClaimTo(address, tokenId, quantity)
+tx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)
 ```
 
-### func \(\*EditionDrop\) [CreateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop.go#L102>)
+### func \(\*EditionDrop\) [CreateBatch](<https://github.com/ricebin/go-sdk/blob/main/thirdweb/edition_drop.go#L103>)
 
 ```go
-func (drop *EditionDrop) CreateBatch(metadatas []*NFTMetadataInput) (*types.Transaction, error)
+func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataInput) (*types.Transaction, error)
 ```
 
-Create a batch of NFTs on this contract\.
+Create a batch of NFTs on this contract.
 
 metadatas: a list of the metadatas of the NFTs to create
 
@@ -105,5 +105,5 @@ metadatasWithSupply := []*thirdweb.EditionMetadataInput{
 	},
 }
 
-tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
+tx, err := contract.MintBatchTo(context.Background(), "{{wallet_address}}", metadatasWithSupply)
 ```

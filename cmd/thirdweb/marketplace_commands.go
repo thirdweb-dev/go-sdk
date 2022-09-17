@@ -33,7 +33,7 @@ var marketplaceListCmd = &cobra.Command{
 			panic(err)
 		}
 
-		tx, err := marketplace.CreateListing(&thirdweb.NewDirectListing{})
+		tx, err := marketplace.CreateListing(context.Background(), &thirdweb.NewDirectListing{})
 		if err != nil {
 			panic(err)
 		}
@@ -52,7 +52,7 @@ var marketplaceEncodeCancelCmd = &cobra.Command{
 			panic(err)
 		}
 
-		tx, err := marketplace.Encoder.CancelListing("0x0000000000000000000000000000000000000000", 0)
+		tx, err := marketplace.Encoder.CancelListing(context.Background(), "0x0000000000000000000000000000000000000000", 0)
 
 		fmt.Println("Nonce:", tx.Nonce())
 		fmt.Println("To:", tx.To())

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -31,7 +32,7 @@ var deployNftCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		address, err := thirdwebSDK.Deployer.DeployNFTCollection(&thirdweb.DeployNFTCollectionMetadata{
+		address, err := thirdwebSDK.Deployer.DeployNFTCollection(context.Background(), &thirdweb.DeployNFTCollectionMetadata{
 			Name: "Goku NFT",
 		})
 		if err != nil {
@@ -57,7 +58,7 @@ var deployEditionCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		address, err := thirdwebSDK.Deployer.DeployEdition(&thirdweb.DeployEditionMetadata{
+		address, err := thirdwebSDK.Deployer.DeployEdition(context.Background(), &thirdweb.DeployEditionMetadata{
 			Name: "Go SDK",
 		})
 		if err != nil {
@@ -83,7 +84,7 @@ var deployTokenCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		address, err := thirdwebSDK.Deployer.DeployToken(&thirdweb.DeployTokenMetadata{
+		address, err := thirdwebSDK.Deployer.DeployToken(context.Background(), &thirdweb.DeployTokenMetadata{
 			Name: "Go SDK",
 		})
 		if err != nil {
@@ -109,7 +110,7 @@ var deployNFTDropCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		address, err := thirdwebSDK.Deployer.DeployNFTDrop(&thirdweb.DeployNFTDropMetadata{
+		address, err := thirdwebSDK.Deployer.DeployNFTDrop(context.Background(), &thirdweb.DeployNFTDropMetadata{
 			Name: "Go Script Drop",
 		})
 		if err != nil {
@@ -135,7 +136,7 @@ var deployEditionDropCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		address, err := thirdwebSDK.Deployer.DeployEditionDrop(&thirdweb.DeployEditionDropMetadata{
+		address, err := thirdwebSDK.Deployer.DeployEditionDrop(context.Background(), &thirdweb.DeployEditionDropMetadata{
 			Name: "Go SDK",
 		})
 		if err != nil {
@@ -161,7 +162,7 @@ var deployMultiwrapCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		address, err := thirdwebSDK.Deployer.DeployMultiwrap(&thirdweb.DeployMultiwrapMetadata{
+		address, err := thirdwebSDK.Deployer.DeployMultiwrap(context.Background(), &thirdweb.DeployMultiwrapMetadata{
 			Name: "Go SDK",
 		})
 		if err != nil {
@@ -187,7 +188,7 @@ var deployMarketplaceCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		address, err := thirdwebSDK.Deployer.DeployMarketplace(&thirdweb.DeployMarketplaceMetadata{
+		address, err := thirdwebSDK.Deployer.DeployMarketplace(context.Background(), &thirdweb.DeployMarketplaceMetadata{
 			Name: "Go SDK",
 		})
 		if err != nil {

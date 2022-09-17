@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -30,14 +31,14 @@ var customSetCmd = &cobra.Command{
 			panic(err)
 		}
 
-		data, err := contract.Call("tokenURI", 0)
+		data, err := contract.Call(context.Background(), "tokenURI", 0)
 		if err != nil {
 			panic(err)
 		}
 
 		log.Println(data)
 
-		tx, err := contract.Call("mintTo", thirdwebSDK.GetSignerAddress().Hex(), "ipfs://QmXCKX8MHHCXU62UWdiU38cjK3vbQ4MeL9FgXKo2hAR6Yz/0" )
+		tx, err := contract.Call(context.Background(), "mintTo", thirdwebSDK.GetSignerAddress().Hex(), "ipfs://QmXCKX8MHHCXU62UWdiU38cjK3vbQ4MeL9FgXKo2hAR6Yz/0")
 		if err != nil {
 			panic(err)
 		}

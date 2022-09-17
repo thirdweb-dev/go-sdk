@@ -39,7 +39,7 @@ func (helper *contractHelper) getAddress() common.Address {
 	return helper.address
 }
 
-func (helper *contractHelper) getUnsignedTxOptions(signerAddress string) (*bind.TransactOpts, error) {
+func (helper *contractHelper) getUnsignedTxOptions(ctx context.Context, signerAddress string) (*bind.TransactOpts, error) {
 	var tipCap, feeCap *big.Int
 
 	provider := helper.GetProvider()
@@ -51,6 +51,7 @@ func (helper *contractHelper) getUnsignedTxOptions(signerAddress string) (*bind.
 	}
 
 	txOpts := &bind.TransactOpts{
+		Context:   ctx,
 		NoSend:    true,
 		From:      common.HexToAddress(signerAddress),
 		GasTipCap: tipCap,
@@ -64,15 +65,15 @@ func (helper *contractHelper) getUnsignedTxOptions(signerAddress string) (*bind.
 	return txOpts, nil
 }
 
-func (helper *contractHelper) getEncodedTxOptions() (*bind.TransactOpts, error) {
-	return helper.getRawTxOptions(true)
+func (helper *contractHelper) getEncodedTxOptions(ctx context.Context) (*bind.TransactOpts, error) {
+	return helper.getRawTxOptions(ctx, true)
 }
 
-func (helper *contractHelper) getTxOptions() (*bind.TransactOpts, error) {
-	return helper.getRawTxOptions(false)
+func (helper *contractHelper) getTxOptions(ctx context.Context) (*bind.TransactOpts, error) {
+	return helper.getRawTxOptions(ctx, false)
 }
 
-func (helper *contractHelper) getRawTxOptions(noSend bool) (*bind.TransactOpts, error) {
+func (helper *contractHelper) getRawTxOptions(ctx context.Context, noSend bool) (*bind.TransactOpts, error) {
 	if helper.GetRawPrivateKey() == "" {
 		return nil, fmt.Errorf("You need to set a private key to use this function!")
 	}
@@ -88,6 +89,7 @@ func (helper *contractHelper) getRawTxOptions(noSend bool) (*bind.TransactOpts, 
 	}
 
 	txOpts := &bind.TransactOpts{
+		Context:   ctx,
 		NoSend:    noSend,
 		From:      helper.GetSignerAddress(),
 		Signer:    helper.getSigner(),
