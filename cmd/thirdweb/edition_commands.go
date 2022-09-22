@@ -33,7 +33,7 @@ var editionGetAllCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := edition.GetAll()
+		allNfts, err := edition.GetAll(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -53,7 +53,7 @@ var editionGetOwnedCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := edition.GetOwned("")
+		allNfts, err := edition.GetOwned(context.Background(), "")
 		if err != nil {
 			panic(err)
 		}

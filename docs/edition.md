@@ -137,7 +137,7 @@ image, err := os.Open("path/to/image.jpg")
 	defer image.Close()
 
 	metadataWithSupply := &thirdweb.EditionMetadataInput{
-     context.Background(),
+        context.Background(),
 		Metadata: &thirdweb.NFTMetadataInput{
 			Name: "Cool NFT",
 			Description: "This is a cool NFT",
@@ -146,5 +146,5 @@ image, err := os.Open("path/to/image.jpg")
 		Supply: 100,
 	}
 
-	tx, err := contract.MintTo("{{wallet_address}}", metadataWithSupply)
+	tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", metadataWithSupply)
 ```

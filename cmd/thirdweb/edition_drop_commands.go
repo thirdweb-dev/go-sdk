@@ -33,7 +33,7 @@ var editionDropGetAllCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := editionDrop.GetAll()
+		allNfts, err := editionDrop.GetAll(context.Background())
 		if err != nil {
 			panic(err)
 		}
