@@ -1,7 +1,7 @@
 
 ## NFT Drop Encoder
 
-The nft drop encoder class is used to get the unsigned transaction data for nft drop contract contract calls that can be signed at a later time after generation.
+The nft drop encoder class is used to get the unsigned transaction data for nft drop contract contract calls that can be signed at a later time after generation\.
 
 It can be accessed from the SDK through the \`Encoder\` namespace of the nft drop contract:
 
@@ -30,13 +30,13 @@ type NFTDropEncoder struct {
 }
 ```
 
-### func \(\*NFTDropEncoder\) [ApproveClaimTo](<https://github.com/ricebin/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L88>)
+### func \(\*NFTDropEncoder\) [ApproveClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L88>)
 
 ```go
 func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error)
 ```
 
-Get the data for the transaction data required to approve the ERC20 token transfers necessary to claim NFTs from this contract.
+Get the data for the transaction data required to approve the ERC20 token transfers necessary to claim NFTs from this contract\.
 
 signerAddress: the address intended to sign the transaction
 
@@ -63,13 +63,13 @@ fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are 
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*NFTDropEncoder\) [ClaimTo](<https://github.com/ricebin/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L127>)
+### func \(\*NFTDropEncoder\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L127>)
 
 ```go
 func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error)
 ```
 
-Get the data for the transaction required to claim NFTs from this contract.
+Get the data for the transaction required to claim NFTs from this contract\.
 
 signerAddress: the address intended to sign the transaction
 
