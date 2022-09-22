@@ -185,8 +185,8 @@ func TestBuyoutListingEdition(t *testing.T) {
 	token := getMarketplaceToken()
 	edition := getMarketplaceEdition()
 
-	adminBalance, _ := edition.BalanceOf(adminWallet, 0)
-	secondaryBalance, _ := edition.BalanceOf(secondaryWallet, 0)
+	adminBalance, _ := edition.BalanceOf(context.Background(), adminWallet, 0)
+	secondaryBalance, _ := edition.BalanceOf(context.Background(), secondaryWallet, 0)
 	assert.Equal(t, adminBalance, 100)
 	assert.Equal(t, secondaryBalance, 0)
 
@@ -211,8 +211,8 @@ func TestBuyoutListingEdition(t *testing.T) {
 	_, err = marketplace.BuyoutListing(context.Background(), listingId, 10)
 	assert.Nil(t, err)
 
-	adminBalance, _ = edition.BalanceOf(adminWallet, 0)
-	secondaryBalance, _ = edition.BalanceOf(secondaryWallet, 0)
+	adminBalance, _ = edition.BalanceOf(context.Background(), adminWallet, 0)
+	secondaryBalance, _ = edition.BalanceOf(context.Background(), secondaryWallet, 0)
 	assert.Equal(t, adminBalance, 90)
 	assert.Equal(t, secondaryBalance, 10)
 

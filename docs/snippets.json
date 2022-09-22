@@ -20,7 +20,7 @@
       {
         "name": "BalanceOf",
         "summary": "",
-        "example": "address := \"{{wallet_address}}\"\ntokenId := 0\nbalance, err := contract.BalanceOf(address, tokenId)\n",
+        "example": "address := \"{{wallet_address}}\"\ntokenId := 0\nbalance, err := contract.BalanceOf(context.Background(), address, tokenId)\n",
         "reference": "https://docs.thirdweb.com/go/edition_drop#func-editiondrop-balanceof"
       },
       {
@@ -32,19 +32,19 @@
       {
         "name": "Get",
         "summary": "",
-        "example": "nft, err := contract.Get(0)\n supply := nft.Supply\n\tname := nft.Metadata.Name\n",
+        "example": "nft, err := contract.Get(context.Background(), 0)\n supply := nft.Supply\n\tname := nft.Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/edition_drop#func-editiondrop-get"
       },
       {
         "name": "GetAll",
         "summary": "",
-        "example": "nfts, err := contract.GetAll()\nsupplyOne := nfts[0].Supply\nnameOne := nfts[0].Metadata.Name\n",
+        "example": "nfts, err := contract.GetAll(context.Background())\nsupplyOne := nfts[0].Supply\nnameOne := nfts[0].Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/edition_drop#func-editiondrop-getall"
       },
       {
         "name": "GetOwned",
         "summary": "",
-        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(owner)\nname := nfts[0].Metadata.Name\n",
+        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(context.Background(), owner)\nname := nfts[0].Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/edition_drop#func-editiondrop-getowned"
       },
       {
@@ -72,13 +72,13 @@
       {
         "name": "MintTo",
         "summary": "",
-        "example": "image, err := os.Open(\"path/to/image.jpg\")\n\tdefer image.Close()\n\n\tmetadataWithSupply := &thirdweb.EditionMetadataInput{\n     context.Background(),\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image,\n\t\t},\n\t\tSupply: 100,\n\t}\n\n\ttx, err := contract.MintTo(\"{{wallet_address}}\", metadataWithSupply)\n",
+        "example": "image, err := os.Open(\"path/to/image.jpg\")\n\tdefer image.Close()\n\n\tmetadataWithSupply := &thirdweb.EditionMetadataInput{\n        context.Background(),\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image,\n\t\t},\n\t\tSupply: 100,\n\t}\n\n\ttx, err := contract.MintTo(context.Background(), \"{{wallet_address}}\", metadataWithSupply)\n",
         "reference": "https://docs.thirdweb.com/go/edition#func-edition-mintto"
       },
       {
         "name": "BalanceOf",
         "summary": "",
-        "example": "address := \"{{wallet_address}}\"\ntokenId := 0\nbalance, err := contract.BalanceOf(address, tokenId)\n",
+        "example": "address := \"{{wallet_address}}\"\ntokenId := 0\nbalance, err := contract.BalanceOf(context.Background(), address, tokenId)\n",
         "reference": "https://docs.thirdweb.com/go/edition#func-edition-balanceof"
       },
       {
@@ -90,19 +90,19 @@
       {
         "name": "Get",
         "summary": "",
-        "example": "nft, err := contract.Get(0)\n supply := nft.Supply\n\tname := nft.Metadata.Name\n",
+        "example": "nft, err := contract.Get(context.Background(), 0)\n supply := nft.Supply\n\tname := nft.Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/edition#func-edition-get"
       },
       {
         "name": "GetAll",
         "summary": "",
-        "example": "nfts, err := contract.GetAll()\nsupplyOne := nfts[0].Supply\nnameOne := nfts[0].Metadata.Name\n",
+        "example": "nfts, err := contract.GetAll(context.Background())\nsupplyOne := nfts[0].Supply\nnameOne := nfts[0].Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/edition#func-edition-getall"
       },
       {
         "name": "GetOwned",
         "summary": "",
-        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(owner)\nname := nfts[0].Metadata.Name\n",
+        "example": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(context.Background(), owner)\nname := nfts[0].Metadata.Name\n",
         "reference": "https://docs.thirdweb.com/go/edition#func-edition-getowned"
       },
       {
