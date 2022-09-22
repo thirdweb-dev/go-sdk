@@ -42,7 +42,7 @@ func newERC20(provider *ethclient.Client, address common.Address, privateKey str
 //	currency, err := contract.Get()
 //	symbol := currency.Symbol
 func (erc20 *ERC20) Get() (*Currency, error) {
-	return fetchCurrencyMetadata(erc20.helper.GetProvider(), erc20.helper.getAddress().String())
+	return fetchCurrencyMetadata(context.Background(), erc20.helper.GetProvider(), erc20.helper.getAddress().String())
 }
 
 // Get the token balance of the connected wallet.
@@ -343,6 +343,7 @@ func (erc20 *ERC20) BurnFrom(ctx context.Context, holder string, amount float64)
 
 func (erc20 *ERC20) getValue(value *big.Int) (*CurrencyValue, error) {
 	return fetchCurrencyValue(
+		context.Background(),
 		erc20.helper.GetProvider(),
 		erc20.helper.getAddress().String(),
 		value,

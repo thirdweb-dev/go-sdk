@@ -79,8 +79,8 @@ func parseUnits(value float64, decimals int) (*big.Int, error) {
 	return bigNumber, nil
 }
 
-func normalizePriceValue(provider *ethclient.Client, price float64, currencyAddress string) (*big.Int, error) {
-	metadata, err := fetchCurrencyMetadata(provider, currencyAddress)
+func normalizePriceValue(ctx context.Context, provider *ethclient.Client, price float64, currencyAddress string) (*big.Int, error) {
+	metadata, err := fetchCurrencyMetadata(ctx, provider, currencyAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -101,9 +101,9 @@ func formatUnits(value *big.Int, decimals int) float64 {
 	return formatted.InexactFloat64()
 }
 
-func fetchCurrencyMetadata(provider *ethclient.Client, asset string) (*Currency, error) {
+func fetchCurrencyMetadata(ctx context.Context, provider *ethclient.Client, asset string) (*Currency, error) {
 	if isNativeToken(asset) {
-		chainId, err := provider.ChainID(context.Background())
+		chainId, err := provider.ChainID(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -120,9 +120,9 @@ func fetchCurrencyMetadata(provider *ethclient.Client, asset string) (*Currency,
 			return nil, err
 		}
 
-		name, err := contractAbi.Name(&bind.CallOpts{})
-		symbol, err := contractAbi.Symbol(&bind.CallOpts{})
-		decimals, err := contractAbi.Decimals(&bind.CallOpts{})
+		name, err := contractAbi.Name(&bind.CallOpts{Context: ctx})
+		symbol, err := contractAbi.Symbol(&bind.CallOpts{Context: ctx})
+		decimals, err := contractAbi.Decimals(&bind.CallOpts{Context: ctx})
 
 		currency := &Currency{
 			name,
@@ -134,8 +134,8 @@ func fetchCurrencyMetadata(provider *ethclient.Client, asset string) (*Currency,
 	}
 }
 
-func fetchCurrencyValue(provider *ethclient.Client, asset string, price *big.Int) (*CurrencyValue, error) {
-	metadata, err := fetchCurrencyMetadata(provider, asset)
+func fetchCurrencyValue(ctx context.Context, provider *ethclient.Client, asset string, price *big.Int) (*CurrencyValue, error) {
+	metadata, err := fetchCurrencyMetadata(ctx, provider, asset)
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +252,7 @@ func approveErc20Allowance(
 
 	owner := contractToApprove.GetSignerAddress()
 	spender := contractToApprove.getAddress()
-	allowance, err := contractAbi.Allowance(&bind.CallOpts{}, owner, spender)
+	allowance, err := contractAbi.Allowance(&bind.CallOpts{Context: ctx}, owner, spender)
 	if err != nil {
 		return err
 	}
@@ -331,11 +331,12 @@ func prepareClaim(
 }
 
 func transformResultToClaimCondition(
+	ctx context.Context,
 	pm *abi.IDropClaimConditionClaimCondition,
 	provider *ethclient.Client,
 	storage storage,
 ) (*ClaimConditionOutput, error) {
-	currencyValue, err := fetchCurrencyValue(provider, pm.Currency.String(), pm.PricePerToken)
+	currencyValue, err := fetchCurrencyValue(ctx, provider, pm.Currency.String(), pm.PricePerToken)
 	if err != nil {
 		return nil, err
 	}
@@ -355,6 +356,7 @@ func transformResultToClaimCondition(
 // MULTIWRAP
 
 func isTokenApprovedForTransfer(
+	ctx context.Context,
 	provider *ethclient.Client,
 	transferrerContractAddress string,
 	assetContract string,
@@ -366,12 +368,12 @@ func isTokenApprovedForTransfer(
 		return false, err
 	}
 
-	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
 	if err != nil {
 		return false, err
 	}
 
-	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
 	if err != nil {
 		return false, err
 	}
@@ -382,7 +384,7 @@ func isTokenApprovedForTransfer(
 			return false, err
 		}
 
-		approved, err := ierc721.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(transferrerContractAddress))
+		approved, err := ierc721.IsApprovedForAll(&bind.CallOpts{Context: ctx}, common.HexToAddress(from), common.HexToAddress(transferrerContractAddress))
 		if err != nil {
 			return false, err
 		}
@@ -391,7 +393,7 @@ func isTokenApprovedForTransfer(
 			return true, nil
 		}
 
-		address, err := ierc721.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+		address, err := ierc721.GetApproved(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 		if err != nil {
 			return false, err
 		}
@@ -403,7 +405,7 @@ func isTokenApprovedForTransfer(
 			return false, err
 		}
 
-		return ierc1155.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(transferrerContractAddress))
+		return ierc1155.IsApprovedForAll(&bind.CallOpts{Context: ctx}, common.HexToAddress(from), common.HexToAddress(transferrerContractAddress))
 	} else {
 		fmt.Println("Contract does not implement ERC1155 or ERC721")
 		return false, nil
@@ -470,6 +472,7 @@ func fetchContractMetadata(uri string, storage storage) (string, error) {
 // MARKETPLACE
 
 func fetchTokenMetadataForContract(
+	ctx context.Context,
 	contractAddress string,
 	provider *ethclient.Client,
 	tokenId int,
@@ -480,12 +483,12 @@ func fetchTokenMetadataForContract(
 		return nil, err
 	}
 
-	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
 	if err != nil {
 		return nil, err
 	}
 
-	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
 	if err != nil {
 		return nil, err
 	}
@@ -497,14 +500,14 @@ func fetchTokenMetadataForContract(
 			return nil, err
 		}
 
-		uri, err = contract.TokenURI(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+		uri, err = contract.TokenURI(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 	} else if isErc1155 {
 		contract, err := abi.NewTokenERC1155(common.HexToAddress(contractAddress), provider)
 		if err != nil {
 			return nil, err
 		}
 
-		uri, err = contract.Uri(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+		uri, err = contract.Uri(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 	}
 
 	return fetchTokenMetadata(tokenId, uri, storage)
@@ -524,12 +527,12 @@ func handleTokenApproval(
 		return err
 	}
 
-	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
 	if err != nil {
 		return err
 	}
 
-	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
 	if err != nil {
 		return err
 	}
@@ -548,7 +551,7 @@ func handleTokenApproval(
 		}
 
 		if !approved {
-			tokenApproved, err := contract.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+			tokenApproved, err := contract.GetApproved(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 			if err != nil {
 				return err
 			}
@@ -576,7 +579,7 @@ func handleTokenApproval(
 			return err
 		}
 
-		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{Context: ctx}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
 		if err != nil {
 			return err
 		}
@@ -605,11 +608,13 @@ func handleTokenApproval(
 }
 
 func isStillValidListing(
+	ctx context.Context,
 	helper *contractHelper,
 	listing *DirectListing,
 	quantity int,
 ) (bool, error) {
 	approved, err := isTokenApprovedForTransfer(
+		ctx,
 		helper.GetProvider(),
 		helper.getAddress().Hex(),
 		listing.AssetContractAddress,
@@ -629,12 +634,12 @@ func isStillValidListing(
 		return false, err
 	}
 
-	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
 	if err != nil {
 		return false, err
 	}
 
-	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
 	if err != nil {
 		return false, err
 	}
@@ -648,7 +653,7 @@ func isStillValidListing(
 			return false, err
 		}
 
-		ownerOf, err := contract.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(listing.TokenId)))
+		ownerOf, err := contract.OwnerOf(&bind.CallOpts{Context: ctx}, big.NewInt(int64(listing.TokenId)))
 		if err != nil {
 			return false, err
 		}
@@ -664,7 +669,7 @@ func isStillValidListing(
 		}
 
 		balance, err := contract.BalanceOf(
-			&bind.CallOpts{},
+			&bind.CallOpts{Context: ctx},
 			common.HexToAddress(listing.SellerAddress),
 			big.NewInt(int64(listing.TokenId)),
 		)
@@ -676,11 +681,13 @@ func isStillValidListing(
 }
 
 func mapListing(
+	ctx context.Context,
 	helper *contractHelper,
 	storage storage,
 	listing abi.IMarketplaceListing,
 ) (*DirectListing, error) {
 	currencyValue, err := fetchCurrencyValue(
+		ctx,
 		helper.GetProvider(),
 		listing.Currency.String(),
 		listing.BuyoutPricePerToken,
@@ -690,6 +697,7 @@ func mapListing(
 	}
 
 	asset, err := fetchTokenMetadataForContract(
+		ctx,
 		listing.AssetContract.String(),
 		helper.GetProvider(),
 		int(listing.TokenId.Int64()),

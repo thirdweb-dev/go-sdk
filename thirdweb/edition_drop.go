@@ -197,7 +197,7 @@ func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string,
 }
 
 func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity int) (*ClaimVerification, error) {
-	claimCondition, err := drop.ClaimConditions.GetActive(tokenId)
+	claimCondition, err := drop.ClaimConditions.GetActive(ctx, tokenId)
 	if err != nil {
 		return nil, err
 	}

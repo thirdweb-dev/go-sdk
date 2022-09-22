@@ -123,12 +123,12 @@ func (encoder *MarketplaceEncoder) ApproveBuyoutListing(
 	quantityDesired int,
 	receiver string,
 ) (*types.Transaction, error) {
-	listing, err := encoder.validateListing(listingId)
+	listing, err := encoder.validateListing(ctx, listingId)
 	if err != nil {
 		return nil, err
 	}
 
-	valid, err := isStillValidListing(encoder.helper, listing, quantityDesired)
+	valid, err := isStillValidListing(ctx, encoder.helper, listing, quantityDesired)
 	if err != nil {
 		return nil, err
 	}
@@ -187,12 +187,12 @@ func (encoder *MarketplaceEncoder) BuyoutListing(
 	quantityDesired int,
 	receiver string,
 ) (*types.Transaction, error) {
-	listing, err := encoder.validateListing(listingId)
+	listing, err := encoder.validateListing(ctx, listingId)
 	if err != nil {
 		return nil, err
 	}
 
-	valid, err := isStillValidListing(encoder.helper, listing, quantityDesired)
+	valid, err := isStillValidListing(ctx, encoder.helper, listing, quantityDesired)
 	if err != nil {
 		return nil, err
 	}
@@ -303,6 +303,7 @@ func (encoder *MarketplaceEncoder) CreateListing(ctx context.Context, signerAddr
 	listing.fillDefaults()
 
 	err := encoder.checkTokenApproval(
+		ctx,
 		signerAddress,
 		encoder.helper.GetProvider(),
 		encoder.helper,
@@ -316,6 +317,7 @@ func (encoder *MarketplaceEncoder) CreateListing(ctx context.Context, signerAddr
 	}
 
 	normalizedPricePerToken, err := normalizePriceValue(
+		ctx,
 		encoder.helper.GetProvider(),
 		listing.BuyoutPricePerToken,
 		listing.CurrencyContractAddress,
@@ -342,8 +344,8 @@ func (encoder *MarketplaceEncoder) CreateListing(ctx context.Context, signerAddr
 	})
 }
 
-func (encoder *MarketplaceEncoder) validateListing(listingId int) (*DirectListing, error) {
-	listing, err := encoder.abi.Listings(&bind.CallOpts{}, big.NewInt(int64(listingId)))
+func (encoder *MarketplaceEncoder) validateListing(ctx context.Context, listingId int) (*DirectListing, error) {
+	listing, err := encoder.abi.Listings(&bind.CallOpts{Context: ctx}, big.NewInt(int64(listingId)))
 	if err != nil {
 		return nil, err
 	}
@@ -353,7 +355,7 @@ func (encoder *MarketplaceEncoder) validateListing(listingId int) (*DirectListin
 	}
 
 	if listing.ListingType == 0 {
-		return mapListing(encoder.helper, encoder.storage, listing)
+		return mapListing(ctx, encoder.helper, encoder.storage, listing)
 	} else {
 		return nil, fmt.Errorf("Unknown listing type: %d", listingId)
 	}
@@ -396,6 +398,7 @@ func (encoder *MarketplaceEncoder) checkErc20Allowance(
 }
 
 func (encoder *MarketplaceEncoder) checkTokenApproval(
+	ctx context.Context,
 	signerAddress string,
 	provider *ethclient.Client,
 	helper *contractHelper,
@@ -409,12 +412,12 @@ func (encoder *MarketplaceEncoder) checkTokenApproval(
 		return err
 	}
 
-	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
 	if err != nil {
 		return err
 	}
 
-	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
 	if err != nil {
 		return err
 	}
@@ -425,13 +428,13 @@ func (encoder *MarketplaceEncoder) checkTokenApproval(
 			return err
 		}
 
-		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{Context: ctx}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
 		if err != nil {
 			return err
 		}
 
 		if !approved {
-			tokenApproved, err := contract.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+			tokenApproved, err := contract.GetApproved(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 			if err != nil {
 				return err
 			}
@@ -454,7 +457,7 @@ func (encoder *MarketplaceEncoder) checkTokenApproval(
 			return err
 		}
 
-		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{Context: ctx}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
 		if err != nil {
 			return err
 		}

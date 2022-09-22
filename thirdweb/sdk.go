@@ -33,6 +33,10 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 		return nil, err
 	}
 
+	return NewThirdwebSDKFromProvider(provider, options)
+}
+
+func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions) (*ThirdwebSDK, error) {
 	// Define defaults for all the options
 	privateKey := ""
 	gatewayUrl := defaultIpfsGatewayUrl

@@ -79,7 +79,7 @@ func (marketplace *Marketplace) GetListing(ctx context.Context, listingId int) (
 	}
 
 	if listing.ListingType == 0 {
-		return mapListing(marketplace.helper, marketplace.storage, listing)
+		return mapListing(ctx, marketplace.helper, marketplace.storage, listing)
 	} else {
 		return nil, fmt.Errorf("Unsupported listing type: %d. Currently only direct listings are supported.", listingId)
 	}
@@ -208,7 +208,7 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 		return nil, err
 	}
 
-	valid, err := isStillValidListing(marketplace.helper, listing, quantityDesired)
+	valid, err := isStillValidListing(ctx, marketplace.helper, listing, quantityDesired)
 	if err != nil {
 		return nil, err
 	}
@@ -286,6 +286,7 @@ func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewD
 	}
 
 	normalizedPricePerToken, err := normalizePriceValue(
+		ctx,
 		marketplace.helper.GetProvider(),
 		listing.BuyoutPricePerToken,
 		listing.CurrencyContractAddress,
