@@ -460,7 +460,7 @@ func fetchContractMetadata(uri string, storage storage) (string, error) {
 		return "", err
 	}
 
-	abiBytes, err := json.Marshal(metadata["output"].(map[string]interface{})["Abi"])
+	abiBytes, err := json.Marshal(metadata["output"].(map[string]interface{})["abi"])
 	if err != nil {
 		return "", err
 	}

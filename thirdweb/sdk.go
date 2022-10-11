@@ -199,7 +199,7 @@ func (sdk *ThirdwebSDK) GetContract(address string) (*SmartContract, error) {
 //
 // address: the address of the contract
 //
-// Abi: the ABI of the contract
+// abi: the ABI of the contract
 func (sdk *ThirdwebSDK) GetContractFromAbi(address string, abi string) (*SmartContract, error) {
 	return newSmartContract(
 		sdk.GetProvider(),

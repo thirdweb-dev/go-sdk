@@ -13,7 +13,7 @@ import (
 
 	"github.com/thirdweb-dev/go-sdk/abi"
 
-	gethAbi "github.com/ethereum/go-ethereum/accounts/Abi"
+	gethAbi "github.com/ethereum/go-ethereum/accounts/abi"
 )
 
 // The contract deployer lets you deploy new contracts to the blockchain using
