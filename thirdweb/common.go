@@ -17,6 +17,7 @@ import (
 	"github.com/fxamacker/cbor"
 	"github.com/mitchellh/mapstructure"
 	"github.com/shopspring/decimal"
+
 	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
@@ -459,7 +460,7 @@ func fetchContractMetadata(uri string, storage storage) (string, error) {
 		return "", err
 	}
 
-	abiBytes, err := json.Marshal(metadata["output"].(map[string]interface{})["abi"])
+	abiBytes, err := json.Marshal(metadata["output"].(map[string]interface{})["Abi"])
 	if err != nil {
 		return "", err
 	}

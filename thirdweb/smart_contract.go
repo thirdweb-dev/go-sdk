@@ -57,10 +57,10 @@ import (
 //	contractAddress := "{{contract_address}}"
 //
 //	// Add your contract ABI here
-//	abi := "[...]"
+//	Abi := "[...]"
 //
 //	// Now you have a contract instance ready to go
-//	contract, err := sdk.GetContractFromAbi(contractAddress, abi)
+//	contract, err := sdk.GetContractFromAbi(contractAddress, Abi)
 //
 // # Calling Contract Functions
 //
