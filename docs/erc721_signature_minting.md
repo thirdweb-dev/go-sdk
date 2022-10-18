@@ -10,7 +10,7 @@ type ERC721SignatureMinting struct {}
 ### func \(\*ERC721SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L176>)
 
 ```go
-func (signature *ERC721SignatureMinting) Generate(payloadToSign *Signature721PayloadInput) (*SignedPayload721, error)
+func (signature *ERC721SignatureMinting) Generate(ctx context.Context, payloadToSign *Signature721PayloadInput) (*SignedPayload721, error)
 ```
 
 #### Generate a new payload from the given data
@@ -42,7 +42,7 @@ signedPayload, err := contract.Signature.Generate(payload)
 ### func \(\*ERC721SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L225>)
 
 ```go
-func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error)
+func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error)
 ```
 
 #### Generate a batch of new payload from the given data
@@ -85,7 +85,7 @@ payload := []*thirdweb.Signature721PayloadInput{
 	},
 }
 
-signedPayload, err := contract.Signature.GenerateBatch(payload)
+signedPayload, err := contract.Signature.GenerateBatch(context.Background(), payload)
 ```
 
 ### func \(\*ERC721SignatureMinting\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L52>)
@@ -131,7 +131,7 @@ tx, err := contract.Signature.MintBatch(context.Background(), signedPayloads)
 ### func \(\*ERC721SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L140>)
 
 ```go
-func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721) (bool, error)
+func (signature *ERC721SignatureMinting) Verify(ctx context.Context, signedPayload *SignedPayload721) (bool, error)
 ```
 
 #### Verify that a signed payload is valid

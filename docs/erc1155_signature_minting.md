@@ -10,7 +10,7 @@ type ERC1155SignatureMinting struct {}
 ### func \(\*ERC1155SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L177>)
 
 ```go
-func (signature *ERC1155SignatureMinting) Generate(payloadToSign *Signature1155PayloadInput) (*SignedPayload1155, error)
+func (signature *ERC1155SignatureMinting) Generate(ctx context.Context, payloadToSign *Signature1155PayloadInput) (*SignedPayload1155, error)
 ```
 
 #### Generate a payload to mint a new token ID
@@ -37,13 +37,13 @@ payload := &thirdweb.Signature721PayloadInput{
 	Quantity:         1,   																					    // number of tokens to mint
 }
 
-signedPayload, err := contract.Signature.Generate(payload)
+signedPayload, err := contract.Signature.Generate(context.Background(), payload)
 ```
 
 ### func \(\*ERC1155SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L272>)
 
 ```go
-func (signature *ERC1155SignatureMinting) GenerateBatch(payloadsToSign []*Signature1155PayloadInput) ([]*SignedPayload1155, error)
+func (signature *ERC1155SignatureMinting) GenerateBatch(ctx context.Context, payloadsToSign []*Signature1155PayloadInput) ([]*SignedPayload1155, error)
 ```
 
 #### Generate a batch of payloads to mint multiple new token IDs
@@ -86,13 +86,13 @@ payload := []*thirdweb.Signature1155PayloadInput{
 	},
 }
 
-signedPayload, err := contract.Signature.GenerateBatch(payload)
+signedPayload, err := contract.Signature.GenerateBatch(context.Background(), payload)
 ```
 
 ### func \(\*ERC1155SignatureMinting\) [GenerateBatchFromTokenIds](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L339>)
 
 ```go
-func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(payloadsToSign []*Signature1155PayloadInputWithTokenId) ([]*SignedPayload1155, error)
+func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(ctx context.Context, payloadsToSign []*Signature1155PayloadInputWithTokenId) ([]*SignedPayload1155, error)
 ```
 
 #### Generate a batch of payloads to mint multiple new token IDs
@@ -135,13 +135,13 @@ payload := []*thirdweb.Signature1155PayloadInputWithTokenId{
 	},
 }
 
-signedPayload, err := contract.Signature.GenerateBatchFromTokenIds(payload)
+signedPayload, err := contract.Signature.GenerateBatchFromTokenIds(context.Background(), payload)
 ```
 
 ### func \(\*ERC1155SignatureMinting\) [GenerateFromTokenId](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L223>)
 
 ```go
-func (signature *ERC1155SignatureMinting) GenerateFromTokenId(payloadToSign *Signature1155PayloadInputWithTokenId) (*SignedPayload1155, error)
+func (signature *ERC1155SignatureMinting) GenerateFromTokenId(ctx context.Context, payloadToSign *Signature1155PayloadInputWithTokenId) (*SignedPayload1155, error)
 ```
 
 #### Generate a new payload to mint additionaly supply to an existing token ID
@@ -167,7 +167,7 @@ payload := &thirdweb.Signature1155PayloadInputWithTokenId{
  	TokenId:              0,                                            // now we need to specify the token ID to mint supply to
 	}
 
-	signedPayload, err := contract.Signature.GenerateFromTokenId(payload)
+	signedPayload, err := contract.Signature.GenerateFromTokenId(context.Background(), payload)
 ```
 
 ### func \(\*ERC1155SignatureMinting\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L52>)
@@ -213,7 +213,7 @@ tx, err := contract.Signature.MintBatch(signedPayloads)
 ### func \(\*ERC1155SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc1155_signature_minting.go#L140>)
 
 ```go
-func (signature *ERC1155SignatureMinting) Verify(signedPayload *SignedPayload1155) (bool, error)
+func (signature *ERC1155SignatureMinting) Verify(ctx context.Context, signedPayload *SignedPayload1155) (bool, error)
 ```
 
 #### Verify that a signed payload is valid
@@ -227,5 +227,5 @@ returns: true if the payload is valid, otherwise false\.
 ```
 // Learn more about how to craft a payload in the Generate() function
 signedPayload, err := contract.Signature.Generate(payload)
-isValid, err := contract.Signature.Verify(signedPayload)
+isValid, err := contract.Signature.Verify(context.Background(), signedPayload)
 ```

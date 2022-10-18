@@ -7,7 +7,7 @@ This interface is currently accessible from the NFT Drop contract contract type 
 type NFTDropClaimConditions struct {}
 ```
 
-### func \(\*NFTDropClaimConditions\) [GetActive](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_claim_conditions.go#L48>)
+### func \(\*NFTDropClaimConditions\) [GetActive](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_claim_conditions.go#L49>)
 
 ```go
 func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error)
@@ -31,7 +31,7 @@ fmt.Println("Price:", condition.Price)
 fmt.Println("Wait In Seconds", condition.WaitInSeconds)
 ```
 
-### func \(\*NFTDropClaimConditions\) [GetAll](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_claim_conditions.go#L88>)
+### func \(\*NFTDropClaimConditions\) [GetAll](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_claim_conditions.go#L90>)
 
 ```go
 func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error)

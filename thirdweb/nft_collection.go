@@ -98,13 +98,13 @@ func (nft *NFTCollection) GetOwnedTokenIDs(ctx context.Context, address string) 
 		address = nft.helper.GetSignerAddress().String()
 	}
 
-	if balance, err := nft.abi.BalanceOf(&bind.CallOpts{}, common.HexToAddress(address)); err != nil {
+	if balance, err := nft.abi.BalanceOf(&bind.CallOpts{Context: ctx}, common.HexToAddress(address)); err != nil {
 		return nil, err
 	} else {
 		tokenIds := []*big.Int{}
 
 		for i := 0; i < int(balance.Int64()); i++ {
-			if tokenId, err := nft.abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
+			if tokenId, err := nft.abi.TokenOfOwnerByIndex(&bind.CallOpts{Context: ctx}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
 				tokenIds = append(tokenIds, tokenId)
 			}
 		}

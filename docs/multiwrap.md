@@ -113,7 +113,7 @@ wrappedTokenMetadata := &thirdweb.NFTMetadataInput{
 }
 
 // This will mint the wrapped token to the connected wallet
-tx, err := contract.Wrap(contents, wrappedTokenMetadata, "")
+tx, err := contract.Wrap(context.Background(), contents, wrappedTokenMetadata, "")
 ```
 
 ## type [MultiwrapBundle](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L210-L214>)

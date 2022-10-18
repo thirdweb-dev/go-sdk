@@ -113,6 +113,7 @@ var editionSigmintCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		payload, err := edition.Signature.Generate(
+			context.Background(),
 			&thirdweb.Signature1155PayloadInput{
 				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
 				Price:                0,
@@ -133,7 +134,7 @@ var editionSigmintCmd = &cobra.Command{
 			panic(err)
 		}
 
-		valid, err := edition.Signature.Verify(payload)
+		valid, err := edition.Signature.Verify(context.Background(), payload)
 		if err != nil {
 			panic(err)
 		} else if !valid {
@@ -166,6 +167,7 @@ var editionSigmintTokenIdCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		payload, err := edition.Signature.GenerateFromTokenId(
+			context.Background(),
 			&thirdweb.Signature1155PayloadInputWithTokenId{
 				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
 				Price:                0,
@@ -187,7 +189,7 @@ var editionSigmintTokenIdCmd = &cobra.Command{
 			panic(err)
 		}
 
-		valid, err := edition.Signature.Verify(payload)
+		valid, err := edition.Signature.Verify(context.Background(), payload)
 		if err != nil {
 			panic(err)
 		} else if !valid {
