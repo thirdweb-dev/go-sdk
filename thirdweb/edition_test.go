@@ -122,6 +122,7 @@ func TestSignatureMint(t *testing.T) {
 	edition := getEdition()
 
 	payload, err := edition.Signature.Generate(
+		context.Background(),
 		&Signature1155PayloadInput{
 			To:                   edition.helper.GetSignerAddress().String(),
 			Price:                0,
@@ -139,7 +140,7 @@ func TestSignatureMint(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	valid, err := edition.Signature.Verify(payload)
+	valid, err := edition.Signature.Verify(context.Background(), payload)
 	assert.Nil(t, err)
 	assert.True(t, valid)
 
