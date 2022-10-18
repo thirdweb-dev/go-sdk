@@ -9,6 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/mitchellh/mapstructure"
+
 	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
@@ -26,7 +27,7 @@ import (
 //
 //	contract, err := sdk.GetNFTDrop("{{contract_address}}")
 type NFTDrop struct {
-	abi    *abi.DropERC721
+	Abi    *abi.DropERC721
 	helper *contractHelper
 	*ERC721
 	ClaimConditions *NFTDropClaimConditions
@@ -99,7 +100,7 @@ func (nft *NFTDrop) GetOwnedTokenIDs(ctx context.Context, address string) ([]*bi
 		address = nft.helper.GetSignerAddress().String()
 	}
 
-	if balance, err := nft.abi.BalanceOf(&bind.CallOpts{
+	if balance, err := nft.Abi.BalanceOf(&bind.CallOpts{
 		Context: ctx,
 	}, common.HexToAddress(address)); err != nil {
 		return nil, err
@@ -107,7 +108,7 @@ func (nft *NFTDrop) GetOwnedTokenIDs(ctx context.Context, address string) ([]*bi
 		tokenIds := []*big.Int{}
 
 		for i := 0; i < int(balance.Int64()); i++ {
-			if tokenId, err := nft.abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
+			if tokenId, err := nft.Abi.TokenOfOwnerByIndex(&bind.CallOpts{}, common.HexToAddress(address), big.NewInt(int64(i))); err == nil {
 				tokenIds = append(tokenIds, tokenId)
 			}
 		}
@@ -125,7 +126,7 @@ func (nft *NFTDrop) GetOwnedTokenIDs(ctx context.Context, address string) ([]*bi
 //	claimedNfts, err := contract.GetAllClaimed(context.Background())
 //	firstOwner := claimedNfts[0].Owner
 func (drop *NFTDrop) GetAllClaimed(ctx context.Context) ([]*NFTMetadataOwner, error) {
-	if maxId, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{}); err != nil {
+	if maxId, err := drop.Abi.NextTokenIdToClaim(&bind.CallOpts{}); err != nil {
 		return nil, err
 	} else {
 		nfts := []*NFTMetadataOwner{}
@@ -149,11 +150,11 @@ func (drop *NFTDrop) GetAllClaimed(ctx context.Context) ([]*NFTMetadataOwner, er
 //	unclaimedNfts, err := contract.GetAllUnclaimed(context.Background())
 //	firstNftName := unclaimedNfts[0].Name
 func (drop *NFTDrop) GetAllUnclaimed(ctx context.Context) ([]*NFTMetadata, error) {
-	maxId, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	maxId, err := drop.Abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
-	unmintedId, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{})
+	unmintedId, err := drop.Abi.NextTokenIdToClaim(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
@@ -170,7 +171,7 @@ func (drop *NFTDrop) GetAllUnclaimed(ctx context.Context) ([]*NFTMetadata, error
 
 // Get the total number of NFTs that have been claimed.
 func (drop *NFTDrop) TotalClaimedSupply() (int, error) {
-	claimed, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{})
+	claimed, err := drop.Abi.NextTokenIdToClaim(&bind.CallOpts{})
 	if err != nil {
 		return 0, err
 	}
@@ -180,12 +181,12 @@ func (drop *NFTDrop) TotalClaimedSupply() (int, error) {
 
 // Get the total number of NFTs that have not yet been claimed.
 func (drop *NFTDrop) TotalUnclaimedSupply() (int, error) {
-	claimed, err := drop.abi.NextTokenIdToClaim(&bind.CallOpts{})
+	claimed, err := drop.Abi.NextTokenIdToClaim(&bind.CallOpts{})
 	if err != nil {
 		return 0, err
 	}
 
-	total, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	total, err := drop.Abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
 		return 0, err
 	}
@@ -223,7 +224,7 @@ func (drop *NFTDrop) TotalUnclaimedSupply() (int, error) {
 //
 //	tx, err := contract.CreateBatch(context.Background(), metadatas)
 func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
-	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	startNumber, err := drop.Abi.NextTokenIdToMint(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
@@ -251,7 +252,7 @@ func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataIn
 	if err != nil {
 		return nil, err
 	}
-	tx, err := drop.abi.LazyMint(
+	tx, err := drop.Abi.LazyMint(
 		txOpts,
 		big.NewInt(int64(len(batch.uris))),
 		batch.baseUri,
@@ -301,7 +302,7 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 
 	txOpts.Value = claimVerification.value
 
-	tx, err := drop.abi.Claim(
+	tx, err := drop.Abi.Claim(
 		txOpts,
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(quantity)),
