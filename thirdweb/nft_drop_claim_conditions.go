@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -58,6 +59,7 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 
 	provider := claim.helper.GetProvider()
 	claimCondition, err := transformResultToClaimCondition(
+		context.Background(),
 		&mc,
 		provider,
 		claim.storage,
@@ -103,6 +105,7 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 		}
 
 		claimCondition, err := transformResultToClaimCondition(
+			context.Background(),
 			&mc,
 			provider,
 			claim.storage,

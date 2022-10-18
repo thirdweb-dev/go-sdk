@@ -50,7 +50,7 @@ func newERC721SignatureMinting(provider *ethclient.Client, address common.Addres
 //	signedPayload, err := contract.Signature.Generate(payload)
 //	tx, err := contract.Signature.Mint(context.Background(), signedPayload)
 func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error) {
-	message, err := signature.mapPayloadToContractStruct(signedPayload.Payload)
+	message, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 			return nil, fmt.Errorf("Can only batch free mints. For mints with a price, use the Mint() function.")
 		}
 
-		payload, err := signature.mapPayloadToContractStruct(signedPayload.Payload)
+		payload, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
 		if err != nil {
 			return nil, err
 		}
@@ -137,16 +137,16 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 //	// Learn more about how to craft a payload in the Generate() function
 //	signedPayload, err := contract.Signature.Generate(payload)
 //	isValid, err := contract.Signature.Verify(signedPayload)
-func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721) (bool, error) {
+func (signature *ERC721SignatureMinting) Verify(ctx context.Context, signedPayload *SignedPayload721) (bool, error) {
 	mintRequest := signedPayload.Payload
 	mintSignature := signedPayload.Signature
-	message, err := signature.mapPayloadToContractStruct(mintRequest)
+	message, err := signature.mapPayloadToContractStruct(ctx, mintRequest)
 
 	if err != nil {
 		return false, err
 	}
 
-	verification, _, err := signature.abi.Verify(&bind.CallOpts{}, *message, mintSignature)
+	verification, _, err := signature.abi.Verify(&bind.CallOpts{Context: ctx}, *message, mintSignature)
 	return verification, err
 }
 
@@ -173,8 +173,8 @@ func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721)
 //	}
 //
 //	signedPayload, err := contract.Signature.Generate(payload)
-func (signature *ERC721SignatureMinting) Generate(payloadToSign *Signature721PayloadInput) (*SignedPayload721, error) {
-	payload, err := signature.GenerateBatch([]*Signature721PayloadInput{payloadToSign})
+func (signature *ERC721SignatureMinting) Generate(ctx context.Context, payloadToSign *Signature721PayloadInput) (*SignedPayload721, error) {
+	payload, err := signature.GenerateBatch(ctx, []*Signature721PayloadInput{payloadToSign})
 	if err != nil {
 		return nil, err
 	}
@@ -221,8 +221,8 @@ func (signature *ERC721SignatureMinting) Generate(payloadToSign *Signature721Pay
 //		},
 //	}
 //
-//	signedPayload, err := contract.Signature.GenerateBatch(payload)
-func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error) {
+//	signedPayload, err := contract.Signature.GenerateBatch(context.Background(), payload)
+func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error) {
 	// TODO: Verify roles and return error
 
 	metadatas := []*NFTMetadataInput{}
@@ -265,7 +265,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 			Uid:                  id,
 		}
 
-		mappedPayload, err := signature.generateMessage(payload)
+		mappedPayload, err := signature.generateMessage(ctx, payload)
 		if err != nil {
 			return nil, err
 		}
@@ -334,9 +334,9 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 	return signedPayloads, nil
 }
 
-func (signature *ERC721SignatureMinting) generateMessage(mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
+func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
 	provider := signature.helper.GetProvider()
-	price, err := normalizePriceValue(provider, mintRequest.Price, mintRequest.CurrencyAddress)
+	price, err := normalizePriceValue(ctx, provider, mintRequest.Price, mintRequest.CurrencyAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -357,9 +357,9 @@ func (signature *ERC721SignatureMinting) generateMessage(mintRequest *Signature7
 	return message, nil
 }
 
-func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
+func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(ctx context.Context, mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
 	provider := signature.helper.GetProvider()
-	price, err := normalizePriceValue(provider, mintRequest.Price, mintRequest.CurrencyAddress)
+	price, err := normalizePriceValue(ctx, provider, mintRequest.Price, mintRequest.CurrencyAddress)
 	if err != nil {
 		return nil, err
 	}

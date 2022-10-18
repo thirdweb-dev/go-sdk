@@ -134,6 +134,7 @@ var nftSigmintCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		payload, err := nftCollection.Signature.Generate(
+			context.Background(),
 			&thirdweb.Signature721PayloadInput{
 				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
 				Price:                0,
@@ -153,7 +154,7 @@ var nftSigmintCmd = &cobra.Command{
 			panic(err)
 		}
 
-		valid, err := nftCollection.Signature.Verify(payload)
+		valid, err := nftCollection.Signature.Verify(context.Background(), payload)
 		if err != nil {
 			panic(err)
 		} else if !valid {

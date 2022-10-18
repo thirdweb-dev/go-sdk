@@ -52,7 +52,7 @@ var editionDropGetActiveCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		all, err := editionDrop.ClaimConditions.GetAll(0)
+		all, err := editionDrop.ClaimConditions.GetAll(context.Background(), 0)
 		if err != nil {
 			panic(err)
 		}
@@ -67,7 +67,7 @@ var editionDropGetActiveCmd = &cobra.Command{
 			fmt.Println("Wait In Seconds", c.WaitInSeconds)
 		}
 
-		all, err = editionDrop.ClaimConditions.GetAll(1)
+		all, err = editionDrop.ClaimConditions.GetAll(context.Background(), 1)
 		if err != nil {
 			panic(err)
 		}
