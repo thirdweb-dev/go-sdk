@@ -210,22 +210,33 @@ func (sdk *ThirdwebSDK) GetContractFromAbi(address string, abi string) (*SmartCo
 	)
 }
 
+func defaultRpc(network string) (string, error) {
+	defaultApiKey := "718c5c811c7f3224efb283e04faab56a8a5cbde78d92a6d4cb905b41985d3856"
+	return fmt.Sprintf("https://%s.rpc.thirdweb.com/%s", network, defaultApiKey), nil
+}
+
 func getDefaultRpcUrl(rpcUrlorName string) (string, error) {
 	switch rpcUrlorName {
 	case "mumbai":
-		return "https://polygon-mumbai.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
-	case "rinkeby":
-		return "https://eth-rinkeby.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+		return defaultRpc("mumbai")
 	case "goerli":
-		return "https://eth-goerli.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+		return defaultRpc("goerli")
 	case "polygon":
-		return "https://polygon-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+		return defaultRpc("polygon")
 	case "mainnet", "ethereum":
-		return "https://eth-mainnet.g.alchemy.com/v2/_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC", nil
+		return defaultRpc("ethereum")
 	case "fantom":
-		return "https://rpc.ftm.tools", nil
+		return defaultRpc("fantom")
 	case "avalanche":
-		return "https://rpc.ankr.com/avalanche", nil
+		return defaultRpc("avalanche")
+	case "optimism":
+		return defaultRpc("optimism");
+	case "optimism-goerli":
+		return defaultRpc("optimism-goerli");
+	case "arbitrum":
+		return defaultRpc("arbitrum");
+	case "arbitrum-goerli":
+		return defaultRpc("arbitrum-goerli");
 	default:
 		if strings.HasPrefix(rpcUrlorName, "http") {
 			return rpcUrlorName, nil
