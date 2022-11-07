@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"fmt"
 	"math/big"
 
@@ -12,7 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	signerTypes "github.com/ethereum/go-ethereum/signer/core/apitypes"
 	"github.com/google/uuid"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // You can access this interface from the NFT Collection contract under the
@@ -45,16 +46,16 @@ func newERC721SignatureMinting(provider *ethclient.Client, address common.Addres
 //
 // Example
 //
-// 	// Learn more about how to craft a payload in the Generate() function
-// 	signedPayload, err := contract.Signature.Generate(payload)
-// 	tx, err := contract.Signature.Mint(signedPayload)
-func (signature *ERC721SignatureMinting) Mint(signedPayload *SignedPayload721) (*types.Transaction, error) {
-	message, err := signature.mapPayloadToContractStruct(signedPayload.Payload)
+//	// Learn more about how to craft a payload in the Generate() function
+//	signedPayload, err := contract.Signature.Generate(payload)
+//	tx, err := contract.Signature.Mint(context.Background(), signedPayload)
+func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error) {
+	message, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	txOpts, err := signature.helper.getTxOptions()
+	txOpts, err := signature.helper.getTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -81,17 +82,17 @@ func (signature *ERC721SignatureMinting) Mint(signedPayload *SignedPayload721) (
 //
 // Example
 //
-// 	// Learn more about how to craft multiple payloads in the GenerateBatch() function
-// 	signedPayloads, err := contract.Signature.GenerateBatch(payloads)
-// 	tx, err := contract.Signature.MintBatch(signedPayloads)
-func (signature *ERC721SignatureMinting) MintBatch(signedPayloads []*SignedPayload721) (*types.Transaction, error) {
+//	// Learn more about how to craft multiple payloads in the GenerateBatch() function
+//	signedPayloads, err := contract.Signature.GenerateBatch(payloads)
+//	tx, err := contract.Signature.MintBatch(context.Background(), signedPayloads)
+func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPayloads []*SignedPayload721) (*types.Transaction, error) {
 	contractPayloads := []*abi.ITokenERC721MintRequest{}
 	for _, signedPayload := range signedPayloads {
 		if signedPayload.Payload.Price > 0 {
 			return nil, fmt.Errorf("Can only batch free mints. For mints with a price, use the Mint() function.")
 		}
 
-		payload, err := signature.mapPayloadToContractStruct(signedPayload.Payload)
+		payload, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
 		if err != nil {
 			return nil, err
 		}
@@ -101,7 +102,7 @@ func (signature *ERC721SignatureMinting) MintBatch(signedPayloads []*SignedPaylo
 
 	encoded := [][]byte{}
 	for i, payload := range contractPayloads {
-		txOpts, err := signature.helper.getEncodedTxOptions()
+		txOpts, err := signature.helper.getEncodedTxOptions(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -113,7 +114,7 @@ func (signature *ERC721SignatureMinting) MintBatch(signedPayloads []*SignedPaylo
 		encoded = append(encoded, tx.Data())
 	}
 
-	txOpts, err := signature.helper.getTxOptions()
+	txOpts, err := signature.helper.getTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -133,19 +134,19 @@ func (signature *ERC721SignatureMinting) MintBatch(signedPayloads []*SignedPaylo
 //
 // Example
 //
-// 	// Learn more about how to craft a payload in the Generate() function
-// 	signedPayload, err := contract.Signature.Generate(payload)
-// 	isValid, err := contract.Signature.Verify(signedPayload)
-func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721) (bool, error) {
+//	// Learn more about how to craft a payload in the Generate() function
+//	signedPayload, err := contract.Signature.Generate(payload)
+//	isValid, err := contract.Signature.Verify(signedPayload)
+func (signature *ERC721SignatureMinting) Verify(ctx context.Context, signedPayload *SignedPayload721) (bool, error) {
 	mintRequest := signedPayload.Payload
 	mintSignature := signedPayload.Signature
-	message, err := signature.mapPayloadToContractStruct(mintRequest)
+	message, err := signature.mapPayloadToContractStruct(ctx, mintRequest)
 
 	if err != nil {
 		return false, err
 	}
 
-	verification, _, err := signature.abi.Verify(&bind.CallOpts{}, *message, mintSignature)
+	verification, _, err := signature.abi.Verify(&bind.CallOpts{Context: ctx}, *message, mintSignature)
 	return verification, err
 }
 
@@ -157,23 +158,23 @@ func (signature *ERC721SignatureMinting) Verify(signedPayload *SignedPayload721)
 //
 // Example
 //
-// 	payload := &thirdweb.Signature721PayloadInput{
-// 		To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6", // address to mint to
-// 		Price:                0,                                            // cost of minting
-// 		CurrencyAddress:      "0x0000000000000000000000000000000000000000", // currency to pay in order to mint
-// 		MintStartTime:        0,                                            // time where minting is allowed to start (epoch seconds)
-// 		MintEndTime:          100000000000000,                              // time when this signature expires (epoch seconds)
-// 		PrimarySaleRecipient: "0x0000000000000000000000000000000000000000", // address to receive the primary sales of this mint
-// 		Metadata: &thirdweb.NFTMetadataInput{																// metadata of the NFT to mint
+//	payload := &thirdweb.Signature721PayloadInput{
+//		To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6", // address to mint to
+//		Price:                0,                                            // cost of minting
+//		CurrencyAddress:      "0x0000000000000000000000000000000000000000", // currency to pay in order to mint
+//		MintStartTime:        0,                                            // time where minting is allowed to start (epoch seconds)
+//		MintEndTime:          100000000000000,                              // time when this signature expires (epoch seconds)
+//		PrimarySaleRecipient: "0x0000000000000000000000000000000000000000", // address to receive the primary sales of this mint
+//		Metadata: &thirdweb.NFTMetadataInput{																// metadata of the NFT to mint
 //	 		Name:  "ERC721 Sigmint!",
-// 		},
-// 		RoyaltyRecipient: "0x0000000000000000000000000000000000000000",     // address to receive royalties of this mint
-// 		RoyaltyBps:       0,                                                // royalty cut of this mint in basis points
-// 	}
+//		},
+//		RoyaltyRecipient: "0x0000000000000000000000000000000000000000",     // address to receive royalties of this mint
+//		RoyaltyBps:       0,                                                // royalty cut of this mint in basis points
+//	}
 //
-// 	signedPayload, err := contract.Signature.Generate(payload)
-func (signature *ERC721SignatureMinting) Generate(payloadToSign *Signature721PayloadInput) (*SignedPayload721, error) {
-	payload, err := signature.GenerateBatch([]*Signature721PayloadInput{payloadToSign})
+//	signedPayload, err := contract.Signature.Generate(payload)
+func (signature *ERC721SignatureMinting) Generate(ctx context.Context, payloadToSign *Signature721PayloadInput) (*SignedPayload721, error) {
+	payload, err := signature.GenerateBatch(ctx, []*Signature721PayloadInput{payloadToSign})
 	if err != nil {
 		return nil, err
 	}
@@ -189,39 +190,39 @@ func (signature *ERC721SignatureMinting) Generate(payloadToSign *Signature721Pay
 //
 // Example
 //
-// 	payload := []*thirdweb.Signature721PayloadInput{
-// 		&thirdweb.Signature721PayloadInput{
-// 			To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
-// 			Price:                0,
-// 			CurrencyAddress:      "0x0000000000000000000000000000000000000000",
-// 			MintStartTime:        0,
-// 			MintEndTime:          100000000000000,
-// 			PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
-// 			Metadata: &thirdweb.NFTMetadataInput{
+//	payload := []*thirdweb.Signature721PayloadInput{
+//		&thirdweb.Signature721PayloadInput{
+//			To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+//			Price:                0,
+//			CurrencyAddress:      "0x0000000000000000000000000000000000000000",
+//			MintStartTime:        0,
+//			MintEndTime:          100000000000000,
+//			PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
+//			Metadata: &thirdweb.NFTMetadataInput{
 //	 			Name:  "ERC721 Sigmint!",
 //	 			Image: imageFile,
-// 			},
-// 			RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
-// 			RoyaltyBps:       0,
-// 		},
-// 		&thirdweb.Signature721PayloadInput{
-// 			To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
-// 			Price:                0,
-// 			CurrencyAddress:      "0x0000000000000000000000000000000000000000",
-// 			MintStartTime:        0,
-// 			MintEndTime:          100000000000000,
-// 			PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
-// 			Metadata: &thirdweb.NFTMetadataInput{
+//			},
+//			RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
+//			RoyaltyBps:       0,
+//		},
+//		&thirdweb.Signature721PayloadInput{
+//			To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
+//			Price:                0,
+//			CurrencyAddress:      "0x0000000000000000000000000000000000000000",
+//			MintStartTime:        0,
+//			MintEndTime:          100000000000000,
+//			PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
+//			Metadata: &thirdweb.NFTMetadataInput{
 //	 			Name:  "ERC721 Sigmint!",
 //	 			Image: imageFile,
-// 			},
-// 			RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
-// 			RoyaltyBps:       0,
-// 		},
-// 	}
+//			},
+//			RoyaltyRecipient: "0x0000000000000000000000000000000000000000",
+//			RoyaltyBps:       0,
+//		},
+//	}
 //
-// 	signedPayload, err := contract.Signature.GenerateBatch(payload)
-func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error) {
+//	signedPayload, err := contract.Signature.GenerateBatch(context.Background(), payload)
+func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error) {
 	// TODO: Verify roles and return error
 
 	metadatas := []*NFTMetadataInput{}
@@ -264,7 +265,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 			Uid:                  id,
 		}
 
-		mappedPayload, err := signature.generateMessage(payload)
+		mappedPayload, err := signature.generateMessage(ctx, payload)
 		if err != nil {
 			return nil, err
 		}
@@ -333,9 +334,9 @@ func (signature *ERC721SignatureMinting) GenerateBatch(payloadsToSign []*Signatu
 	return signedPayloads, nil
 }
 
-func (signature *ERC721SignatureMinting) generateMessage(mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
+func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
 	provider := signature.helper.GetProvider()
-	price, err := normalizePriceValue(provider, mintRequest.Price, mintRequest.CurrencyAddress)
+	price, err := normalizePriceValue(ctx, provider, mintRequest.Price, mintRequest.CurrencyAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -356,9 +357,9 @@ func (signature *ERC721SignatureMinting) generateMessage(mintRequest *Signature7
 	return message, nil
 }
 
-func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
+func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(ctx context.Context, mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
 	provider := signature.helper.GetProvider()
-	price, err := normalizePriceValue(provider, mintRequest.Price, mintRequest.CurrencyAddress)
+	price, err := normalizePriceValue(ctx, provider, mintRequest.Price, mintRequest.CurrencyAddress)
 	if err != nil {
 		return nil, err
 	}

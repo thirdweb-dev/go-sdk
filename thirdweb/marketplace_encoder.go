@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"math/big"
@@ -10,7 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // The marketplace encoder class is used to get the unsigned transaction data for marketplace contract
@@ -20,20 +21,20 @@ import (
 //
 // You can access the Marketplace interface from the SDK as follows:
 //
-// 	import (
-// 		"github.com/thirdweb-dev/go-sdk/thirdweb"
-// 	)
+//		import (
+//			"github.com/thirdweb-dev/go-sdk/thirdweb"
+//		)
 //
-// 	privateKey = "..."
+//		privateKey = "..."
 //
-// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
-//		PrivateKey: privateKey,
-// 	})
+//		sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//			PrivateKey: privateKey,
+//		})
 //
-//	marketplace, err := sdk.GetMarketplace("{{contract_address}}")
+//		marketplace, err := sdk.GetMarketplace("{{contract_address}}")
 //
-// 	// Now the encoder can be accessed from the contract
-//  marketplace.Encoder.CreateListing(...)
+//		// Now the encoder can be accessed from the contract
+//	 marketplace.Encoder.CreateListing(...)
 type MarketplaceEncoder struct {
 	abi     *abi.Marketplace
 	helper  *contractHelper
@@ -65,19 +66,19 @@ func newMarketplaceEncoder(contractAbi *abi.Marketplace, helper *contractHelper,
 //
 // Example
 //
-// 	// Address of the wallet we expect to sign this message
-// 	signerAddress := "0x..."
-// 	// ID of the listing to cancel
-// 	listingId := 1
+//	// Address of the wallet we expect to sign this message
+//	signerAddress := "0x..."
+//	// ID of the listing to cancel
+//	listingId := 1
 //
-// 	// Transaction data required for this request
-// 	tx, err := marketplace.Encoder.CancelListing(signerAddress, listingId)
+//	// Transaction data required for this request
+//	tx, err := marketplace.Encoder.CancelListing(context.Background(), signerAddress, listingId)
 //
-// 	// Now you can get transaction all the standard data as needed
-// 	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
-// 	fmt.Println(tx.Nonce())
-func (encoder *MarketplaceEncoder) CancelListing(signerAddress string, listingId int) (*types.Transaction, error) {
-	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
+//	// Now you can get transaction all the standard data as needed
+//	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+//	fmt.Println(tx.Nonce())
+func (encoder *MarketplaceEncoder) CancelListing(ctx context.Context, signerAddress string, listingId int) (*types.Transaction, error) {
+	txOpts, err := encoder.helper.getUnsignedTxOptions(ctx, signerAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -100,33 +101,34 @@ func (encoder *MarketplaceEncoder) CancelListing(signerAddress string, listingId
 //
 // Example
 //
-// 	// Address of the wallet we expect to sign this message
-// 	signerAddress := "0x..."
-// 	// ID of the listing to buyout
-// 	listingId := 1
-// 	// Quantity of the listed tokens to purchase
-// 	quantityDesired := 1
-// 	// receiver address to receive the purchased tokens
-// 	receiver := "0x..."
+//	// Address of the wallet we expect to sign this message
+//	signerAddress := "0x..."
+//	// ID of the listing to buyout
+//	listingId := 1
+//	// Quantity of the listed tokens to purchase
+//	quantityDesired := 1
+//	// receiver address to receive the purchased tokens
+//	receiver := "0x..."
 //
-// 	// Transaction data required for this request
-// 	tx, err := marketplace.Encoder.ApproveBuyoutListing(signerAddress, listingId, quantityDesired, receiver)
+//	// Transaction data required for this request
+//	tx, err := marketplace.Encoder.ApproveBuyoutListing(context.Background(), signerAddress, listingId, quantityDesired, receiver)
 //
-// 	// Now you can get transaction all the standard data as needed
-// 	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
-// 	fmt.Println(tx.Nonce())
+//	// Now you can get transaction all the standard data as needed
+//	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+//	fmt.Println(tx.Nonce())
 func (encoder *MarketplaceEncoder) ApproveBuyoutListing(
+	ctx context.Context,
 	signerAddress string,
 	listingId int,
 	quantityDesired int,
 	receiver string,
 ) (*types.Transaction, error) {
-	listing, err := encoder.validateListing(listingId)
+	listing, err := encoder.validateListing(ctx, listingId)
 	if err != nil {
 		return nil, err
 	}
 
-	valid, err := isStillValidListing(encoder.helper, listing, quantityDesired)
+	valid, err := isStillValidListing(ctx, encoder.helper, listing, quantityDesired)
 	if err != nil {
 		return nil, err
 	}
@@ -138,16 +140,12 @@ func (encoder *MarketplaceEncoder) ApproveBuyoutListing(
 	quantity := big.NewInt(int64(quantityDesired))
 	value := listing.BuyoutCurrencyValuePerToken.Value.Mul(listing.BuyoutCurrencyValuePerToken.Value, quantity)
 
-	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
-	if err != nil {
-		return nil, err
-	}
-
-	return encoder.setErc20Allowance(
+	return setErc20AllowanceEncoder(
+		ctx,
+		encoder.helper,
 		signerAddress,
 		value,
 		listing.CurrencyContractAddress,
-		txOpts,
 	)
 }
 
@@ -167,33 +165,34 @@ func (encoder *MarketplaceEncoder) ApproveBuyoutListing(
 //
 // Example
 //
-// 	// Address of the wallet we expect to sign this message
-// 	signerAddress := "0x..."
-// 	// ID of the listing to buyout
-// 	listingId := 1
-// 	// Quantity of the listed tokens to purchase
-// 	quantityDesired := 1
-// 	// receiver address to receive the purchased tokens
-// 	receiver := "0x..."
+//	// Address of the wallet we expect to sign this message
+//	signerAddress := "0x..."
+//	// ID of the listing to buyout
+//	listingId := 1
+//	// Quantity of the listed tokens to purchase
+//	quantityDesired := 1
+//	// receiver address to receive the purchased tokens
+//	receiver := "0x..."
 //
-// 	// Transaction data required for this request
-// 	tx, err := marketplace.Encoder.BuyoutListing(signerAddress, listingId, quantityDesired, receiver)
+//	// Transaction data required for this request
+//	tx, err := marketplace.Encoder.BuyoutListing(context.Background(), signerAddress, listingId, quantityDesired, receiver)
 //
-// 	// Now you can get transaction all the standard data as needed
-// 	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
-// 	fmt.Println(tx.Nonce())
+//	// Now you can get transaction all the standard data as needed
+//	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+//	fmt.Println(tx.Nonce())
 func (encoder *MarketplaceEncoder) BuyoutListing(
+	ctx context.Context,
 	signerAddress string,
 	listingId int,
 	quantityDesired int,
 	receiver string,
 ) (*types.Transaction, error) {
-	listing, err := encoder.validateListing(listingId)
+	listing, err := encoder.validateListing(ctx, listingId)
 	if err != nil {
 		return nil, err
 	}
 
-	valid, err := isStillValidListing(encoder.helper, listing, quantityDesired)
+	valid, err := isStillValidListing(ctx, encoder.helper, listing, quantityDesired)
 	if err != nil {
 		return nil, err
 	}
@@ -214,7 +213,7 @@ func (encoder *MarketplaceEncoder) BuyoutListing(
 		return nil, err
 	}
 
-	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
+	txOpts, err := encoder.helper.getUnsignedTxOptions(ctx, signerAddress)
 	return encoder.abi.Buy(
 		txOpts,
 		big.NewInt(int64(listingId)),
@@ -236,28 +235,29 @@ func (encoder *MarketplaceEncoder) BuyoutListing(
 //
 // Example
 //
-// 	// Address of the wallet we expect to sign this message
-// 	signerAddress := "0x..."
+//	// Address of the wallet we expect to sign this message
+//	signerAddress := "0x..."
 //
-// 	listing := &NewDirectListing{
-// 		AssetContractAddress: "0x...", // Address of the asset contract
-// 		TokenId: 0, // Token ID of the asset to list
-// 		StartTimeInEpochSeconds: int(time.Now().Unix()), // Defaults to current time
-// 		ListingDurationInSeconds: int(time.Now().Unix() + 3600), // Defaults to current time + 1 hour
-// 		Quantity: 1, // Quantity of the asset to list
-// 		CurrencyContractAddress: "0x...", // Contract address of currency to sell for, defaults to native token
-// 		BuyoutPricePerToken: 1, // Price per token of the asset to list
-// 	}
+//	listing := &NewDirectListing{
+//		AssetContractAddress: "0x...", // Address of the asset contract
+//		TokenId: 0, // Token ID of the asset to list
+//		StartTimeInEpochSeconds: int(time.Now().Unix()), // Defaults to current time
+//		ListingDurationInSeconds: int(time.Now().Unix() + 3600), // Defaults to current time + 1 hour
+//		Quantity: 1, // Quantity of the asset to list
+//		CurrencyContractAddress: "0x...", // Contract address of currency to sell for, defaults to native token
+//		BuyoutPricePerToken: 1, // Price per token of the asset to list
+//	}
 //
-// 	// Transaction data required for this request
-// 	tx, err := marketplace.Encoder.ApproveCreateListing(signerAddress, listing)
+//	// Transaction data required for this request
+//	tx, err := marketplace.Encoder.ApproveCreateListing(context.Background(), signerAddress, listing)
 //
-// 	// Now you can get transaction data as needed
-// 	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
-// 	fmt.Println(tx.Nonce())
-func (encoder *MarketplaceEncoder) ApproveCreateListing(signerAddress string, listing *NewDirectListing) (*types.Transaction, error) {
+//	// Now you can get transaction data as needed
+//	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+//	fmt.Println(tx.Nonce())
+func (encoder *MarketplaceEncoder) ApproveCreateListing(ctx context.Context, signerAddress string, listing *NewDirectListing) (*types.Transaction, error) {
 	listing.fillDefaults()
 	return encoder.handleTokenApproval(
+		ctx,
 		signerAddress,
 		encoder.helper.GetProvider(),
 		encoder.helper,
@@ -280,29 +280,30 @@ func (encoder *MarketplaceEncoder) ApproveCreateListing(signerAddress string, li
 //
 // Example
 //
-// 	// Address of the wallet we expect to sign this message
-// 	signerAddress := "0x..."
+//	// Address of the wallet we expect to sign this message
+//	signerAddress := "0x..."
 //
-// 	listing := &NewDirectListing{
-// 		AssetContractAddress: "0x...", // Address of the asset contract
-// 		TokenId: 0, // Token ID of the asset to list
-// 		StartTimeInEpochSeconds: int(time.Now().Unix()), // Defaults to current time
-// 		ListingDurationInSeconds: int(time.Now().Unix() + 3600), // Defaults to current time + 1 hour
-// 		Quantity: 1, // Quantity of the asset to list
-// 		CurrencyContractAddress: "0x...", // Contract address of currency to sell for, defaults to native token
-// 		BuyoutPricePerToken: 1, // Price per token of the asset to list
-// 	}
+//	listing := &NewDirectListing{
+//		AssetContractAddress: "0x...", // Address of the asset contract
+//		TokenId: 0, // Token ID of the asset to list
+//		StartTimeInEpochSeconds: int(time.Now().Unix()), // Defaults to current time
+//		ListingDurationInSeconds: int(time.Now().Unix() + 3600), // Defaults to current time + 1 hour
+//		Quantity: 1, // Quantity of the asset to list
+//		CurrencyContractAddress: "0x...", // Contract address of currency to sell for, defaults to native token
+//		BuyoutPricePerToken: 1, // Price per token of the asset to list
+//	}
 //
-// 	// Transaction data required for this request
-// 	tx, err := marketplace.Encoder.CreateListing(signerAddress, listing)
+//	// Transaction data required for this request
+//	tx, err := marketplace.Encoder.CreateListing(context.Background(), signerAddress, listing)
 //
-// 	// Now you can get transaction data as needed
-// 	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
-// 	fmt.Println(tx.Nonce())
-func (encoder *MarketplaceEncoder) CreateListing(signerAddress string, listing *NewDirectListing) (*types.Transaction, error) {
+//	// Now you can get transaction data as needed
+//	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
+//	fmt.Println(tx.Nonce())
+func (encoder *MarketplaceEncoder) CreateListing(ctx context.Context, signerAddress string, listing *NewDirectListing) (*types.Transaction, error) {
 	listing.fillDefaults()
 
 	err := encoder.checkTokenApproval(
+		ctx,
 		signerAddress,
 		encoder.helper.GetProvider(),
 		encoder.helper,
@@ -316,6 +317,7 @@ func (encoder *MarketplaceEncoder) CreateListing(signerAddress string, listing *
 	}
 
 	normalizedPricePerToken, err := normalizePriceValue(
+		ctx,
 		encoder.helper.GetProvider(),
 		listing.BuyoutPricePerToken,
 		listing.CurrencyContractAddress,
@@ -324,7 +326,7 @@ func (encoder *MarketplaceEncoder) CreateListing(signerAddress string, listing *
 		return nil, err
 	}
 
-	txOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
+	txOpts, err := encoder.helper.getUnsignedTxOptions(ctx, signerAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -342,8 +344,8 @@ func (encoder *MarketplaceEncoder) CreateListing(signerAddress string, listing *
 	})
 }
 
-func (encoder *MarketplaceEncoder) validateListing(listingId int) (*DirectListing, error) {
-	listing, err := encoder.abi.Listings(&bind.CallOpts{}, big.NewInt(int64(listingId)))
+func (encoder *MarketplaceEncoder) validateListing(ctx context.Context, listingId int) (*DirectListing, error) {
+	listing, err := encoder.abi.Listings(&bind.CallOpts{Context: ctx}, big.NewInt(int64(listingId)))
 	if err != nil {
 		return nil, err
 	}
@@ -353,46 +355,9 @@ func (encoder *MarketplaceEncoder) validateListing(listingId int) (*DirectListin
 	}
 
 	if listing.ListingType == 0 {
-		return mapListing(encoder.helper, encoder.storage, listing)
+		return mapListing(ctx, encoder.helper, encoder.storage, listing)
 	} else {
 		return nil, fmt.Errorf("Unknown listing type: %d", listingId)
-	}
-}
-
-func (encoder *MarketplaceEncoder) setErc20Allowance(
-	signerAddress string,
-	value *big.Int,
-	currencyAddress string,
-	txOpts *bind.TransactOpts,
-) (*types.Transaction, error) {
-	if isNativeToken(currencyAddress) {
-		txOpts.Value = value
-		return nil, nil
-	} else {
-		provider := encoder.helper.GetProvider()
-		erc20, err := abi.NewIERC20(common.HexToAddress(currencyAddress), provider)
-		if err != nil {
-			return nil, err
-		}
-
-		owner := common.HexToAddress(signerAddress)
-		spender := encoder.helper.getAddress()
-		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
-		if err != nil {
-			return nil, err
-		}
-
-		if allowance.Cmp(value) < 0 {
-			// We can get options from the contract instead of ERC20 because they will be the same
-			approvalOpts, err := encoder.helper.getUnsignedTxOptions(signerAddress)
-			if err != nil {
-				return nil, err
-			}
-
-			return erc20.Approve(approvalOpts, spender, value)
-		}
-
-		return nil, nil
 	}
 }
 
@@ -433,6 +398,7 @@ func (encoder *MarketplaceEncoder) checkErc20Allowance(
 }
 
 func (encoder *MarketplaceEncoder) checkTokenApproval(
+	ctx context.Context,
 	signerAddress string,
 	provider *ethclient.Client,
 	helper *contractHelper,
@@ -446,12 +412,12 @@ func (encoder *MarketplaceEncoder) checkTokenApproval(
 		return err
 	}
 
-	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
 	if err != nil {
 		return err
 	}
 
-	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
 	if err != nil {
 		return err
 	}
@@ -462,13 +428,13 @@ func (encoder *MarketplaceEncoder) checkTokenApproval(
 			return err
 		}
 
-		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{Context: ctx}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
 		if err != nil {
 			return err
 		}
 
 		if !approved {
-			tokenApproved, err := contract.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+			tokenApproved, err := contract.GetApproved(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 			if err != nil {
 				return err
 			}
@@ -491,7 +457,7 @@ func (encoder *MarketplaceEncoder) checkTokenApproval(
 			return err
 		}
 
-		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{Context: ctx}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
 		if err != nil {
 			return err
 		}
@@ -515,6 +481,7 @@ func (encoder *MarketplaceEncoder) checkTokenApproval(
 }
 
 func (encoder *MarketplaceEncoder) handleTokenApproval(
+	ctx context.Context,
 	signerAddress string,
 	provider *ethclient.Client,
 	helper *contractHelper,
@@ -544,7 +511,9 @@ func (encoder *MarketplaceEncoder) handleTokenApproval(
 			return nil, err
 		}
 
-		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{
+			Context: ctx,
+		}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
 		if err != nil {
 			return nil, err
 		}
@@ -555,7 +524,7 @@ func (encoder *MarketplaceEncoder) handleTokenApproval(
 				return nil, err
 			}
 
-			txOpts, err := helper.getUnsignedTxOptions(signerAddress)
+			txOpts, err := helper.getUnsignedTxOptions(ctx, signerAddress)
 			if err != nil {
 				return nil, err
 			}
@@ -576,7 +545,7 @@ func (encoder *MarketplaceEncoder) handleTokenApproval(
 		}
 
 		if !approved {
-			txOpts, err := helper.getUnsignedTxOptions(signerAddress)
+			txOpts, err := helper.getUnsignedTxOptions(ctx, signerAddress)
 			if err != nil {
 				return nil, err
 			}

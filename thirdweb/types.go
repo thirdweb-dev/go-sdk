@@ -25,16 +25,18 @@ type NFTMetadata struct {
 	AnimationUrl    string      `json:"animation_url"`
 	BackgroundColor string      `json:"background_color"`
 	Properties      interface{} `json:"properties,omitempty"`
+	Attributes      interface{} `json:"attributes,omitempty"`
 }
 
 type NFTMetadataInput struct {
 	Name            string      `mapstructure:"name" json:"name"`
-	Description     string      `mapstructure:"description" json:"description"`
-	Image           interface{} `mapstructure:"image" json:"image"`
-	ExternalUrl     string      `mapstructure:"external_url" json:"external_url"`
-	AnimationUrl    string      `mapstructure:"animation_url" json:"animation_url"`
-	BackgroundColor string      `mapstructure:"background_color" json:"background_color"`
+	Description     string      `mapstructure:"description,omitempty" json:"description"`
+	Image           interface{} `mapstructure:"image,omitempty" json:"image"`
+	ExternalUrl     string      `mapstructure:"external_url,omitempty" json:"external_url"`
+	AnimationUrl    string      `mapstructure:"animation_url,omitempty" json:"animation_url"`
+	BackgroundColor string      `mapstructure:"background_color,omitempty" json:"background_color"`
 	Properties      interface{} `mapstructure:"properties,omitempty" json:"properties,omitempty"`
+	Attributes      interface{} `mapstructure:"attributes,omitempty" json:"attributes,omitempty"`
 }
 
 type NFTMetadataOwner struct {
@@ -62,12 +64,13 @@ type EditionMetadataInput struct {
 type ClaimVerification struct {
 	proofs                    [][32]byte
 	maxQuantityPerTransaction int
-	price                     float64
+	price                     *big.Int
 	currencyAddress           string
+	value                     *big.Int
 }
 
 type ClaimConditionOutput struct {
-	Price                       float64
+	Price                       *big.Int
 	MaxQuantity                 *big.Int
 	QuantityLimitPerTransaction *big.Int
 	WaitInSeconds               *big.Int
@@ -256,14 +259,14 @@ type DeployNFTCollectionMetadata struct {
 	Name                   string      `mapstructure:"name" json:"name"`
 	Description            string      `mapstructure:"description" json:"description"`
 	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
-	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	ExternalLink           string      `mapstructure:"external_link,omitempty" json:"external_link"`
 	SellerFeeBasisPoints   int         `mapstructure:"seller_fee_basis_points" json:"seller_fee_basis_points"`
 	FeeRecipient           string      `mapstructure:"fee_recipient" json:"fee_recipient"`
 	Symbol                 string      `mapstructure:"symbol" json:"symbol"`
 	PrimarySaleRecipient   string      `mapstructure:"primary_sale_recipient" json:"primary_sale_recipient"`
 	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
 	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
-	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders" json:"trusted_forwarders"`
 }
 
 func (metadata *DeployNFTCollectionMetadata) fillDefaults() {
@@ -288,14 +291,14 @@ type DeployEditionMetadata struct {
 	Name                   string      `mapstructure:"name" json:"name"`
 	Description            string      `mapstructure:"description" json:"description"`
 	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
-	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	ExternalLink           string      `mapstructure:"external_link,omitempty" json:"external_link"`
 	SellerFeeBasisPoints   int         `mapstructure:"seller_fee_basis_points" json:"seller_fee_basis_points"`
 	FeeRecipient           string      `mapstructure:"fee_recipient" json:"fee_recipient"`
 	Symbol                 string      `mapstructure:"symbol" json:"symbol"`
 	PrimarySaleRecipient   string      `mapstructure:"primary_sale_recipient" json:"primary_sale_recipient"`
 	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
 	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
-	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders" json:"trusted_forwarders"`
 }
 
 func (metadata *DeployEditionMetadata) fillDefaults() {
@@ -320,12 +323,12 @@ type DeployTokenMetadata struct {
 	Name                   string      `mapstructure:"name" json:"name"`
 	Description            string      `mapstructure:"description" json:"description"`
 	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
-	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	ExternalLink           string      `mapstructure:"external_link,omitempty" json:"external_link"`
 	Symbol                 string      `mapstructure:"symbol" json:"symbol"`
 	PrimarySaleRecipient   string      `mapstructure:"primary_sale_recipient" json:"primary_sale_recipient"`
 	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
 	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
-	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders" json:"trusted_forwarders"`
 }
 
 func (metadata *DeployTokenMetadata) fillDefaults() {
@@ -346,7 +349,7 @@ type DeployNFTDropMetadata struct {
 	Name                   string      `mapstructure:"name" json:"name"`
 	Description            string      `mapstructure:"description" json:"description"`
 	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
-	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	ExternalLink           string      `mapstructure:"external_link,omitempty" json:"external_link"`
 	SellerFeeBasisPoints   int         `mapstructure:"seller_fee_basis_points" json:"seller_fee_basis_points"`
 	FeeRecipient           string      `mapstructure:"fee_recipient" json:"fee_recipient"`
 	Merkle                 interface{} `mapstructure:"merkle" json:"merkle"`
@@ -354,7 +357,7 @@ type DeployNFTDropMetadata struct {
 	PrimarySaleRecipient   string      `mapstructure:"primary_sale_recipient" json:"primary_sale_recipient"`
 	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
 	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
-	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders" json:"trusted_forwarders"`
 }
 
 func (metadata *DeployNFTDropMetadata) fillDefaults() {
@@ -379,7 +382,7 @@ type DeployEditionDropMetadata struct {
 	Name                   string      `mapstructure:"name" json:"name"`
 	Description            string      `mapstructure:"description" json:"description"`
 	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
-	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	ExternalLink           string      `mapstructure:"external_link,omitempty" json:"external_link"`
 	SellerFeeBasisPoints   int         `mapstructure:"seller_fee_basis_points" json:"seller_fee_basis_points"`
 	FeeRecipient           string      `mapstructure:"fee_recipient" json:"fee_recipient"`
 	Merkle                 interface{} `mapstructure:"merkle" json:"merkle"`
@@ -387,7 +390,7 @@ type DeployEditionDropMetadata struct {
 	PrimarySaleRecipient   string      `mapstructure:"primary_sale_recipient" json:"primary_sale_recipient"`
 	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
 	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
-	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders" json:"trusted_forwarders"`
 }
 
 func (metadata *DeployEditionDropMetadata) fillDefaults() {
@@ -412,11 +415,11 @@ type DeployMultiwrapMetadata struct {
 	Name                 string      `mapstructure:"name" json:"name"`
 	Description          string      `mapstructure:"description" json:"description"`
 	Image                interface{} `mapstructure:"image,omitempty" json:"image"`
-	ExternalLink         string      `mapstructure:"external_link" json:"external_link"`
+	ExternalLink         string      `mapstructure:"external_link,omitempty" json:"external_link"`
 	SellerFeeBasisPoints int         `mapstructure:"seller_fee_basis_points" json:"seller_fee_basis_points"`
 	FeeRecipient         string      `mapstructure:"fee_recipient" json:"fee_recipient"`
 	Symbol               string      `mapstructure:"symbol" json:"symbol"`
-	TrustedForwarders    []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+	TrustedForwarders    []string    `mapstructure:"trusted_forwarders" json:"trusted_forwarders"`
 }
 
 func (metadata *DeployMultiwrapMetadata) fillDefaults() {
@@ -433,10 +436,10 @@ type DeployMarketplaceMetadata struct {
 	Name                   string      `mapstructure:"name" json:"name"`
 	Description            string      `mapstructure:"description" json:"description"`
 	Image                  interface{} `mapstructure:"image,omitempty" json:"image"`
-	ExternalLink           string      `mapstructure:"external_link" json:"external_link"`
+	ExternalLink           string      `mapstructure:"external_link,omitempty" json:"external_link"`
 	PlatformFeeBasisPoints int         `mapstructure:"platform_fee_basis_points" json:"platform_fee_basis_points"`
 	PlatformFeeRecipient   string      `mapstructure:"platform_fee_recipient" json:"platform_fee_recipient"`
-	TrustedForwarders      []string    `mapstructure:"trusted_forwarders,omitempty" json:"trusted_forwarders"`
+	TrustedForwarders      []string    `mapstructure:"trusted_forwarders" json:"trusted_forwarders"`
 }
 
 func (metadata *DeployMarketplaceMetadata) fillDefaults() {

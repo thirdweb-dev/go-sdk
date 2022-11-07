@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -32,7 +33,7 @@ var editionDropGetAllCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := editionDrop.GetAll()
+		allNfts, err := editionDrop.GetAll(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -51,7 +52,7 @@ var editionDropGetActiveCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		all, err := editionDrop.ClaimConditions.GetAll(0)
+		all, err := editionDrop.ClaimConditions.GetAll(context.Background(), 0)
 		if err != nil {
 			panic(err)
 		}
@@ -66,7 +67,7 @@ var editionDropGetActiveCmd = &cobra.Command{
 			fmt.Println("Wait In Seconds", c.WaitInSeconds)
 		}
 
-		all, err = editionDrop.ClaimConditions.GetAll(1)
+		all, err = editionDrop.ClaimConditions.GetAll(context.Background(), 1)
 		if err != nil {
 			panic(err)
 		}
@@ -92,7 +93,7 @@ var editionDropClaimCmd = &cobra.Command{
 			panic(err)
 		}
 
-		if tx, err := editionDrop.Claim(0, 1); err != nil {
+		if tx, err := editionDrop.Claim(context.Background(), 0, 1); err != nil {
 			panic(err)
 		} else {
 			log.Printf("Claimed nft successfully")
@@ -119,6 +120,7 @@ var editionDropCreateBatchCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		if tx, err := editionDrop.CreateBatch(
+			context.Background(),
 			[]*thirdweb.NFTMetadataInput{
 				{
 					Name:  "Drop NFT 1",

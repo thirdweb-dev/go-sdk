@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,7 +9,7 @@ import (
 
 func getEdition() *Edition {
 	sdk := getSDK()
-	address, _ := sdk.Deployer.DeployEdition(&DeployEditionMetadata{
+	address, _ := sdk.Deployer.DeployEdition(context.Background(), &DeployEditionMetadata{
 		Name: "Edition",
 	})
 
@@ -20,28 +21,31 @@ func getEdition() *Edition {
 func TestMintEdition(t *testing.T) {
 	edition := getEdition()
 
-	balance, _ := edition.Balance(0)
+	balance, _ := edition.Balance(context.Background(), 0)
 	assert.Equal(t, 0, balance)
 
-	_, err := edition.Mint(&EditionMetadataInput{
-		Metadata: &NFTMetadataInput{
-			Name: "NFT",
-		},
-		Supply: 10,
-	})
+	_, err := edition.Mint(
+		context.Background(),
+		&EditionMetadataInput{
+			Metadata: &NFTMetadataInput{
+				Name: "NFT",
+			},
+			Supply: 10,
+		})
 	assert.Nil(t, err)
 
-	balance, _ = edition.Balance(0)
+	balance, _ = edition.Balance(context.Background(), 0)
 	assert.Equal(t, 10, balance)
 }
 
 func TestBatchMintEdition(t *testing.T) {
 	edition := getEdition()
 
-	balance, _ := edition.Balance(0)
+	balance, _ := edition.Balance(context.Background(), 0)
 	assert.Equal(t, 0, balance)
 
 	_, err := edition.MintBatchTo(
+		context.Background(),
 		edition.helper.GetSignerAddress().String(),
 		[]*EditionMetadataInput{
 			{
@@ -60,13 +64,13 @@ func TestBatchMintEdition(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	balance, _ = edition.Balance(0)
+	balance, _ = edition.Balance(context.Background(), 0)
 	assert.Equal(t, 1, balance)
 
-	balance, _ = edition.Balance(1)
+	balance, _ = edition.Balance(context.Background(), 1)
 	assert.Equal(t, 2, balance)
 
-	nfts, _ := edition.GetAll()
+	nfts, _ := edition.GetAll(context.Background())
 	assert.Equal(t, 2, len(nfts))
 	assert.Equal(t, "NFT 1", nfts[0].Metadata.Name)
 	assert.Equal(t, "NFT 2", nfts[1].Metadata.Name)
@@ -75,40 +79,42 @@ func TestBatchMintEdition(t *testing.T) {
 func TestBurnEdition(t *testing.T) {
 	edition := getEdition()
 
-	edition.Mint(&EditionMetadataInput{
+	edition.Mint(context.Background(), &EditionMetadataInput{
 		Metadata: &NFTMetadataInput{
 			Name: "NFT",
 		},
 		Supply: 10,
 	})
 
-	balance, _ := edition.Balance(0)
+	balance, _ := edition.Balance(context.Background(), 0)
 	assert.Equal(t, 10, balance)
 
-	_, err := edition.Burn(0, 10)
+	_, err := edition.Burn(context.Background(), 0, 10)
 	assert.Nil(t, err)
 
-	balance, _ = edition.Balance(0)
+	balance, _ = edition.Balance(context.Background(), 0)
 	assert.Equal(t, 0, balance)
 }
 
 func TestTransferEdition(t *testing.T) {
 	edition := getEdition()
 
-	edition.Mint(&EditionMetadataInput{
-		Metadata: &NFTMetadataInput{
-			Name: "NFT",
-		},
-		Supply: 10,
-	})
+	edition.Mint(
+		context.Background(),
+		&EditionMetadataInput{
+			Metadata: &NFTMetadataInput{
+				Name: "NFT",
+			},
+			Supply: 10,
+		})
 
-	balance, _ := edition.Balance(0)
+	balance, _ := edition.Balance(context.Background(), 0)
 	assert.Equal(t, 10, balance)
 
-	_, err := edition.Transfer(secondaryWallet, 0, 10)
+	_, err := edition.Transfer(context.Background(), secondaryWallet, 0, 10)
 	assert.Nil(t, err)
 
-	balance, _ = edition.Balance(0)
+	balance, _ = edition.Balance(context.Background(), 0)
 	assert.Equal(t, 0, balance)
 }
 
@@ -116,6 +122,7 @@ func TestSignatureMint(t *testing.T) {
 	edition := getEdition()
 
 	payload, err := edition.Signature.Generate(
+		context.Background(),
 		&Signature1155PayloadInput{
 			To:                   edition.helper.GetSignerAddress().String(),
 			Price:                0,
@@ -133,13 +140,13 @@ func TestSignatureMint(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	valid, err := edition.Signature.Verify(payload)
+	valid, err := edition.Signature.Verify(context.Background(), payload)
 	assert.Nil(t, err)
 	assert.True(t, valid)
 
-	_, err = edition.Signature.Mint(payload)
+	_, err = edition.Signature.Mint(context.Background(), payload)
 	assert.Nil(t, err)
 
-	balance, _ := edition.Balance(0)
+	balance, _ := edition.Balance(context.Background(), 0)
 	assert.Equal(t, 1, balance)
 }

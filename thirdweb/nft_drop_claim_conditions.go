@@ -1,13 +1,14 @@
 package thirdweb
 
 import (
+	"context"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // This interface is currently accessible from the NFT Drop contract contract type
@@ -37,15 +38,15 @@ func newNFTDropClaimConditions(address common.Address, provider *ethclient.Clien
 //
 // Example
 //
-// 	condition, err := contract.ClaimConditions.GetActive()
+//	condition, err := contract.ClaimConditions.GetActive()
 //
-// 	// Now you have access to all the claim condition metadata
-// 	fmt.Println("Start Time:", condition.StartTime)
-// 	fmt.Println("Available:", condition.AvailableSupply)
-// 	fmt.Println("Quantity:", condition.MaxQuantity)
-// 	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
-// 	fmt.Println("Price:", condition.Price)
-// 	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
+//	// Now you have access to all the claim condition metadata
+//	fmt.Println("Start Time:", condition.StartTime)
+//	fmt.Println("Available:", condition.AvailableSupply)
+//	fmt.Println("Quantity:", condition.MaxQuantity)
+//	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
+//	fmt.Println("Price:", condition.Price)
+//	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
 func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) {
 	id, err := claim.abi.GetActiveClaimConditionId(&bind.CallOpts{})
 	if err != nil {
@@ -59,6 +60,7 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 
 	provider := claim.helper.GetProvider()
 	claimCondition, err := transformResultToClaimCondition(
+		context.Background(),
 		&mc,
 		provider,
 		claim.storage,
@@ -76,16 +78,16 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 //
 // Example
 //
-// 	conditions, err := contract.ClaimConditions.GetAll()
+//	conditions, err := contract.ClaimConditions.GetAll()
 //
-// 	// Now you have access to all the claim condition metadata
-// 	condition := conditions[0]
-// 	fmt.Println("Start Time:", condition.StartTime)
-// 	fmt.Println("Available:", condition.AvailableSupply)
-// 	fmt.Println("Quantity:", condition.MaxQuantity)
-// 	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
-// 	fmt.Println("Price:", condition.Price)
-// 	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
+//	// Now you have access to all the claim condition metadata
+//	condition := conditions[0]
+//	fmt.Println("Start Time:", condition.StartTime)
+//	fmt.Println("Available:", condition.AvailableSupply)
+//	fmt.Println("Quantity:", condition.MaxQuantity)
+//	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
+//	fmt.Println("Price:", condition.Price)
+//	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
 func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 	condition, err := claim.abi.ClaimCondition(&bind.CallOpts{})
 	if err != nil {
@@ -104,6 +106,7 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 		}
 
 		claimCondition, err := transformResultToClaimCondition(
+			context.Background(),
 			&mc,
 			provider,
 			claim.storage,

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -32,7 +33,7 @@ var editionGetAllCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := edition.GetAll()
+		allNfts, err := edition.GetAll(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -52,7 +53,7 @@ var editionGetOwnedCmd = &cobra.Command{
 			panic(err)
 		}
 
-		allNfts, err := edition.GetOwned("")
+		allNfts, err := edition.GetOwned(context.Background(), "")
 		if err != nil {
 			panic(err)
 		}
@@ -78,7 +79,7 @@ var editionMintCmd = &cobra.Command{
 		}
 		defer imageFile.Close()
 
-		if tx, err := edition.Mint(&thirdweb.EditionMetadataInput{
+		if tx, err := edition.Mint(context.Background(), &thirdweb.EditionMetadataInput{
 			Metadata: &thirdweb.NFTMetadataInput{
 				Name:  "Edition Test",
 				Image: imageFile,
@@ -112,6 +113,7 @@ var editionSigmintCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		payload, err := edition.Signature.Generate(
+			context.Background(),
 			&thirdweb.Signature1155PayloadInput{
 				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
 				Price:                0,
@@ -132,14 +134,14 @@ var editionSigmintCmd = &cobra.Command{
 			panic(err)
 		}
 
-		valid, err := edition.Signature.Verify(payload)
+		valid, err := edition.Signature.Verify(context.Background(), payload)
 		if err != nil {
 			panic(err)
 		} else if !valid {
 			panic("Invalid signature")
 		}
 
-		tx, err := edition.Signature.Mint(payload)
+		tx, err := edition.Signature.Mint(context.Background(), payload)
 		if err != nil {
 			panic(err)
 		}
@@ -165,6 +167,7 @@ var editionSigmintTokenIdCmd = &cobra.Command{
 		defer imageFile.Close()
 
 		payload, err := edition.Signature.GenerateFromTokenId(
+			context.Background(),
 			&thirdweb.Signature1155PayloadInputWithTokenId{
 				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
 				Price:                0,
@@ -186,14 +189,14 @@ var editionSigmintTokenIdCmd = &cobra.Command{
 			panic(err)
 		}
 
-		valid, err := edition.Signature.Verify(payload)
+		valid, err := edition.Signature.Verify(context.Background(), payload)
 		if err != nil {
 			panic(err)
 		} else if !valid {
 			panic("Invalid signature")
 		}
 
-		tx, err := edition.Signature.Mint(payload)
+		tx, err := edition.Signature.Mint(context.Background(), payload)
 		if err != nil {
 			panic(err)
 		}

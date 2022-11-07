@@ -1,25 +1,26 @@
 package thirdweb
 
 import (
+	"context"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb-dev/go-sdk/internal/abi"
+	"github.com/thirdweb-dev/go-sdk/abi"
 )
 
 // You can access the Edition interface from the SDK as follows:
 //
-// 	import (
-// 		"github.com/thirdweb-dev/go-sdk/thirdweb"
-// 	)
+//	import (
+//		"github.com/thirdweb-dev/go-sdk/thirdweb"
+//	)
 //
-// 	privateKey = "..."
+//	privateKey = "..."
 //
-// 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+//	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
 //		PrivateKey: privateKey,
-// 	})
+//	})
 //
 //	contract, err := sdk.GetEdition("{{contract_address}}")
 type Edition struct {
@@ -69,9 +70,9 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 // metadataWithSupply: nft metadata with supply of the NFT to mint
 //
 // returns: the transaction receipt of the mint
-func (edition *Edition) Mint(metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
+func (edition *Edition) Mint(ctx context.Context, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
 	address := edition.helper.GetSignerAddress().String()
-	return edition.MintTo(address, metadataWithSupply)
+	return edition.MintTo(ctx, address, metadataWithSupply)
 }
 
 // Mint a new NFT to the specified wallet.
@@ -84,27 +85,28 @@ func (edition *Edition) Mint(metadataWithSupply *EditionMetadataInput) (*types.T
 //
 // Example
 //
-// 	image, err := os.Open("path/to/image.jpg")
-// 	defer image.Close()
+//		image, err := os.Open("path/to/image.jpg")
+//		defer image.Close()
 //
-// 	metadataWithSupply := &thirdweb.EditionMetadataInput{
-// 		Metadata: &thirdweb.NFTMetadataInput{
-// 			Name: "Cool NFT",
-// 			Description: "This is a cool NFT",
-// 			Image: image,
-// 		},
-// 		Supply: 100,
-// 	}
+//		metadataWithSupply := &thirdweb.EditionMetadataInput{
+//	        context.Background(),
+//			Metadata: &thirdweb.NFTMetadataInput{
+//				Name: "Cool NFT",
+//				Description: "This is a cool NFT",
+//				Image: image,
+//			},
+//			Supply: 100,
+//		}
 //
-// 	tx, err := contract.MintTo("{{wallet_address}}", metadataWithSupply)
-func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
+//		tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", metadataWithSupply)
+func (edition *Edition) MintTo(ctx context.Context, address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
 	uri, err := uploadOrExtractUri(metadataWithSupply.Metadata, edition.storage)
 	if err != nil {
 		return nil, err
 	}
 
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
-	txOpts, err := edition.helper.getTxOptions()
+	txOpts, err := edition.helper.getTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -129,9 +131,9 @@ func (edition *Edition) MintTo(address string, metadataWithSupply *EditionMetada
 // additionalSupply: additional supply to mint
 //
 // returns: the transaction receipt of the mint
-func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) (*types.Transaction, error) {
+func (edition *Edition) MintAdditionalSupply(ctx context.Context, tokenId int, additionalSupply int) (*types.Transaction, error) {
 	address := edition.helper.GetSignerAddress().String()
-	return edition.MintAdditionalSupplyTo(address, tokenId, additionalSupply)
+	return edition.MintAdditionalSupplyTo(ctx, address, tokenId, additionalSupply)
 }
 
 // Mint additional supply of a token to the specified wallet.
@@ -143,13 +145,13 @@ func (edition *Edition) MintAdditionalSupply(tokenId int, additionalSupply int) 
 // additionalySupply: additional supply to mint
 //
 // returns: the transaction receipt of the mint
-func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additionalSupply int) (*types.Transaction, error) {
-	metadata, err := edition.getTokenMetadata(tokenId)
+func (edition *Edition) MintAdditionalSupplyTo(ctx context.Context, to string, tokenId int, additionalSupply int) (*types.Transaction, error) {
+	metadata, err := edition.getTokenMetadata(ctx, tokenId)
 	if err != nil {
 		return nil, err
 	}
 
-	txOpts, err := edition.helper.getTxOptions()
+	txOpts, err := edition.helper.getTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -172,8 +174,8 @@ func (edition *Edition) MintAdditionalSupplyTo(to string, tokenId int, additiona
 // metadatasWithSupply: list of NFT metadatas with supplies to mint
 //
 // returns: the transaction receipt of the mint
-func (edition *Edition) MintBatch(metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
-	return edition.MintBatchTo(edition.helper.GetSignerAddress().String(), metadatasWithSupply)
+func (edition *Edition) MintBatch(ctx context.Context, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
+	return edition.MintBatchTo(ctx, edition.helper.GetSignerAddress().String(), metadatasWithSupply)
 }
 
 // Mint a batch of NFTs to a specific wallet.
@@ -186,25 +188,25 @@ func (edition *Edition) MintBatch(metadatasWithSupply []*EditionMetadataInput) (
 //
 // Example
 //
-// 	metadatasWithSupply := []*thirdweb.EditionMetadataInput{
-// 		&thirdweb.EditionMetadataInput{
-// 			Metadata: &thirdweb.NFTMetadataInput{
-// 				Name: "Cool NFT",
-// 				Description: "This is a cool NFT",
-// 			},
-// 			Supply: 100,
-// 		},
-// 		&thirdweb.EditionMetadataInput{
-// 			Metadata: &thirdweb.NFTMetadataInput{
-// 				Name: "Cool NFT",
-// 				Description: "This is a cool NFT",
-// 			},
-// 			Supply: 100,
-// 		},
-// 	}
+//	metadatasWithSupply := []*thirdweb.EditionMetadataInput{
+//		&thirdweb.EditionMetadataInput{
+//			Metadata: &thirdweb.NFTMetadataInput{
+//				Name: "Cool NFT",
+//				Description: "This is a cool NFT",
+//			},
+//			Supply: 100,
+//		},
+//		&thirdweb.EditionMetadataInput{
+//			Metadata: &thirdweb.NFTMetadataInput{
+//				Name: "Cool NFT",
+//				Description: "This is a cool NFT",
+//			},
+//			Supply: 100,
+//		},
+//	}
 //
-// 	tx, err := contract.MintBatchTo("{{wallet_address}}", metadatasWithSupply)
-func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
+//	tx, err := contract.MintBatchTo(context.Background(), "{{wallet_address}}", metadatasWithSupply)
+func (edition *Edition) MintBatchTo(ctx context.Context, to string, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
 	metadatas := []*NFTMetadataInput{}
 	for _, metadataWithSupply := range metadatasWithSupply {
 		metadatas = append(metadatas, metadataWithSupply.Metadata)
@@ -223,7 +225,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 	encoded := [][]byte{}
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 	for index, uri := range uris {
-		txOpts, err := edition.helper.getEncodedTxOptions()
+		txOpts, err := edition.helper.getEncodedTxOptions(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -241,7 +243,7 @@ func (edition *Edition) MintBatchTo(to string, metadatasWithSupply []*EditionMet
 		encoded = append(encoded, tx.Data())
 	}
 
-	txOpts, err := edition.helper.getTxOptions()
+	txOpts, err := edition.helper.getTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}

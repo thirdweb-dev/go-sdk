@@ -28,10 +28,10 @@ type ContractDeployer struct {
 }
 ```
 
-### func \(\*ContractDeployer\) [DeployEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L110>)
+### func \(\*ContractDeployer\) [DeployEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L114>)
 
 ```go
-func (deployer *ContractDeployer) DeployEdition(metadata *DeployEditionMetadata) (string, error)
+func (deployer *ContractDeployer) DeployEdition(ctx context.Context, metadata *DeployEditionMetadata) (string, error)
 ```
 
 Deploy a new Edition contract\.
@@ -44,16 +44,17 @@ returns: the address of the deployed contract
 
 ```
 address, err := sdk.Deployer.DeployEdition(
-	&thirdweb.DeployEditionMetadata{
-		Name: "Go Edition",
-	}
-})
+     context.Background(),
+		&thirdweb.DeployEditionMetadata{
+			Name: "Go Edition",
+		}
+	})
 ```
 
-### func \(\*ContractDeployer\) [DeployEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L164>)
+### func \(\*ContractDeployer\) [DeployEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L171>)
 
 ```go
-func (deployer *ContractDeployer) DeployEditionDrop(metadata *DeployEditionDropMetadata) (string, error)
+func (deployer *ContractDeployer) DeployEditionDrop(ctx context.Context, metadata *DeployEditionDropMetadata) (string, error)
 ```
 
 Deploy a new Edition Drop contract\.
@@ -66,16 +67,17 @@ returns: the address of the deployed contract
 
 ```
 address, err := sdk.Deployer.DeployEditionDrop(
-	&thirdweb.DeployEditionDropMetadata{
-		Name: "Go Edition Drop",
-	}
-})
+     context.Background(),
+		&thirdweb.DeployEditionDropMetadata{
+			Name: "Go Edition Drop",
+		}
+	})
 ```
 
-### func \(\*ContractDeployer\) [DeployMarketplace](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L200>)
+### func \(\*ContractDeployer\) [DeployMarketplace](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L209>)
 
 ```go
-func (deployer *ContractDeployer) DeployMarketplace(metadata *DeployMarketplaceMetadata) (string, error)
+func (deployer *ContractDeployer) DeployMarketplace(ctx context.Context, metadata *DeployMarketplaceMetadata) (string, error)
 ```
 
 Deploy a new Marketplace contract\.
@@ -88,16 +90,17 @@ returns: the address of the deployed contract
 
 ```
 address, err := sdk.Deployer.DeployMarketplace(
-	&thirdweb.DeployMarketplaceMetadata{
-		Name: "Go Marketplace",
-	}
-})
+     context.Background()
+		&thirdweb.DeployMarketplaceMetadata{
+			Name: "Go Marketplace",
+		}
+	})
 ```
 
-### func \(\*ContractDeployer\) [DeployMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L182>)
+### func \(\*ContractDeployer\) [DeployMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L190>)
 
 ```go
-func (deployer *ContractDeployer) DeployMultiwrap(metadata *DeployMultiwrapMetadata) (string, error)
+func (deployer *ContractDeployer) DeployMultiwrap(ctx context.Context, metadata *DeployMultiwrapMetadata) (string, error)
 ```
 
 Deploy a new Multiwrap contract\.
@@ -110,16 +113,17 @@ returns: the address of the deployed contract
 
 ```
 address, err := sdk.Deployer.DeployMultiwrap(
-	&thirdweb.DeployMultiwrapMetadata{
-		Name: "Go Multiwrap",
-	}
-})
+     context.Background()
+		&thirdweb.DeployMultiwrapMetadata{
+			Name: "Go Multiwrap",
+		}
+	})
 ```
 
-### func \(\*ContractDeployer\) [DeployNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L92>)
+### func \(\*ContractDeployer\) [DeployNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L95>)
 
 ```go
-func (deployer *ContractDeployer) DeployNFTCollection(metadata *DeployNFTCollectionMetadata) (string, error)
+func (deployer *ContractDeployer) DeployNFTCollection(ctx context.Context, metadata *DeployNFTCollectionMetadata) (string, error)
 ```
 
 Deploy a new NFT Collection contract\.
@@ -132,16 +136,17 @@ returns: the address of the deployed contract
 
 ```
 address, err := sdk.Deployer.DeployNFTCollection(
-	&thirdweb.DeployNFTCollectionMetadata{
-		Name: "Go NFT",
-	}
-})
+     context.Background(),
+		&thirdweb.DeployNFTCollectionMetadata{
+			Name: "Go NFT",
+		}
+	})
 ```
 
-### func \(\*ContractDeployer\) [DeployNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L146>)
+### func \(\*ContractDeployer\) [DeployNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L152>)
 
 ```go
-func (deployer *ContractDeployer) DeployNFTDrop(metadata *DeployNFTDropMetadata) (string, error)
+func (deployer *ContractDeployer) DeployNFTDrop(ctx context.Context, metadata *DeployNFTDropMetadata) (string, error)
 ```
 
 Deploy a new NFT Drop contract\.
@@ -154,16 +159,17 @@ returns: the address of the deployed contract
 
 ```
 address, err := sdk.Deployer.DeployNFTDrop(
-	&thirdweb.DeployNFTDropMetadata{
-		Name: "Go NFT Drop",
-	}
-})
+     context.Background(),
+		&thirdweb.DeployNFTDropMetadata{
+			Name: "Go NFT Drop",
+		}
+	})
 ```
 
-### func \(\*ContractDeployer\) [DeployToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L128>)
+### func \(\*ContractDeployer\) [DeployToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_deployer.go#L133>)
 
 ```go
-func (deployer *ContractDeployer) DeployToken(metadata *DeployTokenMetadata) (string, error)
+func (deployer *ContractDeployer) DeployToken(ctx context.Context, metadata *DeployTokenMetadata) (string, error)
 ```
 
 Deploy a new Token contract\.
@@ -176,8 +182,9 @@ returns: the address of the deployed contract
 
 ```
 address, err := sdk.Deployer.DeployToken(
-	&thirdweb.DeployTokenMetadata{
-		Name: "Go Token",
-	}
-})
+     context.Background(),
+		&thirdweb.DeployTokenMetadata{
+			Name: "Go Token",
+		}
+	})
 ```

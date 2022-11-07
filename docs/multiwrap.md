@@ -24,7 +24,7 @@ type Multiwrap struct {
 }
 ```
 
-### func \(\*Multiwrap\) [GetWrappedContents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L76>)
+### func \(\*Multiwrap\) [GetWrappedContents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L77>)
 
 ```go
 func (multiwrap *Multiwrap) GetWrappedContents(wrappedTokenId int) (*MultiwrapBundle, error)
@@ -46,10 +46,10 @@ erc721Tokens := contents.Erc721Tokens
 erc1155Tokens := contents.Erc1155Tokens
 ```
 
-### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L212>)
+### func \(\*Multiwrap\) [Unwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L213>)
 
 ```go
-func (multiwrap *Multiwrap) Unwrap(wrappedTokenId int, recipientAddress string) (*types.Transaction, error)
+func (multiwrap *Multiwrap) Unwrap(ctx context.Context, wrappedTokenId int, recipientAddress string) (*types.Transaction, error)
 ```
 
 #### Unwrap a wrapped token bundle into its contents
@@ -64,13 +64,13 @@ returns: the contents of the wrapped token bundle
 
 ```
 tokenId := 0
-tx, err := contract.Unwrap(tokenId, "")
+tx, err := contract.Unwrap(context.Background(), tokenId, "")
 ```
 
-### func \(\*Multiwrap\) [Wrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L163>)
+### func \(\*Multiwrap\) [Wrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/multiwrap.go#L164>)
 
 ```go
-func (multiwrap *Multiwrap) Wrap(contents *MultiwrapBundle, wrappedTokenMetadata interface{}, recipientAddress string) (*types.Transaction, error)
+func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle, wrappedTokenMetadata interface{}, recipientAddress string) (*types.Transaction, error)
 ```
 
 Wrap any number of ERC20, ERC721, or ERC1155 tokens into a single wrapped token
@@ -113,10 +113,10 @@ wrappedTokenMetadata := &thirdweb.NFTMetadataInput{
 }
 
 // This will mint the wrapped token to the connected wallet
-tx, err := contract.Wrap(contents, wrappedTokenMetadata, "")
+tx, err := contract.Wrap(context.Background(), contents, wrappedTokenMetadata, "")
 ```
 
-## type [MultiwrapBundle](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L207-L211>)
+## type [MultiwrapBundle](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L210-L214>)
 
 ```go
 type MultiwrapBundle struct {
@@ -126,7 +126,7 @@ type MultiwrapBundle struct {
 }
 ```
 
-## type [MultiwrapERC1155](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L201-L205>)
+## type [MultiwrapERC1155](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L204-L208>)
 
 ```go
 type MultiwrapERC1155 struct {
@@ -136,7 +136,7 @@ type MultiwrapERC1155 struct {
 }
 ```
 
-## type [MultiwrapERC20](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L191-L194>)
+## type [MultiwrapERC20](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L194-L197>)
 
 ```go
 type MultiwrapERC20 struct {
@@ -145,7 +145,7 @@ type MultiwrapERC20 struct {
 }
 ```
 
-## type [MultiwrapERC721](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L196-L199>)
+## type [MultiwrapERC721](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L199-L202>)
 
 ```go
 type MultiwrapERC721 struct {

@@ -24,22 +24,22 @@ import (
 //
 // You can use the wallet authenticator as follows:
 //
-// 	// First we specify the domain of the application to authenticate to
-// 	domain := "thirdweb.com"
+//	// First we specify the domain of the application to authenticate to
+//	domain := "example.com"
 //
-// 	// We can then generate a payload for the connected wallet to login
-// 	// This can also be done on the client side with the thirdweb TypeScript SDK
-// 	payload, err := sdk.Auth.Login(domain, nil)
+//	// We can then generate a payload for the connected wallet to login
+//	// This can also be done on the client side with the thirdweb TypeScript SDK
+//	payload, err := sdk.Auth.Login(domain, nil)
 //
-// 	// Then, on the server, we can securely verify the connected address that signed the payload
-// 	address, err := sdk.Auth.Verify(domain, payload, nil)
+//	// Then, on the server, we can securely verify the connected address that signed the payload
+//	address, err := sdk.Auth.Verify(domain, payload, nil)
 //
-// 	// And we can also generate an authentication token to send back to the original payload sender
-// 	token, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)
+//	// And we can also generate an authentication token to send back to the original payload sender
+//	token, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)
 //
-// 	// Finally, the token can be use dby the original payload sender to authenticate to the backend
-// 	// And the server can use the following function to authenticate the token and verify the address
-// 	address, err := sdk.Auth.Authenticate(domain, token)
+//	// Finally, the token can be use dby the original payload sender to authenticate to the backend
+//	// And the server can use the following function to authenticate the token and verify the address
+//	address, err := sdk.Auth.Authenticate(domain, token)
 type WalletAuthenticator struct {
 	*ProviderHandler
 }
@@ -64,11 +64,11 @@ func newWalletAuthenticator(provider *ethclient.Client, privateKey string) (*Wal
 //
 // Example
 //
-// 	// Add the domain of the application that you want to log in to
-// 	domain := "thirdweb.com"
+//	// Add the domain of the application that you want to log in to
+//	domain := "example.com"
 //
-// 	// Generate a signed login payload for the connected wallet to authenticate with
-// 	payload, err := sdk.Auth.Login(domain, nil)
+//	// Generate a signed login payload for the connected wallet to authenticate with
+//	payload, err := sdk.Auth.Login(domain, nil)
 func (auth *WalletAuthenticator) Login(
 	domain string,
 	options *WalletLoginOptions,
@@ -121,11 +121,11 @@ func (auth *WalletAuthenticator) Login(
 //
 // Example
 //
-// 	domain := "thirdweb.com"
-// 	payload, err := sdk.Auth.Login(domain, nil)
+//	domain := "example.com"
+//	payload, err := sdk.Auth.Login(domain, nil)
 //
-// 	// Verify the login request
-// 	address, err := sdk.Auth.Verify(domain, payload, nil)
+//	// Verify the login request
+//	address, err := sdk.Auth.Verify(domain, payload, nil)
 func (auth *WalletAuthenticator) Verify(
 	domain string,
 	payload *WalletLoginPayload,
@@ -189,11 +189,11 @@ func (auth *WalletAuthenticator) Verify(
 //
 // Example
 //
-// 	domain := "thirdweb.com"
-// 	payload, err := sdk.Auth.Login(domain, nil)
+//	domain := "example.com"
+//	payload, err := sdk.Auth.Login(domain, nil)
 //
-// 	// Generate an authentication token for the logged in wallet
-// 	token, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)
+//	// Generate an authentication token for the logged in wallet
+//	token, err := sdk.Auth.GenerateAuthToken(domain, payload, nil)
 func (auth *WalletAuthenticator) GenerateAuthToken(
 	domain string,
 	payload *WalletLoginPayload,
@@ -271,12 +271,12 @@ func (auth *WalletAuthenticator) GenerateAuthToken(
 //
 // Example
 //
-// 	domain := "thirdweb.com"
-// 	payload, err := sdk.Auth.Login(domain)
-// 	token, err := sdk.Auth.GenerateAuthToken(domain, payload)
+//	domain := "example.com"
+//	payload, err := sdk.Auth.Login(domain)
+//	token, err := sdk.Auth.GenerateAuthToken(domain, payload)
 //
-// 	// Authenticate the token and get the address of the authenticating wallet
-// 	address, err := sdk.Auth.Authenticate(domain, token)
+//	// Authenticate the token and get the address of the authenticating wallet
+//	address, err := sdk.Auth.Authenticate(domain, token)
 func (auth *WalletAuthenticator) Authenticate(
 	domain string,
 	token string,
