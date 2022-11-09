@@ -11,7 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb-dev/go-sdk/abi"
+	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
 // The marketplace encoder class is used to get the unsigned transaction data for marketplace contract
@@ -22,7 +22,7 @@ import (
 // You can access the Marketplace interface from the SDK as follows:
 //
 //		import (
-//			"github.com/thirdweb-dev/go-sdk/thirdweb"
+//			"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 //		)
 //
 //		privateKey = "..."

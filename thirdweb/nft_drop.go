@@ -10,13 +10,13 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/mitchellh/mapstructure"
 
-	"github.com/thirdweb-dev/go-sdk/abi"
+	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
 // You can access the NFT Drop interface from the SDK as follows:
 //
 //	import (
-//		"github.com/thirdweb-dev/go-sdk/thirdweb"
+//		"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 //	)
 //
 //	privateKey = "..."

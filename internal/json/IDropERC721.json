@@ -71,7 +71,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "quantityLimitPerTransaction",
+            "name": "quantityLimitPerWallet",
             "type": "uint256"
           },
           {
@@ -115,19 +115,6 @@
       }
     ],
     "name": "MaxTotalSupplyUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "count",
-        "type": "uint256"
-      }
-    ],
-    "name": "MaxWalletClaimCountUpdated",
     "type": "event"
   },
   {
@@ -243,25 +230,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "count",
-        "type": "uint256"
-      }
-    ],
-    "name": "WalletClaimCountUpdated",
-    "type": "event"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -321,14 +289,26 @@
         "type": "uint256"
       },
       {
-        "internalType": "bytes32[]",
-        "name": "proofs",
-        "type": "bytes32[]"
+        "components": [
+          {
+            "internalType": "bytes32[]",
+            "name": "proof",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxQuantityInAllowlist",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IDropERC721.AllowlistProof",
+        "name": "allowlistProof",
+        "type": "tuple"
       },
       {
-        "internalType": "uint256",
-        "name": "proofMaxQuantityPerTransaction",
-        "type": "uint256"
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
       }
     ],
     "name": "claim",
@@ -511,7 +491,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "quantityLimitPerTransaction",
+            "name": "quantityLimitPerWallet",
             "type": "uint256"
           },
           {

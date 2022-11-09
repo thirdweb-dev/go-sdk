@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/cbergoon/merkletree"
+	"github.com/mitchellh/mapstructure"
 )
 
 type SnapshotInput struct {
@@ -91,7 +92,7 @@ func createSnapshot(
 		})
 	}
 
-	snapshotToUpload := SnapshotInfo{
+	snapshot := SnapshotInfo{
 		MerkleRoot: merkleRoot,
 		Claims:     claims,
 	}
@@ -99,13 +100,15 @@ func createSnapshot(
 	// TODO: Hash address and max claimable into content
 
 	// TODO: Upload metadata to IPFS
+	snapshotToUpload := map[string]interface{}{}
+	mapstructure.Decode(snapshot, &snapshotToUpload)
 	uri, err := storage.Upload(snapshotToUpload, "", "")
 	if err != nil {
 		return nil, err
 	}
 
 	return &SnapshotInfos{
-		Snapshot:    snapshotToUpload,
+		Snapshot:    snapshot,
 		MerkleRoot:  merkleRoot,
 		SnapshotUri: uri,
 	}, nil

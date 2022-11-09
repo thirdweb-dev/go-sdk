@@ -3,16 +3,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_twRegistry",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_metadataRegistry",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_trustedForwarder",
         "type": "address"
       }
@@ -32,30 +22,48 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "publisher",
+        "name": "deployment",
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "chainId",
+        "type": "uint256"
+      },
+      {
         "indexed": false,
-        "internalType": "address",
-        "name": "deployedContract",
-        "type": "address"
+        "internalType": "string",
+        "name": "metadataUri",
+        "type": "string"
       }
     ],
-    "name": "ContractDeployed",
+    "name": "Added",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isPaused",
-        "type": "bool"
+        "indexed": true,
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "deployment",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "chainId",
+        "type": "uint256"
       }
     ],
-    "name": "Paused",
+    "name": "Deleted",
     "type": "event"
   },
   {
@@ -147,46 +155,43 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "OPERATOR_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
-        "name": "_publisher",
+        "name": "_deployer",
         "type": "address"
       },
       {
-        "internalType": "bytes",
-        "name": "_contractBytecode",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_constructorArgs",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_salt",
-        "type": "bytes32"
+        "internalType": "address",
+        "name": "_deployment",
+        "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_value",
+        "name": "_chainId",
         "type": "uint256"
       },
       {
         "internalType": "string",
-        "name": "publishMetadataUri",
+        "name": "metadataUri",
         "type": "string"
       }
     ],
-    "name": "deployInstance",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "deployedAddress",
-        "type": "address"
-      }
-    ],
+    "name": "add",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -194,60 +199,71 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_publisher",
+        "name": "_deployer",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_implementation",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "_initializeData",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_salt",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "publishMetadataUri",
-        "type": "string"
       }
     ],
-    "name": "deployInstanceProxy",
+    "name": "count",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "deployedAddress",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "deploymentCount",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "_deployer",
         "type": "address"
       }
     ],
-    "name": "getContractDeployer",
+    "name": "getAll",
     "outputs": [
       {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "deploymentAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "chainId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ITWMultichainRegistry.Deployment[]",
+        "name": "allDeployments",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_chainId",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
-        "name": "",
+        "name": "_deployment",
         "type": "address"
+      }
+    ],
+    "name": "getMetadataUri",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "metadataUri",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -358,19 +374,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "isPaused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -411,6 +414,29 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_deployer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_deployment",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_chainId",
+        "type": "uint256"
+      }
+    ],
+    "name": "remove",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -440,19 +466,6 @@
       }
     ],
     "name": "revokeRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "_pause",
-        "type": "bool"
-      }
-    ],
-    "name": "setPause",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
