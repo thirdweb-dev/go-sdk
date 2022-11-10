@@ -28,21 +28,17 @@ var (
 	_ = event.NewSubscription
 )
 
-// IDropClaimConditionClaimCondition is an auto generated low-level Go binding around an user-defined struct.
-type IDropClaimConditionClaimCondition struct {
-	StartTimestamp                 *big.Int
-	MaxClaimableSupply             *big.Int
-	SupplyClaimed                  *big.Int
-	QuantityLimitPerTransaction    *big.Int
-	WaitTimeInSecondsBetweenClaims *big.Int
-	MerkleRoot                     [32]byte
-	PricePerToken                  *big.Int
-	Currency                       common.Address
+// IDrop1155AllowlistProof is an auto generated low-level Go binding around an user-defined struct.
+type IDrop1155AllowlistProof struct {
+	Proof                  [][32]byte
+	QuantityLimitPerWallet *big.Int
+	PricePerToken          *big.Int
+	Currency               common.Address
 }
 
 // DropERC1155MetaData contains all meta data concerning the DropERC1155 contract.
 var DropERC1155MetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_thirdwebFee\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerTransaction\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"waitTimeInSecondsBetweenClaims\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"indexed\":false,\"internalType\":\"structIDropClaimCondition.ClaimCondition[]\",\"name\":\"claimConditions\",\"type\":\"tuple[]\"}],\"name\":\"ClaimConditionsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newRoyaltyRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newRoyaltyBps\",\"type\":\"uint256\"}],\"name\":\"DefaultRoyalty\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxTotalSupply\",\"type\":\"uint256\"}],\"name\":\"MaxTotalSupplyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"MaxWalletClaimCountUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"prevOwner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"platformFeeRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"platformFeeBps\",\"type\":\"uint256\"}],\"name\":\"PlatformFeeInfoUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"PrimarySaleRecipientUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"royaltyRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyForToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"claimConditionIndex\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"claimer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"quantityClaimed\",\"type\":\"uint256\"}],\"name\":\"TokensClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"baseURI\",\"type\":\"string\"}],\"name\":\"TokensLazyMinted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"TransferBatch\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferSingle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"value\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"URI\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"WalletClaimCountUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"accounts\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"}],\"name\":\"balanceOfBatch\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"burnBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_proofs\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"_proofMaxQuantityPerTransaction\",\"type\":\"uint256\"}],\"name\":\"claim\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"claimCondition\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentStartId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractType\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractVersion\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getActiveClaimConditionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"}],\"name\":\"getClaimConditionById\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerTransaction\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"waitTimeInSecondsBetweenClaims\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"internalType\":\"structIDropClaimCondition.ClaimCondition\",\"name\":\"condition\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"}],\"name\":\"getClaimTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"lastClaimTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"nextValidClaimTimestamp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDefaultRoyaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPlatformFeeInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getRoyaltyInfoForToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_defaultAdmin\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_contractURI\",\"type\":\"string\"},{\"internalType\":\"address[]\",\"name\":\"_trustedForwarders\",\"type\":\"address[]\"},{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_royaltyRecipient\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"_royaltyBps\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"_platformFeeBps\",\"type\":\"uint128\"},{\"internalType\":\"address\",\"name\":\"_platformFeeRecipient\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_baseURIForTokens\",\"type\":\"string\"}],\"name\":\"lazyMint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"maxTotalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"maxWalletClaimCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"data\",\"type\":\"bytes[]\"}],\"name\":\"multicall\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenIdToMint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"primarySaleRecipient\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeBatchTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"saleRecipient\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerTransaction\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"waitTimeInSecondsBetweenClaims\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"internalType\":\"structIDropClaimCondition.ClaimCondition[]\",\"name\":\"_phases\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"_resetClaimEligibility\",\"type\":\"bool\"}],\"name\":\"setClaimConditions\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_royaltyRecipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setDefaultRoyaltyInfo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxTotalSupply\",\"type\":\"uint256\"}],\"name\":\"setMaxTotalSupply\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"setMaxWalletClaimCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"setOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_platformFeeRecipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_platformFeeBps\",\"type\":\"uint256\"}],\"name\":\"setPlatformFeeInfo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"}],\"name\":\"setPrimarySaleRecipient\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_bps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyInfoForToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"setWalletClaimCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"uri\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_tokenURI\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"verifyMaxQuantityPerTransaction\",\"type\":\"bool\"}],\"name\":\"verifyClaim\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_proofs\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"_proofMaxQuantityPerTransaction\",\"type\":\"uint256\"}],\"name\":\"verifyClaimMerkleProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"validMerkleProof\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"merkleProofIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"walletClaimCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"structIClaimCondition.ClaimCondition[]\",\"name\":\"claimConditions\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"resetEligibility\",\"type\":\"bool\"}],\"name\":\"ClaimConditionsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"prevURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"newURI\",\"type\":\"string\"}],\"name\":\"ContractURIUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newRoyaltyRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newRoyaltyBps\",\"type\":\"uint256\"}],\"name\":\"DefaultRoyalty\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxTotalSupply\",\"type\":\"uint256\"}],\"name\":\"MaxTotalSupplyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"prevOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"platformFeeRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"platformFeeBps\",\"type\":\"uint256\"}],\"name\":\"PlatformFeeInfoUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"PrimarySaleRecipientUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"royaltyRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyForToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"saleRecipient\",\"type\":\"address\"}],\"name\":\"SaleRecipientForTokenUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"claimConditionIndex\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"claimer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"quantityClaimed\",\"type\":\"uint256\"}],\"name\":\"TokensClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"startTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"baseURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encryptedBaseURI\",\"type\":\"bytes\"}],\"name\":\"TokensLazyMinted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"indexed\":false,\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"TransferBatch\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferSingle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"value\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"URI\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"accounts\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"}],\"name\":\"balanceOfBatch\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\"}],\"name\":\"burnBatch\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32[]\",\"name\":\"proof\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"internalType\":\"structIDrop1155.AllowlistProof\",\"name\":\"_allowlistProof\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"claim\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"claimCondition\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentStartId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractType\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractVersion\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getActiveClaimConditionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBaseURICount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"getBatchIdAtIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"}],\"name\":\"getClaimConditionById\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"internalType\":\"structIClaimCondition.ClaimCondition\",\"name\":\"condition\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDefaultRoyaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPlatformFeeInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"member\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getRoyaltyInfoForToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"}],\"name\":\"getSupplyClaimedByWallet\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"supplyClaimedByWallet\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRoleWithSwitch\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_defaultAdmin\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_contractURI\",\"type\":\"string\"},{\"internalType\":\"address[]\",\"name\":\"_trustedForwarders\",\"type\":\"address[]\"},{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_royaltyRecipient\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"_royaltyBps\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"_platformFeeBps\",\"type\":\"uint128\"},{\"internalType\":\"address\",\"name\":\"_platformFeeRecipient\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_baseURIForTokens\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"lazyMint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"batchId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"maxTotalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"data\",\"type\":\"bytes[]\"}],\"name\":\"multicall\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenIdToMint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"primarySaleRecipient\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeBatchTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"saleRecipient\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"internalType\":\"structIClaimCondition.ClaimCondition[]\",\"name\":\"_conditions\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"_resetClaimEligibility\",\"type\":\"bool\"}],\"name\":\"setClaimConditions\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_royaltyRecipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setDefaultRoyaltyInfo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxTotalSupply\",\"type\":\"uint256\"}],\"name\":\"setMaxTotalSupply\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"setOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_platformFeeRecipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_platformFeeBps\",\"type\":\"uint256\"}],\"name\":\"setPlatformFeeInfo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"}],\"name\":\"setPrimarySaleRecipient\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_bps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyInfoForToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"}],\"name\":\"setSaleRecipientForToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"uri\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32[]\",\"name\":\"proof\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"internalType\":\"structIDrop1155.AllowlistProof\",\"name\":\"_allowlistProof\",\"type\":\"tuple\"}],\"name\":\"verifyClaim\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isOverride\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // DropERC1155ABI is the input ABI used to generate the binding from.
@@ -453,18 +449,80 @@ func (_DropERC1155 *DropERC1155CallerSession) GetActiveClaimConditionId(_tokenId
 	return _DropERC1155.Contract.GetActiveClaimConditionId(&_DropERC1155.CallOpts, _tokenId)
 }
 
+// GetBaseURICount is a free data retrieval call binding the contract method 0x63b45e2d.
+//
+// Solidity: function getBaseURICount() view returns(uint256)
+func (_DropERC1155 *DropERC1155Caller) GetBaseURICount(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _DropERC1155.contract.Call(opts, &out, "getBaseURICount")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetBaseURICount is a free data retrieval call binding the contract method 0x63b45e2d.
+//
+// Solidity: function getBaseURICount() view returns(uint256)
+func (_DropERC1155 *DropERC1155Session) GetBaseURICount() (*big.Int, error) {
+	return _DropERC1155.Contract.GetBaseURICount(&_DropERC1155.CallOpts)
+}
+
+// GetBaseURICount is a free data retrieval call binding the contract method 0x63b45e2d.
+//
+// Solidity: function getBaseURICount() view returns(uint256)
+func (_DropERC1155 *DropERC1155CallerSession) GetBaseURICount() (*big.Int, error) {
+	return _DropERC1155.Contract.GetBaseURICount(&_DropERC1155.CallOpts)
+}
+
+// GetBatchIdAtIndex is a free data retrieval call binding the contract method 0x2419f51b.
+//
+// Solidity: function getBatchIdAtIndex(uint256 _index) view returns(uint256)
+func (_DropERC1155 *DropERC1155Caller) GetBatchIdAtIndex(opts *bind.CallOpts, _index *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _DropERC1155.contract.Call(opts, &out, "getBatchIdAtIndex", _index)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetBatchIdAtIndex is a free data retrieval call binding the contract method 0x2419f51b.
+//
+// Solidity: function getBatchIdAtIndex(uint256 _index) view returns(uint256)
+func (_DropERC1155 *DropERC1155Session) GetBatchIdAtIndex(_index *big.Int) (*big.Int, error) {
+	return _DropERC1155.Contract.GetBatchIdAtIndex(&_DropERC1155.CallOpts, _index)
+}
+
+// GetBatchIdAtIndex is a free data retrieval call binding the contract method 0x2419f51b.
+//
+// Solidity: function getBatchIdAtIndex(uint256 _index) view returns(uint256)
+func (_DropERC1155 *DropERC1155CallerSession) GetBatchIdAtIndex(_index *big.Int) (*big.Int, error) {
+	return _DropERC1155.Contract.GetBatchIdAtIndex(&_DropERC1155.CallOpts, _index)
+}
+
 // GetClaimConditionById is a free data retrieval call binding the contract method 0xd45b28d7.
 //
-// Solidity: function getClaimConditionById(uint256 _tokenId, uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address) condition)
-func (_DropERC1155 *DropERC1155Caller) GetClaimConditionById(opts *bind.CallOpts, _tokenId *big.Int, _conditionId *big.Int) (IDropClaimConditionClaimCondition, error) {
+// Solidity: function getClaimConditionById(uint256 _tokenId, uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,bytes32,uint256,address,string) condition)
+func (_DropERC1155 *DropERC1155Caller) GetClaimConditionById(opts *bind.CallOpts, _tokenId *big.Int, _conditionId *big.Int) (IClaimConditionClaimCondition, error) {
 	var out []interface{}
 	err := _DropERC1155.contract.Call(opts, &out, "getClaimConditionById", _tokenId, _conditionId)
 
 	if err != nil {
-		return *new(IDropClaimConditionClaimCondition), err
+		return *new(IClaimConditionClaimCondition), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(IDropClaimConditionClaimCondition)).(*IDropClaimConditionClaimCondition)
+	out0 := *abi.ConvertType(out[0], new(IClaimConditionClaimCondition)).(*IClaimConditionClaimCondition)
 
 	return out0, err
 
@@ -472,61 +530,16 @@ func (_DropERC1155 *DropERC1155Caller) GetClaimConditionById(opts *bind.CallOpts
 
 // GetClaimConditionById is a free data retrieval call binding the contract method 0xd45b28d7.
 //
-// Solidity: function getClaimConditionById(uint256 _tokenId, uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address) condition)
-func (_DropERC1155 *DropERC1155Session) GetClaimConditionById(_tokenId *big.Int, _conditionId *big.Int) (IDropClaimConditionClaimCondition, error) {
+// Solidity: function getClaimConditionById(uint256 _tokenId, uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,bytes32,uint256,address,string) condition)
+func (_DropERC1155 *DropERC1155Session) GetClaimConditionById(_tokenId *big.Int, _conditionId *big.Int) (IClaimConditionClaimCondition, error) {
 	return _DropERC1155.Contract.GetClaimConditionById(&_DropERC1155.CallOpts, _tokenId, _conditionId)
 }
 
 // GetClaimConditionById is a free data retrieval call binding the contract method 0xd45b28d7.
 //
-// Solidity: function getClaimConditionById(uint256 _tokenId, uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address) condition)
-func (_DropERC1155 *DropERC1155CallerSession) GetClaimConditionById(_tokenId *big.Int, _conditionId *big.Int) (IDropClaimConditionClaimCondition, error) {
+// Solidity: function getClaimConditionById(uint256 _tokenId, uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,bytes32,uint256,address,string) condition)
+func (_DropERC1155 *DropERC1155CallerSession) GetClaimConditionById(_tokenId *big.Int, _conditionId *big.Int) (IClaimConditionClaimCondition, error) {
 	return _DropERC1155.Contract.GetClaimConditionById(&_DropERC1155.CallOpts, _tokenId, _conditionId)
-}
-
-// GetClaimTimestamp is a free data retrieval call binding the contract method 0x622a6c31.
-//
-// Solidity: function getClaimTimestamp(uint256 _tokenId, uint256 _conditionId, address _claimer) view returns(uint256 lastClaimTimestamp, uint256 nextValidClaimTimestamp)
-func (_DropERC1155 *DropERC1155Caller) GetClaimTimestamp(opts *bind.CallOpts, _tokenId *big.Int, _conditionId *big.Int, _claimer common.Address) (struct {
-	LastClaimTimestamp      *big.Int
-	NextValidClaimTimestamp *big.Int
-}, error) {
-	var out []interface{}
-	err := _DropERC1155.contract.Call(opts, &out, "getClaimTimestamp", _tokenId, _conditionId, _claimer)
-
-	outstruct := new(struct {
-		LastClaimTimestamp      *big.Int
-		NextValidClaimTimestamp *big.Int
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.LastClaimTimestamp = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-	outstruct.NextValidClaimTimestamp = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
-
-	return *outstruct, err
-
-}
-
-// GetClaimTimestamp is a free data retrieval call binding the contract method 0x622a6c31.
-//
-// Solidity: function getClaimTimestamp(uint256 _tokenId, uint256 _conditionId, address _claimer) view returns(uint256 lastClaimTimestamp, uint256 nextValidClaimTimestamp)
-func (_DropERC1155 *DropERC1155Session) GetClaimTimestamp(_tokenId *big.Int, _conditionId *big.Int, _claimer common.Address) (struct {
-	LastClaimTimestamp      *big.Int
-	NextValidClaimTimestamp *big.Int
-}, error) {
-	return _DropERC1155.Contract.GetClaimTimestamp(&_DropERC1155.CallOpts, _tokenId, _conditionId, _claimer)
-}
-
-// GetClaimTimestamp is a free data retrieval call binding the contract method 0x622a6c31.
-//
-// Solidity: function getClaimTimestamp(uint256 _tokenId, uint256 _conditionId, address _claimer) view returns(uint256 lastClaimTimestamp, uint256 nextValidClaimTimestamp)
-func (_DropERC1155 *DropERC1155CallerSession) GetClaimTimestamp(_tokenId *big.Int, _conditionId *big.Int, _claimer common.Address) (struct {
-	LastClaimTimestamp      *big.Int
-	NextValidClaimTimestamp *big.Int
-}, error) {
-	return _DropERC1155.Contract.GetClaimTimestamp(&_DropERC1155.CallOpts, _tokenId, _conditionId, _claimer)
 }
 
 // GetDefaultRoyaltyInfo is a free data retrieval call binding the contract method 0xb24f2d39.
@@ -626,7 +639,7 @@ func (_DropERC1155 *DropERC1155CallerSession) GetRoleAdmin(role [32]byte) ([32]b
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
-// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
+// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address member)
 func (_DropERC1155 *DropERC1155Caller) GetRoleMember(opts *bind.CallOpts, role [32]byte, index *big.Int) (common.Address, error) {
 	var out []interface{}
 	err := _DropERC1155.contract.Call(opts, &out, "getRoleMember", role, index)
@@ -643,21 +656,21 @@ func (_DropERC1155 *DropERC1155Caller) GetRoleMember(opts *bind.CallOpts, role [
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
-// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
+// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address member)
 func (_DropERC1155 *DropERC1155Session) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
 	return _DropERC1155.Contract.GetRoleMember(&_DropERC1155.CallOpts, role, index)
 }
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
-// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
+// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address member)
 func (_DropERC1155 *DropERC1155CallerSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
 	return _DropERC1155.Contract.GetRoleMember(&_DropERC1155.CallOpts, role, index)
 }
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
-// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
+// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256 count)
 func (_DropERC1155 *DropERC1155Caller) GetRoleMemberCount(opts *bind.CallOpts, role [32]byte) (*big.Int, error) {
 	var out []interface{}
 	err := _DropERC1155.contract.Call(opts, &out, "getRoleMemberCount", role)
@@ -674,14 +687,14 @@ func (_DropERC1155 *DropERC1155Caller) GetRoleMemberCount(opts *bind.CallOpts, r
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
-// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
+// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256 count)
 func (_DropERC1155 *DropERC1155Session) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
 	return _DropERC1155.Contract.GetRoleMemberCount(&_DropERC1155.CallOpts, role)
 }
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
-// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
+// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256 count)
 func (_DropERC1155 *DropERC1155CallerSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
 	return _DropERC1155.Contract.GetRoleMemberCount(&_DropERC1155.CallOpts, role)
 }
@@ -718,6 +731,37 @@ func (_DropERC1155 *DropERC1155CallerSession) GetRoyaltyInfoForToken(_tokenId *b
 	return _DropERC1155.Contract.GetRoyaltyInfoForToken(&_DropERC1155.CallOpts, _tokenId)
 }
 
+// GetSupplyClaimedByWallet is a free data retrieval call binding the contract method 0x5811ddab.
+//
+// Solidity: function getSupplyClaimedByWallet(uint256 _tokenId, uint256 _conditionId, address _claimer) view returns(uint256 supplyClaimedByWallet)
+func (_DropERC1155 *DropERC1155Caller) GetSupplyClaimedByWallet(opts *bind.CallOpts, _tokenId *big.Int, _conditionId *big.Int, _claimer common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _DropERC1155.contract.Call(opts, &out, "getSupplyClaimedByWallet", _tokenId, _conditionId, _claimer)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetSupplyClaimedByWallet is a free data retrieval call binding the contract method 0x5811ddab.
+//
+// Solidity: function getSupplyClaimedByWallet(uint256 _tokenId, uint256 _conditionId, address _claimer) view returns(uint256 supplyClaimedByWallet)
+func (_DropERC1155 *DropERC1155Session) GetSupplyClaimedByWallet(_tokenId *big.Int, _conditionId *big.Int, _claimer common.Address) (*big.Int, error) {
+	return _DropERC1155.Contract.GetSupplyClaimedByWallet(&_DropERC1155.CallOpts, _tokenId, _conditionId, _claimer)
+}
+
+// GetSupplyClaimedByWallet is a free data retrieval call binding the contract method 0x5811ddab.
+//
+// Solidity: function getSupplyClaimedByWallet(uint256 _tokenId, uint256 _conditionId, address _claimer) view returns(uint256 supplyClaimedByWallet)
+func (_DropERC1155 *DropERC1155CallerSession) GetSupplyClaimedByWallet(_tokenId *big.Int, _conditionId *big.Int, _claimer common.Address) (*big.Int, error) {
+	return _DropERC1155.Contract.GetSupplyClaimedByWallet(&_DropERC1155.CallOpts, _tokenId, _conditionId, _claimer)
+}
+
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
@@ -747,6 +791,37 @@ func (_DropERC1155 *DropERC1155Session) HasRole(role [32]byte, account common.Ad
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
 func (_DropERC1155 *DropERC1155CallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
 	return _DropERC1155.Contract.HasRole(&_DropERC1155.CallOpts, role, account)
+}
+
+// HasRoleWithSwitch is a free data retrieval call binding the contract method 0xa32fa5b3.
+//
+// Solidity: function hasRoleWithSwitch(bytes32 role, address account) view returns(bool)
+func (_DropERC1155 *DropERC1155Caller) HasRoleWithSwitch(opts *bind.CallOpts, role [32]byte, account common.Address) (bool, error) {
+	var out []interface{}
+	err := _DropERC1155.contract.Call(opts, &out, "hasRoleWithSwitch", role, account)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// HasRoleWithSwitch is a free data retrieval call binding the contract method 0xa32fa5b3.
+//
+// Solidity: function hasRoleWithSwitch(bytes32 role, address account) view returns(bool)
+func (_DropERC1155 *DropERC1155Session) HasRoleWithSwitch(role [32]byte, account common.Address) (bool, error) {
+	return _DropERC1155.Contract.HasRoleWithSwitch(&_DropERC1155.CallOpts, role, account)
+}
+
+// HasRoleWithSwitch is a free data retrieval call binding the contract method 0xa32fa5b3.
+//
+// Solidity: function hasRoleWithSwitch(bytes32 role, address account) view returns(bool)
+func (_DropERC1155 *DropERC1155CallerSession) HasRoleWithSwitch(role [32]byte, account common.Address) (bool, error) {
+	return _DropERC1155.Contract.HasRoleWithSwitch(&_DropERC1155.CallOpts, role, account)
 }
 
 // IsApprovedForAll is a free data retrieval call binding the contract method 0xe985e9c5.
@@ -840,37 +915,6 @@ func (_DropERC1155 *DropERC1155Session) MaxTotalSupply(arg0 *big.Int) (*big.Int,
 // Solidity: function maxTotalSupply(uint256 ) view returns(uint256)
 func (_DropERC1155 *DropERC1155CallerSession) MaxTotalSupply(arg0 *big.Int) (*big.Int, error) {
 	return _DropERC1155.Contract.MaxTotalSupply(&_DropERC1155.CallOpts, arg0)
-}
-
-// MaxWalletClaimCount is a free data retrieval call binding the contract method 0xb79cade4.
-//
-// Solidity: function maxWalletClaimCount(uint256 ) view returns(uint256)
-func (_DropERC1155 *DropERC1155Caller) MaxWalletClaimCount(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _DropERC1155.contract.Call(opts, &out, "maxWalletClaimCount", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// MaxWalletClaimCount is a free data retrieval call binding the contract method 0xb79cade4.
-//
-// Solidity: function maxWalletClaimCount(uint256 ) view returns(uint256)
-func (_DropERC1155 *DropERC1155Session) MaxWalletClaimCount(arg0 *big.Int) (*big.Int, error) {
-	return _DropERC1155.Contract.MaxWalletClaimCount(&_DropERC1155.CallOpts, arg0)
-}
-
-// MaxWalletClaimCount is a free data retrieval call binding the contract method 0xb79cade4.
-//
-// Solidity: function maxWalletClaimCount(uint256 ) view returns(uint256)
-func (_DropERC1155 *DropERC1155CallerSession) MaxWalletClaimCount(arg0 *big.Int) (*big.Int, error) {
-	return _DropERC1155.Contract.MaxWalletClaimCount(&_DropERC1155.CallOpts, arg0)
 }
 
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
@@ -1168,7 +1212,7 @@ func (_DropERC1155 *DropERC1155CallerSession) TotalSupply(arg0 *big.Int) (*big.I
 
 // Uri is a free data retrieval call binding the contract method 0x0e89341c.
 //
-// Solidity: function uri(uint256 _tokenId) view returns(string _tokenURI)
+// Solidity: function uri(uint256 _tokenId) view returns(string)
 func (_DropERC1155 *DropERC1155Caller) Uri(opts *bind.CallOpts, _tokenId *big.Int) (string, error) {
 	var out []interface{}
 	err := _DropERC1155.contract.Call(opts, &out, "uri", _tokenId)
@@ -1185,142 +1229,47 @@ func (_DropERC1155 *DropERC1155Caller) Uri(opts *bind.CallOpts, _tokenId *big.In
 
 // Uri is a free data retrieval call binding the contract method 0x0e89341c.
 //
-// Solidity: function uri(uint256 _tokenId) view returns(string _tokenURI)
+// Solidity: function uri(uint256 _tokenId) view returns(string)
 func (_DropERC1155 *DropERC1155Session) Uri(_tokenId *big.Int) (string, error) {
 	return _DropERC1155.Contract.Uri(&_DropERC1155.CallOpts, _tokenId)
 }
 
 // Uri is a free data retrieval call binding the contract method 0x0e89341c.
 //
-// Solidity: function uri(uint256 _tokenId) view returns(string _tokenURI)
+// Solidity: function uri(uint256 _tokenId) view returns(string)
 func (_DropERC1155 *DropERC1155CallerSession) Uri(_tokenId *big.Int) (string, error) {
 	return _DropERC1155.Contract.Uri(&_DropERC1155.CallOpts, _tokenId)
 }
 
-// VerifyClaim is a free data retrieval call binding the contract method 0xa157f71c.
+// VerifyClaim is a free data retrieval call binding the contract method 0xea1def9c.
 //
-// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, bool verifyMaxQuantityPerTransaction) view returns()
-func (_DropERC1155 *DropERC1155Caller) VerifyClaim(opts *bind.CallOpts, _conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, verifyMaxQuantityPerTransaction bool) error {
+// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof) view returns(bool isOverride)
+func (_DropERC1155 *DropERC1155Caller) VerifyClaim(opts *bind.CallOpts, _conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDrop1155AllowlistProof) (bool, error) {
 	var out []interface{}
-	err := _DropERC1155.contract.Call(opts, &out, "verifyClaim", _conditionId, _claimer, _tokenId, _quantity, _currency, _pricePerToken, verifyMaxQuantityPerTransaction)
+	err := _DropERC1155.contract.Call(opts, &out, "verifyClaim", _conditionId, _claimer, _tokenId, _quantity, _currency, _pricePerToken, _allowlistProof)
 
 	if err != nil {
-		return err
+		return *new(bool), err
 	}
 
-	return err
-
-}
-
-// VerifyClaim is a free data retrieval call binding the contract method 0xa157f71c.
-//
-// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, bool verifyMaxQuantityPerTransaction) view returns()
-func (_DropERC1155 *DropERC1155Session) VerifyClaim(_conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, verifyMaxQuantityPerTransaction bool) error {
-	return _DropERC1155.Contract.VerifyClaim(&_DropERC1155.CallOpts, _conditionId, _claimer, _tokenId, _quantity, _currency, _pricePerToken, verifyMaxQuantityPerTransaction)
-}
-
-// VerifyClaim is a free data retrieval call binding the contract method 0xa157f71c.
-//
-// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, bool verifyMaxQuantityPerTransaction) view returns()
-func (_DropERC1155 *DropERC1155CallerSession) VerifyClaim(_conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, verifyMaxQuantityPerTransaction bool) error {
-	return _DropERC1155.Contract.VerifyClaim(&_DropERC1155.CallOpts, _conditionId, _claimer, _tokenId, _quantity, _currency, _pricePerToken, verifyMaxQuantityPerTransaction)
-}
-
-// VerifyClaimMerkleProof is a free data retrieval call binding the contract method 0x71d53a5b.
-//
-// Solidity: function verifyClaimMerkleProof(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) view returns(bool validMerkleProof, uint256 merkleProofIndex)
-func (_DropERC1155 *DropERC1155Caller) VerifyClaimMerkleProof(opts *bind.CallOpts, _conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (struct {
-	ValidMerkleProof bool
-	MerkleProofIndex *big.Int
-}, error) {
-	var out []interface{}
-	err := _DropERC1155.contract.Call(opts, &out, "verifyClaimMerkleProof", _conditionId, _claimer, _tokenId, _quantity, _proofs, _proofMaxQuantityPerTransaction)
-
-	outstruct := new(struct {
-		ValidMerkleProof bool
-		MerkleProofIndex *big.Int
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.ValidMerkleProof = *abi.ConvertType(out[0], new(bool)).(*bool)
-	outstruct.MerkleProofIndex = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
-
-	return *outstruct, err
-
-}
-
-// VerifyClaimMerkleProof is a free data retrieval call binding the contract method 0x71d53a5b.
-//
-// Solidity: function verifyClaimMerkleProof(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) view returns(bool validMerkleProof, uint256 merkleProofIndex)
-func (_DropERC1155 *DropERC1155Session) VerifyClaimMerkleProof(_conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (struct {
-	ValidMerkleProof bool
-	MerkleProofIndex *big.Int
-}, error) {
-	return _DropERC1155.Contract.VerifyClaimMerkleProof(&_DropERC1155.CallOpts, _conditionId, _claimer, _tokenId, _quantity, _proofs, _proofMaxQuantityPerTransaction)
-}
-
-// VerifyClaimMerkleProof is a free data retrieval call binding the contract method 0x71d53a5b.
-//
-// Solidity: function verifyClaimMerkleProof(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) view returns(bool validMerkleProof, uint256 merkleProofIndex)
-func (_DropERC1155 *DropERC1155CallerSession) VerifyClaimMerkleProof(_conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (struct {
-	ValidMerkleProof bool
-	MerkleProofIndex *big.Int
-}, error) {
-	return _DropERC1155.Contract.VerifyClaimMerkleProof(&_DropERC1155.CallOpts, _conditionId, _claimer, _tokenId, _quantity, _proofs, _proofMaxQuantityPerTransaction)
-}
-
-// WalletClaimCount is a free data retrieval call binding the contract method 0xc16ce64e.
-//
-// Solidity: function walletClaimCount(uint256 , address ) view returns(uint256)
-func (_DropERC1155 *DropERC1155Caller) WalletClaimCount(opts *bind.CallOpts, arg0 *big.Int, arg1 common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _DropERC1155.contract.Call(opts, &out, "walletClaimCount", arg0, arg1)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
 
 	return out0, err
 
 }
 
-// WalletClaimCount is a free data retrieval call binding the contract method 0xc16ce64e.
+// VerifyClaim is a free data retrieval call binding the contract method 0xea1def9c.
 //
-// Solidity: function walletClaimCount(uint256 , address ) view returns(uint256)
-func (_DropERC1155 *DropERC1155Session) WalletClaimCount(arg0 *big.Int, arg1 common.Address) (*big.Int, error) {
-	return _DropERC1155.Contract.WalletClaimCount(&_DropERC1155.CallOpts, arg0, arg1)
+// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof) view returns(bool isOverride)
+func (_DropERC1155 *DropERC1155Session) VerifyClaim(_conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDrop1155AllowlistProof) (bool, error) {
+	return _DropERC1155.Contract.VerifyClaim(&_DropERC1155.CallOpts, _conditionId, _claimer, _tokenId, _quantity, _currency, _pricePerToken, _allowlistProof)
 }
 
-// WalletClaimCount is a free data retrieval call binding the contract method 0xc16ce64e.
+// VerifyClaim is a free data retrieval call binding the contract method 0xea1def9c.
 //
-// Solidity: function walletClaimCount(uint256 , address ) view returns(uint256)
-func (_DropERC1155 *DropERC1155CallerSession) WalletClaimCount(arg0 *big.Int, arg1 common.Address) (*big.Int, error) {
-	return _DropERC1155.Contract.WalletClaimCount(&_DropERC1155.CallOpts, arg0, arg1)
-}
-
-// Burn is a paid mutator transaction binding the contract method 0xf5298aca.
-//
-// Solidity: function burn(address account, uint256 id, uint256 value) returns()
-func (_DropERC1155 *DropERC1155Transactor) Burn(opts *bind.TransactOpts, account common.Address, id *big.Int, value *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.contract.Transact(opts, "burn", account, id, value)
-}
-
-// Burn is a paid mutator transaction binding the contract method 0xf5298aca.
-//
-// Solidity: function burn(address account, uint256 id, uint256 value) returns()
-func (_DropERC1155 *DropERC1155Session) Burn(account common.Address, id *big.Int, value *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.Contract.Burn(&_DropERC1155.TransactOpts, account, id, value)
-}
-
-// Burn is a paid mutator transaction binding the contract method 0xf5298aca.
-//
-// Solidity: function burn(address account, uint256 id, uint256 value) returns()
-func (_DropERC1155 *DropERC1155TransactorSession) Burn(account common.Address, id *big.Int, value *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.Contract.Burn(&_DropERC1155.TransactOpts, account, id, value)
+// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof) view returns(bool isOverride)
+func (_DropERC1155 *DropERC1155CallerSession) VerifyClaim(_conditionId *big.Int, _claimer common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDrop1155AllowlistProof) (bool, error) {
+	return _DropERC1155.Contract.VerifyClaim(&_DropERC1155.CallOpts, _conditionId, _claimer, _tokenId, _quantity, _currency, _pricePerToken, _allowlistProof)
 }
 
 // BurnBatch is a paid mutator transaction binding the contract method 0x6b20c454.
@@ -1344,25 +1293,25 @@ func (_DropERC1155 *DropERC1155TransactorSession) BurnBatch(account common.Addre
 	return _DropERC1155.Contract.BurnBatch(&_DropERC1155.TransactOpts, account, ids, values)
 }
 
-// Claim is a paid mutator transaction binding the contract method 0xb4c5faa1.
+// Claim is a paid mutator transaction binding the contract method 0x57bc3d78.
 //
-// Solidity: function claim(address _receiver, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) payable returns()
-func (_DropERC1155 *DropERC1155Transactor) Claim(opts *bind.TransactOpts, _receiver common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.contract.Transact(opts, "claim", _receiver, _tokenId, _quantity, _currency, _pricePerToken, _proofs, _proofMaxQuantityPerTransaction)
+// Solidity: function claim(address _receiver, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof, bytes _data) payable returns()
+func (_DropERC1155 *DropERC1155Transactor) Claim(opts *bind.TransactOpts, _receiver common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDrop1155AllowlistProof, _data []byte) (*types.Transaction, error) {
+	return _DropERC1155.contract.Transact(opts, "claim", _receiver, _tokenId, _quantity, _currency, _pricePerToken, _allowlistProof, _data)
 }
 
-// Claim is a paid mutator transaction binding the contract method 0xb4c5faa1.
+// Claim is a paid mutator transaction binding the contract method 0x57bc3d78.
 //
-// Solidity: function claim(address _receiver, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) payable returns()
-func (_DropERC1155 *DropERC1155Session) Claim(_receiver common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.Contract.Claim(&_DropERC1155.TransactOpts, _receiver, _tokenId, _quantity, _currency, _pricePerToken, _proofs, _proofMaxQuantityPerTransaction)
+// Solidity: function claim(address _receiver, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof, bytes _data) payable returns()
+func (_DropERC1155 *DropERC1155Session) Claim(_receiver common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDrop1155AllowlistProof, _data []byte) (*types.Transaction, error) {
+	return _DropERC1155.Contract.Claim(&_DropERC1155.TransactOpts, _receiver, _tokenId, _quantity, _currency, _pricePerToken, _allowlistProof, _data)
 }
 
-// Claim is a paid mutator transaction binding the contract method 0xb4c5faa1.
+// Claim is a paid mutator transaction binding the contract method 0x57bc3d78.
 //
-// Solidity: function claim(address _receiver, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) payable returns()
-func (_DropERC1155 *DropERC1155TransactorSession) Claim(_receiver common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.Contract.Claim(&_DropERC1155.TransactOpts, _receiver, _tokenId, _quantity, _currency, _pricePerToken, _proofs, _proofMaxQuantityPerTransaction)
+// Solidity: function claim(address _receiver, uint256 _tokenId, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof, bytes _data) payable returns()
+func (_DropERC1155 *DropERC1155TransactorSession) Claim(_receiver common.Address, _tokenId *big.Int, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDrop1155AllowlistProof, _data []byte) (*types.Transaction, error) {
+	return _DropERC1155.Contract.Claim(&_DropERC1155.TransactOpts, _receiver, _tokenId, _quantity, _currency, _pricePerToken, _allowlistProof, _data)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
@@ -1407,25 +1356,25 @@ func (_DropERC1155 *DropERC1155TransactorSession) Initialize(_defaultAdmin commo
 	return _DropERC1155.Contract.Initialize(&_DropERC1155.TransactOpts, _defaultAdmin, _name, _symbol, _contractURI, _trustedForwarders, _saleRecipient, _royaltyRecipient, _royaltyBps, _platformFeeBps, _platformFeeRecipient)
 }
 
-// LazyMint is a paid mutator transaction binding the contract method 0x47158264.
+// LazyMint is a paid mutator transaction binding the contract method 0xd37c353b.
 //
-// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens) returns()
-func (_DropERC1155 *DropERC1155Transactor) LazyMint(opts *bind.TransactOpts, _amount *big.Int, _baseURIForTokens string) (*types.Transaction, error) {
-	return _DropERC1155.contract.Transact(opts, "lazyMint", _amount, _baseURIForTokens)
+// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns(uint256 batchId)
+func (_DropERC1155 *DropERC1155Transactor) LazyMint(opts *bind.TransactOpts, _amount *big.Int, _baseURIForTokens string, _data []byte) (*types.Transaction, error) {
+	return _DropERC1155.contract.Transact(opts, "lazyMint", _amount, _baseURIForTokens, _data)
 }
 
-// LazyMint is a paid mutator transaction binding the contract method 0x47158264.
+// LazyMint is a paid mutator transaction binding the contract method 0xd37c353b.
 //
-// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens) returns()
-func (_DropERC1155 *DropERC1155Session) LazyMint(_amount *big.Int, _baseURIForTokens string) (*types.Transaction, error) {
-	return _DropERC1155.Contract.LazyMint(&_DropERC1155.TransactOpts, _amount, _baseURIForTokens)
+// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns(uint256 batchId)
+func (_DropERC1155 *DropERC1155Session) LazyMint(_amount *big.Int, _baseURIForTokens string, _data []byte) (*types.Transaction, error) {
+	return _DropERC1155.Contract.LazyMint(&_DropERC1155.TransactOpts, _amount, _baseURIForTokens, _data)
 }
 
-// LazyMint is a paid mutator transaction binding the contract method 0x47158264.
+// LazyMint is a paid mutator transaction binding the contract method 0xd37c353b.
 //
-// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens) returns()
-func (_DropERC1155 *DropERC1155TransactorSession) LazyMint(_amount *big.Int, _baseURIForTokens string) (*types.Transaction, error) {
-	return _DropERC1155.Contract.LazyMint(&_DropERC1155.TransactOpts, _amount, _baseURIForTokens)
+// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns(uint256 batchId)
+func (_DropERC1155 *DropERC1155TransactorSession) LazyMint(_amount *big.Int, _baseURIForTokens string, _data []byte) (*types.Transaction, error) {
+	return _DropERC1155.Contract.LazyMint(&_DropERC1155.TransactOpts, _amount, _baseURIForTokens, _data)
 }
 
 // Multicall is a paid mutator transaction binding the contract method 0xac9650d8.
@@ -1554,25 +1503,25 @@ func (_DropERC1155 *DropERC1155TransactorSession) SetApprovalForAll(operator com
 	return _DropERC1155.Contract.SetApprovalForAll(&_DropERC1155.TransactOpts, operator, approved)
 }
 
-// SetClaimConditions is a paid mutator transaction binding the contract method 0xab073c22.
+// SetClaimConditions is a paid mutator transaction binding the contract method 0x183718d1.
 //
-// Solidity: function setClaimConditions(uint256 _tokenId, (uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] _phases, bool _resetClaimEligibility) returns()
-func (_DropERC1155 *DropERC1155Transactor) SetClaimConditions(opts *bind.TransactOpts, _tokenId *big.Int, _phases []IDropClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
-	return _DropERC1155.contract.Transact(opts, "setClaimConditions", _tokenId, _phases, _resetClaimEligibility)
+// Solidity: function setClaimConditions(uint256 _tokenId, (uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] _conditions, bool _resetClaimEligibility) returns()
+func (_DropERC1155 *DropERC1155Transactor) SetClaimConditions(opts *bind.TransactOpts, _tokenId *big.Int, _conditions []IClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
+	return _DropERC1155.contract.Transact(opts, "setClaimConditions", _tokenId, _conditions, _resetClaimEligibility)
 }
 
-// SetClaimConditions is a paid mutator transaction binding the contract method 0xab073c22.
+// SetClaimConditions is a paid mutator transaction binding the contract method 0x183718d1.
 //
-// Solidity: function setClaimConditions(uint256 _tokenId, (uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] _phases, bool _resetClaimEligibility) returns()
-func (_DropERC1155 *DropERC1155Session) SetClaimConditions(_tokenId *big.Int, _phases []IDropClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
-	return _DropERC1155.Contract.SetClaimConditions(&_DropERC1155.TransactOpts, _tokenId, _phases, _resetClaimEligibility)
+// Solidity: function setClaimConditions(uint256 _tokenId, (uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] _conditions, bool _resetClaimEligibility) returns()
+func (_DropERC1155 *DropERC1155Session) SetClaimConditions(_tokenId *big.Int, _conditions []IClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
+	return _DropERC1155.Contract.SetClaimConditions(&_DropERC1155.TransactOpts, _tokenId, _conditions, _resetClaimEligibility)
 }
 
-// SetClaimConditions is a paid mutator transaction binding the contract method 0xab073c22.
+// SetClaimConditions is a paid mutator transaction binding the contract method 0x183718d1.
 //
-// Solidity: function setClaimConditions(uint256 _tokenId, (uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] _phases, bool _resetClaimEligibility) returns()
-func (_DropERC1155 *DropERC1155TransactorSession) SetClaimConditions(_tokenId *big.Int, _phases []IDropClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
-	return _DropERC1155.Contract.SetClaimConditions(&_DropERC1155.TransactOpts, _tokenId, _phases, _resetClaimEligibility)
+// Solidity: function setClaimConditions(uint256 _tokenId, (uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] _conditions, bool _resetClaimEligibility) returns()
+func (_DropERC1155 *DropERC1155TransactorSession) SetClaimConditions(_tokenId *big.Int, _conditions []IClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
+	return _DropERC1155.Contract.SetClaimConditions(&_DropERC1155.TransactOpts, _tokenId, _conditions, _resetClaimEligibility)
 }
 
 // SetContractURI is a paid mutator transaction binding the contract method 0x938e3d7b.
@@ -1636,27 +1585,6 @@ func (_DropERC1155 *DropERC1155Session) SetMaxTotalSupply(_tokenId *big.Int, _ma
 // Solidity: function setMaxTotalSupply(uint256 _tokenId, uint256 _maxTotalSupply) returns()
 func (_DropERC1155 *DropERC1155TransactorSession) SetMaxTotalSupply(_tokenId *big.Int, _maxTotalSupply *big.Int) (*types.Transaction, error) {
 	return _DropERC1155.Contract.SetMaxTotalSupply(&_DropERC1155.TransactOpts, _tokenId, _maxTotalSupply)
-}
-
-// SetMaxWalletClaimCount is a paid mutator transaction binding the contract method 0x832c3a58.
-//
-// Solidity: function setMaxWalletClaimCount(uint256 _tokenId, uint256 _count) returns()
-func (_DropERC1155 *DropERC1155Transactor) SetMaxWalletClaimCount(opts *bind.TransactOpts, _tokenId *big.Int, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.contract.Transact(opts, "setMaxWalletClaimCount", _tokenId, _count)
-}
-
-// SetMaxWalletClaimCount is a paid mutator transaction binding the contract method 0x832c3a58.
-//
-// Solidity: function setMaxWalletClaimCount(uint256 _tokenId, uint256 _count) returns()
-func (_DropERC1155 *DropERC1155Session) SetMaxWalletClaimCount(_tokenId *big.Int, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.Contract.SetMaxWalletClaimCount(&_DropERC1155.TransactOpts, _tokenId, _count)
-}
-
-// SetMaxWalletClaimCount is a paid mutator transaction binding the contract method 0x832c3a58.
-//
-// Solidity: function setMaxWalletClaimCount(uint256 _tokenId, uint256 _count) returns()
-func (_DropERC1155 *DropERC1155TransactorSession) SetMaxWalletClaimCount(_tokenId *big.Int, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.Contract.SetMaxWalletClaimCount(&_DropERC1155.TransactOpts, _tokenId, _count)
 }
 
 // SetOwner is a paid mutator transaction binding the contract method 0x13af4035.
@@ -1743,25 +1671,25 @@ func (_DropERC1155 *DropERC1155TransactorSession) SetRoyaltyInfoForToken(_tokenI
 	return _DropERC1155.Contract.SetRoyaltyInfoForToken(&_DropERC1155.TransactOpts, _tokenId, _recipient, _bps)
 }
 
-// SetWalletClaimCount is a paid mutator transaction binding the contract method 0xb1014400.
+// SetSaleRecipientForToken is a paid mutator transaction binding the contract method 0x29c49b9b.
 //
-// Solidity: function setWalletClaimCount(uint256 _tokenId, address _claimer, uint256 _count) returns()
-func (_DropERC1155 *DropERC1155Transactor) SetWalletClaimCount(opts *bind.TransactOpts, _tokenId *big.Int, _claimer common.Address, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.contract.Transact(opts, "setWalletClaimCount", _tokenId, _claimer, _count)
+// Solidity: function setSaleRecipientForToken(uint256 _tokenId, address _saleRecipient) returns()
+func (_DropERC1155 *DropERC1155Transactor) SetSaleRecipientForToken(opts *bind.TransactOpts, _tokenId *big.Int, _saleRecipient common.Address) (*types.Transaction, error) {
+	return _DropERC1155.contract.Transact(opts, "setSaleRecipientForToken", _tokenId, _saleRecipient)
 }
 
-// SetWalletClaimCount is a paid mutator transaction binding the contract method 0xb1014400.
+// SetSaleRecipientForToken is a paid mutator transaction binding the contract method 0x29c49b9b.
 //
-// Solidity: function setWalletClaimCount(uint256 _tokenId, address _claimer, uint256 _count) returns()
-func (_DropERC1155 *DropERC1155Session) SetWalletClaimCount(_tokenId *big.Int, _claimer common.Address, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.Contract.SetWalletClaimCount(&_DropERC1155.TransactOpts, _tokenId, _claimer, _count)
+// Solidity: function setSaleRecipientForToken(uint256 _tokenId, address _saleRecipient) returns()
+func (_DropERC1155 *DropERC1155Session) SetSaleRecipientForToken(_tokenId *big.Int, _saleRecipient common.Address) (*types.Transaction, error) {
+	return _DropERC1155.Contract.SetSaleRecipientForToken(&_DropERC1155.TransactOpts, _tokenId, _saleRecipient)
 }
 
-// SetWalletClaimCount is a paid mutator transaction binding the contract method 0xb1014400.
+// SetSaleRecipientForToken is a paid mutator transaction binding the contract method 0x29c49b9b.
 //
-// Solidity: function setWalletClaimCount(uint256 _tokenId, address _claimer, uint256 _count) returns()
-func (_DropERC1155 *DropERC1155TransactorSession) SetWalletClaimCount(_tokenId *big.Int, _claimer common.Address, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC1155.Contract.SetWalletClaimCount(&_DropERC1155.TransactOpts, _tokenId, _claimer, _count)
+// Solidity: function setSaleRecipientForToken(uint256 _tokenId, address _saleRecipient) returns()
+func (_DropERC1155 *DropERC1155TransactorSession) SetSaleRecipientForToken(_tokenId *big.Int, _saleRecipient common.Address) (*types.Transaction, error) {
+	return _DropERC1155.Contract.SetSaleRecipientForToken(&_DropERC1155.TransactOpts, _tokenId, _saleRecipient)
 }
 
 // DropERC1155ApprovalForAllIterator is returned from FilterApprovalForAll and is used to iterate over the raw logs and unpacked data for ApprovalForAll events raised by the DropERC1155 contract.
@@ -1987,14 +1915,15 @@ func (it *DropERC1155ClaimConditionsUpdatedIterator) Close() error {
 
 // DropERC1155ClaimConditionsUpdated represents a ClaimConditionsUpdated event raised by the DropERC1155 contract.
 type DropERC1155ClaimConditionsUpdated struct {
-	TokenId         *big.Int
-	ClaimConditions []IDropClaimConditionClaimCondition
-	Raw             types.Log // Blockchain specific contextual infos
+	TokenId          *big.Int
+	ClaimConditions  []IClaimConditionClaimCondition
+	ResetEligibility bool
+	Raw              types.Log // Blockchain specific contextual infos
 }
 
-// FilterClaimConditionsUpdated is a free log retrieval operation binding the contract event 0x7822655b74d50f461cbd7ca5dfc8b5e48b21fa2157bd7d277888fccce85af2ae.
+// FilterClaimConditionsUpdated is a free log retrieval operation binding the contract event 0x066f72a648b18490c0bc4ab07d508cdb5d6589fa188c63cfba1e0547f3a6556a.
 //
-// Solidity: event ClaimConditionsUpdated(uint256 indexed tokenId, (uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] claimConditions)
+// Solidity: event ClaimConditionsUpdated(uint256 indexed tokenId, (uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] claimConditions, bool resetEligibility)
 func (_DropERC1155 *DropERC1155Filterer) FilterClaimConditionsUpdated(opts *bind.FilterOpts, tokenId []*big.Int) (*DropERC1155ClaimConditionsUpdatedIterator, error) {
 
 	var tokenIdRule []interface{}
@@ -2009,9 +1938,9 @@ func (_DropERC1155 *DropERC1155Filterer) FilterClaimConditionsUpdated(opts *bind
 	return &DropERC1155ClaimConditionsUpdatedIterator{contract: _DropERC1155.contract, event: "ClaimConditionsUpdated", logs: logs, sub: sub}, nil
 }
 
-// WatchClaimConditionsUpdated is a free log subscription operation binding the contract event 0x7822655b74d50f461cbd7ca5dfc8b5e48b21fa2157bd7d277888fccce85af2ae.
+// WatchClaimConditionsUpdated is a free log subscription operation binding the contract event 0x066f72a648b18490c0bc4ab07d508cdb5d6589fa188c63cfba1e0547f3a6556a.
 //
-// Solidity: event ClaimConditionsUpdated(uint256 indexed tokenId, (uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] claimConditions)
+// Solidity: event ClaimConditionsUpdated(uint256 indexed tokenId, (uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] claimConditions, bool resetEligibility)
 func (_DropERC1155 *DropERC1155Filterer) WatchClaimConditionsUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155ClaimConditionsUpdated, tokenId []*big.Int) (event.Subscription, error) {
 
 	var tokenIdRule []interface{}
@@ -2051,12 +1980,147 @@ func (_DropERC1155 *DropERC1155Filterer) WatchClaimConditionsUpdated(opts *bind.
 	}), nil
 }
 
-// ParseClaimConditionsUpdated is a log parse operation binding the contract event 0x7822655b74d50f461cbd7ca5dfc8b5e48b21fa2157bd7d277888fccce85af2ae.
+// ParseClaimConditionsUpdated is a log parse operation binding the contract event 0x066f72a648b18490c0bc4ab07d508cdb5d6589fa188c63cfba1e0547f3a6556a.
 //
-// Solidity: event ClaimConditionsUpdated(uint256 indexed tokenId, (uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] claimConditions)
+// Solidity: event ClaimConditionsUpdated(uint256 indexed tokenId, (uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] claimConditions, bool resetEligibility)
 func (_DropERC1155 *DropERC1155Filterer) ParseClaimConditionsUpdated(log types.Log) (*DropERC1155ClaimConditionsUpdated, error) {
 	event := new(DropERC1155ClaimConditionsUpdated)
 	if err := _DropERC1155.contract.UnpackLog(event, "ClaimConditionsUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// DropERC1155ContractURIUpdatedIterator is returned from FilterContractURIUpdated and is used to iterate over the raw logs and unpacked data for ContractURIUpdated events raised by the DropERC1155 contract.
+type DropERC1155ContractURIUpdatedIterator struct {
+	Event *DropERC1155ContractURIUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *DropERC1155ContractURIUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(DropERC1155ContractURIUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(DropERC1155ContractURIUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *DropERC1155ContractURIUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *DropERC1155ContractURIUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// DropERC1155ContractURIUpdated represents a ContractURIUpdated event raised by the DropERC1155 contract.
+type DropERC1155ContractURIUpdated struct {
+	PrevURI string
+	NewURI  string
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterContractURIUpdated is a free log retrieval operation binding the contract event 0xc9c7c3fe08b88b4df9d4d47ef47d2c43d55c025a0ba88ca442580ed9e7348a16.
+//
+// Solidity: event ContractURIUpdated(string prevURI, string newURI)
+func (_DropERC1155 *DropERC1155Filterer) FilterContractURIUpdated(opts *bind.FilterOpts) (*DropERC1155ContractURIUpdatedIterator, error) {
+
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "ContractURIUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &DropERC1155ContractURIUpdatedIterator{contract: _DropERC1155.contract, event: "ContractURIUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchContractURIUpdated is a free log subscription operation binding the contract event 0xc9c7c3fe08b88b4df9d4d47ef47d2c43d55c025a0ba88ca442580ed9e7348a16.
+//
+// Solidity: event ContractURIUpdated(string prevURI, string newURI)
+func (_DropERC1155 *DropERC1155Filterer) WatchContractURIUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155ContractURIUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "ContractURIUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(DropERC1155ContractURIUpdated)
+				if err := _DropERC1155.contract.UnpackLog(event, "ContractURIUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseContractURIUpdated is a log parse operation binding the contract event 0xc9c7c3fe08b88b4df9d4d47ef47d2c43d55c025a0ba88ca442580ed9e7348a16.
+//
+// Solidity: event ContractURIUpdated(string prevURI, string newURI)
+func (_DropERC1155 *DropERC1155Filterer) ParseContractURIUpdated(log types.Log) (*DropERC1155ContractURIUpdated, error) {
+	event := new(DropERC1155ContractURIUpdated)
+	if err := _DropERC1155.contract.UnpackLog(event, "ContractURIUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2139,10 +2203,15 @@ type DropERC1155DefaultRoyalty struct {
 
 // FilterDefaultRoyalty is a free log retrieval operation binding the contract event 0x90d7ec04bcb8978719414f82e52e4cb651db41d0e6f8cea6118c2191e6183adb.
 //
-// Solidity: event DefaultRoyalty(address newRoyaltyRecipient, uint256 newRoyaltyBps)
-func (_DropERC1155 *DropERC1155Filterer) FilterDefaultRoyalty(opts *bind.FilterOpts) (*DropERC1155DefaultRoyaltyIterator, error) {
+// Solidity: event DefaultRoyalty(address indexed newRoyaltyRecipient, uint256 newRoyaltyBps)
+func (_DropERC1155 *DropERC1155Filterer) FilterDefaultRoyalty(opts *bind.FilterOpts, newRoyaltyRecipient []common.Address) (*DropERC1155DefaultRoyaltyIterator, error) {
 
-	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "DefaultRoyalty")
+	var newRoyaltyRecipientRule []interface{}
+	for _, newRoyaltyRecipientItem := range newRoyaltyRecipient {
+		newRoyaltyRecipientRule = append(newRoyaltyRecipientRule, newRoyaltyRecipientItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "DefaultRoyalty", newRoyaltyRecipientRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2151,10 +2220,15 @@ func (_DropERC1155 *DropERC1155Filterer) FilterDefaultRoyalty(opts *bind.FilterO
 
 // WatchDefaultRoyalty is a free log subscription operation binding the contract event 0x90d7ec04bcb8978719414f82e52e4cb651db41d0e6f8cea6118c2191e6183adb.
 //
-// Solidity: event DefaultRoyalty(address newRoyaltyRecipient, uint256 newRoyaltyBps)
-func (_DropERC1155 *DropERC1155Filterer) WatchDefaultRoyalty(opts *bind.WatchOpts, sink chan<- *DropERC1155DefaultRoyalty) (event.Subscription, error) {
+// Solidity: event DefaultRoyalty(address indexed newRoyaltyRecipient, uint256 newRoyaltyBps)
+func (_DropERC1155 *DropERC1155Filterer) WatchDefaultRoyalty(opts *bind.WatchOpts, sink chan<- *DropERC1155DefaultRoyalty, newRoyaltyRecipient []common.Address) (event.Subscription, error) {
 
-	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "DefaultRoyalty")
+	var newRoyaltyRecipientRule []interface{}
+	for _, newRoyaltyRecipientItem := range newRoyaltyRecipient {
+		newRoyaltyRecipientRule = append(newRoyaltyRecipientRule, newRoyaltyRecipientItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "DefaultRoyalty", newRoyaltyRecipientRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2188,10 +2262,144 @@ func (_DropERC1155 *DropERC1155Filterer) WatchDefaultRoyalty(opts *bind.WatchOpt
 
 // ParseDefaultRoyalty is a log parse operation binding the contract event 0x90d7ec04bcb8978719414f82e52e4cb651db41d0e6f8cea6118c2191e6183adb.
 //
-// Solidity: event DefaultRoyalty(address newRoyaltyRecipient, uint256 newRoyaltyBps)
+// Solidity: event DefaultRoyalty(address indexed newRoyaltyRecipient, uint256 newRoyaltyBps)
 func (_DropERC1155 *DropERC1155Filterer) ParseDefaultRoyalty(log types.Log) (*DropERC1155DefaultRoyalty, error) {
 	event := new(DropERC1155DefaultRoyalty)
 	if err := _DropERC1155.contract.UnpackLog(event, "DefaultRoyalty", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// DropERC1155InitializedIterator is returned from FilterInitialized and is used to iterate over the raw logs and unpacked data for Initialized events raised by the DropERC1155 contract.
+type DropERC1155InitializedIterator struct {
+	Event *DropERC1155Initialized // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *DropERC1155InitializedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(DropERC1155Initialized)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(DropERC1155Initialized)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *DropERC1155InitializedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *DropERC1155InitializedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// DropERC1155Initialized represents a Initialized event raised by the DropERC1155 contract.
+type DropERC1155Initialized struct {
+	Version uint8
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterInitialized is a free log retrieval operation binding the contract event 0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498.
+//
+// Solidity: event Initialized(uint8 version)
+func (_DropERC1155 *DropERC1155Filterer) FilterInitialized(opts *bind.FilterOpts) (*DropERC1155InitializedIterator, error) {
+
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return &DropERC1155InitializedIterator{contract: _DropERC1155.contract, event: "Initialized", logs: logs, sub: sub}, nil
+}
+
+// WatchInitialized is a free log subscription operation binding the contract event 0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498.
+//
+// Solidity: event Initialized(uint8 version)
+func (_DropERC1155 *DropERC1155Filterer) WatchInitialized(opts *bind.WatchOpts, sink chan<- *DropERC1155Initialized) (event.Subscription, error) {
+
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "Initialized")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(DropERC1155Initialized)
+				if err := _DropERC1155.contract.UnpackLog(event, "Initialized", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseInitialized is a log parse operation binding the contract event 0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498.
+//
+// Solidity: event Initialized(uint8 version)
+func (_DropERC1155 *DropERC1155Filterer) ParseInitialized(log types.Log) (*DropERC1155Initialized, error) {
+	event := new(DropERC1155Initialized)
+	if err := _DropERC1155.contract.UnpackLog(event, "Initialized", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2333,141 +2541,6 @@ func (_DropERC1155 *DropERC1155Filterer) ParseMaxTotalSupplyUpdated(log types.Lo
 	return event, nil
 }
 
-// DropERC1155MaxWalletClaimCountUpdatedIterator is returned from FilterMaxWalletClaimCountUpdated and is used to iterate over the raw logs and unpacked data for MaxWalletClaimCountUpdated events raised by the DropERC1155 contract.
-type DropERC1155MaxWalletClaimCountUpdatedIterator struct {
-	Event *DropERC1155MaxWalletClaimCountUpdated // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DropERC1155MaxWalletClaimCountUpdatedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DropERC1155MaxWalletClaimCountUpdated)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DropERC1155MaxWalletClaimCountUpdated)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DropERC1155MaxWalletClaimCountUpdatedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DropERC1155MaxWalletClaimCountUpdatedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DropERC1155MaxWalletClaimCountUpdated represents a MaxWalletClaimCountUpdated event raised by the DropERC1155 contract.
-type DropERC1155MaxWalletClaimCountUpdated struct {
-	TokenId *big.Int
-	Count   *big.Int
-	Raw     types.Log // Blockchain specific contextual infos
-}
-
-// FilterMaxWalletClaimCountUpdated is a free log retrieval operation binding the contract event 0x07fa2d0eb2fe8b8e6fbee6073cf9d84659d6db054d221579a0373ae29bc9d73d.
-//
-// Solidity: event MaxWalletClaimCountUpdated(uint256 tokenId, uint256 count)
-func (_DropERC1155 *DropERC1155Filterer) FilterMaxWalletClaimCountUpdated(opts *bind.FilterOpts) (*DropERC1155MaxWalletClaimCountUpdatedIterator, error) {
-
-	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "MaxWalletClaimCountUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return &DropERC1155MaxWalletClaimCountUpdatedIterator{contract: _DropERC1155.contract, event: "MaxWalletClaimCountUpdated", logs: logs, sub: sub}, nil
-}
-
-// WatchMaxWalletClaimCountUpdated is a free log subscription operation binding the contract event 0x07fa2d0eb2fe8b8e6fbee6073cf9d84659d6db054d221579a0373ae29bc9d73d.
-//
-// Solidity: event MaxWalletClaimCountUpdated(uint256 tokenId, uint256 count)
-func (_DropERC1155 *DropERC1155Filterer) WatchMaxWalletClaimCountUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155MaxWalletClaimCountUpdated) (event.Subscription, error) {
-
-	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "MaxWalletClaimCountUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DropERC1155MaxWalletClaimCountUpdated)
-				if err := _DropERC1155.contract.UnpackLog(event, "MaxWalletClaimCountUpdated", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseMaxWalletClaimCountUpdated is a log parse operation binding the contract event 0x07fa2d0eb2fe8b8e6fbee6073cf9d84659d6db054d221579a0373ae29bc9d73d.
-//
-// Solidity: event MaxWalletClaimCountUpdated(uint256 tokenId, uint256 count)
-func (_DropERC1155 *DropERC1155Filterer) ParseMaxWalletClaimCountUpdated(log types.Log) (*DropERC1155MaxWalletClaimCountUpdated, error) {
-	event := new(DropERC1155MaxWalletClaimCountUpdated)
-	if err := _DropERC1155.contract.UnpackLog(event, "MaxWalletClaimCountUpdated", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
 // DropERC1155OwnerUpdatedIterator is returned from FilterOwnerUpdated and is used to iterate over the raw logs and unpacked data for OwnerUpdated events raised by the DropERC1155 contract.
 type DropERC1155OwnerUpdatedIterator struct {
 	Event *DropERC1155OwnerUpdated // Event containing the contract specifics and raw log
@@ -2544,10 +2617,19 @@ type DropERC1155OwnerUpdated struct {
 
 // FilterOwnerUpdated is a free log retrieval operation binding the contract event 0x8292fce18fa69edf4db7b94ea2e58241df0ae57f97e0a6c9b29067028bf92d76.
 //
-// Solidity: event OwnerUpdated(address prevOwner, address newOwner)
-func (_DropERC1155 *DropERC1155Filterer) FilterOwnerUpdated(opts *bind.FilterOpts) (*DropERC1155OwnerUpdatedIterator, error) {
+// Solidity: event OwnerUpdated(address indexed prevOwner, address indexed newOwner)
+func (_DropERC1155 *DropERC1155Filterer) FilterOwnerUpdated(opts *bind.FilterOpts, prevOwner []common.Address, newOwner []common.Address) (*DropERC1155OwnerUpdatedIterator, error) {
 
-	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "OwnerUpdated")
+	var prevOwnerRule []interface{}
+	for _, prevOwnerItem := range prevOwner {
+		prevOwnerRule = append(prevOwnerRule, prevOwnerItem)
+	}
+	var newOwnerRule []interface{}
+	for _, newOwnerItem := range newOwner {
+		newOwnerRule = append(newOwnerRule, newOwnerItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "OwnerUpdated", prevOwnerRule, newOwnerRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2556,10 +2638,19 @@ func (_DropERC1155 *DropERC1155Filterer) FilterOwnerUpdated(opts *bind.FilterOpt
 
 // WatchOwnerUpdated is a free log subscription operation binding the contract event 0x8292fce18fa69edf4db7b94ea2e58241df0ae57f97e0a6c9b29067028bf92d76.
 //
-// Solidity: event OwnerUpdated(address prevOwner, address newOwner)
-func (_DropERC1155 *DropERC1155Filterer) WatchOwnerUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155OwnerUpdated) (event.Subscription, error) {
+// Solidity: event OwnerUpdated(address indexed prevOwner, address indexed newOwner)
+func (_DropERC1155 *DropERC1155Filterer) WatchOwnerUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155OwnerUpdated, prevOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
 
-	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "OwnerUpdated")
+	var prevOwnerRule []interface{}
+	for _, prevOwnerItem := range prevOwner {
+		prevOwnerRule = append(prevOwnerRule, prevOwnerItem)
+	}
+	var newOwnerRule []interface{}
+	for _, newOwnerItem := range newOwner {
+		newOwnerRule = append(newOwnerRule, newOwnerItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "OwnerUpdated", prevOwnerRule, newOwnerRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2593,7 +2684,7 @@ func (_DropERC1155 *DropERC1155Filterer) WatchOwnerUpdated(opts *bind.WatchOpts,
 
 // ParseOwnerUpdated is a log parse operation binding the contract event 0x8292fce18fa69edf4db7b94ea2e58241df0ae57f97e0a6c9b29067028bf92d76.
 //
-// Solidity: event OwnerUpdated(address prevOwner, address newOwner)
+// Solidity: event OwnerUpdated(address indexed prevOwner, address indexed newOwner)
 func (_DropERC1155 *DropERC1155Filterer) ParseOwnerUpdated(log types.Log) (*DropERC1155OwnerUpdated, error) {
 	event := new(DropERC1155OwnerUpdated)
 	if err := _DropERC1155.contract.UnpackLog(event, "OwnerUpdated", log); err != nil {
@@ -2679,10 +2770,15 @@ type DropERC1155PlatformFeeInfoUpdated struct {
 
 // FilterPlatformFeeInfoUpdated is a free log retrieval operation binding the contract event 0xe2497bd806ec41a6e0dd992c29a72efc0ef8fec9092d1978fd4a1e00b2f18304.
 //
-// Solidity: event PlatformFeeInfoUpdated(address platformFeeRecipient, uint256 platformFeeBps)
-func (_DropERC1155 *DropERC1155Filterer) FilterPlatformFeeInfoUpdated(opts *bind.FilterOpts) (*DropERC1155PlatformFeeInfoUpdatedIterator, error) {
+// Solidity: event PlatformFeeInfoUpdated(address indexed platformFeeRecipient, uint256 platformFeeBps)
+func (_DropERC1155 *DropERC1155Filterer) FilterPlatformFeeInfoUpdated(opts *bind.FilterOpts, platformFeeRecipient []common.Address) (*DropERC1155PlatformFeeInfoUpdatedIterator, error) {
 
-	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "PlatformFeeInfoUpdated")
+	var platformFeeRecipientRule []interface{}
+	for _, platformFeeRecipientItem := range platformFeeRecipient {
+		platformFeeRecipientRule = append(platformFeeRecipientRule, platformFeeRecipientItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "PlatformFeeInfoUpdated", platformFeeRecipientRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2691,10 +2787,15 @@ func (_DropERC1155 *DropERC1155Filterer) FilterPlatformFeeInfoUpdated(opts *bind
 
 // WatchPlatformFeeInfoUpdated is a free log subscription operation binding the contract event 0xe2497bd806ec41a6e0dd992c29a72efc0ef8fec9092d1978fd4a1e00b2f18304.
 //
-// Solidity: event PlatformFeeInfoUpdated(address platformFeeRecipient, uint256 platformFeeBps)
-func (_DropERC1155 *DropERC1155Filterer) WatchPlatformFeeInfoUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155PlatformFeeInfoUpdated) (event.Subscription, error) {
+// Solidity: event PlatformFeeInfoUpdated(address indexed platformFeeRecipient, uint256 platformFeeBps)
+func (_DropERC1155 *DropERC1155Filterer) WatchPlatformFeeInfoUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155PlatformFeeInfoUpdated, platformFeeRecipient []common.Address) (event.Subscription, error) {
 
-	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "PlatformFeeInfoUpdated")
+	var platformFeeRecipientRule []interface{}
+	for _, platformFeeRecipientItem := range platformFeeRecipient {
+		platformFeeRecipientRule = append(platformFeeRecipientRule, platformFeeRecipientItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "PlatformFeeInfoUpdated", platformFeeRecipientRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2728,7 +2829,7 @@ func (_DropERC1155 *DropERC1155Filterer) WatchPlatformFeeInfoUpdated(opts *bind.
 
 // ParsePlatformFeeInfoUpdated is a log parse operation binding the contract event 0xe2497bd806ec41a6e0dd992c29a72efc0ef8fec9092d1978fd4a1e00b2f18304.
 //
-// Solidity: event PlatformFeeInfoUpdated(address platformFeeRecipient, uint256 platformFeeBps)
+// Solidity: event PlatformFeeInfoUpdated(address indexed platformFeeRecipient, uint256 platformFeeBps)
 func (_DropERC1155 *DropERC1155Filterer) ParsePlatformFeeInfoUpdated(log types.Log) (*DropERC1155PlatformFeeInfoUpdated, error) {
 	event := new(DropERC1155PlatformFeeInfoUpdated)
 	if err := _DropERC1155.contract.UnpackLog(event, "PlatformFeeInfoUpdated", log); err != nil {
@@ -3445,15 +3546,19 @@ type DropERC1155RoyaltyForToken struct {
 
 // FilterRoyaltyForToken is a free log retrieval operation binding the contract event 0x7365cf4122f072a3365c20d54eff9b38d73c096c28e1892ec8f5b0e403a0f12d.
 //
-// Solidity: event RoyaltyForToken(uint256 indexed tokenId, address royaltyRecipient, uint256 royaltyBps)
-func (_DropERC1155 *DropERC1155Filterer) FilterRoyaltyForToken(opts *bind.FilterOpts, tokenId []*big.Int) (*DropERC1155RoyaltyForTokenIterator, error) {
+// Solidity: event RoyaltyForToken(uint256 indexed tokenId, address indexed royaltyRecipient, uint256 royaltyBps)
+func (_DropERC1155 *DropERC1155Filterer) FilterRoyaltyForToken(opts *bind.FilterOpts, tokenId []*big.Int, royaltyRecipient []common.Address) (*DropERC1155RoyaltyForTokenIterator, error) {
 
 	var tokenIdRule []interface{}
 	for _, tokenIdItem := range tokenId {
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
+	var royaltyRecipientRule []interface{}
+	for _, royaltyRecipientItem := range royaltyRecipient {
+		royaltyRecipientRule = append(royaltyRecipientRule, royaltyRecipientItem)
+	}
 
-	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "RoyaltyForToken", tokenIdRule)
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "RoyaltyForToken", tokenIdRule, royaltyRecipientRule)
 	if err != nil {
 		return nil, err
 	}
@@ -3462,15 +3567,19 @@ func (_DropERC1155 *DropERC1155Filterer) FilterRoyaltyForToken(opts *bind.Filter
 
 // WatchRoyaltyForToken is a free log subscription operation binding the contract event 0x7365cf4122f072a3365c20d54eff9b38d73c096c28e1892ec8f5b0e403a0f12d.
 //
-// Solidity: event RoyaltyForToken(uint256 indexed tokenId, address royaltyRecipient, uint256 royaltyBps)
-func (_DropERC1155 *DropERC1155Filterer) WatchRoyaltyForToken(opts *bind.WatchOpts, sink chan<- *DropERC1155RoyaltyForToken, tokenId []*big.Int) (event.Subscription, error) {
+// Solidity: event RoyaltyForToken(uint256 indexed tokenId, address indexed royaltyRecipient, uint256 royaltyBps)
+func (_DropERC1155 *DropERC1155Filterer) WatchRoyaltyForToken(opts *bind.WatchOpts, sink chan<- *DropERC1155RoyaltyForToken, tokenId []*big.Int, royaltyRecipient []common.Address) (event.Subscription, error) {
 
 	var tokenIdRule []interface{}
 	for _, tokenIdItem := range tokenId {
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
+	var royaltyRecipientRule []interface{}
+	for _, royaltyRecipientItem := range royaltyRecipient {
+		royaltyRecipientRule = append(royaltyRecipientRule, royaltyRecipientItem)
+	}
 
-	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "RoyaltyForToken", tokenIdRule)
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "RoyaltyForToken", tokenIdRule, royaltyRecipientRule)
 	if err != nil {
 		return nil, err
 	}
@@ -3504,10 +3613,155 @@ func (_DropERC1155 *DropERC1155Filterer) WatchRoyaltyForToken(opts *bind.WatchOp
 
 // ParseRoyaltyForToken is a log parse operation binding the contract event 0x7365cf4122f072a3365c20d54eff9b38d73c096c28e1892ec8f5b0e403a0f12d.
 //
-// Solidity: event RoyaltyForToken(uint256 indexed tokenId, address royaltyRecipient, uint256 royaltyBps)
+// Solidity: event RoyaltyForToken(uint256 indexed tokenId, address indexed royaltyRecipient, uint256 royaltyBps)
 func (_DropERC1155 *DropERC1155Filterer) ParseRoyaltyForToken(log types.Log) (*DropERC1155RoyaltyForToken, error) {
 	event := new(DropERC1155RoyaltyForToken)
 	if err := _DropERC1155.contract.UnpackLog(event, "RoyaltyForToken", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// DropERC1155SaleRecipientForTokenUpdatedIterator is returned from FilterSaleRecipientForTokenUpdated and is used to iterate over the raw logs and unpacked data for SaleRecipientForTokenUpdated events raised by the DropERC1155 contract.
+type DropERC1155SaleRecipientForTokenUpdatedIterator struct {
+	Event *DropERC1155SaleRecipientForTokenUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *DropERC1155SaleRecipientForTokenUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(DropERC1155SaleRecipientForTokenUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(DropERC1155SaleRecipientForTokenUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *DropERC1155SaleRecipientForTokenUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *DropERC1155SaleRecipientForTokenUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// DropERC1155SaleRecipientForTokenUpdated represents a SaleRecipientForTokenUpdated event raised by the DropERC1155 contract.
+type DropERC1155SaleRecipientForTokenUpdated struct {
+	TokenId       *big.Int
+	SaleRecipient common.Address
+	Raw           types.Log // Blockchain specific contextual infos
+}
+
+// FilterSaleRecipientForTokenUpdated is a free log retrieval operation binding the contract event 0x359479172ba65a6639b0df237f704e030498cb7135d5e89b56f598bd1d84b016.
+//
+// Solidity: event SaleRecipientForTokenUpdated(uint256 indexed tokenId, address saleRecipient)
+func (_DropERC1155 *DropERC1155Filterer) FilterSaleRecipientForTokenUpdated(opts *bind.FilterOpts, tokenId []*big.Int) (*DropERC1155SaleRecipientForTokenUpdatedIterator, error) {
+
+	var tokenIdRule []interface{}
+	for _, tokenIdItem := range tokenId {
+		tokenIdRule = append(tokenIdRule, tokenIdItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "SaleRecipientForTokenUpdated", tokenIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return &DropERC1155SaleRecipientForTokenUpdatedIterator{contract: _DropERC1155.contract, event: "SaleRecipientForTokenUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchSaleRecipientForTokenUpdated is a free log subscription operation binding the contract event 0x359479172ba65a6639b0df237f704e030498cb7135d5e89b56f598bd1d84b016.
+//
+// Solidity: event SaleRecipientForTokenUpdated(uint256 indexed tokenId, address saleRecipient)
+func (_DropERC1155 *DropERC1155Filterer) WatchSaleRecipientForTokenUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155SaleRecipientForTokenUpdated, tokenId []*big.Int) (event.Subscription, error) {
+
+	var tokenIdRule []interface{}
+	for _, tokenIdItem := range tokenId {
+		tokenIdRule = append(tokenIdRule, tokenIdItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "SaleRecipientForTokenUpdated", tokenIdRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(DropERC1155SaleRecipientForTokenUpdated)
+				if err := _DropERC1155.contract.UnpackLog(event, "SaleRecipientForTokenUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseSaleRecipientForTokenUpdated is a log parse operation binding the contract event 0x359479172ba65a6639b0df237f704e030498cb7135d5e89b56f598bd1d84b016.
+//
+// Solidity: event SaleRecipientForTokenUpdated(uint256 indexed tokenId, address saleRecipient)
+func (_DropERC1155 *DropERC1155Filterer) ParseSaleRecipientForTokenUpdated(log types.Log) (*DropERC1155SaleRecipientForTokenUpdated, error) {
+	event := new(DropERC1155SaleRecipientForTokenUpdated)
+	if err := _DropERC1155.contract.UnpackLog(event, "SaleRecipientForTokenUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -3584,57 +3838,57 @@ func (it *DropERC1155TokensClaimedIterator) Close() error {
 // DropERC1155TokensClaimed represents a TokensClaimed event raised by the DropERC1155 contract.
 type DropERC1155TokensClaimed struct {
 	ClaimConditionIndex *big.Int
-	TokenId             *big.Int
 	Claimer             common.Address
 	Receiver            common.Address
+	TokenId             *big.Int
 	QuantityClaimed     *big.Int
 	Raw                 types.Log // Blockchain specific contextual infos
 }
 
-// FilterTokensClaimed is a free log retrieval operation binding the contract event 0x4f72e6585331094d368e469f11198272039d08cbddfcda1577e192687a83afb6.
+// FilterTokensClaimed is a free log retrieval operation binding the contract event 0xfa76a4010d9533e3e964f2930a65fb6042a12fa6ff5b08281837a10b0be7321e.
 //
-// Solidity: event TokensClaimed(uint256 indexed claimConditionIndex, uint256 indexed tokenId, address indexed claimer, address receiver, uint256 quantityClaimed)
-func (_DropERC1155 *DropERC1155Filterer) FilterTokensClaimed(opts *bind.FilterOpts, claimConditionIndex []*big.Int, tokenId []*big.Int, claimer []common.Address) (*DropERC1155TokensClaimedIterator, error) {
+// Solidity: event TokensClaimed(uint256 indexed claimConditionIndex, address indexed claimer, address indexed receiver, uint256 tokenId, uint256 quantityClaimed)
+func (_DropERC1155 *DropERC1155Filterer) FilterTokensClaimed(opts *bind.FilterOpts, claimConditionIndex []*big.Int, claimer []common.Address, receiver []common.Address) (*DropERC1155TokensClaimedIterator, error) {
 
 	var claimConditionIndexRule []interface{}
 	for _, claimConditionIndexItem := range claimConditionIndex {
 		claimConditionIndexRule = append(claimConditionIndexRule, claimConditionIndexItem)
 	}
-	var tokenIdRule []interface{}
-	for _, tokenIdItem := range tokenId {
-		tokenIdRule = append(tokenIdRule, tokenIdItem)
-	}
 	var claimerRule []interface{}
 	for _, claimerItem := range claimer {
 		claimerRule = append(claimerRule, claimerItem)
 	}
+	var receiverRule []interface{}
+	for _, receiverItem := range receiver {
+		receiverRule = append(receiverRule, receiverItem)
+	}
 
-	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "TokensClaimed", claimConditionIndexRule, tokenIdRule, claimerRule)
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "TokensClaimed", claimConditionIndexRule, claimerRule, receiverRule)
 	if err != nil {
 		return nil, err
 	}
 	return &DropERC1155TokensClaimedIterator{contract: _DropERC1155.contract, event: "TokensClaimed", logs: logs, sub: sub}, nil
 }
 
-// WatchTokensClaimed is a free log subscription operation binding the contract event 0x4f72e6585331094d368e469f11198272039d08cbddfcda1577e192687a83afb6.
+// WatchTokensClaimed is a free log subscription operation binding the contract event 0xfa76a4010d9533e3e964f2930a65fb6042a12fa6ff5b08281837a10b0be7321e.
 //
-// Solidity: event TokensClaimed(uint256 indexed claimConditionIndex, uint256 indexed tokenId, address indexed claimer, address receiver, uint256 quantityClaimed)
-func (_DropERC1155 *DropERC1155Filterer) WatchTokensClaimed(opts *bind.WatchOpts, sink chan<- *DropERC1155TokensClaimed, claimConditionIndex []*big.Int, tokenId []*big.Int, claimer []common.Address) (event.Subscription, error) {
+// Solidity: event TokensClaimed(uint256 indexed claimConditionIndex, address indexed claimer, address indexed receiver, uint256 tokenId, uint256 quantityClaimed)
+func (_DropERC1155 *DropERC1155Filterer) WatchTokensClaimed(opts *bind.WatchOpts, sink chan<- *DropERC1155TokensClaimed, claimConditionIndex []*big.Int, claimer []common.Address, receiver []common.Address) (event.Subscription, error) {
 
 	var claimConditionIndexRule []interface{}
 	for _, claimConditionIndexItem := range claimConditionIndex {
 		claimConditionIndexRule = append(claimConditionIndexRule, claimConditionIndexItem)
 	}
-	var tokenIdRule []interface{}
-	for _, tokenIdItem := range tokenId {
-		tokenIdRule = append(tokenIdRule, tokenIdItem)
-	}
 	var claimerRule []interface{}
 	for _, claimerItem := range claimer {
 		claimerRule = append(claimerRule, claimerItem)
 	}
+	var receiverRule []interface{}
+	for _, receiverItem := range receiver {
+		receiverRule = append(receiverRule, receiverItem)
+	}
 
-	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "TokensClaimed", claimConditionIndexRule, tokenIdRule, claimerRule)
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "TokensClaimed", claimConditionIndexRule, claimerRule, receiverRule)
 	if err != nil {
 		return nil, err
 	}
@@ -3666,9 +3920,9 @@ func (_DropERC1155 *DropERC1155Filterer) WatchTokensClaimed(opts *bind.WatchOpts
 	}), nil
 }
 
-// ParseTokensClaimed is a log parse operation binding the contract event 0x4f72e6585331094d368e469f11198272039d08cbddfcda1577e192687a83afb6.
+// ParseTokensClaimed is a log parse operation binding the contract event 0xfa76a4010d9533e3e964f2930a65fb6042a12fa6ff5b08281837a10b0be7321e.
 //
-// Solidity: event TokensClaimed(uint256 indexed claimConditionIndex, uint256 indexed tokenId, address indexed claimer, address receiver, uint256 quantityClaimed)
+// Solidity: event TokensClaimed(uint256 indexed claimConditionIndex, address indexed claimer, address indexed receiver, uint256 tokenId, uint256 quantityClaimed)
 func (_DropERC1155 *DropERC1155Filterer) ParseTokensClaimed(log types.Log) (*DropERC1155TokensClaimed, error) {
 	event := new(DropERC1155TokensClaimed)
 	if err := _DropERC1155.contract.UnpackLog(event, "TokensClaimed", log); err != nil {
@@ -3747,30 +4001,41 @@ func (it *DropERC1155TokensLazyMintedIterator) Close() error {
 
 // DropERC1155TokensLazyMinted represents a TokensLazyMinted event raised by the DropERC1155 contract.
 type DropERC1155TokensLazyMinted struct {
-	StartTokenId *big.Int
-	EndTokenId   *big.Int
-	BaseURI      string
-	Raw          types.Log // Blockchain specific contextual infos
+	StartTokenId     *big.Int
+	EndTokenId       *big.Int
+	BaseURI          string
+	EncryptedBaseURI []byte
+	Raw              types.Log // Blockchain specific contextual infos
 }
 
-// FilterTokensLazyMinted is a free log retrieval operation binding the contract event 0x4e6c698792b8dfb7c94c60c7e9e91f82932832d5e1ec0870ed42cf674e6af445.
+// FilterTokensLazyMinted is a free log retrieval operation binding the contract event 0x2a0365091ef1a40953c670dce28177e37520648a6fdc91506bffac0ab045570d.
 //
-// Solidity: event TokensLazyMinted(uint256 startTokenId, uint256 endTokenId, string baseURI)
-func (_DropERC1155 *DropERC1155Filterer) FilterTokensLazyMinted(opts *bind.FilterOpts) (*DropERC1155TokensLazyMintedIterator, error) {
+// Solidity: event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
+func (_DropERC1155 *DropERC1155Filterer) FilterTokensLazyMinted(opts *bind.FilterOpts, startTokenId []*big.Int) (*DropERC1155TokensLazyMintedIterator, error) {
 
-	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "TokensLazyMinted")
+	var startTokenIdRule []interface{}
+	for _, startTokenIdItem := range startTokenId {
+		startTokenIdRule = append(startTokenIdRule, startTokenIdItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "TokensLazyMinted", startTokenIdRule)
 	if err != nil {
 		return nil, err
 	}
 	return &DropERC1155TokensLazyMintedIterator{contract: _DropERC1155.contract, event: "TokensLazyMinted", logs: logs, sub: sub}, nil
 }
 
-// WatchTokensLazyMinted is a free log subscription operation binding the contract event 0x4e6c698792b8dfb7c94c60c7e9e91f82932832d5e1ec0870ed42cf674e6af445.
+// WatchTokensLazyMinted is a free log subscription operation binding the contract event 0x2a0365091ef1a40953c670dce28177e37520648a6fdc91506bffac0ab045570d.
 //
-// Solidity: event TokensLazyMinted(uint256 startTokenId, uint256 endTokenId, string baseURI)
-func (_DropERC1155 *DropERC1155Filterer) WatchTokensLazyMinted(opts *bind.WatchOpts, sink chan<- *DropERC1155TokensLazyMinted) (event.Subscription, error) {
+// Solidity: event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
+func (_DropERC1155 *DropERC1155Filterer) WatchTokensLazyMinted(opts *bind.WatchOpts, sink chan<- *DropERC1155TokensLazyMinted, startTokenId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "TokensLazyMinted")
+	var startTokenIdRule []interface{}
+	for _, startTokenIdItem := range startTokenId {
+		startTokenIdRule = append(startTokenIdRule, startTokenIdItem)
+	}
+
+	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "TokensLazyMinted", startTokenIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -3802,9 +4067,9 @@ func (_DropERC1155 *DropERC1155Filterer) WatchTokensLazyMinted(opts *bind.WatchO
 	}), nil
 }
 
-// ParseTokensLazyMinted is a log parse operation binding the contract event 0x4e6c698792b8dfb7c94c60c7e9e91f82932832d5e1ec0870ed42cf674e6af445.
+// ParseTokensLazyMinted is a log parse operation binding the contract event 0x2a0365091ef1a40953c670dce28177e37520648a6fdc91506bffac0ab045570d.
 //
-// Solidity: event TokensLazyMinted(uint256 startTokenId, uint256 endTokenId, string baseURI)
+// Solidity: event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
 func (_DropERC1155 *DropERC1155Filterer) ParseTokensLazyMinted(log types.Log) (*DropERC1155TokensLazyMinted, error) {
 	event := new(DropERC1155TokensLazyMinted)
 	if err := _DropERC1155.contract.UnpackLog(event, "TokensLazyMinted", log); err != nil {
@@ -4281,152 +4546,6 @@ func (_DropERC1155 *DropERC1155Filterer) WatchURI(opts *bind.WatchOpts, sink cha
 func (_DropERC1155 *DropERC1155Filterer) ParseURI(log types.Log) (*DropERC1155URI, error) {
 	event := new(DropERC1155URI)
 	if err := _DropERC1155.contract.UnpackLog(event, "URI", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// DropERC1155WalletClaimCountUpdatedIterator is returned from FilterWalletClaimCountUpdated and is used to iterate over the raw logs and unpacked data for WalletClaimCountUpdated events raised by the DropERC1155 contract.
-type DropERC1155WalletClaimCountUpdatedIterator struct {
-	Event *DropERC1155WalletClaimCountUpdated // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DropERC1155WalletClaimCountUpdatedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DropERC1155WalletClaimCountUpdated)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DropERC1155WalletClaimCountUpdated)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DropERC1155WalletClaimCountUpdatedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DropERC1155WalletClaimCountUpdatedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DropERC1155WalletClaimCountUpdated represents a WalletClaimCountUpdated event raised by the DropERC1155 contract.
-type DropERC1155WalletClaimCountUpdated struct {
-	TokenId *big.Int
-	Wallet  common.Address
-	Count   *big.Int
-	Raw     types.Log // Blockchain specific contextual infos
-}
-
-// FilterWalletClaimCountUpdated is a free log retrieval operation binding the contract event 0x9260cdce30c9abdb65593c1a903e40c87feb886a28aa4335a6695547988aab2f.
-//
-// Solidity: event WalletClaimCountUpdated(uint256 tokenId, address indexed wallet, uint256 count)
-func (_DropERC1155 *DropERC1155Filterer) FilterWalletClaimCountUpdated(opts *bind.FilterOpts, wallet []common.Address) (*DropERC1155WalletClaimCountUpdatedIterator, error) {
-
-	var walletRule []interface{}
-	for _, walletItem := range wallet {
-		walletRule = append(walletRule, walletItem)
-	}
-
-	logs, sub, err := _DropERC1155.contract.FilterLogs(opts, "WalletClaimCountUpdated", walletRule)
-	if err != nil {
-		return nil, err
-	}
-	return &DropERC1155WalletClaimCountUpdatedIterator{contract: _DropERC1155.contract, event: "WalletClaimCountUpdated", logs: logs, sub: sub}, nil
-}
-
-// WatchWalletClaimCountUpdated is a free log subscription operation binding the contract event 0x9260cdce30c9abdb65593c1a903e40c87feb886a28aa4335a6695547988aab2f.
-//
-// Solidity: event WalletClaimCountUpdated(uint256 tokenId, address indexed wallet, uint256 count)
-func (_DropERC1155 *DropERC1155Filterer) WatchWalletClaimCountUpdated(opts *bind.WatchOpts, sink chan<- *DropERC1155WalletClaimCountUpdated, wallet []common.Address) (event.Subscription, error) {
-
-	var walletRule []interface{}
-	for _, walletItem := range wallet {
-		walletRule = append(walletRule, walletItem)
-	}
-
-	logs, sub, err := _DropERC1155.contract.WatchLogs(opts, "WalletClaimCountUpdated", walletRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DropERC1155WalletClaimCountUpdated)
-				if err := _DropERC1155.contract.UnpackLog(event, "WalletClaimCountUpdated", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseWalletClaimCountUpdated is a log parse operation binding the contract event 0x9260cdce30c9abdb65593c1a903e40c87feb886a28aa4335a6695547988aab2f.
-//
-// Solidity: event WalletClaimCountUpdated(uint256 tokenId, address indexed wallet, uint256 count)
-func (_DropERC1155 *DropERC1155Filterer) ParseWalletClaimCountUpdated(log types.Log) (*DropERC1155WalletClaimCountUpdated, error) {
-	event := new(DropERC1155WalletClaimCountUpdated)
-	if err := _DropERC1155.contract.UnpackLog(event, "WalletClaimCountUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

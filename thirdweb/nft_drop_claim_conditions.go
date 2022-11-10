@@ -2,11 +2,11 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/json"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
@@ -53,7 +53,12 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 		return nil, err
 	}
 
-	mc, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, id)
+	active, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, id)
+	if err != nil {
+		return nil, err
+	}
+
+  merkle, err := claim.GetMerkleMetadata()
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +66,8 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 	provider := claim.helper.GetProvider()
 	claimCondition, err := transformResultToClaimCondition(
 		context.Background(),
-		&mc,
+		&active,
+		merkle,
 		provider,
 		claim.storage,
 	)
@@ -105,9 +111,15 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 			return nil, err
 		}
 
+		merkle, err := claim.GetMerkleMetadata()
+		if err != nil {
+			return nil, err
+		}
+	
 		claimCondition, err := transformResultToClaimCondition(
 			context.Background(),
 			&mc,
+			merkle,
 			provider,
 			claim.storage,
 		)
@@ -121,6 +133,28 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 	return conditions, nil
 }
 
+func (claim *NFTDropClaimConditions) GetMerkleMetadata() (*map[string]string, error) {
+	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{});
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := claim.storage.Get(uri);
+	if err != nil {
+		return nil, err
+	}
+
+	var rawMetadata struct {
+		Merkle map[string]string `json:"merkle"`
+	};
+	if err := json.Unmarshal(body, &rawMetadata); err != nil {
+		return nil, err
+	}
+
+	return &rawMetadata.Merkle, nil;
+}
+
+/**
 func (claim *NFTDropClaimConditions) CanClaim(
 	quantity int,
 	addressToCheck string,
@@ -150,3 +184,4 @@ func (claim *NFTDropClaimConditions) Set(
 ) (*types.Transaction, error) {
 	return nil, nil
 }
+**/

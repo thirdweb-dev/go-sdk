@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/json"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -60,10 +61,16 @@ func (claim *EditionDropClaimConditions) GetActive(ctx context.Context, tokenId 
 		return nil, err
 	}
 
+	merkle, err := claim.GetMerkleMetadata()
+	if err != nil {
+		return nil, err
+	}
+
 	provider := claim.helper.GetProvider()
 	claimCondition, err := transformResultToClaimCondition(
 		ctx,
 		&mc,
+		merkle,
 		provider,
 		claim.storage,
 	)
@@ -110,9 +117,15 @@ func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int
 			return nil, err
 		}
 
+		merkle, err := claim.GetMerkleMetadata()
+		if err != nil {
+			return nil, err
+		}
+
 		claimCondition, err := transformResultToClaimCondition(
 			ctx,
 			&mc,
+			merkle,
 			provider,
 			claim.storage,
 		)
@@ -124,4 +137,24 @@ func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int
 	}
 
 	return conditions, nil
+}
+
+func (claim *EditionDropClaimConditions) GetMerkleMetadata() (interface{}, error) {
+	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{});
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := claim.storage.Get(uri);
+	if err != nil {
+		return nil, err
+	}
+
+	metadata := map[string]interface{}{}
+	if err := json.Unmarshal(body, &metadata); err != nil {
+		return nil, err
+	}
+
+	merkle := metadata["merkle"];
+	return merkle, nil;
 }

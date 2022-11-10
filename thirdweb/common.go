@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -298,42 +299,123 @@ func prepareClaim(
 	ctx context.Context,
 	quantity int,
 	activeClaimCondition *ClaimConditionOutput,
+	merkleMetadata *map[string]string,
 	contractHelper *contractHelper,
 	storage storage,
 ) (*ClaimVerification, error) {
-	maxClaimable := 0
-	price := activeClaimCondition.Price
-	currencyAddress := activeClaimCondition.CurrencyAddress
+	addressToClaim := contractHelper.GetSignerAddress()
+	maxClaimable := activeClaimCondition.MaxClaimablePerWallet
 	proofs := [][32]byte{}
+	priceInProof := activeClaimCondition.Price
+	currencyAddressInProof := activeClaimCondition.CurrencyAddress
 	value := big.NewInt(0)
 
-	if price.Cmp(big.NewInt(0)) > 0 {
+	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
+
+	// Snapshot and merkle proof stuff
+	// TODO: Check if this string conversion works
+	if !strings.HasPrefix(hex.EncodeToString(activeClaimCondition.MerkleRootHash[:]), zeroAddress) {
+		snapshotEntry, err := fetchSnapshotEntryForAddress(
+			ctx,
+			addressToClaim,
+			activeClaimCondition.MerkleRootHash,
+			merkleMetadata,
+			contractHelper.GetProvider(),
+			storage,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if snapshotEntry != nil {
+			proofs = snapshotEntry.Proof
+			maxClaimable = snapshotEntry.MaxClaimable
+			if priceInProof.Cmp(MaxUint256) == 0 {
+				priceInProof = MaxUint256
+			} else {
+				currencyAddressInProof = snapshotEntry.CurrencyAddress
+				priceInProof = snapshotEntry.Price
+			}
+		}
+	}
+
+	// Handle approval for ERC20
+	var pricePerToken *big.Int
+	if priceInProof.Cmp(MaxUint256) == 0 {
+		pricePerToken = activeClaimCondition.Price
+	} else {
+		pricePerToken = priceInProof
+	}
+
+	var currencyAddress string
+	if currencyAddressInProof != zeroAddress {
+		currencyAddress = currencyAddressInProof
+	} else {
+		currencyAddress = activeClaimCondition.CurrencyAddress
+	}
+
+	if pricePerToken.Cmp(big.NewInt(0)) > 0 {
 		if isNativeToken(currencyAddress) {
-			value = big.NewInt(0).Mul(big.NewInt(int64(quantity)), price)
+			value = big.NewInt(0).Mul(big.NewInt(int64(quantity)), pricePerToken)
 		} else {
 			approveErc20Allowance(
 				ctx,
 				contractHelper,
 				currencyAddress,
-				price,
+				pricePerToken,
 				quantity,
 			)
 		}
 	}
 
 	claimVerification := &ClaimVerification{
-		proofs:                    proofs,
-		maxQuantityPerTransaction: maxClaimable,
-		price:                     price,
-		currencyAddress:           currencyAddress,
-		value:                     value,
+		Proofs:          proofs,
+		MaxClaimable:    maxClaimable,
+		Price:           pricePerToken,
+		CurrencyAddress: currencyAddressInProof,
+		Value:           value,
 	}
 	return claimVerification, nil
 }
 
+func fetchSnapshotEntryForAddress(
+	ctx context.Context,
+	addressToClaim common.Address,
+	merkleRootHash [32]byte,
+	merkleMetadata *map[string]string,
+	provider *ethclient.Client,
+	storage storage,
+) (*SnapshotEntryWithProof, error) {
+	// TODO: Test with no merkle metadata
+	if merkleMetadata == nil {
+		return nil, nil
+	}
+
+	snapshotUri, exists := (*merkleMetadata)[hex.EncodeToString(merkleRootHash[:])]
+	if exists {
+		body, err := storage.Get(snapshotUri)
+		if err != nil {
+			return nil, err
+		}
+	
+		metadata := &ShardedMerkleTreeInfo{}
+		if err := json.Unmarshal(body, &metadata); err != nil {
+			return nil, err
+		}
+
+		if metadata.MerkleRoot == hex.EncodeToString(merkleRootHash[:]) {
+			merkleTree := shardedMerkleTreeFromInfo(metadata, storage)
+			return merkleTree.GetProof(ctx, addressToClaim.String(), provider)
+		}
+	}
+
+	return nil, nil
+}
+
 func transformResultToClaimCondition(
 	ctx context.Context,
-	pm *abi.IDropClaimConditionClaimCondition,
+	pm *abi.IClaimConditionClaimCondition,
+	merkleMetadata interface{},
 	provider *ethclient.Client,
 	storage storage,
 ) (*ClaimConditionOutput, error) {
@@ -344,16 +426,19 @@ func transformResultToClaimCondition(
 
 	return &ClaimConditionOutput{
 		StartTime:                   pm.StartTimestamp,
-		MaxQuantity:                 pm.MaxClaimableSupply,
+		MaxClaimableSupply:          pm.MaxClaimableSupply,
+		MaxClaimablePerWallet:       pm.QuantityLimitPerWallet,
+		CurrentMintSupply:           pm.SupplyClaimed,
 		AvailableSupply:             big.NewInt(0).Sub(pm.MaxClaimableSupply, pm.SupplyClaimed),
-		QuantityLimitPerTransaction: pm.QuantityLimitPerTransaction,
-		WaitInSeconds:               pm.WaitTimeInSecondsBetweenClaims,
+		WaitInSeconds:               big.NewInt(0),
 		Price:                       pm.PricePerToken,
 		CurrencyAddress:             pm.Currency.String(),
 		CurrencyMetadata:            currencyValue,
+		MerkleRootHash:              pm.MerkleRoot,
 	}, nil
 }
 
+/**
 func processClaimConditionInputs(
 	claimConditionInputs []*ClaimConditionInput,
 	tokenDecimals int,
@@ -382,7 +467,7 @@ func processClaimConditionInputs(
 		}
 	}
 
-	parsedConditions := []*abi.IDropClaimConditionClaimCondition{}
+	parsedConditions := []*abi.IClaimConditionClaimCondition{}
 	for _, claimCondition := range inputsWithSnapshots {
 		condition := convertToContractModel(claimCondition, tokenDecimals, provider)
 		parsedConditions = append(parsedConditions, condition)
@@ -395,7 +480,7 @@ func convertToContractModel(
 	c *ClaimConditionInput,
 	tokenDecimals int,
 	provider *ethclient.Client,
-) *abi.IDropClaimConditionClaimCondition {
+) *abi.IClaimConditionClaimCondition {
 	currency := nativeTokenAddress
 	if !isNativeToken(c.CurrencyAddress) {
 		currency = c.CurrencyAddress
@@ -407,6 +492,7 @@ func convertToContractModel(
 
 	return nil
 }
+**/
 
 // MULTIWRAP
 
