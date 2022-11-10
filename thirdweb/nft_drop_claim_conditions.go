@@ -2,8 +2,10 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	"math/big"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -67,6 +69,32 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 	claimCondition, err := transformResultToClaimCondition(
 		context.Background(),
 		&active,
+		merkle,
+		provider,
+		claim.storage,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return claimCondition, nil
+}
+
+func (claim *NFTDropClaimConditions) Get(claimConditionId int) (*ClaimConditionOutput, error) {
+	condition, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, big.NewInt(int64(claimConditionId)))
+	if err != nil {
+		return nil, err
+	}
+
+	provider := claim.helper.GetProvider()
+	merkle, err := claim.GetMerkleMetadata()
+	if err != nil {
+		return nil, err
+	}
+
+	claimCondition, err := transformResultToClaimCondition(
+		context.Background(),
+		&condition,
 		merkle,
 		provider,
 		claim.storage,
@@ -152,6 +180,35 @@ func (claim *NFTDropClaimConditions) GetMerkleMetadata() (*map[string]string, er
 	}
 
 	return &rawMetadata.Merkle, nil;
+}
+
+func (claim *NFTDropClaimConditions) GetClaimerProofs(
+	ctx context.Context,
+	claimerAddress string,
+  claimConditionId int,
+) (*SnapshotEntryWithProof, error) {
+	claimCondition, err := claim.Get(claimConditionId)
+	if err != nil {
+		return nil, err
+	}
+	
+	if !strings.HasPrefix(hex.EncodeToString(claimCondition.MerkleRootHash[:]), zeroAddress) {
+		merkleMetadata, err := claim.GetMerkleMetadata()
+		if err != nil {
+			return nil, err
+		}
+		
+		return fetchSnapshotEntryForAddress(
+			ctx,
+			common.HexToAddress(claimerAddress),
+			claimCondition.MerkleRootHash,
+			merkleMetadata,
+			claim.helper.GetProvider(),
+			claim.storage,
+		)
+	} else {
+		return nil, nil
+	}
 }
 
 /**
