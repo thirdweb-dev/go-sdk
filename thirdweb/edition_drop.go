@@ -132,6 +132,7 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 		txOpts,
 		big.NewInt(int64(len(batch.uris))),
 		batch.baseUri,
+		[]byte{},
 	)
 	if err != nil {
 		return nil, err
@@ -175,19 +176,34 @@ func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string,
 		return nil, err
 	}
 
+	active, err := drop.ClaimConditions.GetActive(ctx, tokenId)
+	if err != nil {
+		return nil, err
+	}
+
 	txOpts, err := drop.helper.getTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	txOpts.Value = claimVerification.Value
+
+	proof := abi.IDrop1155AllowlistProof{
+		Proof: claimVerification.Proofs,
+		QuantityLimitPerWallet: claimVerification.MaxClaimable,
+		PricePerToken: claimVerification.Price,
+		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+	}
+
 	tx, err := drop.abi.Claim(
 		txOpts,
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(tokenId)),
 		big.NewInt(int64(quantity)),
-		common.HexToAddress(claimVerification.currencyAddress),
-		claimVerification.price,
-		claimVerification.proofs,
-		big.NewInt(int64(claimVerification.maxQuantityPerTransaction)),
+		common.HexToAddress(active.CurrencyAddress),
+		active.Price,
+		proof,
+		[]byte{},
 	)
 	if err != nil {
 		return nil, err
@@ -202,10 +218,18 @@ func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity
 		return nil, err
 	}
 
+
+	merkleMetadata, err := drop.ClaimConditions.GetMerkleMetadata()
+	if err != nil {
+		return nil, err
+	}
+
+
 	claimVerification, err := prepareClaim(
 		ctx,
 		quantity,
 		claimCondition,
+		merkleMetadata,
 		drop.helper,
 		drop.storage,
 	)

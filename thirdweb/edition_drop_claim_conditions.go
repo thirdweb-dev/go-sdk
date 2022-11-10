@@ -139,7 +139,7 @@ func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int
 	return conditions, nil
 }
 
-func (claim *EditionDropClaimConditions) GetMerkleMetadata() (interface{}, error) {
+func (claim *EditionDropClaimConditions) GetMerkleMetadata() (*map[string]string, error) {
 	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{});
 	if err != nil {
 		return nil, err
@@ -150,11 +150,12 @@ func (claim *EditionDropClaimConditions) GetMerkleMetadata() (interface{}, error
 		return nil, err
 	}
 
-	metadata := map[string]interface{}{}
-	if err := json.Unmarshal(body, &metadata); err != nil {
+	var rawMetadata struct {
+		Merkle map[string]string `json:"merkle"`
+	};
+	if err := json.Unmarshal(body, &rawMetadata); err != nil {
 		return nil, err
 	}
 
-	merkle := metadata["merkle"];
-	return merkle, nil;
+	return &rawMetadata.Merkle, nil;
 }
