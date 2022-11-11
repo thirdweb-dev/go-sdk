@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"math/big"
+	"strconv"
 	"strings"
 
 	"github.com/btcsuite/btcutil/base58"
@@ -71,6 +72,29 @@ func isNativeToken(tokenAddress string) bool {
 	return isZero || isNative
 }
 
+func convertToReadableQuantity(bn *big.Int, decimals int) string {
+	if bn.Cmp(new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)) == 0 {
+		return "unlimited"
+	} else {
+		return fmt.Sprintf("%.2f", formatUnits(bn, decimals))
+	}
+}
+
+func convertQuantityToBigNumber(quantity string, decimals int) (*big.Int, error) {
+  if quantity == "unlimited" {
+		MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
+		return MaxUint256, nil
+	} else {
+		flt, err := strconv.ParseFloat(quantity, 64)
+		if err != nil {
+			return nil, err
+		}
+
+		return parseUnits(flt, decimals)
+	}
+}
+
+// TODO: Update value to be string
 func parseUnits(value float64, decimals int) (*big.Int, error) {
 	floatValue := value * math.Pow(10, float64(decimals))
 	bigNumber, ok := new(big.Int).SetString(fmt.Sprintf("%.0f", floatValue), 10)
@@ -329,17 +353,36 @@ func prepareClaim(
 
 		if snapshotEntry != nil {
 			proofs = snapshotEntry.Proof
-			maxClaimable = snapshotEntry.MaxClaimable
-			if priceInProof.Cmp(MaxUint256) == 0 {
+
+			maxClaimable, err = convertQuantityToBigNumber(snapshotEntry.MaxClaimable, 0)
+			if err != nil {
+				return nil, err
+			}
+
+			if snapshotEntry.Price == "unlimited" || snapshotEntry.Price == "" {
 				priceInProof = MaxUint256
 			} else {
+				flt, err := strconv.ParseFloat(snapshotEntry.Price, 64)
+				if err != nil {
+					return nil, err
+				}
+
+				priceInProof, err = normalizePriceValue(
+					ctx, 
+					contractHelper.GetProvider(), 
+					flt, 
+					snapshotEntry.CurrencyAddress,
+				)
+			}
+
+			if snapshotEntry.CurrencyAddress == "" {
+				currencyAddressInProof = zeroAddress
+			} else {
 				currencyAddressInProof = snapshotEntry.CurrencyAddress
-				priceInProof = snapshotEntry.Price
 			}
 		}
 	}
 
-	// Handle approval for ERC20
 	var pricePerToken *big.Int
 	if priceInProof.Cmp(MaxUint256) == 0 {
 		pricePerToken = activeClaimCondition.Price
@@ -357,24 +400,17 @@ func prepareClaim(
 	if pricePerToken.Cmp(big.NewInt(0)) > 0 {
 		if isNativeToken(currencyAddress) {
 			value = big.NewInt(0).Mul(big.NewInt(int64(quantity)), pricePerToken)
-		} else {
-			approveErc20Allowance(
-				ctx,
-				contractHelper,
-				currencyAddress,
-				pricePerToken,
-				quantity,
-			)
-		}
+		} 
 	}
 
 	claimVerification := &ClaimVerification{
 		Proofs:          proofs,
 		MaxClaimable:    maxClaimable,
-		Price:           pricePerToken,
+		Price:           priceInProof,
 		CurrencyAddress: currencyAddressInProof,
 		Value:           value,
 	}
+
 	return claimVerification, nil
 }
 
@@ -391,7 +427,9 @@ func fetchSnapshotEntryForAddress(
 		return nil, nil
 	}
 
-	snapshotUri, exists := (*merkleMetadata)[hex.EncodeToString(merkleRootHash[:])]
+	merkleRoot := "0x" + hex.EncodeToString(merkleRootHash[:])
+
+	snapshotUri, exists := (*merkleMetadata)[merkleRoot]
 	if exists {
 		body, err := storage.Get(snapshotUri)
 		if err != nil {
@@ -403,7 +441,8 @@ func fetchSnapshotEntryForAddress(
 			return nil, err
 		}
 
-		if metadata.MerkleRoot == hex.EncodeToString(merkleRootHash[:]) {
+		if metadata.MerkleRoot == merkleRoot {
+			fmt.Printf("%#v\n", metadata)
 			merkleTree := shardedMerkleTreeFromInfo(metadata, storage)
 			return merkleTree.GetProof(ctx, addressToClaim.String(), provider)
 		}

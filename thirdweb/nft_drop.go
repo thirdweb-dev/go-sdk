@@ -358,5 +358,34 @@ func (drop *NFTDrop) prepareClaim(ctx context.Context, quantity int) (*ClaimVeri
 		return nil, err
 	}
 
+	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
+
+	// Handle approval for ERC20
+	var pricePerToken *big.Int
+	if claimVerification.Price.Cmp(MaxUint256) == 0 {
+		pricePerToken = active.Price
+	} else {
+		pricePerToken = claimVerification.Price
+	}
+
+	var currencyAddress string
+	if claimVerification.CurrencyAddress != zeroAddress {
+		currencyAddress = claimVerification.CurrencyAddress
+	} else {
+		currencyAddress = active.CurrencyAddress
+	}
+
+	if pricePerToken.Cmp(big.NewInt(0)) > 0 {
+		if !isNativeToken(currencyAddress) {
+			approveErc20Allowance(
+				ctx,
+				drop.helper,
+				currencyAddress,
+				pricePerToken,
+				quantity,
+			)
+		}
+	}
+
 	return claimVerification, nil
 }

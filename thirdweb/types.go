@@ -536,8 +536,8 @@ func (condition *ClaimConditionInput) fillDefaults() {
 
 type SnapshotEntryWithProof struct {
 	Address         string
-	MaxClaimable    *big.Int
-	Price 					*big.Int
+	MaxClaimable    string
+	Price 					string
 	CurrencyAddress string
 	Proof           [][32]byte
 }
@@ -558,8 +558,8 @@ type ShardedMerkleTreeInfo struct {
 
 type SnapshotEntry struct {
 	Address         string   `json:"address"`
-	MaxClaimable    int `json:"maxClaimable"`
-	Price 					int `json:"price"`
+	MaxClaimable    string   `json:"maxClaimable"`
+	Price 					string   `json:"price"`
 	CurrencyAddress string   `json:"currencyAddress"`
 }
 type ShardData struct {

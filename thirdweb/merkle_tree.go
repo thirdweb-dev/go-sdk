@@ -4,12 +4,12 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
-	"math/big"
+	"reflect"
 	"strings"
 
-	"github.com/cbergoon/merkletree"
 	"github.com/ethereum/go-ethereum/ethclient"
 	solsha3 "github.com/miguelmota/go-solidity-sha3"
+	merkletree "github.com/txaty/go-merkletree"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -76,14 +76,24 @@ func (tree *ShardedMerkleTree) HashEntry(
 	tokenDecimals int,
 	currencyDecimals int,
 ) (string, error) {
-	maxClaimable, err := parseUnits(float64(entry.MaxClaimable), tokenDecimals)
+	maxClaimable, err := convertQuantityToBigNumber(entry.MaxClaimable, tokenDecimals)
 	if err != nil {
 		return "", err 
 	}
 
-	price, err := parseUnits(float64(entry.Price), currencyDecimals)
+	entryPrice := entry.Price
+	if entryPrice == "" {
+		entryPrice = "unlimited"
+	}
+
+	price, err := convertQuantityToBigNumber(entryPrice, currencyDecimals)
 	if err != nil {
 		return "", err 
+	}
+
+	currencyAddress := entry.CurrencyAddress
+	if currencyAddress == "" {
+		currencyAddress = zeroAddress
 	}
 
 	hash := solsha3.SoliditySHA3(
@@ -92,7 +102,7 @@ func (tree *ShardedMerkleTree) HashEntry(
 			entry.Address,
 			maxClaimable.String(),
 			price.String(),
-			entry.CurrencyAddress,
+			currencyAddress,
 		},
 	)
 
@@ -109,9 +119,11 @@ func (tree *ShardedMerkleTree) GetProof(
 
 	currencyDecimalMap := make(map[string]int)
 
+
 	if !exists {
 		var shardData ShardData
-		raw, err := tree.storage.Get(tree.baseUri + `/` + shardId + `.json`)
+		uri := tree.baseUri + `/` + shardId + `.json`
+		raw, err := tree.storage.Get(uri)
 		if err != nil {
 			return nil, err
 		}
@@ -124,7 +136,7 @@ func (tree *ShardedMerkleTree) GetProof(
 		tree.shards[shardId] = shardData
 		shard = tree.shards[shardId]
 
-		hashedEntries := make([]merkletree.Content, len(shard.Entries))
+		hashedEntries := []merkletree.DataBlock{}
 		for _, entry := range shard.Entries {
 			currencyDecimals, err := tree.FetchAndCacheDecimals(ctx, currencyDecimalMap, provider, entry.CurrencyAddress)
 			if err != nil {
@@ -136,15 +148,50 @@ func (tree *ShardedMerkleTree) GetProof(
 				return nil, err
 			}
 
-			hashedEntries = append(hashedEntries, MerkleNode{Hash: hash})
-		}
-		
-		merkleTree, err := merkletree.NewTree(hashedEntries)
-		if err != nil {
-			return nil, err
+			hashBytes, err := hex.DecodeString(hash)
+			if err != nil {
+				return nil, err
+			}
+
+
+			hashedEntries = append(hashedEntries, &MerkleNode{data: hashBytes})
 		}
 
-		tree.trees[shardId] = merkleTree
+		calculateHash := func (data []byte) ([]byte, error) {
+			// Avoid hashing the leaf nodes to match merkletreejs implementation
+			for _, node := range hashedEntries {
+				node, err := node.Serialize()
+				if err != nil {
+					return nil, err
+				}
+
+				if reflect.DeepEqual(node, data) {
+					return data, nil
+				}
+			}
+
+			h := sha3.NewLegacyKeccak256()
+		
+			if _, err := h.Write([]byte(data)); err != nil {
+				return nil, err
+			}
+		
+			return h.Sum(nil), nil
+		}
+
+		if len(hashedEntries) > 1 {
+			config := &merkletree.Config{
+				Mode: merkletree.ModeProofGenAndTreeBuild,
+				HashFunc: calculateHash,
+			}
+	
+			merkleTree, err := merkletree.New(config, hashedEntries)
+			if err != nil {
+				return nil, err
+			}
+	
+			tree.trees[shardId] = merkleTree
+		}
 	}
 
 	var entry *SnapshotEntry
@@ -169,41 +216,50 @@ func (tree *ShardedMerkleTree) GetProof(
 		return nil, err
 	}
 
-	proofData, _, err := tree.trees[shardId].GetMerklePath(MerkleNode{Hash: leaf})
+	leafBytes, err := hex.DecodeString(leaf)
 	if err != nil {
 		return nil, err
 	}
 
-	var proof [][32]byte;
-	for _, p := range proofData {
+	proof := [][32]byte{};
+	currentTree := tree.trees[shardId]
+	if currentTree != nil {
+		proofData, err := currentTree.GenerateProof(&MerkleNode{data: leafBytes})
+		if err != nil {
+			return nil, err
+		}
+	
+		for _, p := range proofData.Siblings {
+			var proofItem [32]byte
+			copy(proofItem[:], p)
+			proof = append(proof, proofItem)
+		}
+	}
+
+	for _, p := range shard.Proofs {
 		var proofItem [32]byte
-		copy(proofItem[:], p)
+		proofBytes, err := hex.DecodeString(p[2:])
+		if err != nil {
+			return nil, err
+		}
+
+		copy(proofItem[:], proofBytes)
 		proof = append(proof, proofItem)
 	}
 
 	return &SnapshotEntryWithProof{
 		Address: entry.Address,
-		MaxClaimable: big.NewInt(int64(entry.MaxClaimable)),
-		Price: big.NewInt(int64(entry.Price)),
+		MaxClaimable: entry.MaxClaimable,
+		Price: entry.Price,
 		CurrencyAddress: entry.CurrencyAddress,
 		Proof: proof,
 	}, nil
 }
 
 type MerkleNode struct {
-	Hash string
+	data []byte
 }
 
-func (t MerkleNode) CalculateHash() ([]byte, error) {
-	h := sha3.NewLegacyKeccak256()
-
-  if _, err := h.Write([]byte(t.Hash)); err != nil {
-    return nil, err
-  }
-
-  return h.Sum(nil), nil
-}
-
-func (t MerkleNode) Equals(other merkletree.Content) (bool, error) {
-  return t.Hash == other.(MerkleNode).Hash, nil
+func (t *MerkleNode) Serialize() ([]byte, error) {
+	return t.data, nil
 }

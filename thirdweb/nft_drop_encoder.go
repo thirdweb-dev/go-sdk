@@ -86,7 +86,7 @@ func newNFTDropEncoder(
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 //	fmt.Println(tx.Nonce())
 func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
-	claimVerification, err := encoder.prepareClaim(quantity)
+	claimVerification, err := encoder.prepareClaim(ctx, quantity)
 	if err != nil {
 		return nil, err
 	}
@@ -95,8 +95,8 @@ func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress
 		ctx,
 		encoder.helper,
 		signerAddress,
-		claimVerification.value,
-		claimVerification.currencyAddress,
+		claimVerification.Value,
+		claimVerification.CurrencyAddress,
 	)
 }
 
@@ -125,7 +125,7 @@ func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 //	fmt.Println(tx.Nonce())
 func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
-	claimVerification, err := encoder.prepareClaim(quantity)
+	claimVerification, err := encoder.prepareClaim(ctx, quantity)
 	if err != nil {
 		return nil, err
 	}
@@ -135,40 +135,56 @@ func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string
 		return nil, err
 	}
 
-	txOpts.Value = claimVerification.value
+	txOpts.Value = claimVerification.Value
 
 	err = encoder.checkErc20Allowance(
 		signerAddress,
-		claimVerification.value,
-		claimVerification.currencyAddress,
+		claimVerification.Value,
+		claimVerification.CurrencyAddress,
 	)
 	if err != nil {
 		return nil, err
+	}
+
+	proof := abi.IDropAllowlistProof{
+		Proof: claimVerification.Proofs,
+		QuantityLimitPerWallet: claimVerification.MaxClaimable,
+		PricePerToken: claimVerification.Price,
+		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
 	}
 
 	return encoder.abi.Claim(
 		txOpts,
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(quantity)),
-		common.HexToAddress(claimVerification.currencyAddress),
-		claimVerification.price,
-		claimVerification.proofs,
-		big.NewInt(int64(claimVerification.maxQuantityPerTransaction)),
+		common.HexToAddress(claimVerification.CurrencyAddress),
+		claimVerification.Price,
+		proof,
+		[]byte{},
 	)
 }
 
-func (encoder *NFTDropEncoder) prepareClaim(quantity int) (*ClaimVerification, error) {
-	claimCondition, err := encoder.claimConditions.GetActive()
+func (encoder *NFTDropEncoder) prepareClaim(ctx context.Context, quantity int) (*ClaimVerification, error) {
+	active, err := encoder.claimConditions.GetActive()
 	if err != nil {
 		return nil, err
 	}
 
-	claimVerification := &ClaimVerification{
-		proofs:                    [][32]byte{},
-		maxQuantityPerTransaction: 0,
-		price:                     claimCondition.Price,
-		currencyAddress:           claimCondition.CurrencyAddress,
-		value:                     big.NewInt(0).Mul(big.NewInt(int64(quantity)), claimCondition.Price),
+	merkleMetadata, err := encoder.claimConditions.GetMerkleMetadata()
+	if err != nil {
+		return nil, err
+	}
+
+	claimVerification, err := prepareClaim(
+		ctx,
+		quantity,
+		active,
+		merkleMetadata,
+		encoder.helper,
+		encoder.storage,
+	)
+	if err != nil {
+		return nil, err
 	}
 
 	return claimVerification, nil

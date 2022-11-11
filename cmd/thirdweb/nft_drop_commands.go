@@ -85,7 +85,7 @@ var nftDropGetActiveCmd = &cobra.Command{
 		fmt.Println("Start Time:", active.StartTime)
 		fmt.Println("Available:", active.AvailableSupply)
 		fmt.Println("Quantity:", active.MaxQuantity)
-		fmt.Println("Quantity Limit:", active.QuantityLimitPerTransaction)
+		fmt.Println("Quantity Limit:", active.MaxClaimablePerWallet)
 		fmt.Println("Price:", active.Price)
 		fmt.Println("Wait In Seconds", active.WaitInSeconds)
 
@@ -99,7 +99,7 @@ var nftDropGetActiveCmd = &cobra.Command{
 			fmt.Println("Start Time:", c.StartTime)
 			fmt.Println("Available:", c.AvailableSupply)
 			fmt.Println("Quantity:", c.MaxQuantity)
-			fmt.Println("Quantity Limit:", c.QuantityLimitPerTransaction)
+			fmt.Println("Quantity Limit:", c.MaxClaimablePerWallet)
 			fmt.Println("Price:", c.Price)
 			fmt.Println("Wait In Seconds", c.WaitInSeconds)
 		}
