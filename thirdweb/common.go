@@ -271,7 +271,7 @@ func approveErc20Allowance(
 		return err
 	}
 
-	erc20, err := newContractHelper(common.HexToAddress(currencyAddress), provider, "")
+	erc20, err := newContractHelper(common.HexToAddress(currencyAddress), provider, contractToApprove.GetRawPrivateKey())
 	if err != nil {
 		return err
 	}
@@ -290,7 +290,12 @@ func approveErc20Allowance(
 		if err != nil {
 			return err
 		}
-		contractAbi.Approve(txOpts, spender, allowance.Add(allowance, totalPrice))
+		tx, err := contractAbi.Approve(txOpts, spender, allowance.Add(allowance, totalPrice))
+		if err != nil {
+			return err
+		}
+
+		contractToApprove.awaitTx(tx.Hash())
 	}
 
 	return nil
@@ -442,7 +447,6 @@ func fetchSnapshotEntryForAddress(
 		}
 
 		if metadata.MerkleRoot == merkleRoot {
-			fmt.Printf("%#v\n", metadata)
 			merkleTree := shardedMerkleTreeFromInfo(metadata, storage)
 			return merkleTree.GetProof(ctx, addressToClaim.String(), provider)
 		}

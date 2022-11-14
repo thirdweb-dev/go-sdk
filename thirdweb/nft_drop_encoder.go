@@ -75,17 +75,15 @@ func newNFTDropEncoder(
 //
 //	// Address of the wallet we expect to sign this message
 //	signerAddress := "0x..."
-//	// Address of the wallet we want to claim the NFTs to
-//	destinationAddress := "{{wallet_address}}"
 //	// Number of NFTs to claim
 //	quantity = 1
 //
-//	tx, err := contract.Encoder.ApproveClaimTo(context.Background(), signerAddress, destinationAddress, quantity)
+//	tx, err := contract.Encoder.ApproveClaimTo(context.Background(), signerAddress, quantity)
 //
 //	// Now you can get all the standard transaction data as needed
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 //	fmt.Println(tx.Nonce())
-func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
+func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress string, quantity int) (*types.Transaction, error) {
 	claimVerification, err := encoder.prepareClaim(ctx, quantity)
 	if err != nil {
 		return nil, err
@@ -125,6 +123,11 @@ func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 //	fmt.Println(tx.Nonce())
 func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
+	active, err := encoder.claimConditions.GetActive()
+	if err != nil {
+		return nil, err
+	}
+	
 	claimVerification, err := encoder.prepareClaim(ctx, quantity)
 	if err != nil {
 		return nil, err
@@ -137,10 +140,27 @@ func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string
 
 	txOpts.Value = claimVerification.Value
 
+	// Check for ERC20 Approval
+	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
+	var pricePerToken *big.Int
+	if claimVerification.Price.Cmp(MaxUint256) == 0 {
+		pricePerToken = active.Price
+	} else {
+		pricePerToken = claimVerification.Price
+	}
+
+	var currencyAddress string
+	if claimVerification.CurrencyAddress != zeroAddress {
+		currencyAddress = claimVerification.CurrencyAddress
+	} else {
+		currencyAddress = active.CurrencyAddress
+	}
+
+	totalPrice := pricePerToken.Mul(big.NewInt(int64(quantity)), pricePerToken)
 	err = encoder.checkErc20Allowance(
 		signerAddress,
-		claimVerification.Value,
-		claimVerification.CurrencyAddress,
+		totalPrice,
+		currencyAddress,
 	)
 	if err != nil {
 		return nil, err
@@ -157,8 +177,8 @@ func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string
 		txOpts,
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(quantity)),
-		common.HexToAddress(claimVerification.CurrencyAddress),
-		claimVerification.Price,
+		common.HexToAddress(active.CurrencyAddress),
+		active.Price,
 		proof,
 		[]byte{},
 	)

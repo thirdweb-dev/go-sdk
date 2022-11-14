@@ -300,7 +300,7 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 		return nil, err
 	}
 	
-	claimVerification, err := drop.prepareClaim(ctx, quantity)
+	claimVerification, err := drop.prepareClaim(ctx, quantity, true)
 	if err != nil {
 		return nil, err
 	}
@@ -335,7 +335,50 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 	return drop.helper.awaitTx(tx.Hash())
 }
 
-func (drop *NFTDrop) prepareClaim(ctx context.Context, quantity int) (*ClaimVerification, error) {
+func (drop *NFTDrop) GetClaimArguments(
+	ctx context.Context,
+	destinationAddress string,
+	quantity int,
+) (
+	*ClaimArguments,
+	error,
+) {
+	active, err := drop.ClaimConditions.GetActive()
+	if err != nil {
+		return nil, err
+	}
+	
+	claimVerification, err := drop.prepareClaim(ctx, quantity, false)
+	if err != nil {
+		return nil, err
+	}
+
+	txOpts, err := drop.helper.getTxOptions(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	txOpts.Value = claimVerification.Value
+
+	proof := abi.IDropAllowlistProof{
+		Proof: claimVerification.Proofs,
+		QuantityLimitPerWallet: claimVerification.MaxClaimable,
+		PricePerToken: claimVerification.Price,
+		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+	}
+
+	return &ClaimArguments{ 
+		txOpts, 
+		common.HexToAddress(destinationAddress), 
+		big.NewInt(int64(quantity)),  
+		common.HexToAddress(active.CurrencyAddress), 
+		active.Price, 
+		proof, 
+		[]byte{}, 
+	}, nil
+}
+
+func (drop *NFTDrop) prepareClaim(ctx context.Context, quantity int, handleApproval bool) (*ClaimVerification, error) {
 	active, err := drop.ClaimConditions.GetActive()
 	if err != nil {
 		return nil, err
@@ -358,32 +401,38 @@ func (drop *NFTDrop) prepareClaim(ctx context.Context, quantity int) (*ClaimVeri
 		return nil, err
 	}
 
-	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
-
+	
 	// Handle approval for ERC20
-	var pricePerToken *big.Int
-	if claimVerification.Price.Cmp(MaxUint256) == 0 {
-		pricePerToken = active.Price
-	} else {
-		pricePerToken = claimVerification.Price
-	}
+	if handleApproval {
+		MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 
-	var currencyAddress string
-	if claimVerification.CurrencyAddress != zeroAddress {
-		currencyAddress = claimVerification.CurrencyAddress
-	} else {
-		currencyAddress = active.CurrencyAddress
-	}
+		var pricePerToken *big.Int
+		if claimVerification.Price.Cmp(MaxUint256) == 0 {
+			pricePerToken = active.Price
+		} else {
+			pricePerToken = claimVerification.Price
+		}
+	
+		var currencyAddress string
+		if claimVerification.CurrencyAddress != zeroAddress {
+			currencyAddress = claimVerification.CurrencyAddress
+		} else {
+			currencyAddress = active.CurrencyAddress
+		}
 
-	if pricePerToken.Cmp(big.NewInt(0)) > 0 {
-		if !isNativeToken(currencyAddress) {
-			approveErc20Allowance(
-				ctx,
-				drop.helper,
-				currencyAddress,
-				pricePerToken,
-				quantity,
-			)
+		if pricePerToken.Cmp(big.NewInt(0)) > 0 {
+			if !isNativeToken(currencyAddress) {
+				err := approveErc20Allowance(
+					ctx,
+					drop.helper,
+					currencyAddress,
+					pricePerToken,
+					quantity,
+				)
+				if err != nil {
+					return nil, err
+				}
+			}
 		}
 	}
 

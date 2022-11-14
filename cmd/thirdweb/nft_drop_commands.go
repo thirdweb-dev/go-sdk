@@ -53,6 +53,12 @@ var nftDropEncoderCmd = &cobra.Command{
 			panic(err)
 		}
 
+		// tx, err := nftDrop.Encoder.ApproveClaimTo(
+		// 	context.Background(),
+		// 	thirdwebSDK.GetSignerAddress().String(),
+		// 	1,
+		// )
+
 		tx, err := nftDrop.Encoder.ClaimTo(
 			context.Background(),
 			thirdwebSDK.GetSignerAddress().String(),
@@ -115,14 +121,35 @@ var nftDropClaimCmd = &cobra.Command{
 			panic(err)
 		}
 
-		if tx, err := nftDrop.Claim(context.Background(), 1); err != nil {
+		address := thirdwebSDK.GetSignerAddress().String()
+		claimArgs, err := nftDrop.GetClaimArguments(context.Background(), address, 1)	
+		if err != nil {
 			panic(err)
-		} else {
-			log.Printf("Claimed nft successfully")
-
-			result, _ := json.Marshal(&tx)
-			fmt.Println(string(result))
 		}
+
+		fmt.Printf("%#v\n", claimArgs)
+
+		tx, err := nftDrop.Abi.Claim(
+			claimArgs.Opts,
+			claimArgs.Receiver,
+			claimArgs.Quantity,
+			claimArgs.Currency,
+			claimArgs.PricePerToken,
+			claimArgs.AllowlistProof,
+			claimArgs.Data,
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		awaitTx(tx.Hash())
+
+		// tx, err := nftDrop.Claim(context.Background(), 1)
+		// if err != nil {
+		// 	panic(err)
+		// }
+
+		// log.Println("Claimed nft with tx hash", tx.Hash().String())
 	},
 }
 

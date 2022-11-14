@@ -9,7 +9,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/ethclient"
 	solsha3 "github.com/miguelmota/go-solidity-sha3"
-	merkletree "github.com/txaty/go-merkletree"
+	merkletree "github.com/thirdweb-dev/go-sdk/v2/merkle"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -119,7 +119,6 @@ func (tree *ShardedMerkleTree) GetProof(
 
 	currencyDecimalMap := make(map[string]int)
 
-
 	if !exists {
 		var shardData ShardData
 		uri := tree.baseUri + `/` + shardId + `.json`
@@ -157,6 +156,7 @@ func (tree *ShardedMerkleTree) GetProof(
 			hashedEntries = append(hashedEntries, &MerkleNode{data: hashBytes})
 		}
 
+		// Define our own hash function so we can match merkletreejs
 		calculateHash := func (data []byte) ([]byte, error) {
 			// Avoid hashing the leaf nodes to match merkletreejs implementation
 			for _, node := range hashedEntries {
@@ -228,7 +228,7 @@ func (tree *ShardedMerkleTree) GetProof(
 		if err != nil {
 			return nil, err
 		}
-	
+
 		for _, p := range proofData.Siblings {
 			var proofItem [32]byte
 			copy(proofItem[:], p)

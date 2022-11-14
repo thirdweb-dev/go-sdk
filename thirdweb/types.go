@@ -3,6 +3,10 @@ package thirdweb
 import (
 	"math/big"
 	"time"
+
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
 type SDKOptions struct {
@@ -516,6 +520,16 @@ type MarketplaceFilter struct {
 }
 
 // CLAIM CONDITIONS
+
+type ClaimArguments struct {
+	Opts           *bind.TransactOpts
+	Receiver       common.Address
+	Quantity       *big.Int
+	Currency       common.Address
+	PricePerToken  *big.Int
+	AllowlistProof abi.IDropAllowlistProof
+	Data 					 []byte
+}
 
 type ClaimConditionInput struct {
 	StartTime                   *time.Time
