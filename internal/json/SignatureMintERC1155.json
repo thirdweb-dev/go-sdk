@@ -168,7 +168,13 @@
       }
     ],
     "name": "mintWithSignature",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "signer",
+        "type": "address"
+      }
+    ],
     "stateMutability": "payable",
     "type": "function"
   },

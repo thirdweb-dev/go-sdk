@@ -39,7 +39,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct MinimalForwarder.ForwardRequest",
+        "internalType": "struct Forwarder.ForwardRequest",
         "name": "req",
         "type": "tuple"
       },
@@ -119,7 +119,7 @@
             "type": "bytes"
           }
         ],
-        "internalType": "struct MinimalForwarder.ForwardRequest",
+        "internalType": "struct Forwarder.ForwardRequest",
         "name": "req",
         "type": "tuple"
       },

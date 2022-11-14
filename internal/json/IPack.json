@@ -3,38 +3,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "packId",
+        "type": "uint256"
+      },
+      {
         "indexed": false,
         "internalType": "address",
-        "name": "newRoyaltyRecipient",
+        "name": "recipient",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "newRoyaltyBps",
+        "name": "totalPacksCreated",
         "type": "uint256"
       }
     ],
-    "name": "DefaultRoyalty",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "prevOwner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnerUpdated",
+    "name": "PackCreated",
     "type": "event"
   },
   {
@@ -43,91 +30,115 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "packId",
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
-        "name": "royaltyRecipient",
+        "name": "opener",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "royaltyBps",
+        "name": "numOfPacksOpened",
         "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "assetContract",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITokenBundle.TokenType",
+            "name": "tokenType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalAmount",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ITokenBundle.Token[]",
+        "name": "rewardUnitsDistributed",
+        "type": "tuple[]"
       }
     ],
-    "name": "RoyaltyForToken",
+    "name": "PackOpened",
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "contractType",
-    "outputs": [
+    "anonymous": false,
+    "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "packId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalPacksCreated",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "contractURI",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "contractVersion",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
+    "name": "PackUpdated",
+    "type": "event"
   },
   {
     "inputs": [
       {
         "components": [
           {
-            "internalType": "address[]",
-            "name": "erc1155AssetContracts",
-            "type": "address[]"
+            "internalType": "address",
+            "name": "assetContract",
+            "type": "address"
           },
           {
-            "internalType": "uint256[][]",
-            "name": "erc1155TokensToWrap",
-            "type": "uint256[][]"
+            "internalType": "enum ITokenBundle.TokenType",
+            "name": "tokenType",
+            "type": "uint8"
           },
           {
-            "internalType": "uint256[][]",
-            "name": "erc1155AmountsToWrap",
-            "type": "uint256[][]"
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalAmount",
+            "type": "uint256"
           }
         ],
-        "internalType": "struct IPack.PackContents",
+        "internalType": "struct ITokenBundle.Token[]",
         "name": "contents",
-        "type": "tuple"
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "numOfRewardUnits",
+        "type": "uint256[]"
       },
       {
         "internalType": "string",
-        "name": "uri",
+        "name": "packUri",
         "type": "string"
       },
       {
@@ -137,55 +148,29 @@
       },
       {
         "internalType": "uint128",
-        "name": "nftsPerOpen",
+        "name": "amountDistributedPerOpen",
         "type": "uint128"
+      },
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
       }
     ],
     "name": "createPack",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getDefaultRoyaltyInfo",
     "outputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "packId",
+        "type": "uint256"
       },
       {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "packTotalSupply",
         "type": "uint256"
       }
     ],
-    "name": "getRoyaltyInfoForToken",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -202,116 +187,35 @@
       }
     ],
     "name": "openPack",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
     "outputs": [
       {
-        "internalType": "address",
+        "components": [
+          {
+            "internalType": "address",
+            "name": "assetContract",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITokenBundle.TokenType",
+            "name": "tokenType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ITokenBundle.Token[]",
         "name": "",
-        "type": "address"
+        "type": "tuple[]"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "salePrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "royaltyInfo",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "receiver",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "royaltyAmount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_uri",
-        "type": "string"
-      }
-    ],
-    "name": "setContractURI",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_royaltyRecipient",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_royaltyBps",
-        "type": "uint256"
-      }
-    ],
-    "name": "setDefaultRoyaltyInfo",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "setOwner",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "bps",
-        "type": "uint256"
-      }
-    ],
-    "name": "setRoyaltyInfoForToken",
-    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   }
