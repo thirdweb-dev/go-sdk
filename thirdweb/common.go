@@ -333,7 +333,7 @@ func prepareClaim(
 
 func transformResultToClaimCondition(
 	ctx context.Context,
-	pm *abi.IDropClaimConditionClaimCondition,
+	pm *abi.IDropClaimCondition_V2ClaimCondition,
 	provider *ethclient.Client,
 	storage storage,
 ) (*ClaimConditionOutput, error) {

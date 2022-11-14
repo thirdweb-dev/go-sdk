@@ -15,6 +15,12 @@
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenIdMinted",
+        "type": "uint256"
+      },
+      {
         "components": [
           {
             "internalType": "address",
@@ -152,7 +158,13 @@
       }
     ],
     "name": "mintWithSignature",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "signer",
+        "type": "address"
+      }
+    ],
     "stateMutability": "payable",
     "type": "function"
   },

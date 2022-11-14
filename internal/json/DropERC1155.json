@@ -1,12 +1,6 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_thirdwebFee",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -63,12 +57,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "quantityLimitPerTransaction",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "waitTimeInSecondsBetweenClaims",
+            "name": "quantityLimitPerWallet",
             "type": "uint256"
           },
           {
@@ -85,12 +74,23 @@
             "internalType": "address",
             "name": "currency",
             "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
           }
         ],
         "indexed": false,
-        "internalType": "struct IDropClaimCondition.ClaimCondition[]",
+        "internalType": "struct IClaimCondition.ClaimCondition[]",
         "name": "claimConditions",
         "type": "tuple[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "resetEligibility",
+        "type": "bool"
       }
     ],
     "name": "ClaimConditionsUpdated",
@@ -101,6 +101,25 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "string",
+        "name": "prevURI",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "newURI",
+        "type": "string"
+      }
+    ],
+    "name": "ContractURIUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "newRoyaltyRecipient",
         "type": "address"
@@ -113,6 +132,19 @@
       }
     ],
     "name": "DefaultRoyalty",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "version",
+        "type": "uint8"
+      }
+    ],
+    "name": "Initialized",
     "type": "event"
   },
   {
@@ -138,32 +170,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "count",
-        "type": "uint256"
-      }
-    ],
-    "name": "MaxWalletClaimCountUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "prevOwner",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
@@ -176,7 +189,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "platformFeeRecipient",
         "type": "address"
@@ -289,7 +302,7 @@
         "type": "uint256"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "royaltyRecipient",
         "type": "address"
@@ -310,13 +323,26 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "claimConditionIndex",
+        "name": "tokenId",
         "type": "uint256"
       },
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "saleRecipient",
+        "type": "address"
+      }
+    ],
+    "name": "SaleRecipientForTokenUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "claimConditionIndex",
         "type": "uint256"
       },
       {
@@ -326,10 +352,16 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "receiver",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
       },
       {
         "indexed": false,
@@ -345,7 +377,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "startTokenId",
         "type": "uint256"
@@ -361,6 +393,12 @@
         "internalType": "string",
         "name": "baseURI",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "encryptedBaseURI",
+        "type": "bytes"
       }
     ],
     "name": "TokensLazyMinted",
@@ -460,31 +498,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "wallet",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "count",
-        "type": "uint256"
-      }
-    ],
-    "name": "WalletClaimCountUpdated",
-    "type": "event"
-  },
-  {
     "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
     "outputs": [
@@ -553,29 +566,6 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
-      }
-    ],
-    "name": "burn",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
         "internalType": "uint256[]",
         "name": "ids",
         "type": "uint256[]"
@@ -619,14 +609,36 @@
         "type": "uint256"
       },
       {
-        "internalType": "bytes32[]",
-        "name": "_proofs",
-        "type": "bytes32[]"
+        "components": [
+          {
+            "internalType": "bytes32[]",
+            "name": "proof",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "quantityLimitPerWallet",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "currency",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IDrop1155.AllowlistProof",
+        "name": "_allowlistProof",
+        "type": "tuple"
       },
       {
-        "internalType": "uint256",
-        "name": "_proofMaxQuantityPerTransaction",
-        "type": "uint256"
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
       }
     ],
     "name": "claim",
@@ -717,6 +729,38 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getBaseURICount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBatchIdAtIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -750,12 +794,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "quantityLimitPerTransaction",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "waitTimeInSecondsBetweenClaims",
+            "name": "quantityLimitPerWallet",
             "type": "uint256"
           },
           {
@@ -772,45 +811,16 @@
             "internalType": "address",
             "name": "currency",
             "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
           }
         ],
-        "internalType": "struct IDropClaimCondition.ClaimCondition",
+        "internalType": "struct IClaimCondition.ClaimCondition",
         "name": "condition",
         "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_conditionId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_claimer",
-        "type": "address"
-      }
-    ],
-    "name": "getClaimTimestamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "lastClaimTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "nextValidClaimTimestamp",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -888,7 +898,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "member",
         "type": "address"
       }
     ],
@@ -907,7 +917,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "count",
         "type": "uint256"
       }
     ],
@@ -933,6 +943,35 @@
         "internalType": "uint16",
         "name": "",
         "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_conditionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_claimer",
+        "type": "address"
+      }
+    ],
+    "name": "getSupplyClaimedByWallet",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "supplyClaimedByWallet",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -970,6 +1009,30 @@
       }
     ],
     "name": "hasRole",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "hasRoleWithSwitch",
     "outputs": [
       {
         "internalType": "bool",
@@ -1092,10 +1155,21 @@
         "internalType": "string",
         "name": "_baseURIForTokens",
         "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
       }
     ],
     "name": "lazyMint",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "batchId",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -1108,25 +1182,6 @@
       }
     ],
     "name": "maxTotalSupply",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "maxWalletClaimCount",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1402,12 +1457,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "quantityLimitPerTransaction",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "waitTimeInSecondsBetweenClaims",
+            "name": "quantityLimitPerWallet",
             "type": "uint256"
           },
           {
@@ -1424,10 +1474,15 @@
             "internalType": "address",
             "name": "currency",
             "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
           }
         ],
-        "internalType": "struct IDropClaimCondition.ClaimCondition[]",
-        "name": "_phases",
+        "internalType": "struct IClaimCondition.ClaimCondition[]",
+        "name": "_conditions",
         "type": "tuple[]"
       },
       {
@@ -1486,24 +1541,6 @@
       }
     ],
     "name": "setMaxTotalSupply",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_count",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMaxWalletClaimCount",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1584,16 +1621,11 @@
       },
       {
         "internalType": "address",
-        "name": "_claimer",
+        "name": "_saleRecipient",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_count",
-        "type": "uint256"
       }
     ],
-    "name": "setWalletClaimCount",
+    "name": "setSaleRecipientForToken",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1661,7 +1693,7 @@
     "outputs": [
       {
         "internalType": "string",
-        "name": "_tokenURI",
+        "name": "",
         "type": "string"
       }
     ],
@@ -1701,84 +1733,39 @@
         "type": "uint256"
       },
       {
-        "internalType": "bool",
-        "name": "verifyMaxQuantityPerTransaction",
-        "type": "bool"
+        "components": [
+          {
+            "internalType": "bytes32[]",
+            "name": "proof",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "quantityLimitPerWallet",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "currency",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IDrop1155.AllowlistProof",
+        "name": "_allowlistProof",
+        "type": "tuple"
       }
     ],
     "name": "verifyClaim",
-    "outputs": [],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_conditionId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_claimer",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_quantity",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32[]",
-        "name": "_proofs",
-        "type": "bytes32[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_proofMaxQuantityPerTransaction",
-        "type": "uint256"
-      }
-    ],
-    "name": "verifyClaimMerkleProof",
     "outputs": [
       {
         "internalType": "bool",
-        "name": "validMerkleProof",
+        "name": "isOverride",
         "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "merkleProofIndex",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "walletClaimCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",

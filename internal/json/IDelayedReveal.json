@@ -1,5 +1,24 @@
 [
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "revealedURI",
+        "type": "string"
+      }
+    ],
+    "name": "TokenURIRevealed",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes",

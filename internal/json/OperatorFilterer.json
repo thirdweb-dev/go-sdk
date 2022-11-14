@@ -1,0 +1,29 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "subscriptionOrRegistrantToCopy",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "subscribe",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      }
+    ],
+    "name": "OperatorNotAllowed",
+    "type": "error"
+  }
+]
