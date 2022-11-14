@@ -5,7 +5,7 @@ The contract deployer lets you deploy new contracts to the blockchain using just
 
 ```
 import (
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
 privateKey = "..."

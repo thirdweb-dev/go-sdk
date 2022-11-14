@@ -11,7 +11,7 @@ Let's take a look at how you can get a custom contract instance for one of your 
 
 ```
 import (
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
 privateKey = "..."
@@ -31,7 +31,7 @@ Alternatively, if you didn't deploy your contract with thirdweb deploy, you can 
 
 ```
 import (
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
 privateKey = "..."
@@ -88,4 +88,65 @@ balance, err := contract.Call("balanceOf", "{{wallet_address}}")
 
 // You can also make a transaction to your contract with the call method
 tx, err := contract.Call(context.Background(), "mintTo", "{{wallet_address}}", "ipfs://...")
+```
+
+## type [SnapshotClaim](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/snapshots.go#L17-L21>)
+
+```go
+type SnapshotClaim struct {
+    Address      string   `json:"address"`
+    MaxClaimable int      `json:"maxClaimable"`
+    Proof        []string `json:"proof"`
+}
+```
+
+## type [SnapshotEntry](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L573-L578>)
+
+```go
+type SnapshotEntry struct {
+    Address         string `json:"address"`
+    MaxClaimable    string `json:"maxClaimable"`
+    Price           string `json:"price"`
+    CurrencyAddress string `json:"currencyAddress"`
+}
+```
+
+## type [SnapshotEntryWithProof](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L551-L557>)
+
+```go
+type SnapshotEntryWithProof struct {
+    Address         string
+    MaxClaimable    string
+    Price           string
+    CurrencyAddress string
+    Proof           [][32]byte
+}
+```
+
+## type [SnapshotInfo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/snapshots.go#L23-L26>)
+
+```go
+type SnapshotInfo struct {
+    MerkleRoot string          `json:"merkleRoot"`
+    Claims     []SnapshotClaim `json:"claims"`
+}
+```
+
+## type [SnapshotInfos](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/snapshots.go#L28-L32>)
+
+```go
+type SnapshotInfos struct {
+    Snapshot    SnapshotInfo
+    MerkleRoot  string
+    SnapshotUri string
+}
+```
+
+## type [SnapshotInput](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/snapshots.go#L12-L15>)
+
+```go
+type SnapshotInput struct {
+    Address      string
+    MaxClaimable int
+}
 ```

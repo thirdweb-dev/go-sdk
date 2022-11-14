@@ -7,7 +7,7 @@ This interface is currently accessible from the Edition Drop contract contract t
 type EditionDropClaimConditions struct {}
 ```
 
-### func \(\*EditionDropClaimConditions\) [GetActive](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop_claim_conditions.go#L52>)
+### func \(\*EditionDropClaimConditions\) [GetActive](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop_claim_conditions.go#L53>)
 
 ```go
 func (claim *EditionDropClaimConditions) GetActive(ctx context.Context, tokenId int) (*ClaimConditionOutput, error)
@@ -34,7 +34,7 @@ fmt.Println("Price:", condition.Price)
 fmt.Println("Wait In Seconds", condition.WaitInSeconds)
 ```
 
-### func \(\*EditionDropClaimConditions\) [GetAll](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop_claim_conditions.go#L96>)
+### func \(\*EditionDropClaimConditions\) [GetAll](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop_claim_conditions.go#L103>)
 
 ```go
 func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int) ([]*ClaimConditionOutput, error)
@@ -60,4 +60,10 @@ fmt.Println("Quantity:", condition.MaxQuantity)
 fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
 fmt.Println("Price:", condition.Price)
 fmt.Println("Wait In Seconds", condition.WaitInSeconds)
+```
+
+### func \(\*EditionDropClaimConditions\) [GetMerkleMetadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/edition_drop_claim_conditions.go#L142>)
+
+```go
+func (claim *EditionDropClaimConditions) GetMerkleMetadata() (*map[string]string, error)
 ```

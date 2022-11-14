@@ -9,7 +9,7 @@ You can access the NFTDrop interface from the SDK as follows:
 
 ```
 import (
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
 privateKey = "..."
@@ -30,10 +30,10 @@ type NFTDropEncoder struct {
 }
 ```
 
-### func \(\*NFTDropEncoder\) [ApproveClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L88>)
+### func \(\*NFTDropEncoder\) [ApproveClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L86>)
 
 ```go
-func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error)
+func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress string, quantity int) (*types.Transaction, error)
 ```
 
 Get the data for the transaction data required to approve the ERC20 token transfers necessary to claim NFTs from this contract\.
@@ -51,19 +51,17 @@ returns: the transaction data of the token approval for the claim
 ```
 // Address of the wallet we expect to sign this message
 signerAddress := "0x..."
-// Address of the wallet we want to claim the NFTs to
-destinationAddress := "{{wallet_address}}"
 // Number of NFTs to claim
 quantity = 1
 
-tx, err := contract.Encoder.ApproveClaimTo(context.Background(), signerAddress, destinationAddress, quantity)
+tx, err := contract.Encoder.ApproveClaimTo(context.Background(), signerAddress, quantity)
 
 // Now you can get all the standard transaction data as needed
 fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 fmt.Println(tx.Nonce())
 ```
 
-### func \(\*NFTDropEncoder\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L127>)
+### func \(\*NFTDropEncoder\) [ClaimTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/nft_drop_encoder.go#L125>)
 
 ```go
 func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error)

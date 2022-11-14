@@ -9,7 +9,7 @@ You can access the Marketplace interface from the SDK as follows:
 
 ```
 import (
-		"github.com/thirdweb-dev/go-sdk/thirdweb"
+		"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 	)
 
 	privateKey = "..."
@@ -212,7 +212,7 @@ fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are 
 fmt.Println(tx.Nonce())
 ```
 
-## type [MarketplaceFilter](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L509-L514>)
+## type [MarketplaceFilter](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L515-L520>)
 
 ```go
 type MarketplaceFilter struct {
@@ -223,7 +223,37 @@ type MarketplaceFilter struct {
 }
 ```
 
-## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L13-L16>)
+## type [MerkleContent](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/snapshots.go#L34-L36>)
+
+```go
+type MerkleContent struct {}
+```
+
+### func \(MerkleContent\) [CalculateHash](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/snapshots.go#L38>)
+
+```go
+func (t MerkleContent) CalculateHash() ([]byte, error)
+```
+
+### func \(MerkleContent\) [Equals](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/snapshots.go#L47>)
+
+```go
+func (t MerkleContent) Equals(other merkletree.Content) (bool, error)
+```
+
+## type [MerkleNode](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sharded_merkle_tree.go#L259-L261>)
+
+```go
+type MerkleNode struct {}
+```
+
+### func \(\*MerkleNode\) [Serialize](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sharded_merkle_tree.go#L263>)
+
+```go
+func (t *MerkleNode) Serialize() ([]byte, error)
+```
+
+## type [Metadata](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L17-L20>)
 
 ```go
 type Metadata struct {
