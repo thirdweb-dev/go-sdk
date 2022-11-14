@@ -1703,23 +1703,23 @@ func (_DropERC721 *DropERC721TransactorSession) SafeTransferFrom(from common.Add
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
-func (_DropERC721 *DropERC721Transactor) SafeTransferFrom0(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
-	return _DropERC721.contract.Transact(opts, "safeTransferFrom0", from, to, tokenId, _data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
+func (_DropERC721 *DropERC721Transactor) SafeTransferFrom0(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
+	return _DropERC721.contract.Transact(opts, "safeTransferFrom0", from, to, tokenId, data)
 }
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
-func (_DropERC721 *DropERC721Session) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
-	return _DropERC721.Contract.SafeTransferFrom0(&_DropERC721.TransactOpts, from, to, tokenId, _data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
+func (_DropERC721 *DropERC721Session) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
+	return _DropERC721.Contract.SafeTransferFrom0(&_DropERC721.TransactOpts, from, to, tokenId, data)
 }
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
-func (_DropERC721 *DropERC721TransactorSession) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
-	return _DropERC721.Contract.SafeTransferFrom0(&_DropERC721.TransactOpts, from, to, tokenId, _data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
+func (_DropERC721 *DropERC721TransactorSession) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
+	return _DropERC721.Contract.SafeTransferFrom0(&_DropERC721.TransactOpts, from, to, tokenId, data)
 }
 
 // SetApprovalForAll is a paid mutator transaction binding the contract method 0xa22cb465.

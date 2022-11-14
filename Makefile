@@ -7,8 +7,8 @@ abi:
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC721.json --out abi/token_erc721.go --type TokenERC721
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/TokenERC1155.json --out abi/token_erc1155.go --type TokenERC1155
 	# If you want to generate drop contracts, you'll have to delete a struct
-	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC721.json --out abi/drop_erc721.go --type DropERC721
-	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC1155.json --out abi/drop_erc1155.go --type DropERC1155
+	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC721_V3.json --out abi/drop_erc721.go --type DropERC721
+	# abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/DropERC1155_V2.json --out abi/drop_erc1155.go --type DropERC1155
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Multiwrap.json --out abi/multiwrap.go --type Multiwrap
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/Marketplace.json --out abi/marketplace.go --type Marketplace
 
