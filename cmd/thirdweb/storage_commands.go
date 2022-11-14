@@ -7,7 +7,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/cobra"
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
 var storageCmd = &cobra.Command{

@@ -2,12 +2,13 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/json"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb-dev/go-sdk/abi"
+	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
 // This interface is currently accessible from the Edition Drop contract contract type
@@ -60,10 +61,16 @@ func (claim *EditionDropClaimConditions) GetActive(ctx context.Context, tokenId 
 		return nil, err
 	}
 
+	merkle, err := claim.GetMerkleMetadata()
+	if err != nil {
+		return nil, err
+	}
+
 	provider := claim.helper.GetProvider()
 	claimCondition, err := transformResultToClaimCondition(
 		ctx,
 		&mc,
+		merkle,
 		provider,
 		claim.storage,
 	)
@@ -110,9 +117,15 @@ func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int
 			return nil, err
 		}
 
+		merkle, err := claim.GetMerkleMetadata()
+		if err != nil {
+			return nil, err
+		}
+
 		claimCondition, err := transformResultToClaimCondition(
 			ctx,
 			&mc,
+			merkle,
 			provider,
 			claim.storage,
 		)
@@ -124,4 +137,25 @@ func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int
 	}
 
 	return conditions, nil
+}
+
+func (claim *EditionDropClaimConditions) GetMerkleMetadata() (*map[string]string, error) {
+	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{});
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := claim.storage.Get(uri);
+	if err != nil {
+		return nil, err
+	}
+
+	var rawMetadata struct {
+		Merkle map[string]string `json:"merkle"`
+	};
+	if err := json.Unmarshal(body, &rawMetadata); err != nil {
+		return nil, err
+	}
+
+	return &rawMetadata.Merkle, nil;
 }

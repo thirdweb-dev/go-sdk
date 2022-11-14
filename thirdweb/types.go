@@ -3,6 +3,10 @@ package thirdweb
 import (
 	"math/big"
 	"time"
+
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
 type SDKOptions struct {
@@ -62,24 +66,26 @@ type EditionMetadataInput struct {
 }
 
 type ClaimVerification struct {
-	proofs                    [][32]byte
-	maxQuantityPerTransaction int
-	price                     *big.Int
-	currencyAddress           string
-	value                     *big.Int
+	Value                     *big.Int
+	Proofs                    [][32]byte
+	MaxClaimable              *big.Int
+	Price                     *big.Int
+	CurrencyAddress           string
 }
 
 type ClaimConditionOutput struct {
-	Price                       *big.Int
-	MaxQuantity                 *big.Int
-	QuantityLimitPerTransaction *big.Int
-	WaitInSeconds               *big.Int
 	StartTime                   *big.Int
+	MaxClaimableSupply 					*big.Int
+	MaxClaimablePerWallet 		  *big.Int
+	CurrentMintSupply           *big.Int
 	AvailableSupply             *big.Int
+	WaitInSeconds               *big.Int
+	Price                       *big.Int
 	CurrencyAddress             string
 	CurrencyMetadata            *CurrencyValue
+	MaxQuantity                 *big.Int
+	MerkleRootHash              [32]byte
 }
-
 type Currency struct {
 	Name     string
 	Symbol   string
@@ -511,4 +517,66 @@ type MarketplaceFilter struct {
 	Count         int
 	Seller        string
 	TokenContract string
+}
+
+// CLAIM CONDITIONS
+
+type ClaimArguments struct {
+	Opts           *bind.TransactOpts
+	Receiver       common.Address
+	Quantity       *big.Int
+	Currency       common.Address
+	PricePerToken  *big.Int
+	AllowlistProof abi.IDropAllowlistProof
+	Data 					 []byte
+}
+
+type ClaimConditionInput struct {
+	StartTime                   *time.Time
+	CurrencyAddress             string
+	Price                       float64
+	MaxQuantity                 int
+	QuantityLimitPerTransaction int
+	WaitInSeconds               int
+	MerkleRootHash              string
+	Snapshot                    []*SnapshotInput
+}
+
+func (condition *ClaimConditionInput) fillDefaults() {
+	if condition.CurrencyAddress == "" {
+		condition.CurrencyAddress = "0x0000000000000000000000000000000000000000"
+	}
+}
+
+type SnapshotEntryWithProof struct {
+	Address         string
+	MaxClaimable    string
+	Price 					string
+	CurrencyAddress string
+	Proof           [][32]byte
+}
+
+func (entry *SnapshotEntryWithProof) fillDefaults() {
+	if entry.CurrencyAddress == "" {
+		entry.CurrencyAddress = zeroAddress
+	}
+}
+
+type ShardedMerkleTreeInfo struct {
+	MerkleRoot 				 string 					 `json:"merkleRoot"`
+	BaseUri            string 					 `json:"baseUri"`
+	OriginalEntriesUri string 					 `json:"originalEntriesUri"`
+	ShardNybbles			 int    					 `json:"shardNybbles"`
+	TokenDecimals      int               `json:"tokenDecimals"`
+}
+
+type SnapshotEntry struct {
+	Address         string   `json:"address"`
+	MaxClaimable    string   `json:"maxClaimable"`
+	Price 					string   `json:"price"`
+	CurrencyAddress string   `json:"currencyAddress"`
+}
+type ShardData struct {
+	Proofs  []string `json:"proofs"`
+	Entries []SnapshotEntry `json:"entries"`
 }

@@ -28,21 +28,29 @@ var (
 	_ = event.NewSubscription
 )
 
-// IDropClaimCondition_V2ClaimCondition is an auto generated low-level Go binding around an user-defined struct.
-type IDropClaimCondition_V2ClaimCondition struct {
-	StartTimestamp                 *big.Int
-	MaxClaimableSupply             *big.Int
-	SupplyClaimed                  *big.Int
-	QuantityLimitPerTransaction    *big.Int
-	WaitTimeInSecondsBetweenClaims *big.Int
-	MerkleRoot                     [32]byte
-	PricePerToken                  *big.Int
-	Currency                       common.Address
+// IClaimConditionClaimCondition is an auto generated low-level Go binding around an user-defined struct.
+type IClaimConditionClaimCondition struct {
+	StartTimestamp         *big.Int
+	MaxClaimableSupply     *big.Int
+	SupplyClaimed          *big.Int
+	QuantityLimitPerWallet *big.Int
+	MerkleRoot             [32]byte
+	PricePerToken          *big.Int
+	Currency               common.Address
+	Metadata               string
+}
+
+// IDropAllowlistProof is an auto generated low-level Go binding around an user-defined struct.
+type IDropAllowlistProof struct {
+	Proof                  [][32]byte
+	QuantityLimitPerWallet *big.Int
+	PricePerToken          *big.Int
+	Currency               common.Address
 }
 
 // DropERC721MetaData contains all meta data concerning the DropERC721 contract.
 var DropERC721MetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerTransaction\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"waitTimeInSecondsBetweenClaims\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"indexed\":false,\"internalType\":\"structIDropClaimCondition_V2.ClaimCondition[]\",\"name\":\"claimConditions\",\"type\":\"tuple[]\"}],\"name\":\"ClaimConditionsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newRoyaltyRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newRoyaltyBps\",\"type\":\"uint256\"}],\"name\":\"DefaultRoyalty\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxTotalSupply\",\"type\":\"uint256\"}],\"name\":\"MaxTotalSupplyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"MaxWalletClaimCountUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"revealedURI\",\"type\":\"string\"}],\"name\":\"NFTRevealed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"prevOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"platformFeeRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"platformFeeBps\",\"type\":\"uint256\"}],\"name\":\"PlatformFeeInfoUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"PrimarySaleRecipientUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"royaltyRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyForToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"claimConditionIndex\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"claimer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"quantityClaimed\",\"type\":\"uint256\"}],\"name\":\"TokensClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"baseURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encryptedBaseURI\",\"type\":\"bytes\"}],\"name\":\"TokensLazyMinted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"WalletClaimCountUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"baseURIIndices\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_proofs\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"_proofMaxQuantityPerTransaction\",\"type\":\"uint256\"}],\"name\":\"claim\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"claimCondition\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentStartId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractType\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractVersion\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"key\",\"type\":\"bytes\"}],\"name\":\"encryptDecrypt\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"result\",\"type\":\"bytes\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"encryptedData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getActiveClaimConditionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBaseURICount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"}],\"name\":\"getClaimConditionById\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerTransaction\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"waitTimeInSecondsBetweenClaims\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"internalType\":\"structIDropClaimCondition_V2.ClaimCondition\",\"name\":\"condition\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"}],\"name\":\"getClaimTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"lastClaimTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"nextValidClaimTimestamp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDefaultRoyaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPlatformFeeInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getRoyaltyInfoForToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_defaultAdmin\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_contractURI\",\"type\":\"string\"},{\"internalType\":\"address[]\",\"name\":\"_trustedForwarders\",\"type\":\"address[]\"},{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_royaltyRecipient\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"_royaltyBps\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"_platformFeeBps\",\"type\":\"uint128\"},{\"internalType\":\"address\",\"name\":\"_platformFeeRecipient\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_baseURIForTokens\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"lazyMint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxTotalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxWalletClaimCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"data\",\"type\":\"bytes[]\"}],\"name\":\"multicall\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenIdToClaim\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenIdToMint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"primarySaleRecipient\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_key\",\"type\":\"bytes\"}],\"name\":\"reveal\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"revealedURI\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerTransaction\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"waitTimeInSecondsBetweenClaims\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"internalType\":\"structIDropClaimCondition_V2.ClaimCondition[]\",\"name\":\"_phases\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"_resetClaimEligibility\",\"type\":\"bool\"}],\"name\":\"setClaimConditions\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_royaltyRecipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setDefaultRoyaltyInfo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxTotalSupply\",\"type\":\"uint256\"}],\"name\":\"setMaxTotalSupply\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"setMaxWalletClaimCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"setOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_platformFeeRecipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_platformFeeBps\",\"type\":\"uint256\"}],\"name\":\"setPlatformFeeInfo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"}],\"name\":\"setPrimarySaleRecipient\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_bps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyInfoForToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_count\",\"type\":\"uint256\"}],\"name\":\"setWalletClaimCount\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"verifyMaxQuantityPerTransaction\",\"type\":\"bool\"}],\"name\":\"verifyClaim\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"bytes32[]\",\"name\":\"_proofs\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"_proofMaxQuantityPerTransaction\",\"type\":\"uint256\"}],\"name\":\"verifyClaimMerkleProof\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"validMerkleProof\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"merkleProofIndex\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"walletClaimCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"ApprovalCallerNotOwnerNorApproved\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ApprovalQueryForNonexistentToken\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ApprovalToCurrentOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ApproveToCaller\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"BalanceQueryForZeroAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MintToZeroAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"MintZeroQuantity\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OwnerQueryForNonexistentToken\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferCallerNotOwnerNorApproved\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferFromIncorrectOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferToNonERC721ReceiverImplementer\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferToZeroAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"URIQueryForNonexistentToken\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"indexed\":false,\"internalType\":\"structIClaimCondition.ClaimCondition[]\",\"name\":\"claimConditions\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"resetEligibility\",\"type\":\"bool\"}],\"name\":\"ClaimConditionsUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"prevURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"newURI\",\"type\":\"string\"}],\"name\":\"ContractURIUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newRoyaltyRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newRoyaltyBps\",\"type\":\"uint256\"}],\"name\":\"DefaultRoyalty\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxTotalSupply\",\"type\":\"uint256\"}],\"name\":\"MaxTotalSupplyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"prevOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnerUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"platformFeeRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"platformFeeBps\",\"type\":\"uint256\"}],\"name\":\"PlatformFeeInfoUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"PrimarySaleRecipientUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"royaltyRecipient\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"royaltyBps\",\"type\":\"uint256\"}],\"name\":\"RoyaltyForToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"revealedURI\",\"type\":\"string\"}],\"name\":\"TokenURIRevealed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"claimConditionIndex\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"claimer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"startTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"quantityClaimed\",\"type\":\"uint256\"}],\"name\":\"TokensClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"startTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"endTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"baseURI\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encryptedBaseURI\",\"type\":\"bytes\"}],\"name\":\"TokensLazyMinted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32[]\",\"name\":\"proof\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"internalType\":\"structIDrop.AllowlistProof\",\"name\":\"_allowlistProof\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"claim\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"claimCondition\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentStartId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractType\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"contractVersion\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"key\",\"type\":\"bytes\"}],\"name\":\"encryptDecrypt\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"result\",\"type\":\"bytes\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"encryptedData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getActiveClaimConditionId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBaseURICount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"getBatchIdAtIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"}],\"name\":\"getClaimConditionById\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"internalType\":\"structIClaimCondition.ClaimCondition\",\"name\":\"condition\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDefaultRoyaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPlatformFeeInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_batchId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_key\",\"type\":\"bytes\"}],\"name\":\"getRevealURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"revealedURI\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"member\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getRoyaltyInfoForToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"}],\"name\":\"getSupplyClaimedByWallet\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"supplyClaimedByWallet\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRoleWithSwitch\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_defaultAdmin\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_contractURI\",\"type\":\"string\"},{\"internalType\":\"address[]\",\"name\":\"_trustedForwarders\",\"type\":\"address[]\"},{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_royaltyRecipient\",\"type\":\"address\"},{\"internalType\":\"uint128\",\"name\":\"_royaltyBps\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"_platformFeeBps\",\"type\":\"uint128\"},{\"internalType\":\"address\",\"name\":\"_platformFeeRecipient\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_batchId\",\"type\":\"uint256\"}],\"name\":\"isEncryptedBatch\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"forwarder\",\"type\":\"address\"}],\"name\":\"isTrustedForwarder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_baseURIForTokens\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"lazyMint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"batchId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxTotalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"data\",\"type\":\"bytes[]\"}],\"name\":\"multicall\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenIdToClaim\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextTokenIdToMint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"primarySaleRecipient\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_key\",\"type\":\"bytes\"}],\"name\":\"reveal\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"revealedURI\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxClaimableSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"supplyClaimed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"internalType\":\"structIClaimCondition.ClaimCondition[]\",\"name\":\"_conditions\",\"type\":\"tuple[]\"},{\"internalType\":\"bool\",\"name\":\"_resetClaimEligibility\",\"type\":\"bool\"}],\"name\":\"setClaimConditions\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"setContractURI\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_royaltyRecipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_royaltyBps\",\"type\":\"uint256\"}],\"name\":\"setDefaultRoyaltyInfo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxTotalSupply\",\"type\":\"uint256\"}],\"name\":\"setMaxTotalSupply\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newOwner\",\"type\":\"address\"}],\"name\":\"setOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_platformFeeRecipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_platformFeeBps\",\"type\":\"uint256\"}],\"name\":\"setPlatformFeeInfo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_saleRecipient\",\"type\":\"address\"}],\"name\":\"setPrimarySaleRecipient\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_bps\",\"type\":\"uint256\"}],\"name\":\"setRoyaltyInfoForToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalMinted\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_conditionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_claimer\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_quantity\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_pricePerToken\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"bytes32[]\",\"name\":\"proof\",\"type\":\"bytes32[]\"},{\"internalType\":\"uint256\",\"name\":\"quantityLimitPerWallet\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pricePerToken\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"currency\",\"type\":\"address\"}],\"internalType\":\"structIDrop.AllowlistProof\",\"name\":\"_allowlistProof\",\"type\":\"tuple\"}],\"name\":\"verifyClaim\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isOverride\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]",
 }
 
 // DropERC721ABI is the input ABI used to generate the binding from.
@@ -251,37 +259,6 @@ func (_DropERC721 *DropERC721Session) BalanceOf(owner common.Address) (*big.Int,
 // Solidity: function balanceOf(address owner) view returns(uint256)
 func (_DropERC721 *DropERC721CallerSession) BalanceOf(owner common.Address) (*big.Int, error) {
 	return _DropERC721.Contract.BalanceOf(&_DropERC721.CallOpts, owner)
-}
-
-// BaseURIIndices is a free data retrieval call binding the contract method 0xd860483f.
-//
-// Solidity: function baseURIIndices(uint256 ) view returns(uint256)
-func (_DropERC721 *DropERC721Caller) BaseURIIndices(opts *bind.CallOpts, arg0 *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _DropERC721.contract.Call(opts, &out, "baseURIIndices", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// BaseURIIndices is a free data retrieval call binding the contract method 0xd860483f.
-//
-// Solidity: function baseURIIndices(uint256 ) view returns(uint256)
-func (_DropERC721 *DropERC721Session) BaseURIIndices(arg0 *big.Int) (*big.Int, error) {
-	return _DropERC721.Contract.BaseURIIndices(&_DropERC721.CallOpts, arg0)
-}
-
-// BaseURIIndices is a free data retrieval call binding the contract method 0xd860483f.
-//
-// Solidity: function baseURIIndices(uint256 ) view returns(uint256)
-func (_DropERC721 *DropERC721CallerSession) BaseURIIndices(arg0 *big.Int) (*big.Int, error) {
-	return _DropERC721.Contract.BaseURIIndices(&_DropERC721.CallOpts, arg0)
 }
 
 // ClaimCondition is a free data retrieval call binding the contract method 0xd637ed59.
@@ -577,18 +554,49 @@ func (_DropERC721 *DropERC721CallerSession) GetBaseURICount() (*big.Int, error) 
 	return _DropERC721.Contract.GetBaseURICount(&_DropERC721.CallOpts)
 }
 
+// GetBatchIdAtIndex is a free data retrieval call binding the contract method 0x2419f51b.
+//
+// Solidity: function getBatchIdAtIndex(uint256 _index) view returns(uint256)
+func (_DropERC721 *DropERC721Caller) GetBatchIdAtIndex(opts *bind.CallOpts, _index *big.Int) (*big.Int, error) {
+	var out []interface{}
+	err := _DropERC721.contract.Call(opts, &out, "getBatchIdAtIndex", _index)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetBatchIdAtIndex is a free data retrieval call binding the contract method 0x2419f51b.
+//
+// Solidity: function getBatchIdAtIndex(uint256 _index) view returns(uint256)
+func (_DropERC721 *DropERC721Session) GetBatchIdAtIndex(_index *big.Int) (*big.Int, error) {
+	return _DropERC721.Contract.GetBatchIdAtIndex(&_DropERC721.CallOpts, _index)
+}
+
+// GetBatchIdAtIndex is a free data retrieval call binding the contract method 0x2419f51b.
+//
+// Solidity: function getBatchIdAtIndex(uint256 _index) view returns(uint256)
+func (_DropERC721 *DropERC721CallerSession) GetBatchIdAtIndex(_index *big.Int) (*big.Int, error) {
+	return _DropERC721.Contract.GetBatchIdAtIndex(&_DropERC721.CallOpts, _index)
+}
+
 // GetClaimConditionById is a free data retrieval call binding the contract method 0x6f8934f4.
 //
-// Solidity: function getClaimConditionById(uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address) condition)
-func (_DropERC721 *DropERC721Caller) GetClaimConditionById(opts *bind.CallOpts, _conditionId *big.Int) (IDropClaimCondition_V2ClaimCondition, error) {
+// Solidity: function getClaimConditionById(uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,bytes32,uint256,address,string) condition)
+func (_DropERC721 *DropERC721Caller) GetClaimConditionById(opts *bind.CallOpts, _conditionId *big.Int) (IClaimConditionClaimCondition, error) {
 	var out []interface{}
 	err := _DropERC721.contract.Call(opts, &out, "getClaimConditionById", _conditionId)
 
 	if err != nil {
-		return *new(IDropClaimCondition_V2ClaimCondition), err
+		return *new(IClaimConditionClaimCondition), err
 	}
 
-	out0 := *abi.ConvertType(out[0], new(IDropClaimCondition_V2ClaimCondition)).(*IDropClaimCondition_V2ClaimCondition)
+	out0 := *abi.ConvertType(out[0], new(IClaimConditionClaimCondition)).(*IClaimConditionClaimCondition)
 
 	return out0, err
 
@@ -596,61 +604,16 @@ func (_DropERC721 *DropERC721Caller) GetClaimConditionById(opts *bind.CallOpts, 
 
 // GetClaimConditionById is a free data retrieval call binding the contract method 0x6f8934f4.
 //
-// Solidity: function getClaimConditionById(uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address) condition)
-func (_DropERC721 *DropERC721Session) GetClaimConditionById(_conditionId *big.Int) (IDropClaimCondition_V2ClaimCondition, error) {
+// Solidity: function getClaimConditionById(uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,bytes32,uint256,address,string) condition)
+func (_DropERC721 *DropERC721Session) GetClaimConditionById(_conditionId *big.Int) (IClaimConditionClaimCondition, error) {
 	return _DropERC721.Contract.GetClaimConditionById(&_DropERC721.CallOpts, _conditionId)
 }
 
 // GetClaimConditionById is a free data retrieval call binding the contract method 0x6f8934f4.
 //
-// Solidity: function getClaimConditionById(uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address) condition)
-func (_DropERC721 *DropERC721CallerSession) GetClaimConditionById(_conditionId *big.Int) (IDropClaimCondition_V2ClaimCondition, error) {
+// Solidity: function getClaimConditionById(uint256 _conditionId) view returns((uint256,uint256,uint256,uint256,bytes32,uint256,address,string) condition)
+func (_DropERC721 *DropERC721CallerSession) GetClaimConditionById(_conditionId *big.Int) (IClaimConditionClaimCondition, error) {
 	return _DropERC721.Contract.GetClaimConditionById(&_DropERC721.CallOpts, _conditionId)
-}
-
-// GetClaimTimestamp is a free data retrieval call binding the contract method 0x86ee745d.
-//
-// Solidity: function getClaimTimestamp(uint256 _conditionId, address _claimer) view returns(uint256 lastClaimTimestamp, uint256 nextValidClaimTimestamp)
-func (_DropERC721 *DropERC721Caller) GetClaimTimestamp(opts *bind.CallOpts, _conditionId *big.Int, _claimer common.Address) (struct {
-	LastClaimTimestamp      *big.Int
-	NextValidClaimTimestamp *big.Int
-}, error) {
-	var out []interface{}
-	err := _DropERC721.contract.Call(opts, &out, "getClaimTimestamp", _conditionId, _claimer)
-
-	outstruct := new(struct {
-		LastClaimTimestamp      *big.Int
-		NextValidClaimTimestamp *big.Int
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.LastClaimTimestamp = *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-	outstruct.NextValidClaimTimestamp = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
-
-	return *outstruct, err
-
-}
-
-// GetClaimTimestamp is a free data retrieval call binding the contract method 0x86ee745d.
-//
-// Solidity: function getClaimTimestamp(uint256 _conditionId, address _claimer) view returns(uint256 lastClaimTimestamp, uint256 nextValidClaimTimestamp)
-func (_DropERC721 *DropERC721Session) GetClaimTimestamp(_conditionId *big.Int, _claimer common.Address) (struct {
-	LastClaimTimestamp      *big.Int
-	NextValidClaimTimestamp *big.Int
-}, error) {
-	return _DropERC721.Contract.GetClaimTimestamp(&_DropERC721.CallOpts, _conditionId, _claimer)
-}
-
-// GetClaimTimestamp is a free data retrieval call binding the contract method 0x86ee745d.
-//
-// Solidity: function getClaimTimestamp(uint256 _conditionId, address _claimer) view returns(uint256 lastClaimTimestamp, uint256 nextValidClaimTimestamp)
-func (_DropERC721 *DropERC721CallerSession) GetClaimTimestamp(_conditionId *big.Int, _claimer common.Address) (struct {
-	LastClaimTimestamp      *big.Int
-	NextValidClaimTimestamp *big.Int
-}, error) {
-	return _DropERC721.Contract.GetClaimTimestamp(&_DropERC721.CallOpts, _conditionId, _claimer)
 }
 
 // GetDefaultRoyaltyInfo is a free data retrieval call binding the contract method 0xb24f2d39.
@@ -717,6 +680,37 @@ func (_DropERC721 *DropERC721CallerSession) GetPlatformFeeInfo() (common.Address
 	return _DropERC721.Contract.GetPlatformFeeInfo(&_DropERC721.CallOpts)
 }
 
+// GetRevealURI is a free data retrieval call binding the contract method 0x9fc4d68f.
+//
+// Solidity: function getRevealURI(uint256 _batchId, bytes _key) view returns(string revealedURI)
+func (_DropERC721 *DropERC721Caller) GetRevealURI(opts *bind.CallOpts, _batchId *big.Int, _key []byte) (string, error) {
+	var out []interface{}
+	err := _DropERC721.contract.Call(opts, &out, "getRevealURI", _batchId, _key)
+
+	if err != nil {
+		return *new(string), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(string)).(*string)
+
+	return out0, err
+
+}
+
+// GetRevealURI is a free data retrieval call binding the contract method 0x9fc4d68f.
+//
+// Solidity: function getRevealURI(uint256 _batchId, bytes _key) view returns(string revealedURI)
+func (_DropERC721 *DropERC721Session) GetRevealURI(_batchId *big.Int, _key []byte) (string, error) {
+	return _DropERC721.Contract.GetRevealURI(&_DropERC721.CallOpts, _batchId, _key)
+}
+
+// GetRevealURI is a free data retrieval call binding the contract method 0x9fc4d68f.
+//
+// Solidity: function getRevealURI(uint256 _batchId, bytes _key) view returns(string revealedURI)
+func (_DropERC721 *DropERC721CallerSession) GetRevealURI(_batchId *big.Int, _key []byte) (string, error) {
+	return _DropERC721.Contract.GetRevealURI(&_DropERC721.CallOpts, _batchId, _key)
+}
+
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
 //
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
@@ -750,7 +744,7 @@ func (_DropERC721 *DropERC721CallerSession) GetRoleAdmin(role [32]byte) ([32]byt
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
-// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
+// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address member)
 func (_DropERC721 *DropERC721Caller) GetRoleMember(opts *bind.CallOpts, role [32]byte, index *big.Int) (common.Address, error) {
 	var out []interface{}
 	err := _DropERC721.contract.Call(opts, &out, "getRoleMember", role, index)
@@ -767,21 +761,21 @@ func (_DropERC721 *DropERC721Caller) GetRoleMember(opts *bind.CallOpts, role [32
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
-// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
+// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address member)
 func (_DropERC721 *DropERC721Session) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
 	return _DropERC721.Contract.GetRoleMember(&_DropERC721.CallOpts, role, index)
 }
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
-// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
+// Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address member)
 func (_DropERC721 *DropERC721CallerSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
 	return _DropERC721.Contract.GetRoleMember(&_DropERC721.CallOpts, role, index)
 }
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
-// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
+// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256 count)
 func (_DropERC721 *DropERC721Caller) GetRoleMemberCount(opts *bind.CallOpts, role [32]byte) (*big.Int, error) {
 	var out []interface{}
 	err := _DropERC721.contract.Call(opts, &out, "getRoleMemberCount", role)
@@ -798,14 +792,14 @@ func (_DropERC721 *DropERC721Caller) GetRoleMemberCount(opts *bind.CallOpts, rol
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
-// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
+// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256 count)
 func (_DropERC721 *DropERC721Session) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
 	return _DropERC721.Contract.GetRoleMemberCount(&_DropERC721.CallOpts, role)
 }
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
-// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
+// Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256 count)
 func (_DropERC721 *DropERC721CallerSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
 	return _DropERC721.Contract.GetRoleMemberCount(&_DropERC721.CallOpts, role)
 }
@@ -842,6 +836,37 @@ func (_DropERC721 *DropERC721CallerSession) GetRoyaltyInfoForToken(_tokenId *big
 	return _DropERC721.Contract.GetRoyaltyInfoForToken(&_DropERC721.CallOpts, _tokenId)
 }
 
+// GetSupplyClaimedByWallet is a free data retrieval call binding the contract method 0xad1eefc5.
+//
+// Solidity: function getSupplyClaimedByWallet(uint256 _conditionId, address _claimer) view returns(uint256 supplyClaimedByWallet)
+func (_DropERC721 *DropERC721Caller) GetSupplyClaimedByWallet(opts *bind.CallOpts, _conditionId *big.Int, _claimer common.Address) (*big.Int, error) {
+	var out []interface{}
+	err := _DropERC721.contract.Call(opts, &out, "getSupplyClaimedByWallet", _conditionId, _claimer)
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// GetSupplyClaimedByWallet is a free data retrieval call binding the contract method 0xad1eefc5.
+//
+// Solidity: function getSupplyClaimedByWallet(uint256 _conditionId, address _claimer) view returns(uint256 supplyClaimedByWallet)
+func (_DropERC721 *DropERC721Session) GetSupplyClaimedByWallet(_conditionId *big.Int, _claimer common.Address) (*big.Int, error) {
+	return _DropERC721.Contract.GetSupplyClaimedByWallet(&_DropERC721.CallOpts, _conditionId, _claimer)
+}
+
+// GetSupplyClaimedByWallet is a free data retrieval call binding the contract method 0xad1eefc5.
+//
+// Solidity: function getSupplyClaimedByWallet(uint256 _conditionId, address _claimer) view returns(uint256 supplyClaimedByWallet)
+func (_DropERC721 *DropERC721CallerSession) GetSupplyClaimedByWallet(_conditionId *big.Int, _claimer common.Address) (*big.Int, error) {
+	return _DropERC721.Contract.GetSupplyClaimedByWallet(&_DropERC721.CallOpts, _conditionId, _claimer)
+}
+
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
@@ -873,6 +898,37 @@ func (_DropERC721 *DropERC721CallerSession) HasRole(role [32]byte, account commo
 	return _DropERC721.Contract.HasRole(&_DropERC721.CallOpts, role, account)
 }
 
+// HasRoleWithSwitch is a free data retrieval call binding the contract method 0xa32fa5b3.
+//
+// Solidity: function hasRoleWithSwitch(bytes32 role, address account) view returns(bool)
+func (_DropERC721 *DropERC721Caller) HasRoleWithSwitch(opts *bind.CallOpts, role [32]byte, account common.Address) (bool, error) {
+	var out []interface{}
+	err := _DropERC721.contract.Call(opts, &out, "hasRoleWithSwitch", role, account)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// HasRoleWithSwitch is a free data retrieval call binding the contract method 0xa32fa5b3.
+//
+// Solidity: function hasRoleWithSwitch(bytes32 role, address account) view returns(bool)
+func (_DropERC721 *DropERC721Session) HasRoleWithSwitch(role [32]byte, account common.Address) (bool, error) {
+	return _DropERC721.Contract.HasRoleWithSwitch(&_DropERC721.CallOpts, role, account)
+}
+
+// HasRoleWithSwitch is a free data retrieval call binding the contract method 0xa32fa5b3.
+//
+// Solidity: function hasRoleWithSwitch(bytes32 role, address account) view returns(bool)
+func (_DropERC721 *DropERC721CallerSession) HasRoleWithSwitch(role [32]byte, account common.Address) (bool, error) {
+	return _DropERC721.Contract.HasRoleWithSwitch(&_DropERC721.CallOpts, role, account)
+}
+
 // IsApprovedForAll is a free data retrieval call binding the contract method 0xe985e9c5.
 //
 // Solidity: function isApprovedForAll(address owner, address operator) view returns(bool)
@@ -902,6 +958,37 @@ func (_DropERC721 *DropERC721Session) IsApprovedForAll(owner common.Address, ope
 // Solidity: function isApprovedForAll(address owner, address operator) view returns(bool)
 func (_DropERC721 *DropERC721CallerSession) IsApprovedForAll(owner common.Address, operator common.Address) (bool, error) {
 	return _DropERC721.Contract.IsApprovedForAll(&_DropERC721.CallOpts, owner, operator)
+}
+
+// IsEncryptedBatch is a free data retrieval call binding the contract method 0x492e224b.
+//
+// Solidity: function isEncryptedBatch(uint256 _batchId) view returns(bool)
+func (_DropERC721 *DropERC721Caller) IsEncryptedBatch(opts *bind.CallOpts, _batchId *big.Int) (bool, error) {
+	var out []interface{}
+	err := _DropERC721.contract.Call(opts, &out, "isEncryptedBatch", _batchId)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsEncryptedBatch is a free data retrieval call binding the contract method 0x492e224b.
+//
+// Solidity: function isEncryptedBatch(uint256 _batchId) view returns(bool)
+func (_DropERC721 *DropERC721Session) IsEncryptedBatch(_batchId *big.Int) (bool, error) {
+	return _DropERC721.Contract.IsEncryptedBatch(&_DropERC721.CallOpts, _batchId)
+}
+
+// IsEncryptedBatch is a free data retrieval call binding the contract method 0x492e224b.
+//
+// Solidity: function isEncryptedBatch(uint256 _batchId) view returns(bool)
+func (_DropERC721 *DropERC721CallerSession) IsEncryptedBatch(_batchId *big.Int) (bool, error) {
+	return _DropERC721.Contract.IsEncryptedBatch(&_DropERC721.CallOpts, _batchId)
 }
 
 // IsTrustedForwarder is a free data retrieval call binding the contract method 0x572b6c05.
@@ -964,37 +1051,6 @@ func (_DropERC721 *DropERC721Session) MaxTotalSupply() (*big.Int, error) {
 // Solidity: function maxTotalSupply() view returns(uint256)
 func (_DropERC721 *DropERC721CallerSession) MaxTotalSupply() (*big.Int, error) {
 	return _DropERC721.Contract.MaxTotalSupply(&_DropERC721.CallOpts)
-}
-
-// MaxWalletClaimCount is a free data retrieval call binding the contract method 0x05981769.
-//
-// Solidity: function maxWalletClaimCount() view returns(uint256)
-func (_DropERC721 *DropERC721Caller) MaxWalletClaimCount(opts *bind.CallOpts) (*big.Int, error) {
-	var out []interface{}
-	err := _DropERC721.contract.Call(opts, &out, "maxWalletClaimCount")
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// MaxWalletClaimCount is a free data retrieval call binding the contract method 0x05981769.
-//
-// Solidity: function maxWalletClaimCount() view returns(uint256)
-func (_DropERC721 *DropERC721Session) MaxWalletClaimCount() (*big.Int, error) {
-	return _DropERC721.Contract.MaxWalletClaimCount(&_DropERC721.CallOpts)
-}
-
-// MaxWalletClaimCount is a free data retrieval call binding the contract method 0x05981769.
-//
-// Solidity: function maxWalletClaimCount() view returns(uint256)
-func (_DropERC721 *DropERC721CallerSession) MaxWalletClaimCount() (*big.Int, error) {
-	return _DropERC721.Contract.MaxWalletClaimCount(&_DropERC721.CallOpts)
 }
 
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
@@ -1290,68 +1346,6 @@ func (_DropERC721 *DropERC721CallerSession) Symbol() (string, error) {
 	return _DropERC721.Contract.Symbol(&_DropERC721.CallOpts)
 }
 
-// TokenByIndex is a free data retrieval call binding the contract method 0x4f6ccce7.
-//
-// Solidity: function tokenByIndex(uint256 index) view returns(uint256)
-func (_DropERC721 *DropERC721Caller) TokenByIndex(opts *bind.CallOpts, index *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _DropERC721.contract.Call(opts, &out, "tokenByIndex", index)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// TokenByIndex is a free data retrieval call binding the contract method 0x4f6ccce7.
-//
-// Solidity: function tokenByIndex(uint256 index) view returns(uint256)
-func (_DropERC721 *DropERC721Session) TokenByIndex(index *big.Int) (*big.Int, error) {
-	return _DropERC721.Contract.TokenByIndex(&_DropERC721.CallOpts, index)
-}
-
-// TokenByIndex is a free data retrieval call binding the contract method 0x4f6ccce7.
-//
-// Solidity: function tokenByIndex(uint256 index) view returns(uint256)
-func (_DropERC721 *DropERC721CallerSession) TokenByIndex(index *big.Int) (*big.Int, error) {
-	return _DropERC721.Contract.TokenByIndex(&_DropERC721.CallOpts, index)
-}
-
-// TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
-//
-// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
-func (_DropERC721 *DropERC721Caller) TokenOfOwnerByIndex(opts *bind.CallOpts, owner common.Address, index *big.Int) (*big.Int, error) {
-	var out []interface{}
-	err := _DropERC721.contract.Call(opts, &out, "tokenOfOwnerByIndex", owner, index)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
-
-	return out0, err
-
-}
-
-// TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
-//
-// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
-func (_DropERC721 *DropERC721Session) TokenOfOwnerByIndex(owner common.Address, index *big.Int) (*big.Int, error) {
-	return _DropERC721.Contract.TokenOfOwnerByIndex(&_DropERC721.CallOpts, owner, index)
-}
-
-// TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
-//
-// Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
-func (_DropERC721 *DropERC721CallerSession) TokenOfOwnerByIndex(owner common.Address, index *big.Int) (*big.Int, error) {
-	return _DropERC721.Contract.TokenOfOwnerByIndex(&_DropERC721.CallOpts, owner, index)
-}
-
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
 // Solidity: function tokenURI(uint256 _tokenId) view returns(string)
@@ -1381,6 +1375,37 @@ func (_DropERC721 *DropERC721Session) TokenURI(_tokenId *big.Int) (string, error
 // Solidity: function tokenURI(uint256 _tokenId) view returns(string)
 func (_DropERC721 *DropERC721CallerSession) TokenURI(_tokenId *big.Int) (string, error) {
 	return _DropERC721.Contract.TokenURI(&_DropERC721.CallOpts, _tokenId)
+}
+
+// TotalMinted is a free data retrieval call binding the contract method 0xa2309ff8.
+//
+// Solidity: function totalMinted() view returns(uint256)
+func (_DropERC721 *DropERC721Caller) TotalMinted(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _DropERC721.contract.Call(opts, &out, "totalMinted")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// TotalMinted is a free data retrieval call binding the contract method 0xa2309ff8.
+//
+// Solidity: function totalMinted() view returns(uint256)
+func (_DropERC721 *DropERC721Session) TotalMinted() (*big.Int, error) {
+	return _DropERC721.Contract.TotalMinted(&_DropERC721.CallOpts)
+}
+
+// TotalMinted is a free data retrieval call binding the contract method 0xa2309ff8.
+//
+// Solidity: function totalMinted() view returns(uint256)
+func (_DropERC721 *DropERC721CallerSession) TotalMinted() (*big.Int, error) {
+	return _DropERC721.Contract.TotalMinted(&_DropERC721.CallOpts)
 }
 
 // TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
@@ -1414,109 +1439,35 @@ func (_DropERC721 *DropERC721CallerSession) TotalSupply() (*big.Int, error) {
 	return _DropERC721.Contract.TotalSupply(&_DropERC721.CallOpts)
 }
 
-// VerifyClaim is a free data retrieval call binding the contract method 0xafb82916.
+// VerifyClaim is a free data retrieval call binding the contract method 0x23a2902b.
 //
-// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _quantity, address _currency, uint256 _pricePerToken, bool verifyMaxQuantityPerTransaction) view returns()
-func (_DropERC721 *DropERC721Caller) VerifyClaim(opts *bind.CallOpts, _conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, verifyMaxQuantityPerTransaction bool) error {
+// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof) view returns(bool isOverride)
+func (_DropERC721 *DropERC721Caller) VerifyClaim(opts *bind.CallOpts, _conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDropAllowlistProof) (bool, error) {
 	var out []interface{}
-	err := _DropERC721.contract.Call(opts, &out, "verifyClaim", _conditionId, _claimer, _quantity, _currency, _pricePerToken, verifyMaxQuantityPerTransaction)
+	err := _DropERC721.contract.Call(opts, &out, "verifyClaim", _conditionId, _claimer, _quantity, _currency, _pricePerToken, _allowlistProof)
 
 	if err != nil {
-		return err
+		return *new(bool), err
 	}
 
-	return err
-
-}
-
-// VerifyClaim is a free data retrieval call binding the contract method 0xafb82916.
-//
-// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _quantity, address _currency, uint256 _pricePerToken, bool verifyMaxQuantityPerTransaction) view returns()
-func (_DropERC721 *DropERC721Session) VerifyClaim(_conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, verifyMaxQuantityPerTransaction bool) error {
-	return _DropERC721.Contract.VerifyClaim(&_DropERC721.CallOpts, _conditionId, _claimer, _quantity, _currency, _pricePerToken, verifyMaxQuantityPerTransaction)
-}
-
-// VerifyClaim is a free data retrieval call binding the contract method 0xafb82916.
-//
-// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _quantity, address _currency, uint256 _pricePerToken, bool verifyMaxQuantityPerTransaction) view returns()
-func (_DropERC721 *DropERC721CallerSession) VerifyClaim(_conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, verifyMaxQuantityPerTransaction bool) error {
-	return _DropERC721.Contract.VerifyClaim(&_DropERC721.CallOpts, _conditionId, _claimer, _quantity, _currency, _pricePerToken, verifyMaxQuantityPerTransaction)
-}
-
-// VerifyClaimMerkleProof is a free data retrieval call binding the contract method 0xaf3be890.
-//
-// Solidity: function verifyClaimMerkleProof(uint256 _conditionId, address _claimer, uint256 _quantity, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) view returns(bool validMerkleProof, uint256 merkleProofIndex)
-func (_DropERC721 *DropERC721Caller) VerifyClaimMerkleProof(opts *bind.CallOpts, _conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (struct {
-	ValidMerkleProof bool
-	MerkleProofIndex *big.Int
-}, error) {
-	var out []interface{}
-	err := _DropERC721.contract.Call(opts, &out, "verifyClaimMerkleProof", _conditionId, _claimer, _quantity, _proofs, _proofMaxQuantityPerTransaction)
-
-	outstruct := new(struct {
-		ValidMerkleProof bool
-		MerkleProofIndex *big.Int
-	})
-	if err != nil {
-		return *outstruct, err
-	}
-
-	outstruct.ValidMerkleProof = *abi.ConvertType(out[0], new(bool)).(*bool)
-	outstruct.MerkleProofIndex = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
-
-	return *outstruct, err
-
-}
-
-// VerifyClaimMerkleProof is a free data retrieval call binding the contract method 0xaf3be890.
-//
-// Solidity: function verifyClaimMerkleProof(uint256 _conditionId, address _claimer, uint256 _quantity, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) view returns(bool validMerkleProof, uint256 merkleProofIndex)
-func (_DropERC721 *DropERC721Session) VerifyClaimMerkleProof(_conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (struct {
-	ValidMerkleProof bool
-	MerkleProofIndex *big.Int
-}, error) {
-	return _DropERC721.Contract.VerifyClaimMerkleProof(&_DropERC721.CallOpts, _conditionId, _claimer, _quantity, _proofs, _proofMaxQuantityPerTransaction)
-}
-
-// VerifyClaimMerkleProof is a free data retrieval call binding the contract method 0xaf3be890.
-//
-// Solidity: function verifyClaimMerkleProof(uint256 _conditionId, address _claimer, uint256 _quantity, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) view returns(bool validMerkleProof, uint256 merkleProofIndex)
-func (_DropERC721 *DropERC721CallerSession) VerifyClaimMerkleProof(_conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (struct {
-	ValidMerkleProof bool
-	MerkleProofIndex *big.Int
-}, error) {
-	return _DropERC721.Contract.VerifyClaimMerkleProof(&_DropERC721.CallOpts, _conditionId, _claimer, _quantity, _proofs, _proofMaxQuantityPerTransaction)
-}
-
-// WalletClaimCount is a free data retrieval call binding the contract method 0x4352ab41.
-//
-// Solidity: function walletClaimCount(address ) view returns(uint256)
-func (_DropERC721 *DropERC721Caller) WalletClaimCount(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
-	var out []interface{}
-	err := _DropERC721.contract.Call(opts, &out, "walletClaimCount", arg0)
-
-	if err != nil {
-		return *new(*big.Int), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
 
 	return out0, err
 
 }
 
-// WalletClaimCount is a free data retrieval call binding the contract method 0x4352ab41.
+// VerifyClaim is a free data retrieval call binding the contract method 0x23a2902b.
 //
-// Solidity: function walletClaimCount(address ) view returns(uint256)
-func (_DropERC721 *DropERC721Session) WalletClaimCount(arg0 common.Address) (*big.Int, error) {
-	return _DropERC721.Contract.WalletClaimCount(&_DropERC721.CallOpts, arg0)
+// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof) view returns(bool isOverride)
+func (_DropERC721 *DropERC721Session) VerifyClaim(_conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDropAllowlistProof) (bool, error) {
+	return _DropERC721.Contract.VerifyClaim(&_DropERC721.CallOpts, _conditionId, _claimer, _quantity, _currency, _pricePerToken, _allowlistProof)
 }
 
-// WalletClaimCount is a free data retrieval call binding the contract method 0x4352ab41.
+// VerifyClaim is a free data retrieval call binding the contract method 0x23a2902b.
 //
-// Solidity: function walletClaimCount(address ) view returns(uint256)
-func (_DropERC721 *DropERC721CallerSession) WalletClaimCount(arg0 common.Address) (*big.Int, error) {
-	return _DropERC721.Contract.WalletClaimCount(&_DropERC721.CallOpts, arg0)
+// Solidity: function verifyClaim(uint256 _conditionId, address _claimer, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof) view returns(bool isOverride)
+func (_DropERC721 *DropERC721CallerSession) VerifyClaim(_conditionId *big.Int, _claimer common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDropAllowlistProof) (bool, error) {
+	return _DropERC721.Contract.VerifyClaim(&_DropERC721.CallOpts, _conditionId, _claimer, _quantity, _currency, _pricePerToken, _allowlistProof)
 }
 
 // Approve is a paid mutator transaction binding the contract method 0x095ea7b3.
@@ -1561,25 +1512,25 @@ func (_DropERC721 *DropERC721TransactorSession) Burn(tokenId *big.Int) (*types.T
 	return _DropERC721.Contract.Burn(&_DropERC721.TransactOpts, tokenId)
 }
 
-// Claim is a paid mutator transaction binding the contract method 0x7a5a8e7e.
+// Claim is a paid mutator transaction binding the contract method 0x84bb1e42.
 //
-// Solidity: function claim(address _receiver, uint256 _quantity, address _currency, uint256 _pricePerToken, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) payable returns()
-func (_DropERC721 *DropERC721Transactor) Claim(opts *bind.TransactOpts, _receiver common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (*types.Transaction, error) {
-	return _DropERC721.contract.Transact(opts, "claim", _receiver, _quantity, _currency, _pricePerToken, _proofs, _proofMaxQuantityPerTransaction)
+// Solidity: function claim(address _receiver, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof, bytes _data) payable returns()
+func (_DropERC721 *DropERC721Transactor) Claim(opts *bind.TransactOpts, _receiver common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDropAllowlistProof, _data []byte) (*types.Transaction, error) {
+	return _DropERC721.contract.Transact(opts, "claim", _receiver, _quantity, _currency, _pricePerToken, _allowlistProof, _data)
 }
 
-// Claim is a paid mutator transaction binding the contract method 0x7a5a8e7e.
+// Claim is a paid mutator transaction binding the contract method 0x84bb1e42.
 //
-// Solidity: function claim(address _receiver, uint256 _quantity, address _currency, uint256 _pricePerToken, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) payable returns()
-func (_DropERC721 *DropERC721Session) Claim(_receiver common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (*types.Transaction, error) {
-	return _DropERC721.Contract.Claim(&_DropERC721.TransactOpts, _receiver, _quantity, _currency, _pricePerToken, _proofs, _proofMaxQuantityPerTransaction)
+// Solidity: function claim(address _receiver, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof, bytes _data) payable returns()
+func (_DropERC721 *DropERC721Session) Claim(_receiver common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDropAllowlistProof, _data []byte) (*types.Transaction, error) {
+	return _DropERC721.Contract.Claim(&_DropERC721.TransactOpts, _receiver, _quantity, _currency, _pricePerToken, _allowlistProof, _data)
 }
 
-// Claim is a paid mutator transaction binding the contract method 0x7a5a8e7e.
+// Claim is a paid mutator transaction binding the contract method 0x84bb1e42.
 //
-// Solidity: function claim(address _receiver, uint256 _quantity, address _currency, uint256 _pricePerToken, bytes32[] _proofs, uint256 _proofMaxQuantityPerTransaction) payable returns()
-func (_DropERC721 *DropERC721TransactorSession) Claim(_receiver common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _proofs [][32]byte, _proofMaxQuantityPerTransaction *big.Int) (*types.Transaction, error) {
-	return _DropERC721.Contract.Claim(&_DropERC721.TransactOpts, _receiver, _quantity, _currency, _pricePerToken, _proofs, _proofMaxQuantityPerTransaction)
+// Solidity: function claim(address _receiver, uint256 _quantity, address _currency, uint256 _pricePerToken, (bytes32[],uint256,uint256,address) _allowlistProof, bytes _data) payable returns()
+func (_DropERC721 *DropERC721TransactorSession) Claim(_receiver common.Address, _quantity *big.Int, _currency common.Address, _pricePerToken *big.Int, _allowlistProof IDropAllowlistProof, _data []byte) (*types.Transaction, error) {
+	return _DropERC721.Contract.Claim(&_DropERC721.TransactOpts, _receiver, _quantity, _currency, _pricePerToken, _allowlistProof, _data)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
@@ -1626,21 +1577,21 @@ func (_DropERC721 *DropERC721TransactorSession) Initialize(_defaultAdmin common.
 
 // LazyMint is a paid mutator transaction binding the contract method 0xd37c353b.
 //
-// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns()
+// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns(uint256 batchId)
 func (_DropERC721 *DropERC721Transactor) LazyMint(opts *bind.TransactOpts, _amount *big.Int, _baseURIForTokens string, _data []byte) (*types.Transaction, error) {
 	return _DropERC721.contract.Transact(opts, "lazyMint", _amount, _baseURIForTokens, _data)
 }
 
 // LazyMint is a paid mutator transaction binding the contract method 0xd37c353b.
 //
-// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns()
+// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns(uint256 batchId)
 func (_DropERC721 *DropERC721Session) LazyMint(_amount *big.Int, _baseURIForTokens string, _data []byte) (*types.Transaction, error) {
 	return _DropERC721.Contract.LazyMint(&_DropERC721.TransactOpts, _amount, _baseURIForTokens, _data)
 }
 
 // LazyMint is a paid mutator transaction binding the contract method 0xd37c353b.
 //
-// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns()
+// Solidity: function lazyMint(uint256 _amount, string _baseURIForTokens, bytes _data) returns(uint256 batchId)
 func (_DropERC721 *DropERC721TransactorSession) LazyMint(_amount *big.Int, _baseURIForTokens string, _data []byte) (*types.Transaction, error) {
 	return _DropERC721.Contract.LazyMint(&_DropERC721.TransactOpts, _amount, _baseURIForTokens, _data)
 }
@@ -1689,23 +1640,23 @@ func (_DropERC721 *DropERC721TransactorSession) RenounceRole(role [32]byte, acco
 
 // Reveal is a paid mutator transaction binding the contract method 0xce805642.
 //
-// Solidity: function reveal(uint256 index, bytes _key) returns(string revealedURI)
-func (_DropERC721 *DropERC721Transactor) Reveal(opts *bind.TransactOpts, index *big.Int, _key []byte) (*types.Transaction, error) {
-	return _DropERC721.contract.Transact(opts, "reveal", index, _key)
+// Solidity: function reveal(uint256 _index, bytes _key) returns(string revealedURI)
+func (_DropERC721 *DropERC721Transactor) Reveal(opts *bind.TransactOpts, _index *big.Int, _key []byte) (*types.Transaction, error) {
+	return _DropERC721.contract.Transact(opts, "reveal", _index, _key)
 }
 
 // Reveal is a paid mutator transaction binding the contract method 0xce805642.
 //
-// Solidity: function reveal(uint256 index, bytes _key) returns(string revealedURI)
-func (_DropERC721 *DropERC721Session) Reveal(index *big.Int, _key []byte) (*types.Transaction, error) {
-	return _DropERC721.Contract.Reveal(&_DropERC721.TransactOpts, index, _key)
+// Solidity: function reveal(uint256 _index, bytes _key) returns(string revealedURI)
+func (_DropERC721 *DropERC721Session) Reveal(_index *big.Int, _key []byte) (*types.Transaction, error) {
+	return _DropERC721.Contract.Reveal(&_DropERC721.TransactOpts, _index, _key)
 }
 
 // Reveal is a paid mutator transaction binding the contract method 0xce805642.
 //
-// Solidity: function reveal(uint256 index, bytes _key) returns(string revealedURI)
-func (_DropERC721 *DropERC721TransactorSession) Reveal(index *big.Int, _key []byte) (*types.Transaction, error) {
-	return _DropERC721.Contract.Reveal(&_DropERC721.TransactOpts, index, _key)
+// Solidity: function reveal(uint256 _index, bytes _key) returns(string revealedURI)
+func (_DropERC721 *DropERC721TransactorSession) Reveal(_index *big.Int, _key []byte) (*types.Transaction, error) {
+	return _DropERC721.Contract.Reveal(&_DropERC721.TransactOpts, _index, _key)
 }
 
 // RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
@@ -1792,25 +1743,25 @@ func (_DropERC721 *DropERC721TransactorSession) SetApprovalForAll(operator commo
 	return _DropERC721.Contract.SetApprovalForAll(&_DropERC721.TransactOpts, operator, approved)
 }
 
-// SetClaimConditions is a paid mutator transaction binding the contract method 0xe23b8164.
+// SetClaimConditions is a paid mutator transaction binding the contract method 0x74bc7db7.
 //
-// Solidity: function setClaimConditions((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] _phases, bool _resetClaimEligibility) returns()
-func (_DropERC721 *DropERC721Transactor) SetClaimConditions(opts *bind.TransactOpts, _phases []IDropClaimCondition_V2ClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
-	return _DropERC721.contract.Transact(opts, "setClaimConditions", _phases, _resetClaimEligibility)
+// Solidity: function setClaimConditions((uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] _conditions, bool _resetClaimEligibility) returns()
+func (_DropERC721 *DropERC721Transactor) SetClaimConditions(opts *bind.TransactOpts, _conditions []IClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
+	return _DropERC721.contract.Transact(opts, "setClaimConditions", _conditions, _resetClaimEligibility)
 }
 
-// SetClaimConditions is a paid mutator transaction binding the contract method 0xe23b8164.
+// SetClaimConditions is a paid mutator transaction binding the contract method 0x74bc7db7.
 //
-// Solidity: function setClaimConditions((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] _phases, bool _resetClaimEligibility) returns()
-func (_DropERC721 *DropERC721Session) SetClaimConditions(_phases []IDropClaimCondition_V2ClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
-	return _DropERC721.Contract.SetClaimConditions(&_DropERC721.TransactOpts, _phases, _resetClaimEligibility)
+// Solidity: function setClaimConditions((uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] _conditions, bool _resetClaimEligibility) returns()
+func (_DropERC721 *DropERC721Session) SetClaimConditions(_conditions []IClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
+	return _DropERC721.Contract.SetClaimConditions(&_DropERC721.TransactOpts, _conditions, _resetClaimEligibility)
 }
 
-// SetClaimConditions is a paid mutator transaction binding the contract method 0xe23b8164.
+// SetClaimConditions is a paid mutator transaction binding the contract method 0x74bc7db7.
 //
-// Solidity: function setClaimConditions((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] _phases, bool _resetClaimEligibility) returns()
-func (_DropERC721 *DropERC721TransactorSession) SetClaimConditions(_phases []IDropClaimCondition_V2ClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
-	return _DropERC721.Contract.SetClaimConditions(&_DropERC721.TransactOpts, _phases, _resetClaimEligibility)
+// Solidity: function setClaimConditions((uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] _conditions, bool _resetClaimEligibility) returns()
+func (_DropERC721 *DropERC721TransactorSession) SetClaimConditions(_conditions []IClaimConditionClaimCondition, _resetClaimEligibility bool) (*types.Transaction, error) {
+	return _DropERC721.Contract.SetClaimConditions(&_DropERC721.TransactOpts, _conditions, _resetClaimEligibility)
 }
 
 // SetContractURI is a paid mutator transaction binding the contract method 0x938e3d7b.
@@ -1874,27 +1825,6 @@ func (_DropERC721 *DropERC721Session) SetMaxTotalSupply(_maxTotalSupply *big.Int
 // Solidity: function setMaxTotalSupply(uint256 _maxTotalSupply) returns()
 func (_DropERC721 *DropERC721TransactorSession) SetMaxTotalSupply(_maxTotalSupply *big.Int) (*types.Transaction, error) {
 	return _DropERC721.Contract.SetMaxTotalSupply(&_DropERC721.TransactOpts, _maxTotalSupply)
-}
-
-// SetMaxWalletClaimCount is a paid mutator transaction binding the contract method 0x50867957.
-//
-// Solidity: function setMaxWalletClaimCount(uint256 _count) returns()
-func (_DropERC721 *DropERC721Transactor) SetMaxWalletClaimCount(opts *bind.TransactOpts, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC721.contract.Transact(opts, "setMaxWalletClaimCount", _count)
-}
-
-// SetMaxWalletClaimCount is a paid mutator transaction binding the contract method 0x50867957.
-//
-// Solidity: function setMaxWalletClaimCount(uint256 _count) returns()
-func (_DropERC721 *DropERC721Session) SetMaxWalletClaimCount(_count *big.Int) (*types.Transaction, error) {
-	return _DropERC721.Contract.SetMaxWalletClaimCount(&_DropERC721.TransactOpts, _count)
-}
-
-// SetMaxWalletClaimCount is a paid mutator transaction binding the contract method 0x50867957.
-//
-// Solidity: function setMaxWalletClaimCount(uint256 _count) returns()
-func (_DropERC721 *DropERC721TransactorSession) SetMaxWalletClaimCount(_count *big.Int) (*types.Transaction, error) {
-	return _DropERC721.Contract.SetMaxWalletClaimCount(&_DropERC721.TransactOpts, _count)
 }
 
 // SetOwner is a paid mutator transaction binding the contract method 0x13af4035.
@@ -1979,27 +1909,6 @@ func (_DropERC721 *DropERC721Session) SetRoyaltyInfoForToken(_tokenId *big.Int, 
 // Solidity: function setRoyaltyInfoForToken(uint256 _tokenId, address _recipient, uint256 _bps) returns()
 func (_DropERC721 *DropERC721TransactorSession) SetRoyaltyInfoForToken(_tokenId *big.Int, _recipient common.Address, _bps *big.Int) (*types.Transaction, error) {
 	return _DropERC721.Contract.SetRoyaltyInfoForToken(&_DropERC721.TransactOpts, _tokenId, _recipient, _bps)
-}
-
-// SetWalletClaimCount is a paid mutator transaction binding the contract method 0x3ea33f29.
-//
-// Solidity: function setWalletClaimCount(address _claimer, uint256 _count) returns()
-func (_DropERC721 *DropERC721Transactor) SetWalletClaimCount(opts *bind.TransactOpts, _claimer common.Address, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC721.contract.Transact(opts, "setWalletClaimCount", _claimer, _count)
-}
-
-// SetWalletClaimCount is a paid mutator transaction binding the contract method 0x3ea33f29.
-//
-// Solidity: function setWalletClaimCount(address _claimer, uint256 _count) returns()
-func (_DropERC721 *DropERC721Session) SetWalletClaimCount(_claimer common.Address, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC721.Contract.SetWalletClaimCount(&_DropERC721.TransactOpts, _claimer, _count)
-}
-
-// SetWalletClaimCount is a paid mutator transaction binding the contract method 0x3ea33f29.
-//
-// Solidity: function setWalletClaimCount(address _claimer, uint256 _count) returns()
-func (_DropERC721 *DropERC721TransactorSession) SetWalletClaimCount(_claimer common.Address, _count *big.Int) (*types.Transaction, error) {
-	return _DropERC721.Contract.SetWalletClaimCount(&_DropERC721.TransactOpts, _claimer, _count)
 }
 
 // TransferFrom is a paid mutator transaction binding the contract method 0x23b872dd.
@@ -2408,13 +2317,14 @@ func (it *DropERC721ClaimConditionsUpdatedIterator) Close() error {
 
 // DropERC721ClaimConditionsUpdated represents a ClaimConditionsUpdated event raised by the DropERC721 contract.
 type DropERC721ClaimConditionsUpdated struct {
-	ClaimConditions []IDropClaimCondition_V2ClaimCondition
-	Raw             types.Log // Blockchain specific contextual infos
+	ClaimConditions  []IClaimConditionClaimCondition
+	ResetEligibility bool
+	Raw              types.Log // Blockchain specific contextual infos
 }
 
-// FilterClaimConditionsUpdated is a free log retrieval operation binding the contract event 0x22ddd1bcb3816651679299dbffccb94973edec10c32e88dc2f4735c7699a02ca.
+// FilterClaimConditionsUpdated is a free log retrieval operation binding the contract event 0xbf4016fceeaaa4ac5cf4be865b559ff85825ab4ca7aa7b661d16e2f544c03098.
 //
-// Solidity: event ClaimConditionsUpdated((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] claimConditions)
+// Solidity: event ClaimConditionsUpdated((uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] claimConditions, bool resetEligibility)
 func (_DropERC721 *DropERC721Filterer) FilterClaimConditionsUpdated(opts *bind.FilterOpts) (*DropERC721ClaimConditionsUpdatedIterator, error) {
 
 	logs, sub, err := _DropERC721.contract.FilterLogs(opts, "ClaimConditionsUpdated")
@@ -2424,9 +2334,9 @@ func (_DropERC721 *DropERC721Filterer) FilterClaimConditionsUpdated(opts *bind.F
 	return &DropERC721ClaimConditionsUpdatedIterator{contract: _DropERC721.contract, event: "ClaimConditionsUpdated", logs: logs, sub: sub}, nil
 }
 
-// WatchClaimConditionsUpdated is a free log subscription operation binding the contract event 0x22ddd1bcb3816651679299dbffccb94973edec10c32e88dc2f4735c7699a02ca.
+// WatchClaimConditionsUpdated is a free log subscription operation binding the contract event 0xbf4016fceeaaa4ac5cf4be865b559ff85825ab4ca7aa7b661d16e2f544c03098.
 //
-// Solidity: event ClaimConditionsUpdated((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] claimConditions)
+// Solidity: event ClaimConditionsUpdated((uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] claimConditions, bool resetEligibility)
 func (_DropERC721 *DropERC721Filterer) WatchClaimConditionsUpdated(opts *bind.WatchOpts, sink chan<- *DropERC721ClaimConditionsUpdated) (event.Subscription, error) {
 
 	logs, sub, err := _DropERC721.contract.WatchLogs(opts, "ClaimConditionsUpdated")
@@ -2461,12 +2371,147 @@ func (_DropERC721 *DropERC721Filterer) WatchClaimConditionsUpdated(opts *bind.Wa
 	}), nil
 }
 
-// ParseClaimConditionsUpdated is a log parse operation binding the contract event 0x22ddd1bcb3816651679299dbffccb94973edec10c32e88dc2f4735c7699a02ca.
+// ParseClaimConditionsUpdated is a log parse operation binding the contract event 0xbf4016fceeaaa4ac5cf4be865b559ff85825ab4ca7aa7b661d16e2f544c03098.
 //
-// Solidity: event ClaimConditionsUpdated((uint256,uint256,uint256,uint256,uint256,bytes32,uint256,address)[] claimConditions)
+// Solidity: event ClaimConditionsUpdated((uint256,uint256,uint256,uint256,bytes32,uint256,address,string)[] claimConditions, bool resetEligibility)
 func (_DropERC721 *DropERC721Filterer) ParseClaimConditionsUpdated(log types.Log) (*DropERC721ClaimConditionsUpdated, error) {
 	event := new(DropERC721ClaimConditionsUpdated)
 	if err := _DropERC721.contract.UnpackLog(event, "ClaimConditionsUpdated", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// DropERC721ContractURIUpdatedIterator is returned from FilterContractURIUpdated and is used to iterate over the raw logs and unpacked data for ContractURIUpdated events raised by the DropERC721 contract.
+type DropERC721ContractURIUpdatedIterator struct {
+	Event *DropERC721ContractURIUpdated // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *DropERC721ContractURIUpdatedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(DropERC721ContractURIUpdated)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(DropERC721ContractURIUpdated)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *DropERC721ContractURIUpdatedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *DropERC721ContractURIUpdatedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// DropERC721ContractURIUpdated represents a ContractURIUpdated event raised by the DropERC721 contract.
+type DropERC721ContractURIUpdated struct {
+	PrevURI string
+	NewURI  string
+	Raw     types.Log // Blockchain specific contextual infos
+}
+
+// FilterContractURIUpdated is a free log retrieval operation binding the contract event 0xc9c7c3fe08b88b4df9d4d47ef47d2c43d55c025a0ba88ca442580ed9e7348a16.
+//
+// Solidity: event ContractURIUpdated(string prevURI, string newURI)
+func (_DropERC721 *DropERC721Filterer) FilterContractURIUpdated(opts *bind.FilterOpts) (*DropERC721ContractURIUpdatedIterator, error) {
+
+	logs, sub, err := _DropERC721.contract.FilterLogs(opts, "ContractURIUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return &DropERC721ContractURIUpdatedIterator{contract: _DropERC721.contract, event: "ContractURIUpdated", logs: logs, sub: sub}, nil
+}
+
+// WatchContractURIUpdated is a free log subscription operation binding the contract event 0xc9c7c3fe08b88b4df9d4d47ef47d2c43d55c025a0ba88ca442580ed9e7348a16.
+//
+// Solidity: event ContractURIUpdated(string prevURI, string newURI)
+func (_DropERC721 *DropERC721Filterer) WatchContractURIUpdated(opts *bind.WatchOpts, sink chan<- *DropERC721ContractURIUpdated) (event.Subscription, error) {
+
+	logs, sub, err := _DropERC721.contract.WatchLogs(opts, "ContractURIUpdated")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(DropERC721ContractURIUpdated)
+				if err := _DropERC721.contract.UnpackLog(event, "ContractURIUpdated", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseContractURIUpdated is a log parse operation binding the contract event 0xc9c7c3fe08b88b4df9d4d47ef47d2c43d55c025a0ba88ca442580ed9e7348a16.
+//
+// Solidity: event ContractURIUpdated(string prevURI, string newURI)
+func (_DropERC721 *DropERC721Filterer) ParseContractURIUpdated(log types.Log) (*DropERC721ContractURIUpdated, error) {
+	event := new(DropERC721ContractURIUpdated)
+	if err := _DropERC721.contract.UnpackLog(event, "ContractURIUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -2880,275 +2925,6 @@ func (_DropERC721 *DropERC721Filterer) WatchMaxTotalSupplyUpdated(opts *bind.Wat
 func (_DropERC721 *DropERC721Filterer) ParseMaxTotalSupplyUpdated(log types.Log) (*DropERC721MaxTotalSupplyUpdated, error) {
 	event := new(DropERC721MaxTotalSupplyUpdated)
 	if err := _DropERC721.contract.UnpackLog(event, "MaxTotalSupplyUpdated", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// DropERC721MaxWalletClaimCountUpdatedIterator is returned from FilterMaxWalletClaimCountUpdated and is used to iterate over the raw logs and unpacked data for MaxWalletClaimCountUpdated events raised by the DropERC721 contract.
-type DropERC721MaxWalletClaimCountUpdatedIterator struct {
-	Event *DropERC721MaxWalletClaimCountUpdated // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DropERC721MaxWalletClaimCountUpdatedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DropERC721MaxWalletClaimCountUpdated)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DropERC721MaxWalletClaimCountUpdated)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DropERC721MaxWalletClaimCountUpdatedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DropERC721MaxWalletClaimCountUpdatedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DropERC721MaxWalletClaimCountUpdated represents a MaxWalletClaimCountUpdated event raised by the DropERC721 contract.
-type DropERC721MaxWalletClaimCountUpdated struct {
-	Count *big.Int
-	Raw   types.Log // Blockchain specific contextual infos
-}
-
-// FilterMaxWalletClaimCountUpdated is a free log retrieval operation binding the contract event 0xf9d383c69b6255cbd431ca23734f43bdf15e694c7494956c917498469bcbce73.
-//
-// Solidity: event MaxWalletClaimCountUpdated(uint256 count)
-func (_DropERC721 *DropERC721Filterer) FilterMaxWalletClaimCountUpdated(opts *bind.FilterOpts) (*DropERC721MaxWalletClaimCountUpdatedIterator, error) {
-
-	logs, sub, err := _DropERC721.contract.FilterLogs(opts, "MaxWalletClaimCountUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return &DropERC721MaxWalletClaimCountUpdatedIterator{contract: _DropERC721.contract, event: "MaxWalletClaimCountUpdated", logs: logs, sub: sub}, nil
-}
-
-// WatchMaxWalletClaimCountUpdated is a free log subscription operation binding the contract event 0xf9d383c69b6255cbd431ca23734f43bdf15e694c7494956c917498469bcbce73.
-//
-// Solidity: event MaxWalletClaimCountUpdated(uint256 count)
-func (_DropERC721 *DropERC721Filterer) WatchMaxWalletClaimCountUpdated(opts *bind.WatchOpts, sink chan<- *DropERC721MaxWalletClaimCountUpdated) (event.Subscription, error) {
-
-	logs, sub, err := _DropERC721.contract.WatchLogs(opts, "MaxWalletClaimCountUpdated")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DropERC721MaxWalletClaimCountUpdated)
-				if err := _DropERC721.contract.UnpackLog(event, "MaxWalletClaimCountUpdated", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseMaxWalletClaimCountUpdated is a log parse operation binding the contract event 0xf9d383c69b6255cbd431ca23734f43bdf15e694c7494956c917498469bcbce73.
-//
-// Solidity: event MaxWalletClaimCountUpdated(uint256 count)
-func (_DropERC721 *DropERC721Filterer) ParseMaxWalletClaimCountUpdated(log types.Log) (*DropERC721MaxWalletClaimCountUpdated, error) {
-	event := new(DropERC721MaxWalletClaimCountUpdated)
-	if err := _DropERC721.contract.UnpackLog(event, "MaxWalletClaimCountUpdated", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// DropERC721NFTRevealedIterator is returned from FilterNFTRevealed and is used to iterate over the raw logs and unpacked data for NFTRevealed events raised by the DropERC721 contract.
-type DropERC721NFTRevealedIterator struct {
-	Event *DropERC721NFTRevealed // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DropERC721NFTRevealedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DropERC721NFTRevealed)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DropERC721NFTRevealed)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DropERC721NFTRevealedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DropERC721NFTRevealedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DropERC721NFTRevealed represents a NFTRevealed event raised by the DropERC721 contract.
-type DropERC721NFTRevealed struct {
-	EndTokenId  *big.Int
-	RevealedURI string
-	Raw         types.Log // Blockchain specific contextual infos
-}
-
-// FilterNFTRevealed is a free log retrieval operation binding the contract event 0x09b52c0c3a3e08761cd3917c8e49275ed1e0982477b54047add8b4d70513bc86.
-//
-// Solidity: event NFTRevealed(uint256 endTokenId, string revealedURI)
-func (_DropERC721 *DropERC721Filterer) FilterNFTRevealed(opts *bind.FilterOpts) (*DropERC721NFTRevealedIterator, error) {
-
-	logs, sub, err := _DropERC721.contract.FilterLogs(opts, "NFTRevealed")
-	if err != nil {
-		return nil, err
-	}
-	return &DropERC721NFTRevealedIterator{contract: _DropERC721.contract, event: "NFTRevealed", logs: logs, sub: sub}, nil
-}
-
-// WatchNFTRevealed is a free log subscription operation binding the contract event 0x09b52c0c3a3e08761cd3917c8e49275ed1e0982477b54047add8b4d70513bc86.
-//
-// Solidity: event NFTRevealed(uint256 endTokenId, string revealedURI)
-func (_DropERC721 *DropERC721Filterer) WatchNFTRevealed(opts *bind.WatchOpts, sink chan<- *DropERC721NFTRevealed) (event.Subscription, error) {
-
-	logs, sub, err := _DropERC721.contract.WatchLogs(opts, "NFTRevealed")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DropERC721NFTRevealed)
-				if err := _DropERC721.contract.UnpackLog(event, "NFTRevealed", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseNFTRevealed is a log parse operation binding the contract event 0x09b52c0c3a3e08761cd3917c8e49275ed1e0982477b54047add8b4d70513bc86.
-//
-// Solidity: event NFTRevealed(uint256 endTokenId, string revealedURI)
-func (_DropERC721 *DropERC721Filterer) ParseNFTRevealed(log types.Log) (*DropERC721NFTRevealed, error) {
-	event := new(DropERC721NFTRevealed)
-	if err := _DropERC721.contract.UnpackLog(event, "NFTRevealed", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -4237,6 +4013,151 @@ func (_DropERC721 *DropERC721Filterer) ParseRoyaltyForToken(log types.Log) (*Dro
 	return event, nil
 }
 
+// DropERC721TokenURIRevealedIterator is returned from FilterTokenURIRevealed and is used to iterate over the raw logs and unpacked data for TokenURIRevealed events raised by the DropERC721 contract.
+type DropERC721TokenURIRevealedIterator struct {
+	Event *DropERC721TokenURIRevealed // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *DropERC721TokenURIRevealedIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(DropERC721TokenURIRevealed)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(DropERC721TokenURIRevealed)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *DropERC721TokenURIRevealedIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *DropERC721TokenURIRevealedIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// DropERC721TokenURIRevealed represents a TokenURIRevealed event raised by the DropERC721 contract.
+type DropERC721TokenURIRevealed struct {
+	Index       *big.Int
+	RevealedURI string
+	Raw         types.Log // Blockchain specific contextual infos
+}
+
+// FilterTokenURIRevealed is a free log retrieval operation binding the contract event 0x6df1d8db2a036436ffe0b2d1833f2c5f1e624818dfce2578c0faa4b83ef9998d.
+//
+// Solidity: event TokenURIRevealed(uint256 indexed index, string revealedURI)
+func (_DropERC721 *DropERC721Filterer) FilterTokenURIRevealed(opts *bind.FilterOpts, index []*big.Int) (*DropERC721TokenURIRevealedIterator, error) {
+
+	var indexRule []interface{}
+	for _, indexItem := range index {
+		indexRule = append(indexRule, indexItem)
+	}
+
+	logs, sub, err := _DropERC721.contract.FilterLogs(opts, "TokenURIRevealed", indexRule)
+	if err != nil {
+		return nil, err
+	}
+	return &DropERC721TokenURIRevealedIterator{contract: _DropERC721.contract, event: "TokenURIRevealed", logs: logs, sub: sub}, nil
+}
+
+// WatchTokenURIRevealed is a free log subscription operation binding the contract event 0x6df1d8db2a036436ffe0b2d1833f2c5f1e624818dfce2578c0faa4b83ef9998d.
+//
+// Solidity: event TokenURIRevealed(uint256 indexed index, string revealedURI)
+func (_DropERC721 *DropERC721Filterer) WatchTokenURIRevealed(opts *bind.WatchOpts, sink chan<- *DropERC721TokenURIRevealed, index []*big.Int) (event.Subscription, error) {
+
+	var indexRule []interface{}
+	for _, indexItem := range index {
+		indexRule = append(indexRule, indexItem)
+	}
+
+	logs, sub, err := _DropERC721.contract.WatchLogs(opts, "TokenURIRevealed", indexRule)
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(DropERC721TokenURIRevealed)
+				if err := _DropERC721.contract.UnpackLog(event, "TokenURIRevealed", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseTokenURIRevealed is a log parse operation binding the contract event 0x6df1d8db2a036436ffe0b2d1833f2c5f1e624818dfce2578c0faa4b83ef9998d.
+//
+// Solidity: event TokenURIRevealed(uint256 indexed index, string revealedURI)
+func (_DropERC721 *DropERC721Filterer) ParseTokenURIRevealed(log types.Log) (*DropERC721TokenURIRevealed, error) {
+	event := new(DropERC721TokenURIRevealed)
+	if err := _DropERC721.contract.UnpackLog(event, "TokenURIRevealed", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
 // DropERC721TokensClaimedIterator is returned from FilterTokensClaimed and is used to iterate over the raw logs and unpacked data for TokensClaimed events raised by the DropERC721 contract.
 type DropERC721TokensClaimedIterator struct {
 	Event *DropERC721TokensClaimed // Event containing the contract specifics and raw log
@@ -4479,10 +4400,15 @@ type DropERC721TokensLazyMinted struct {
 
 // FilterTokensLazyMinted is a free log retrieval operation binding the contract event 0x2a0365091ef1a40953c670dce28177e37520648a6fdc91506bffac0ab045570d.
 //
-// Solidity: event TokensLazyMinted(uint256 startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
-func (_DropERC721 *DropERC721Filterer) FilterTokensLazyMinted(opts *bind.FilterOpts) (*DropERC721TokensLazyMintedIterator, error) {
+// Solidity: event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
+func (_DropERC721 *DropERC721Filterer) FilterTokensLazyMinted(opts *bind.FilterOpts, startTokenId []*big.Int) (*DropERC721TokensLazyMintedIterator, error) {
 
-	logs, sub, err := _DropERC721.contract.FilterLogs(opts, "TokensLazyMinted")
+	var startTokenIdRule []interface{}
+	for _, startTokenIdItem := range startTokenId {
+		startTokenIdRule = append(startTokenIdRule, startTokenIdItem)
+	}
+
+	logs, sub, err := _DropERC721.contract.FilterLogs(opts, "TokensLazyMinted", startTokenIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -4491,10 +4417,15 @@ func (_DropERC721 *DropERC721Filterer) FilterTokensLazyMinted(opts *bind.FilterO
 
 // WatchTokensLazyMinted is a free log subscription operation binding the contract event 0x2a0365091ef1a40953c670dce28177e37520648a6fdc91506bffac0ab045570d.
 //
-// Solidity: event TokensLazyMinted(uint256 startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
-func (_DropERC721 *DropERC721Filterer) WatchTokensLazyMinted(opts *bind.WatchOpts, sink chan<- *DropERC721TokensLazyMinted) (event.Subscription, error) {
+// Solidity: event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
+func (_DropERC721 *DropERC721Filterer) WatchTokensLazyMinted(opts *bind.WatchOpts, sink chan<- *DropERC721TokensLazyMinted, startTokenId []*big.Int) (event.Subscription, error) {
 
-	logs, sub, err := _DropERC721.contract.WatchLogs(opts, "TokensLazyMinted")
+	var startTokenIdRule []interface{}
+	for _, startTokenIdItem := range startTokenId {
+		startTokenIdRule = append(startTokenIdRule, startTokenIdItem)
+	}
+
+	logs, sub, err := _DropERC721.contract.WatchLogs(opts, "TokensLazyMinted", startTokenIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -4528,7 +4459,7 @@ func (_DropERC721 *DropERC721Filterer) WatchTokensLazyMinted(opts *bind.WatchOpt
 
 // ParseTokensLazyMinted is a log parse operation binding the contract event 0x2a0365091ef1a40953c670dce28177e37520648a6fdc91506bffac0ab045570d.
 //
-// Solidity: event TokensLazyMinted(uint256 startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
+// Solidity: event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)
 func (_DropERC721 *DropERC721Filterer) ParseTokensLazyMinted(log types.Log) (*DropERC721TokensLazyMinted, error) {
 	event := new(DropERC721TokensLazyMinted)
 	if err := _DropERC721.contract.UnpackLog(event, "TokensLazyMinted", log); err != nil {
@@ -4694,151 +4625,6 @@ func (_DropERC721 *DropERC721Filterer) WatchTransfer(opts *bind.WatchOpts, sink 
 func (_DropERC721 *DropERC721Filterer) ParseTransfer(log types.Log) (*DropERC721Transfer, error) {
 	event := new(DropERC721Transfer)
 	if err := _DropERC721.contract.UnpackLog(event, "Transfer", log); err != nil {
-		return nil, err
-	}
-	event.Raw = log
-	return event, nil
-}
-
-// DropERC721WalletClaimCountUpdatedIterator is returned from FilterWalletClaimCountUpdated and is used to iterate over the raw logs and unpacked data for WalletClaimCountUpdated events raised by the DropERC721 contract.
-type DropERC721WalletClaimCountUpdatedIterator struct {
-	Event *DropERC721WalletClaimCountUpdated // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *DropERC721WalletClaimCountUpdatedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(DropERC721WalletClaimCountUpdated)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(DropERC721WalletClaimCountUpdated)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *DropERC721WalletClaimCountUpdatedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *DropERC721WalletClaimCountUpdatedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// DropERC721WalletClaimCountUpdated represents a WalletClaimCountUpdated event raised by the DropERC721 contract.
-type DropERC721WalletClaimCountUpdated struct {
-	Wallet common.Address
-	Count  *big.Int
-	Raw    types.Log // Blockchain specific contextual infos
-}
-
-// FilterWalletClaimCountUpdated is a free log retrieval operation binding the contract event 0x8973b95d42472e89416ea69404f8038c041db700af9ec294e7b4cd4e1ff2801c.
-//
-// Solidity: event WalletClaimCountUpdated(address indexed wallet, uint256 count)
-func (_DropERC721 *DropERC721Filterer) FilterWalletClaimCountUpdated(opts *bind.FilterOpts, wallet []common.Address) (*DropERC721WalletClaimCountUpdatedIterator, error) {
-
-	var walletRule []interface{}
-	for _, walletItem := range wallet {
-		walletRule = append(walletRule, walletItem)
-	}
-
-	logs, sub, err := _DropERC721.contract.FilterLogs(opts, "WalletClaimCountUpdated", walletRule)
-	if err != nil {
-		return nil, err
-	}
-	return &DropERC721WalletClaimCountUpdatedIterator{contract: _DropERC721.contract, event: "WalletClaimCountUpdated", logs: logs, sub: sub}, nil
-}
-
-// WatchWalletClaimCountUpdated is a free log subscription operation binding the contract event 0x8973b95d42472e89416ea69404f8038c041db700af9ec294e7b4cd4e1ff2801c.
-//
-// Solidity: event WalletClaimCountUpdated(address indexed wallet, uint256 count)
-func (_DropERC721 *DropERC721Filterer) WatchWalletClaimCountUpdated(opts *bind.WatchOpts, sink chan<- *DropERC721WalletClaimCountUpdated, wallet []common.Address) (event.Subscription, error) {
-
-	var walletRule []interface{}
-	for _, walletItem := range wallet {
-		walletRule = append(walletRule, walletItem)
-	}
-
-	logs, sub, err := _DropERC721.contract.WatchLogs(opts, "WalletClaimCountUpdated", walletRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(DropERC721WalletClaimCountUpdated)
-				if err := _DropERC721.contract.UnpackLog(event, "WalletClaimCountUpdated", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseWalletClaimCountUpdated is a log parse operation binding the contract event 0x8973b95d42472e89416ea69404f8038c041db700af9ec294e7b4cd4e1ff2801c.
-//
-// Solidity: event WalletClaimCountUpdated(address indexed wallet, uint256 count)
-func (_DropERC721 *DropERC721Filterer) ParseWalletClaimCountUpdated(log types.Log) (*DropERC721WalletClaimCountUpdated, error) {
-	event := new(DropERC721WalletClaimCountUpdated)
-	if err := _DropERC721.contract.UnpackLog(event, "WalletClaimCountUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

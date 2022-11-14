@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
 var (
@@ -53,6 +53,12 @@ var nftDropEncoderCmd = &cobra.Command{
 			panic(err)
 		}
 
+		// tx, err := nftDrop.Encoder.ApproveClaimTo(
+		// 	context.Background(),
+		// 	thirdwebSDK.GetSignerAddress().String(),
+		// 	1,
+		// )
+
 		tx, err := nftDrop.Encoder.ClaimTo(
 			context.Background(),
 			thirdwebSDK.GetSignerAddress().String(),
@@ -85,7 +91,7 @@ var nftDropGetActiveCmd = &cobra.Command{
 		fmt.Println("Start Time:", active.StartTime)
 		fmt.Println("Available:", active.AvailableSupply)
 		fmt.Println("Quantity:", active.MaxQuantity)
-		fmt.Println("Quantity Limit:", active.QuantityLimitPerTransaction)
+		fmt.Println("Quantity Limit:", active.MaxClaimablePerWallet)
 		fmt.Println("Price:", active.Price)
 		fmt.Println("Wait In Seconds", active.WaitInSeconds)
 
@@ -99,7 +105,7 @@ var nftDropGetActiveCmd = &cobra.Command{
 			fmt.Println("Start Time:", c.StartTime)
 			fmt.Println("Available:", c.AvailableSupply)
 			fmt.Println("Quantity:", c.MaxQuantity)
-			fmt.Println("Quantity Limit:", c.QuantityLimitPerTransaction)
+			fmt.Println("Quantity Limit:", c.MaxClaimablePerWallet)
 			fmt.Println("Price:", c.Price)
 			fmt.Println("Wait In Seconds", c.WaitInSeconds)
 		}
@@ -115,14 +121,35 @@ var nftDropClaimCmd = &cobra.Command{
 			panic(err)
 		}
 
-		if tx, err := nftDrop.Claim(context.Background(), 1); err != nil {
+		address := thirdwebSDK.GetSignerAddress().String()
+		claimArgs, err := nftDrop.GetClaimArguments(context.Background(), address, 1)	
+		if err != nil {
 			panic(err)
-		} else {
-			log.Printf("Claimed nft successfully")
-
-			result, _ := json.Marshal(&tx)
-			fmt.Println(string(result))
 		}
+
+		fmt.Printf("%#v\n", claimArgs)
+
+		tx, err := nftDrop.Abi.Claim(
+			claimArgs.Opts,
+			claimArgs.Receiver,
+			claimArgs.Quantity,
+			claimArgs.Currency,
+			claimArgs.PricePerToken,
+			claimArgs.AllowlistProof,
+			claimArgs.Data,
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		awaitTx(tx.Hash())
+
+		// tx, err := nftDrop.Claim(context.Background(), 1)
+		// if err != nil {
+		// 	panic(err)
+		// }
+
+		// log.Println("Claimed nft with tx hash", tx.Hash().String())
 	},
 }
 

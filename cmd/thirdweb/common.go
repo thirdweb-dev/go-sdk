@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
+	"time"
 
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
 var (
@@ -20,6 +25,37 @@ func initSdk() {
 		panic(err)
 	} else {
 		thirdwebSDK = sdk
+	}
+}
+
+func awaitTx(hash common.Hash) (*types.Transaction, error) {
+	provider := thirdwebSDK.GetProvider()
+	wait := time.Second * 1
+	maxAttempts := uint8(20)
+	attempts := uint8(0)
+
+	var syncError error
+	for {
+		if attempts >= maxAttempts {
+			fmt.Println("Retry attempts to get tx exhausted, tx might have failed")
+			return nil, syncError
+		}
+
+		if tx, isPending, err := provider.TransactionByHash(context.Background(), hash); err != nil {
+			syncError = err
+			log.Printf("Failed to get tx %v, err = %v\n", hash.String(), err)
+			attempts += 1
+			time.Sleep(wait)
+			continue
+		} else {
+			if isPending {
+				log.Println("Transaction still pending...")
+				time.Sleep(wait)
+				continue
+			}
+			log.Printf("Transaction with hash %v mined successfully\n", tx.Hash())
+			return tx, nil
+		}
 	}
 }
 

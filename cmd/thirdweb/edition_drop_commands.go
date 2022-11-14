@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/thirdweb-dev/go-sdk/thirdweb"
+	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
 var (
@@ -62,7 +62,7 @@ var editionDropGetActiveCmd = &cobra.Command{
 			fmt.Println("Start Time:", c.StartTime)
 			fmt.Println("Available:", c.AvailableSupply)
 			fmt.Println("Quantity:", c.MaxQuantity)
-			fmt.Println("Quantity Limit:", c.QuantityLimitPerTransaction)
+			fmt.Println("Quantity Limit:", c.MaxClaimablePerWallet)
 			fmt.Println("Price:", c.Price)
 			fmt.Println("Wait In Seconds", c.WaitInSeconds)
 		}
@@ -77,7 +77,7 @@ var editionDropGetActiveCmd = &cobra.Command{
 			fmt.Println("Start Time:", c.StartTime)
 			fmt.Println("Available:", c.AvailableSupply)
 			fmt.Println("Quantity:", c.MaxQuantity)
-			fmt.Println("Quantity Limit:", c.QuantityLimitPerTransaction)
+			fmt.Println("Quantity Limit:", c.MaxClaimablePerWallet)
 			fmt.Println("Price:", c.Price)
 			fmt.Println("Wait In Seconds", c.WaitInSeconds)
 		}

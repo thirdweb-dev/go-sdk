@@ -2,12 +2,15 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/hex"
+	"encoding/json"
 	"math/big"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/thirdweb-dev/go-sdk/abi"
+	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
 // This interface is currently accessible from the NFT Drop contract contract type
@@ -52,7 +55,12 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 		return nil, err
 	}
 
-	mc, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, id)
+	active, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, id)
+	if err != nil {
+		return nil, err
+	}
+
+  merkle, err := claim.GetMerkleMetadata()
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +68,34 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 	provider := claim.helper.GetProvider()
 	claimCondition, err := transformResultToClaimCondition(
 		context.Background(),
-		&mc,
+		&active,
+		merkle,
+		provider,
+		claim.storage,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return claimCondition, nil
+}
+
+func (claim *NFTDropClaimConditions) Get(claimConditionId int) (*ClaimConditionOutput, error) {
+	condition, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, big.NewInt(int64(claimConditionId)))
+	if err != nil {
+		return nil, err
+	}
+
+	provider := claim.helper.GetProvider()
+	merkle, err := claim.GetMerkleMetadata()
+	if err != nil {
+		return nil, err
+	}
+
+	claimCondition, err := transformResultToClaimCondition(
+		context.Background(),
+		&condition,
+		merkle,
 		provider,
 		claim.storage,
 	)
@@ -104,9 +139,15 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 			return nil, err
 		}
 
+		merkle, err := claim.GetMerkleMetadata()
+		if err != nil {
+			return nil, err
+		}
+	
 		claimCondition, err := transformResultToClaimCondition(
 			context.Background(),
 			&mc,
+			merkle,
 			provider,
 			claim.storage,
 		)
@@ -119,3 +160,85 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 
 	return conditions, nil
 }
+
+func (claim *NFTDropClaimConditions) GetMerkleMetadata() (*map[string]string, error) {
+	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{});
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := claim.storage.Get(uri);
+	if err != nil {
+		return nil, err
+	}
+
+	var rawMetadata struct {
+		Merkle map[string]string `json:"merkle"`
+	};
+	if err := json.Unmarshal(body, &rawMetadata); err != nil {
+		return nil, err
+	}
+
+	return &rawMetadata.Merkle, nil;
+}
+
+func (claim *NFTDropClaimConditions) GetClaimerProofs(
+	ctx context.Context,
+	claimerAddress string,
+  claimConditionId int,
+) (*SnapshotEntryWithProof, error) {
+	claimCondition, err := claim.Get(claimConditionId)
+	if err != nil {
+		return nil, err
+	}
+	
+	if !strings.HasPrefix(hex.EncodeToString(claimCondition.MerkleRootHash[:]), zeroAddress) {
+		merkleMetadata, err := claim.GetMerkleMetadata()
+		if err != nil {
+			return nil, err
+		}
+		
+		return fetchSnapshotEntryForAddress(
+			ctx,
+			common.HexToAddress(claimerAddress),
+			claimCondition.MerkleRootHash,
+			merkleMetadata,
+			claim.helper.GetProvider(),
+			claim.storage,
+		)
+	} else {
+		return nil, nil
+	}
+}
+
+/**
+func (claim *NFTDropClaimConditions) CanClaim(
+	quantity int,
+	addressToCheck string,
+) (bool, error) {
+	reasons, err := claim.GetClaimIneligibilityReasons(quantity, addressToCheck)
+	if err != nil {
+		return false, err
+	}
+
+	if len(reasons) > 0 {
+		return false, nil
+	} else {
+		return true, nil
+	}
+}
+
+func (claim *NFTDropClaimConditions) GetClaimIneligibilityReasons(
+	quantity int,
+	addressToCheck string,
+) ([]*ClaimEligibility, error) {
+	return nil, nil
+}
+
+func (claim *NFTDropClaimConditions) Set(
+	claimConditionInputs []*ClaimConditionInput,
+	resetClaimEligibilityForAll bool,
+) (*types.Transaction, error) {
+	return nil, nil
+}
+**/
