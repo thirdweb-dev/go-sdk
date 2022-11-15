@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -32,6 +33,11 @@ type ContractEvent struct {
 	Transaction types.Log
 }
 
+type EventSubscription struct {
+  Err 				func () <- chan error
+	Unsubscribe func ()
+}
+
 func newContractEvents(contractAbi string, helper *contractHelper) (*ContractEvents, error) {
 	parsedAbi, err := abi.JSON(strings.NewReader(contractAbi))
 	if err != nil {
@@ -47,30 +53,57 @@ func newContractEvents(contractAbi string, helper *contractHelper) (*ContractEve
 	}, nil
 }
 
-func (events *ContractEvents) AddEventListener(eventName string, listener func (event ContractEvent)) (func (), error) {
-	logs, subscription, err := events.contract.WatchLogs(&bind.WatchOpts{}, eventName)
-	if err != nil {
-		fmt.Println("Error in watch logs")
-		return func () {}, err
-	}
+func (events *ContractEvents) AddEventListener(ctx context.Context, eventName string, listener func (event ContractEvent)) (EventSubscription, error) {
+	ticker := time.NewTicker(500 * time.Millisecond)
+	done := make(chan bool)
+	errors := make(chan error)
 
-	removeListener := func () {
-		subscription.Unsubscribe()
-		close(logs)
+	lastBlockNumber, err := events.helper.GetProvider().BlockNumber(ctx)
+	if err != nil {
+		return EventSubscription{}, err
 	}
 
 	go func() {
-		for log := range logs {
-			event, err := events.transformEvent(eventName, log)
-			if err != nil {
+		for {
+			select {
+			case <- done:
 				return
-			}
+			case <- ticker.C:
+				currentBlockNumber, err := events.helper.GetProvider().BlockNumber(ctx)
+				if err != nil {
+					errors <- err
+					continue
+				}
 
-			listener(event)
+				if currentBlockNumber > lastBlockNumber {
+					recentEvents, err := events.GetEvents(ctx, eventName, EventQueryOptions{
+						FromBlock: lastBlockNumber,
+					})
+					if err != nil {
+						errors <- err
+						continue
+					}
+
+					for _, event := range recentEvents {
+						listener(event)
+					}
+
+					lastBlockNumber = currentBlockNumber
+				}
+			}
 		}
 	}()
 
-	return removeListener, nil
+	subscription := EventSubscription{
+		Err: func () (<-chan error) {
+			return errors
+		},
+		Unsubscribe: func () {
+			done <- true
+		},
+	}
+
+	return subscription, nil
 }
 
 func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, options EventQueryOptions) ([]ContractEvent, error) {
