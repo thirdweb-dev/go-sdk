@@ -12,7 +12,6 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/event"
 )
 
 type ContractEvents struct {
@@ -24,7 +23,13 @@ type ContractEvents struct {
 type EventQueryOptions struct {
 	FromBlock uint64
 	ToBlock   *uint64
-	Filters   *map[string]interface{}
+	Filters   map[string]interface{}
+}
+
+type ContractEvent struct {
+	EventName   string
+	Data        map[string]interface{}
+	Transaction types.Log
 }
 
 func newContractEvents(contractAbi string, helper *contractHelper) (*ContractEvents, error) {
@@ -42,24 +47,44 @@ func newContractEvents(contractAbi string, helper *contractHelper) (*ContractEve
 	}, nil
 }
 
-func (events *ContractEvents) AddEventListener(eventName string) (chan types.Log, event.Subscription, error) {
-	return events.contract.WatchLogs(&bind.WatchOpts{}, eventName)
+func (events *ContractEvents) AddEventListener(eventName string, listener func (event ContractEvent)) (func (), error) {
+	logs, subscription, err := events.contract.WatchLogs(&bind.WatchOpts{}, eventName)
+	if err != nil {
+		fmt.Println("Error in watch logs")
+		return func () {}, err
+	}
+
+	removeListener := func () {
+		subscription.Unsubscribe()
+		close(logs)
+	}
+
+	go func() {
+		for log := range logs {
+			event, err := events.transformEvent(eventName, log)
+			if err != nil {
+				return
+			}
+
+			listener(event)
+		}
+	}()
+
+	return removeListener, nil
 }
 
-func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, options EventQueryOptions) ([]map[string]interface{}, error) {
+func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, options EventQueryOptions) ([]ContractEvent, error) {
 	eventSignature, ok := events.abi.Events[eventName]
 	if !ok {
 		return nil, fmt.Errorf("Event with name '%s' not found", eventName)
 	}
 
-
-
 	query := [][]interface{}{{eventSignature.ID}}
 	if options.Filters != nil {
-		args := []interface{}{}
+		// args := []interface{}{}
 		for _, input := range eventSignature.Inputs {
 			// For all indexed inputs, check if a filter is provided
-			if value, ok := (*options.Filters)[input.Name]; ok && input.Indexed {
+			if value, ok := options.Filters[input.Name]; ok && input.Indexed {
 				// If a filter is provided, check if the type is correct
 				if reflect.TypeOf(value) != input.Type.GetType() {
 					return nil, fmt.Errorf(
@@ -70,11 +95,12 @@ func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, o
 				}
 
 				// If the type is correct, add the filter to the query
-				args = append(args, value)
+				query = append(query, []interface{}{value})
+			} else {
+				// If no filter is provided, add an empty value
+				query = append(query, []interface{}{})
 			}
 		}
-
-		query = append(query, args)
 	}
 	
 	topics, err := abi.MakeTopics(query...)
@@ -96,11 +122,23 @@ func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, o
 		return nil, err
 	}
 
-	parsedLogs := []map[string]interface{}{}
+	parsedLogs := []ContractEvent{}
 	for _, log := range logs {
-		event := map[string]interface{}{}
-		events.contract.UnpackLogIntoMap(event, eventName, log)
+		event, err := events.transformEvent(eventName, log)
+		if err != nil {
+			return nil, err
+		}
+
+		parsedLogs = append(parsedLogs, event)
 	}
 
 	return parsedLogs, nil
+}
+
+func (events *ContractEvents) transformEvent(eventName string, log types.Log) (ContractEvent, error) {
+	parsedLog := map[string]interface{}{}
+	events.contract.UnpackLogIntoMap(parsedLog, eventName, log)
+	event := ContractEvent{ eventName, parsedLog, log }
+
+	return event, nil
 }
