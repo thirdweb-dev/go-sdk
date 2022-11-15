@@ -77,6 +77,8 @@ type SmartContract struct {
 	abi      *abi.ABI
 	contract *bind.BoundContract
 	helper   *contractHelper
+	Encoder  *ContractEncoder
+	Events   *ContractEvents
 }
 
 func newSmartContract(provider *ethclient.Client, address common.Address, contractAbi string, privateKey string, storage storage) (*SmartContract, error) {
@@ -92,10 +94,24 @@ func newSmartContract(provider *ethclient.Client, address common.Address, contra
 	}
 
 	boundContract := bind.NewBoundContract(address, parsedAbi, provider, provider, provider)
+
+	encoder, err := newContractEncoder(contractAbi, helper)
+	if err != nil {
+		return nil, err
+	}
+
+
+	events, err := newContractEvents(contractAbi, helper)
+	if err != nil {
+		return nil, err
+	}
+
 	contract := &SmartContract{
 		abi:      &parsedAbi,
 		contract: boundContract,
 		helper:   helper,
+		Encoder:  encoder,
+		Events:   events,
 	}
 
 	return contract, nil
