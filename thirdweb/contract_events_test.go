@@ -12,20 +12,30 @@ func TestEventListener(t *testing.T) {
 	nft := getNft()
 
 	events := []ContractEvent{}
-	_, err := nft.Events.AddEventListener(
+	subscription := nft.Events.AddEventListener(
 		context.Background(), 
 		"TokensMinted", 
 		func (event ContractEvent) {
 			events = append(events, event)
 		},
 	)
+
+	_, err := nft.Mint(context.Background(), &NFTMetadataInput{})
 	assert.Nil(t, err)
 
 	_, err = nft.Mint(context.Background(), &NFTMetadataInput{})
 	assert.Nil(t, err)
 
-	<- time.After(1 * time.Second)
-	assert.Equal(t, 1, len(events))
+	<- time.After(2 * time.Second)
+
+	subscription.Unsubscribe()
+
+	_, err = nft.Mint(context.Background(), &NFTMetadataInput{})
+	assert.Nil(t, err)
+
+	<- time.After(2 * time.Second)
+
+	assert.Equal(t, 2, len(events))
 	assert.Equal(t, events[0].EventName, "TokensMinted")
 }
 

@@ -53,17 +53,18 @@ func newContractEvents(contractAbi string, helper *contractHelper) (*ContractEve
 	}, nil
 }
 
-func (events *ContractEvents) AddEventListener(ctx context.Context, eventName string, listener func (event ContractEvent)) (EventSubscription, error) {
+func (events *ContractEvents) AddEventListener(ctx context.Context, eventName string, listener func (event ContractEvent)) (EventSubscription) {
 	ticker := time.NewTicker(500 * time.Millisecond)
 	done := make(chan bool)
 	errors := make(chan error)
 
-	lastBlockNumber, err := events.helper.GetProvider().BlockNumber(ctx)
-	if err != nil {
-		return EventSubscription{}, err
-	}
-
 	go func() {
+		nextBlockToCheck, err := events.helper.GetProvider().BlockNumber(ctx)
+		if err != nil {
+			errors <- err
+			return
+		}
+
 		for {
 			select {
 			case <- done:
@@ -75,9 +76,10 @@ func (events *ContractEvents) AddEventListener(ctx context.Context, eventName st
 					continue
 				}
 
-				if currentBlockNumber > lastBlockNumber {
+				if currentBlockNumber >= nextBlockToCheck {
 					recentEvents, err := events.GetEvents(ctx, eventName, EventQueryOptions{
-						FromBlock: lastBlockNumber,
+						FromBlock: nextBlockToCheck,
+						ToBlock: &currentBlockNumber,
 					})
 					if err != nil {
 						errors <- err
@@ -88,7 +90,7 @@ func (events *ContractEvents) AddEventListener(ctx context.Context, eventName st
 						listener(event)
 					}
 
-					lastBlockNumber = currentBlockNumber
+					nextBlockToCheck = currentBlockNumber + 1
 				}
 			}
 		}
@@ -103,7 +105,7 @@ func (events *ContractEvents) AddEventListener(ctx context.Context, eventName st
 		},
 	}
 
-	return subscription, nil
+	return subscription
 }
 
 func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, options EventQueryOptions) ([]ContractEvent, error) {
