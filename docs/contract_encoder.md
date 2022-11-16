@@ -35,3 +35,13 @@ fmt.Println(tx.Data()) // Now you can access all transaction data, like the foll
 fmt.Println(tx.Nonce())
 fmt.Println(tx.Value())
 ```
+
+## type [ContractEvent](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_events.go#L49-L53>)
+
+```go
+type ContractEvent struct {
+    EventName   string
+    Data        map[string]interface{}
+    Transaction types.Log
+}
+```

@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"context"
+
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -27,6 +28,7 @@ type Token struct {
 	helper *contractHelper
 	*ERC20
 	Encoder *ContractEncoder
+	Events  *ContractEvents
 }
 
 func newToken(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Token, error) {
@@ -43,11 +45,17 @@ func newToken(provider *ethclient.Client, address common.Address, privateKey str
 				return nil, err
 			}
 
+			events, err := newContractEvents(abi.TokenERC20ABI, helper)
+			if err != nil {
+				return nil, err
+			}
+
 			token := &Token{
 				contractAbi,
 				helper,
 				erc20,
 				encoder,
+				events,
 			}
 			return token, nil
 		}

@@ -64,10 +64,13 @@ tx, err := contract.Call("mintTo", "{{wallet_address}}", "ipfs://...")
 ```
 
 ```go
-type SmartContract struct {}
+type SmartContract struct {
+    Encoder *ContractEncoder
+    Events  *ContractEvents
+}
 ```
 
-### func \(\*SmartContract\) [Call](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/smart_contract.go#L118>)
+### func \(\*SmartContract\) [Call](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/smart_contract.go#L134>)
 
 ```go
 func (c *SmartContract) Call(ctx context.Context, method string, args ...interface{}) (interface{}, error)

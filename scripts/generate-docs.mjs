@@ -1,147 +1,150 @@
 import fs from "fs";
 
-const docPath = "./docs/doc.md"
+const docPath = "./docs/doc.md";
 
 // Delimiters are used to split the initially generated single doc file into multiple files
 // We search for the structure `## type [delimiter]` and create a new file for each delimiter
 const delimiters = {
-  "ContractDeployer": {
+  ContractDeployer: {
     name: "contract_deployer.md",
-    header: "Contract Deployments"
+    header: "Contract Deployments",
   },
-  "ContractEncoder": {
+  ContractEncoder: {
     name: "contract_encoder.md",
-    header: "Contract Encoder"
+    header: "Contract Encoder",
   },
-  "Currency": {
+  ContractEvents: {
+    name: "contract_events.md",
+    header: "Contract Events",
+  },
+  Currency: {
     name: "delete.md",
-    header: "Delete"
+    header: "Delete",
   },
-  "ERC20": {
+  ERC20: {
     name: "erc20.md",
     header: "ERC20",
   },
-  "ERC721SignatureMinting": {
+  ERC721SignatureMinting: {
     name: "erc721_signature_minting.md",
     header: "ERC721 Signature Minting",
   },
-  "ERC721": {
+  ERC721: {
     name: "erc721.md",
     header: "ERC721",
   },
-  "ERC1155SignatureMinting": {
+  ERC1155SignatureMinting: {
     name: "erc1155_signature_minting.md",
     header: "ERC1155 Signature Minting",
   },
-  "ERC1155": {
+  ERC1155: {
     name: "erc1155.md",
     header: "ERC1155",
   },
-  "Edition": {
+  Edition: {
     name: "edition.md",
     header: "Edition",
   },
-  "EditionDrop": {
+  EditionDrop: {
     name: "edition_drop.md",
     header: "Edition Drop",
   },
-  "EditionDropClaimConditions": {
+  EditionDropClaimConditions: {
     name: "edition_drop_claim_conditions.md",
     header: "Edition Drop",
   },
-  "EditionMetadata": {
+  EditionMetadata: {
     name: "delete.md",
     header: "Delete",
   },
-  "LoginOptions": {
+  LoginOptions: {
     name: "delete.md",
     header: "Delete",
   },
-  "IpfsStorage": {
+  IpfsStorage: {
     name: "storage.md",
     header: `IPFS Storage`,
   },
-  "Marketplace": {
+  Marketplace: {
     name: "marketplace.md",
     header: "Marketplace",
   },
-  "MarketplaceEncoder": {
+  MarketplaceEncoder: {
     name: "marketplace_encoder.md",
     header: "Marketplace Encoder",
   },
-  "Multiwrap": {
+  Multiwrap: {
     name: "multiwrap.md",
     header: "Multiwrap",
   },
-  "NewDirectListing": {
+  NewDirectListing: {
     name: "delete.md",
     header: "Delete",
   },
-  "NFTCollection": {
+  NFTCollection: {
     name: "nft_collection.md",
     header: "NFT Collection",
   },
-  "NFTDrop": {
+  NFTDrop: {
     name: "nft_drop.md",
     header: "NFT Drop",
   },
-  "NFTDropClaimConditions": {
+  NFTDropClaimConditions: {
     name: "nft_drop_claim_conditions.md",
     header: "NFT Drop Claim Conditions",
   },
-  "NFTDropEncoder": {
+  NFTDropEncoder: {
     name: "nft_drop_encoder.md",
     header: "NFT Drop Encoder",
   },
-  "NFTMetadata": {
+  NFTMetadata: {
     name: "delete.md",
     header: "Delete",
   },
-  "ProviderHandler": {
+  ProviderHandler: {
     name: "provider.md",
     header: "Provider",
   },
-  "SDKOptions": {
+  SDKOptions: {
     name: "delete.md",
     header: "Delete",
   },
-  "SmartContract": {
+  SmartContract: {
     name: "custom.md",
     header: "Custom Contracts",
   },
-  "ThirdwebSDK": {
+  ThirdwebSDK: {
     name: "sdk.md",
     header: "ThirdwebSDK",
   },
-  "Token": {
+  Token: {
     name: "token.md",
     header: "Token",
   },
-  "WalletAuthenticationOptions": {
-    name: "delete.md",
-    header: "Delete"
-  },
-  "WalletAuthenticator": {
-    name: "wallet_authenticator.md",
-    header: "Wallet Authenticator",
-  },
-  "WrappedToken": {
+  WalletAuthenticationOptions: {
     name: "delete.md",
     header: "Delete",
   },
-}
+  WalletAuthenticator: {
+    name: "wallet_authenticator.md",
+    header: "Wallet Authenticator",
+  },
+  WrappedToken: {
+    name: "delete.md",
+    header: "Delete",
+  },
+};
 
 async function main() {
   const lines = fs.readFileSync(docPath).toString().split("\n");
-  let file = ""
-  let name = "start.md"
-  let header = ""
+  let file = "";
+  let name = "start.md";
+  let header = "";
 
   for (const line of lines) {
     let matched = false;
 
     for (const delimiter of Object.keys(delimiters)) {
-
       // Get the actual type delimiter to split the file by
       const typeDelimeter = `## type [${delimiter}]`;
 
@@ -149,35 +152,37 @@ async function main() {
         matched = true;
 
         // Do basic formatting on doc output to make them nicer
-        file = file.replaceAll("    // contains filtered or unexported fields\n", "").replaceAll("{\n}", "{}").replaceAll("\\,", ",")
-        file = `\n## ${header}${file}`
-        
+        file = file
+          .replaceAll("    // contains filtered or unexported fields\n", "")
+          .replaceAll("{\n}", "{}")
+          .replaceAll("\\,", ",");
+        file = `\n## ${header}${file}`;
+
         fs.writeFile(`./docs/${name}`, file, (err) => {
           if (err) throw err;
-        })
+        });
 
-        const data = delimiters[delimiter]
-        name = data.name
-        header = data.header
+        const data = delimiters[delimiter];
+        name = data.name;
+        header = data.header;
 
-        file = ""
+        file = "";
       }
     }
 
     if (!matched) {
-      file += "\n" + line
+      file += "\n" + line;
     }
   }
 
-
   fs.writeFile(`./docs/${name}`, file, (err) => {
     if (err) throw err;
-  })
+  });
 
-  const README = fs.readFileSync("./README.md").toString()
+  const README = fs.readFileSync("./README.md").toString();
   fs.writeFile("./docs/index.md", README, (err) => {
     if (err) throw err;
-  })
+  });
 }
 
-main()
+main();

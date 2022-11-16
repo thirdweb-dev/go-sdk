@@ -32,6 +32,7 @@ type Marketplace struct {
 	helper  *contractHelper
 	storage storage
 	Encoder *MarketplaceEncoder
+	Events  *ContractEvents
 }
 
 func newMarketplace(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Marketplace, error) {
@@ -45,11 +46,17 @@ func newMarketplace(provider *ethclient.Client, address common.Address, privateK
 			return nil, err
 		}
 
+		events, err := newContractEvents(abi.MarketplaceABI, helper)
+		if err != nil {
+			return nil, err
+		}
+
 		marketplace := &Marketplace{
 			Abi:     contractAbi,
 			helper:  helper,
 			storage: storage,
 			Encoder: encoder,
+			Events: events,
 		}
 		return marketplace, nil
 	}
