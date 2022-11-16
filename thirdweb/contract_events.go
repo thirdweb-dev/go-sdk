@@ -183,21 +183,23 @@ func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, o
 		// args := []interface{}{}
 		for _, input := range eventSignature.Inputs {
 			// For all indexed inputs, check if a filter is provided
-			if value, ok := options.Filters[input.Name]; ok && input.Indexed {
-				// If a filter is provided, check if the type is correct
-				if reflect.TypeOf(value) != input.Type.GetType() {
-					return nil, fmt.Errorf(
-						"Filter for indexed input '%s' is of wrong type, expected type '%s'", 
-						input.Name, 
-						input.Type.GetType().String(),
-					)
+			if input.Indexed {
+				if value, ok := options.Filters[input.Name]; ok {
+					// If a filter is provided, check if the type is correct
+					if reflect.TypeOf(value) != input.Type.GetType() {
+						return nil, fmt.Errorf(
+							"Filter for indexed input '%s' is of wrong type, expected type '%s'", 
+							input.Name, 
+							input.Type.GetType().String(),
+						)
+					}
+	
+					// If the type is correct, add the filter to the query
+					query = append(query, []interface{}{value})
+				} else {
+					// If no filter is provided, add an empty value
+					query = append(query, []interface{}{})
 				}
-
-				// If the type is correct, add the filter to the query
-				query = append(query, []interface{}{value})
-			} else {
-				// If no filter is provided, add an empty value
-				query = append(query, []interface{}{})
 			}
 		}
 	}
