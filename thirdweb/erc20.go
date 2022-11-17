@@ -149,7 +149,7 @@ func (erc20 *ERC20) Transfer(ctx context.Context, to string, amount float64) (*t
 		return nil, err
 	}
 
-	txOpts, err := erc20.helper.getTxOptions(ctx)
+	txOpts, err := erc20.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func (erc20 *ERC20) Transfer(ctx context.Context, to string, amount float64) (*t
 		return nil, err
 	}
 
-	return erc20.helper.awaitTx(tx.Hash())
+	return erc20.helper.AwaitTx(tx.Hash())
 }
 
 // Transfer a specified amount of tokens from one specified address to another.
@@ -184,7 +184,7 @@ func (erc20 *ERC20) TransferFrom(ctx context.Context, from string, to string, am
 		return nil, err
 	}
 
-	txOpts, err := erc20.helper.getTxOptions(ctx)
+	txOpts, err := erc20.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -193,7 +193,7 @@ func (erc20 *ERC20) TransferFrom(ctx context.Context, from string, to string, am
 		return nil, err
 	}
 
-	return erc20.helper.awaitTx(tx.Hash())
+	return erc20.helper.AwaitTx(tx.Hash())
 }
 
 // Sets the allowance of a wallet to spend the connected wallets funds.
@@ -216,7 +216,7 @@ func (erc20 *ERC20) SetAllowance(ctx context.Context, spender string, amount flo
 		return nil, err
 	}
 
-	txOpts, err := erc20.helper.getTxOptions(ctx)
+	txOpts, err := erc20.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -225,7 +225,7 @@ func (erc20 *ERC20) SetAllowance(ctx context.Context, spender string, amount flo
 		return nil, err
 	}
 
-	return erc20.helper.awaitTx(tx.Hash())
+	return erc20.helper.AwaitTx(tx.Hash())
 }
 
 // Transfer tokens from the connected wallet to many wallets.
@@ -269,7 +269,7 @@ func (erc20 *ERC20) TransferBatch(ctx context.Context, args []*TokenAmount) (*ty
 		encoded = append(encoded, tx.Data())
 	}
 
-	txOpts, err := erc20.helper.getTxOptions(ctx)
+	txOpts, err := erc20.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -278,7 +278,7 @@ func (erc20 *ERC20) TransferBatch(ctx context.Context, args []*TokenAmount) (*ty
 		return nil, err
 	}
 
-	return erc20.helper.awaitTx(tx.Hash())
+	return erc20.helper.AwaitTx(tx.Hash())
 }
 
 // Burn a specified amount of tokens from the connected wallet.
@@ -297,7 +297,7 @@ func (erc20 *ERC20) Burn(ctx context.Context, amount float64) (*types.Transactio
 		return nil, err
 	}
 
-	txOpts, err := erc20.helper.getTxOptions(ctx)
+	txOpts, err := erc20.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -306,7 +306,7 @@ func (erc20 *ERC20) Burn(ctx context.Context, amount float64) (*types.Transactio
 		return nil, err
 	}
 
-	return erc20.helper.awaitTx(tx.Hash())
+	return erc20.helper.AwaitTx(tx.Hash())
 }
 
 // Burn a specified amount of tokens from a specific wallet.
@@ -329,7 +329,7 @@ func (erc20 *ERC20) BurnFrom(ctx context.Context, holder string, amount float64)
 		return nil, err
 	}
 
-	txOpts, err := erc20.helper.getTxOptions(ctx)
+	txOpts, err := erc20.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -338,7 +338,7 @@ func (erc20 *ERC20) BurnFrom(ctx context.Context, holder string, amount float64)
 		return nil, err
 	}
 
-	return erc20.helper.awaitTx(tx.Hash())
+	return erc20.helper.AwaitTx(tx.Hash())
 }
 
 func (erc20 *ERC20) getValue(value *big.Int) (*CurrencyValue, error) {

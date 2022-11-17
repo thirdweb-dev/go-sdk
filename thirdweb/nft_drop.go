@@ -28,9 +28,9 @@ import (
 //
 //	contract, err := sdk.GetNFTDrop("{{contract_address}}")
 type NFTDrop struct {
-	Abi    *abi.DropERC721
-	helper *contractHelper
 	*ERC721
+	Abi    *abi.DropERC721
+	Helper *contractHelper
 	ClaimConditions *NFTDropClaimConditions
 	Encoder         *NFTDropEncoder
 	Events          *ContractEvents
@@ -62,9 +62,9 @@ func newNFTDrop(provider *ethclient.Client, address common.Address, privateKey s
 				}
 
 				nftCollection := &NFTDrop{
+					erc721,
 					contractAbi,
 					helper,
-					erc721,
 					claimConditions,
 					encoder,
 					events,
@@ -242,8 +242,8 @@ func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataIn
 	}
 	fileStartNumber := int(startNumber.Int64())
 
-	contractAddress := drop.helper.getAddress().String()
-	signerAddress := drop.helper.GetSignerAddress().String()
+	contractAddress := drop.Helper.getAddress().String()
+	signerAddress := drop.Helper.GetSignerAddress().String()
 
 	data := []interface{}{}
 	for _, metadata := range metadatas {
@@ -260,7 +260,7 @@ func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataIn
 		signerAddress,
 	)
 
-	txOpts, err := drop.helper.getTxOptions(ctx)
+	txOpts, err := drop.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -274,7 +274,7 @@ func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataIn
 		return nil, err
 	}
 
-	return drop.helper.awaitTx(tx.Hash())
+	return drop.Helper.AwaitTx(tx.Hash())
 }
 
 // Claim NFTs from this contract to the connect wallet.
@@ -283,7 +283,7 @@ func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataIn
 //
 // returns: the transaction receipt of the claim
 func (drop *NFTDrop) Claim(ctx context.Context, quantity int) (*types.Transaction, error) {
-	address := drop.helper.GetSignerAddress().String()
+	address := drop.Helper.GetSignerAddress().String()
 	return drop.ClaimTo(ctx, address, quantity)
 }
 
@@ -307,12 +307,12 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 		return nil, err
 	}
 	
-	claimVerification, err := drop.prepareClaim(ctx, quantity, true)
+	claimVerification, err := drop.prepareClaim(ctx, destinationAddress, quantity, true)
 	if err != nil {
 		return nil, err
 	}
 
-	txOpts, err := drop.helper.getTxOptions(ctx)
+	txOpts, err := drop.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -339,7 +339,7 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 		return nil, err
 	}
 
-	return drop.helper.awaitTx(tx.Hash())
+	return drop.Helper.AwaitTx(tx.Hash())
 }
 
 func (drop *NFTDrop) GetClaimArguments(
@@ -355,17 +355,10 @@ func (drop *NFTDrop) GetClaimArguments(
 		return nil, err
 	}
 	
-	claimVerification, err := drop.prepareClaim(ctx, quantity, false)
+	claimVerification, err := drop.prepareClaim(ctx, destinationAddress, quantity, false)
 	if err != nil {
 		return nil, err
 	}
-
-	txOpts, err := drop.helper.getTxOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	txOpts.Value = claimVerification.Value
 
 	proof := abi.IDropAllowlistProof{
 		Proof: claimVerification.Proofs,
@@ -375,7 +368,7 @@ func (drop *NFTDrop) GetClaimArguments(
 	}
 
 	return &ClaimArguments{ 
-		txOpts, 
+		claimVerification.Value, 
 		common.HexToAddress(destinationAddress), 
 		big.NewInt(int64(quantity)),  
 		common.HexToAddress(active.CurrencyAddress), 
@@ -385,23 +378,24 @@ func (drop *NFTDrop) GetClaimArguments(
 	}, nil
 }
 
-func (drop *NFTDrop) prepareClaim(ctx context.Context, quantity int, handleApproval bool) (*ClaimVerification, error) {
+func (drop *NFTDrop) prepareClaim(ctx context.Context, addressToClaim string, quantity int, handleApproval bool) (*ClaimVerification, error) {
 	active, err := drop.ClaimConditions.GetActive()
 	if err != nil {
 		return nil, err
 	}
 
-	merkleMetadata, err := drop.ClaimConditions.GetMerkleMetadata()
+	merkleMetadata, err := drop.ClaimConditions.getMerkleMetadata()
 	if err != nil {
 		return nil, err
 	}
 
 	claimVerification, err := prepareClaim(
 		ctx,
+		addressToClaim,
 		quantity,
 		active,
 		merkleMetadata,
-		drop.helper,
+		drop.Helper,
 		drop.storage,
 	)
 	if err != nil {
@@ -431,7 +425,7 @@ func (drop *NFTDrop) prepareClaim(ctx context.Context, quantity int, handleAppro
 			if !isNativeToken(currencyAddress) {
 				err := approveErc20Allowance(
 					ctx,
-					drop.helper,
+					drop.Helper,
 					currencyAddress,
 					pricePerToken,
 					quantity,

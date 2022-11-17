@@ -238,7 +238,7 @@ func setErc20Allowance(
 
 		if allowance.Cmp(value) < 0 {
 			// We can get options from the contract instead of ERC20 because they will be the same
-			approvalOpts, err := contractToApprove.getTxOptions(txOpts.Context)
+			approvalOpts, err := contractToApprove.GetTxOptions(txOpts.Context)
 			if err != nil {
 				return err
 			}
@@ -248,7 +248,7 @@ func setErc20Allowance(
 				return err
 			}
 
-			_, err = contractToApprove.awaitTx(tx.Hash())
+			_, err = contractToApprove.AwaitTx(tx.Hash())
 			if err != nil {
 				return err
 			}
@@ -286,7 +286,7 @@ func approveErc20Allowance(
 	totalPrice := price.Mul(big.NewInt(int64(quantity)), price)
 
 	if allowance.Cmp(totalPrice) < 0 {
-		txOpts, err := erc20.getTxOptions(ctx)
+		txOpts, err := erc20.GetTxOptions(ctx)
 		if err != nil {
 			return err
 		}
@@ -295,7 +295,7 @@ func approveErc20Allowance(
 			return err
 		}
 
-		contractToApprove.awaitTx(tx.Hash())
+		contractToApprove.AwaitTx(tx.Hash())
 	}
 
 	return nil
@@ -326,13 +326,13 @@ func hasErc20Allowance(contractToApprove *contractHelper, currencyAddress string
 
 func prepareClaim(
 	ctx context.Context,
+	addressToClaim string,
 	quantity int,
 	activeClaimCondition *ClaimConditionOutput,
 	merkleMetadata *map[string]string,
 	contractHelper *contractHelper,
 	storage storage,
 ) (*ClaimVerification, error) {
-	addressToClaim := contractHelper.GetSignerAddress()
 	maxClaimable := activeClaimCondition.MaxClaimablePerWallet
 	proofs := [][32]byte{}
 	priceInProof := activeClaimCondition.Price
@@ -346,7 +346,7 @@ func prepareClaim(
 	if !strings.HasPrefix(hex.EncodeToString(activeClaimCondition.MerkleRootHash[:]), zeroAddress) {
 		snapshotEntry, err := fetchSnapshotEntryForAddress(
 			ctx,
-			addressToClaim,
+			common.HexToAddress(addressToClaim),
 			activeClaimCondition.MerkleRootHash,
 			merkleMetadata,
 			contractHelper.GetProvider(),
@@ -740,7 +740,7 @@ func handleTokenApproval(
 				return err
 			}
 
-			txOpts, err := helper.getTxOptions(ctx)
+			txOpts, err := helper.GetTxOptions(ctx)
 			if err != nil {
 				return err
 			}
@@ -751,7 +751,7 @@ func handleTokenApproval(
 					return err
 				}
 
-				_, err = helper.awaitTx(tx.Hash())
+				_, err = helper.AwaitTx(tx.Hash())
 				if err != nil {
 					return err
 				}
@@ -769,7 +769,7 @@ func handleTokenApproval(
 		}
 
 		if !approved {
-			txOpts, err := helper.getTxOptions(ctx)
+			txOpts, err := helper.GetTxOptions(ctx)
 			if err != nil {
 				return err
 			}
@@ -779,7 +779,7 @@ func handleTokenApproval(
 				return err
 			}
 
-			_, err = helper.awaitTx(tx.Hash())
+			_, err = helper.AwaitTx(tx.Hash())
 			if err != nil {
 				return err
 			}

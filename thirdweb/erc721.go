@@ -184,14 +184,14 @@ func (erc721 *ERC721) IsApproved(ctx context.Context, address string, operator s
 //
 //	tx, err := contract.Transfer(context.Background(), to, tokenId)
 func (erc721 *ERC721) Transfer(ctx context.Context, to string, tokenId int) (*types.Transaction, error) {
-	txOpts, err := erc721.helper.getTxOptions(ctx)
+	txOpts, err := erc721.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if tx, err := erc721.abi.SafeTransferFrom(txOpts, erc721.helper.GetSignerAddress(), common.HexToAddress(to), big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
-		return erc721.helper.awaitTx(tx.Hash())
+		return erc721.helper.AwaitTx(tx.Hash())
 	}
 }
 
@@ -206,14 +206,14 @@ func (erc721 *ERC721) Transfer(ctx context.Context, to string, tokenId int) (*ty
 //	tokenId := 0
 //	tx, err := contract.Burn(context.Background(), tokenId)
 func (erc721 *ERC721) Burn(ctx context.Context, tokenId int) (*types.Transaction, error) {
-	txOpts, err := erc721.helper.getTxOptions(ctx)
+	txOpts, err := erc721.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if tx, err := erc721.abi.Burn(txOpts, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
-		return erc721.helper.awaitTx(tx.Hash())
+		return erc721.helper.AwaitTx(tx.Hash())
 	}
 }
 
@@ -227,14 +227,14 @@ func (erc721 *ERC721) Burn(ctx context.Context, tokenId int) (*types.Transaction
 //
 // returns: the transaction receipt of the approval
 func (erc721 *ERC721) SetApprovalForAll(ctx context.Context, operator string, approved bool) (*types.Transaction, error) {
-	txOpts, err := erc721.helper.getTxOptions(ctx)
+	txOpts, err := erc721.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if tx, err := erc721.abi.SetApprovalForAll(txOpts, common.HexToAddress(operator), approved); err != nil {
 		return nil, err
 	} else {
-		return erc721.helper.awaitTx(tx.Hash())
+		return erc721.helper.AwaitTx(tx.Hash())
 	}
 }
 
@@ -247,14 +247,14 @@ func (erc721 *ERC721) SetApprovalForAll(ctx context.Context, operator string, ap
 //
 // returns: the transaction receipt of the approval
 func (erc721 *ERC721) SetApprovalForToken(ctx context.Context, operator string, tokenId int) (*types.Transaction, error) {
-	txOpts, err := erc721.helper.getTxOptions(ctx)
+	txOpts, err := erc721.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if tx, err := erc721.abi.Approve(txOpts, common.HexToAddress(operator), big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
-		return erc721.helper.awaitTx(tx.Hash())
+		return erc721.helper.AwaitTx(tx.Hash())
 	}
 }
 

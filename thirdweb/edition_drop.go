@@ -26,9 +26,9 @@ import (
 //
 //	contract, err := sdk.GetEditionDrop("{{contract_address}}")
 type EditionDrop struct {
-	abi    *abi.DropERC1155
-	helper *contractHelper
 	*ERC1155
+	abi             *abi.DropERC1155
+	Helper          *contractHelper
 	ClaimConditions *EditionDropClaimConditions
 	Encoder         *ContractEncoder
 	Events          *ContractEvents
@@ -60,9 +60,9 @@ func newEditionDrop(provider *ethclient.Client, address common.Address, privateK
 				}
 
 				edition := &EditionDrop{
+					erc1155,
 					contractAbi,
 					helper,
-					erc1155,
 					claimConditions,
 					encoder,
 					events,
@@ -114,8 +114,8 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 	}
 	fileStartNumber := int(startNumber.Int64())
 
-	contractAddress := drop.helper.getAddress().String()
-	signerAddress := drop.helper.GetSignerAddress().String()
+	contractAddress := drop.Helper.getAddress().String()
+	signerAddress := drop.Helper.GetSignerAddress().String()
 
 	data := []interface{}{}
 	for _, metadata := range metadatas {
@@ -131,7 +131,7 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 		signerAddress,
 	)
 
-	txOpts, err := drop.helper.getTxOptions(ctx)
+	txOpts, err := drop.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 		return nil, err
 	}
 
-	return drop.helper.awaitTx(tx.Hash())
+	return drop.Helper.AwaitTx(tx.Hash())
 }
 
 // Claim NFTs from this contract to the connect wallet.
@@ -156,7 +156,7 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 //
 // returns: the transaction receipt of the claim
 func (drop *EditionDrop) Claim(ctx context.Context, tokenId int, quantity int) (*types.Transaction, error) {
-	address := drop.helper.GetSignerAddress().String()
+	address := drop.Helper.GetSignerAddress().String()
 	return drop.ClaimTo(ctx, address, tokenId, quantity)
 }
 
@@ -178,7 +178,7 @@ func (drop *EditionDrop) Claim(ctx context.Context, tokenId int, quantity int) (
 //
 //	tx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)
 func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string, tokenId int, quantity int) (*types.Transaction, error) {
-	claimVerification, err := drop.prepareClaim(ctx, tokenId, quantity)
+	claimVerification, err := drop.prepareClaim(ctx, destinationAddress, tokenId, quantity)
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +188,7 @@ func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string,
 		return nil, err
 	}
 
-	txOpts, err := drop.helper.getTxOptions(ctx)
+	txOpts, err := drop.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -216,10 +216,10 @@ func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string,
 		return nil, err
 	}
 
-	return drop.helper.awaitTx(tx.Hash())
+	return drop.Helper.AwaitTx(tx.Hash())
 }
 
-func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity int) (*ClaimVerification, error) {
+func (drop *EditionDrop) prepareClaim(ctx context.Context, addressToClaim string, tokenId int, quantity int) (*ClaimVerification, error) {
 	claimCondition, err := drop.ClaimConditions.GetActive(ctx, tokenId)
 	if err != nil {
 		return nil, err
@@ -234,10 +234,11 @@ func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity
 
 	claimVerification, err := prepareClaim(
 		ctx,
+		addressToClaim,
 		quantity,
 		claimCondition,
 		merkleMetadata,
-		drop.helper,
+		drop.Helper,
 		drop.storage,
 	)
 	if err != nil {

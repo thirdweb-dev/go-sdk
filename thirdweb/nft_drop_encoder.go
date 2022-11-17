@@ -190,13 +190,15 @@ func (encoder *NFTDropEncoder) prepareClaim(ctx context.Context, quantity int) (
 		return nil, err
 	}
 
-	merkleMetadata, err := encoder.claimConditions.GetMerkleMetadata()
+	merkleMetadata, err := encoder.claimConditions.getMerkleMetadata()
 	if err != nil {
 		return nil, err
 	}
 
+	address := encoder.helper.getAddress().String()
 	claimVerification, err := prepareClaim(
 		ctx,
+		address,
 		quantity,
 		active,
 		merkleMetadata,

@@ -165,7 +165,7 @@ func TestBuyoutListingNft(t *testing.T) {
 	})
 	assert.Nil(t, err)
 
-	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
+	marketplace.Helper.UpdatePrivateKey(secondaryPrivateKey)
 	_, err = marketplace.BuyoutListing(context.Background(), listingId, 1)
 	assert.Nil(t, err)
 
@@ -207,7 +207,7 @@ func TestBuyoutListingEdition(t *testing.T) {
 
 	assert.Nil(t, err)
 
-	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
+	marketplace.Helper.UpdatePrivateKey(secondaryPrivateKey)
 	_, err = marketplace.BuyoutListing(context.Background(), listingId, 10)
 	assert.Nil(t, err)
 
@@ -286,7 +286,7 @@ func TestGetListingFilters(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, len(listings), 0)
 
-	marketplace.helper.UpdatePrivateKey(secondaryPrivateKey)
+	marketplace.Helper.UpdatePrivateKey(secondaryPrivateKey)
 	_, err = marketplace.BuyoutListing(context.Background(), 2, 10)
 	assert.Nil(t, err)
 
@@ -309,7 +309,7 @@ func TestCreateListingUnapprovedEncoder(t *testing.T) {
 		BuyoutPricePerToken:      1.0,
 	})
 	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), marketplace.helper.getAddress().Hex())
+	assert.Contains(t, err.Error(), marketplace.Helper.getAddress().Hex())
 	assert.Contains(t, err.Error(), nft.helper.getAddress().Hex())
 	assert.Contains(t, err.Error(), adminWallet)
 	assert.Contains(t, err.Error(), "marketplace.Encoder.ApproveCreateListing")
@@ -334,7 +334,7 @@ func TestBuyoutListingUnapprovedEncoder(t *testing.T) {
 	_, err = marketplace.Encoder.BuyoutListing(context.Background(), adminWallet, listingId, 10, adminWallet)
 
 	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), marketplace.helper.getAddress().Hex())
+	assert.Contains(t, err.Error(), marketplace.Helper.getAddress().Hex())
 	assert.Contains(t, err.Error(), token.helper.getAddress().Hex())
 	assert.Contains(t, err.Error(), adminWallet)
 	assert.Contains(t, err.Error(), "marketplace.Encoder.ApproveBuyoutListing")
@@ -357,12 +357,12 @@ func TestCreateListingApprovedEncoder(t *testing.T) {
 	toAddress := tx.To()
 	assert.Equal(t, toAddress.Hex(), nft.helper.getAddress().Hex())
 
-	isApproved, err := nft.IsApproved(context.Background(), adminWallet, marketplace.helper.getAddress().Hex())
+	isApproved, err := nft.IsApproved(context.Background(), adminWallet, marketplace.Helper.getAddress().Hex())
 	assert.Equal(t, isApproved, false)
 
-	nft.SetApprovalForAll(context.Background(), marketplace.helper.getAddress().Hex(), true)
+	nft.SetApprovalForAll(context.Background(), marketplace.Helper.getAddress().Hex(), true)
 
-	isApproved, err = nft.IsApproved(context.Background(), adminWallet, marketplace.helper.getAddress().Hex())
+	isApproved, err = nft.IsApproved(context.Background(), adminWallet, marketplace.Helper.getAddress().Hex())
 	assert.Equal(t, isApproved, true)
 
 	tx, err = marketplace.Encoder.CreateListing(context.Background(), adminWallet, &NewDirectListing{
@@ -376,7 +376,7 @@ func TestCreateListingApprovedEncoder(t *testing.T) {
 	})
 	assert.Nil(t, err)
 	toAddress = tx.To()
-	assert.Equal(t, toAddress.Hex(), marketplace.helper.getAddress().Hex())
+	assert.Equal(t, toAddress.Hex(), marketplace.Helper.getAddress().Hex())
 }
 
 func TestBuyoutListingApprovedEncoder(t *testing.T) {
@@ -400,12 +400,12 @@ func TestBuyoutListingApprovedEncoder(t *testing.T) {
 	toAddress := tx.To()
 	assert.Equal(t, toAddress.Hex(), token.helper.getAddress().Hex())
 
-	token.SetAllowance(context.Background(), marketplace.helper.getAddress().Hex(), 1000000)
+	token.SetAllowance(context.Background(), marketplace.Helper.getAddress().Hex(), 1000000)
 
 	tx, err = marketplace.Encoder.BuyoutListing(context.Background(), adminWallet, listingId, 10, adminWallet)
 	assert.Nil(t, err)
 	toAddress = tx.To()
-	assert.Equal(t, toAddress.Hex(), marketplace.helper.getAddress().Hex())
+	assert.Equal(t, toAddress.Hex(), marketplace.Helper.getAddress().Hex())
 }
 
 func TestGenericEncoder(t *testing.T) {
@@ -427,6 +427,6 @@ func TestGenericEncoder(t *testing.T) {
 	tx, err := marketplace.Encoder.Encode(context.Background(), adminWallet, "cancelDirectListing", listingId)
 	assert.Nil(t, err)
 	toAddress := tx.To()
-	assert.Equal(t, toAddress.Hex(), marketplace.helper.getAddress().Hex())
+	assert.Equal(t, toAddress.Hex(), marketplace.Helper.getAddress().Hex())
 	assert.Equal(t, hex.EncodeToString(tx.Data()), "7506c84a0000000000000000000000000000000000000000000000000000000000000000")
 }

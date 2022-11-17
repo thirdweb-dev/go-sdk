@@ -24,9 +24,9 @@ import (
 //
 //	contract, err := sdk.GetToken("{{contract_address}}")
 type Token struct {
-	abi    *abi.TokenERC20
-	helper *contractHelper
 	*ERC20
+	abi    *abi.TokenERC20
+	Helper *contractHelper
 	Encoder *ContractEncoder
 	Events  *ContractEvents
 }
@@ -51,9 +51,9 @@ func newToken(provider *ethclient.Client, address common.Address, privateKey str
 			}
 
 			token := &Token{
+				erc20,
 				contractAbi,
 				helper,
-				erc20,
 				encoder,
 				events,
 			}
@@ -66,7 +66,7 @@ func newToken(provider *ethclient.Client, address common.Address, privateKey str
 //
 // returns: vote balance of the connected wallet
 func (token *Token) GetVoteBalance(ctx context.Context) (*CurrencyValue, error) {
-	return token.GetVoteBalanceOf(ctx, token.helper.GetSignerAddress().String())
+	return token.GetVoteBalanceOf(ctx, token.Helper.GetSignerAddress().String())
 }
 
 // Get the voting power of the specified wallet in this token.
@@ -87,7 +87,7 @@ func (token *Token) GetVoteBalanceOf(ctx context.Context, address string) (*Curr
 //
 // returns: delegation address of the connected wallet
 func (token *Token) GetDelegation() (string, error) {
-	return token.GetDelegationOf(token.helper.GetSignerAddress().String())
+	return token.GetDelegationOf(token.Helper.GetSignerAddress().String())
 }
 
 // Get a specified wallets delegatee for this token.
@@ -108,7 +108,7 @@ func (token *Token) GetDelegationOf(address string) (string, error) {
 //
 // returns: transaction receipt of the mint
 func (token *Token) Mint(ctx context.Context, amount float64) (*types.Transaction, error) {
-	return token.MintTo(ctx, token.helper.GetSignerAddress().String(), amount)
+	return token.MintTo(ctx, token.Helper.GetSignerAddress().String(), amount)
 }
 
 // Mint tokens to a specified wallet.
@@ -128,7 +128,7 @@ func (token *Token) MintTo(ctx context.Context, to string, amount float64) (*typ
 		return nil, err
 	}
 
-	txOpts, err := token.helper.getTxOptions(ctx)
+	txOpts, err := token.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +137,7 @@ func (token *Token) MintTo(ctx context.Context, to string, amount float64) (*typ
 		return nil, err
 	}
 
-	return token.helper.awaitTx(tx.Hash())
+	return token.Helper.AwaitTx(tx.Hash())
 }
 
 // Mint tokens to a list of wallets.
@@ -169,7 +169,7 @@ func (token *Token) MintBatchTo(ctx context.Context, args []*TokenAmount) (*type
 			return nil, err
 		}
 
-		txOpts, err := token.helper.getEncodedTxOptions(ctx)
+		txOpts, err := token.Helper.getEncodedTxOptions(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -181,7 +181,7 @@ func (token *Token) MintBatchTo(ctx context.Context, args []*TokenAmount) (*type
 		encoded = append(encoded, tx.Data())
 	}
 
-	txOpts, err := token.helper.getTxOptions(ctx)
+	txOpts, err := token.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +190,7 @@ func (token *Token) MintBatchTo(ctx context.Context, args []*TokenAmount) (*type
 		return nil, err
 	}
 
-	return token.helper.awaitTx(tx.Hash())
+	return token.Helper.AwaitTx(tx.Hash())
 }
 
 // Delegate the connected wallets tokens to a specified wallet.
@@ -199,7 +199,7 @@ func (token *Token) MintBatchTo(ctx context.Context, args []*TokenAmount) (*type
 //
 // returns: transaction receipt of the delegation
 func (token *Token) DelegateTo(ctx context.Context, delegatreeAddress string) (*types.Transaction, error) {
-	txOpts, err := token.helper.getTxOptions(ctx)
+	txOpts, err := token.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -208,5 +208,5 @@ func (token *Token) DelegateTo(ctx context.Context, delegatreeAddress string) (*
 		return nil, err
 	}
 
-	return token.helper.awaitTx(tx.Hash())
+	return token.Helper.AwaitTx(tx.Hash())
 }

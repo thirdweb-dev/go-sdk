@@ -121,16 +121,33 @@ var nftDropClaimCmd = &cobra.Command{
 			panic(err)
 		}
 
+		emptySdk, err := thirdweb.NewThirdwebSDK(
+			chainRpcUrl,
+			nil,
+		)
+		if err != nil {
+			panic(err)
+		}
+
+		emptyDrop, err := emptySdk.GetNFTDrop(nftDropContractAddress)
+
 		address := thirdwebSDK.GetSignerAddress().String()
-		claimArgs, err := nftDrop.GetClaimArguments(context.Background(), address, 1)	
+		claimArgs, err := emptyDrop.GetClaimArguments(context.Background(), address, 1)	
 		if err != nil {
 			panic(err)
 		}
 
 		fmt.Printf("%#v\n", claimArgs)
 
+		txOpts, err := nftDrop.Helper.GetTxOptions(context.Background())
+		if err != nil {
+			panic(err)
+		}
+
+		txOpts.Value = claimArgs.TxValue
+
 		tx, err := nftDrop.Abi.Claim(
-			claimArgs.Opts,
+			txOpts,
 			claimArgs.Receiver,
 			claimArgs.Quantity,
 			claimArgs.Currency,
