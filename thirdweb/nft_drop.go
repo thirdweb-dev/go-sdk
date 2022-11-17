@@ -237,7 +237,6 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 		return nil, err
 	}
 
-
 	totalClaimedInPhase, err := drop.Abi.GetSupplyClaimedByWallet(&bind.CallOpts{}, activeConditionIndex, common.HexToAddress(address))
 	if err != nil {
 		return nil, err
@@ -264,11 +263,15 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 		}
 	}
 
-	totalClaimedInPhase, err := drop.GetTotalClaimed(ctx, addressToCheck)
+	activeConditionIndex, err := drop.Abi.GetActiveClaimConditionId(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
 
+	totalClaimedInPhase, err := drop.Abi.GetSupplyClaimedByWallet(&bind.CallOpts{}, activeConditionIndex, common.HexToAddress(addressToCheck))
+	if err != nil {
+		return nil, err
+	}
 
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 	if active.AvailableSupply.Cmp(MaxUint256) != 0 {
