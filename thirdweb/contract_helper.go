@@ -69,7 +69,7 @@ func (helper *contractHelper) getEncodedTxOptions(ctx context.Context) (*bind.Tr
 	return helper.getRawTxOptions(ctx, true)
 }
 
-func (helper *contractHelper) getTxOptions(ctx context.Context) (*bind.TransactOpts, error) {
+func (helper *contractHelper) GetTxOptions(ctx context.Context) (*bind.TransactOpts, error) {
 	return helper.getRawTxOptions(ctx, false)
 }
 
@@ -100,7 +100,7 @@ func (helper *contractHelper) getRawTxOptions(ctx context.Context, noSend bool) 
 	return txOpts, nil
 }
 
-func (helper *contractHelper) awaitTx(hash common.Hash) (*types.Transaction, error) {
+func (helper *contractHelper) AwaitTx(hash common.Hash) (*types.Transaction, error) {
 	provider := helper.GetProvider()
 	wait := txWaitTimeBetweenAttempts
 	maxAttempts := uint8(txMaxAttempts)

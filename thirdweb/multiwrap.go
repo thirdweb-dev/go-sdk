@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -28,9 +27,9 @@ import (
 //
 //	contract, err := sdk.GetMultiwrap("{{contract_address}}")
 type Multiwrap struct {
-	abi    *abi.Multiwrap
-	helper *contractHelper
 	*ERC721
+	abi    *abi.Multiwrap
+	Helper *contractHelper
 	Encoder *ContractEncoder
 }
 
@@ -50,9 +49,9 @@ func newMultiwrap(provider *ethclient.Client, address common.Address, privateKey
 				}
 
 				multiwrap := &Multiwrap{
+					erc721,
 					contractAbi,
 					helper,
-					erc721,
 					encoder,
 				}
 				return multiwrap, nil
@@ -80,8 +79,6 @@ func (multiwrap *Multiwrap) GetWrappedContents(wrappedTokenId int) (*MultiwrapBu
 		return nil, err
 	}
 
-	log.Println("Tokens: ", len(wrappedTokens))
-
 	erc20Tokens := []*MultiwrapERC20{}
 	erc721Tokens := []*MultiwrapERC721{}
 	erc1155Tokens := []*MultiwrapERC1155{}
@@ -89,7 +86,7 @@ func (multiwrap *Multiwrap) GetWrappedContents(wrappedTokenId int) (*MultiwrapBu
 	for _, wrappedToken := range wrappedTokens {
 		switch wrappedToken.TokenType {
 		case 0:
-			tokenMetadata, err := fetchCurrencyMetadata(context.Background(), multiwrap.helper.GetProvider(), wrappedToken.AssetContract.String())
+			tokenMetadata, err := fetchCurrencyMetadata(context.Background(), multiwrap.Helper.GetProvider(), wrappedToken.AssetContract.String())
 			if err != nil {
 				return nil, err
 			}
@@ -178,7 +175,7 @@ func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle,
 	}
 
 	if recipientAddress == "" {
-		recipientAddress = multiwrap.helper.GetSignerAddress().String()
+		recipientAddress = multiwrap.Helper.GetSignerAddress().String()
 	}
 
 	tokens, err := multiwrap.toTokenStructList(ctx, contents)
@@ -186,7 +183,7 @@ func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle,
 		return nil, err
 	}
 
-	txOpts, err := multiwrap.helper.getTxOptions(ctx)
+	txOpts, err := multiwrap.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +192,7 @@ func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle,
 		return nil, err
 	}
 
-	return multiwrap.helper.awaitTx(tx.Hash())
+	return multiwrap.Helper.AwaitTx(tx.Hash())
 }
 
 // Unwrap a wrapped token bundle into its contents
@@ -212,10 +209,10 @@ func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle,
 //	tx, err := contract.Unwrap(context.Background(), tokenId, "")
 func (multiwrap *Multiwrap) Unwrap(ctx context.Context, wrappedTokenId int, recipientAddress string) (*types.Transaction, error) {
 	if recipientAddress == "" {
-		recipientAddress = multiwrap.helper.GetSignerAddress().String()
+		recipientAddress = multiwrap.Helper.GetSignerAddress().String()
 	}
 
-	txOpts, err := multiwrap.helper.getTxOptions(ctx)
+	txOpts, err := multiwrap.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -224,13 +221,13 @@ func (multiwrap *Multiwrap) Unwrap(ctx context.Context, wrappedTokenId int, reci
 		return nil, err
 	}
 
-	return multiwrap.helper.awaitTx(tx.Hash())
+	return multiwrap.Helper.AwaitTx(tx.Hash())
 }
 
 func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *MultiwrapBundle) ([]abi.ITokenBundleToken, error) {
 	tokens := []abi.ITokenBundleToken{}
-	provider := multiwrap.helper.GetProvider()
-	owner := multiwrap.helper.GetSignerAddress()
+	provider := multiwrap.Helper.GetProvider()
+	owner := multiwrap.Helper.GetSignerAddress()
 
 	for _, erc20 := range contents.ERC20Tokens {
 		normalizedQuantity, err := normalizePriceValue(
@@ -244,7 +241,7 @@ func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *Mul
 		}
 
 		hasAllowance, err := hasErc20Allowance(
-			multiwrap.helper,
+			multiwrap.Helper,
 			erc20.ContractAddress,
 			normalizedQuantity,
 		)
@@ -270,7 +267,7 @@ func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *Mul
 		isApproved, err := isTokenApprovedForTransfer(
 			ctx,
 			provider,
-			multiwrap.helper.getAddress().String(),
+			multiwrap.Helper.getAddress().String(),
 			erc721.ContractAddress,
 			erc721.TokenId,
 			owner.String(),
@@ -283,7 +280,7 @@ func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *Mul
 			return nil, fmt.Errorf(
 				fmt.Sprintf("ERC721 with contract address %v does not have enough allowance to transfer.", erc721.ContractAddress) +
 					"You can set allowance to the multiwrap contract to transfer this token by running:\n" +
-					fmt.Sprintf("nft, _ := sdk.GetNFTCollection(\"%v\")\nnft.SetApprovalForToken(\"%v\", %d)", erc721.ContractAddress, multiwrap.helper.getAddress().String(), erc721.TokenId),
+					fmt.Sprintf("nft, _ := sdk.GetNFTCollection(\"%v\")\nnft.SetApprovalForToken(\"%v\", %d)", erc721.ContractAddress, multiwrap.Helper.getAddress().String(), erc721.TokenId),
 			)
 		}
 
@@ -300,7 +297,7 @@ func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *Mul
 		isApproved, err := isTokenApprovedForTransfer(
 			ctx,
 			provider,
-			multiwrap.helper.getAddress().String(),
+			multiwrap.Helper.getAddress().String(),
 			erc1155.ContractAddress,
 			erc1155.TokenId,
 			owner.String(),
@@ -313,7 +310,7 @@ func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *Mul
 			return nil, fmt.Errorf(
 				fmt.Sprintf("ERC1155 with contract address %v does not have enough allowance to transfer.", erc1155.ContractAddress) +
 					"You can set allowance to the multiwrap contract to transfer this token by running:\n" +
-					fmt.Sprintf("edition, _ := sdk.GetEdition(\"%v\")\nedition.SetApprovalForAll(\"%v\", true)", erc1155.ContractAddress, multiwrap.helper.getAddress().String()),
+					fmt.Sprintf("edition, _ := sdk.GetEdition(\"%v\")\nedition.SetApprovalForAll(\"%v\", true)", erc1155.ContractAddress, multiwrap.Helper.getAddress().String()),
 			)
 		}
 

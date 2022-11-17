@@ -28,9 +28,9 @@ import (
 //
 //	contract, err := sdk.GetMarketplace("{{contract_address}}")
 type Marketplace struct {
-	Abi     *abi.Marketplace
-	helper  *contractHelper
 	storage storage
+	Abi     *abi.Marketplace
+	Helper  *contractHelper
 	Encoder *MarketplaceEncoder
 	Events  *ContractEvents
 }
@@ -52,9 +52,9 @@ func newMarketplace(provider *ethclient.Client, address common.Address, privateK
 		}
 
 		marketplace := &Marketplace{
-			Abi:     contractAbi,
-			helper:  helper,
 			storage: storage,
+			Abi:     contractAbi,
+			Helper:  helper,
 			Encoder: encoder,
 			Events: events,
 		}
@@ -86,7 +86,7 @@ func (marketplace *Marketplace) GetListing(ctx context.Context, listingId int) (
 	}
 
 	if listing.ListingType == 0 {
-		return mapListing(ctx, marketplace.helper, marketplace.storage, listing)
+		return mapListing(ctx, marketplace.Helper, marketplace.storage, listing)
 	} else {
 		return nil, fmt.Errorf("Unsupported listing type: %d. Currently only direct listings are supported.", listingId)
 	}
@@ -169,7 +169,7 @@ func (marketplace *Marketplace) GetTotalCount(ctx context.Context) (int, error) 
 //	listingId := 0
 //	receipt, err := marketplace.CancelListing(context.Background(), listingId)
 func (marketplace *Marketplace) CancelListing(ctx context.Context, listingId int) (*types.Transaction, error) {
-	txOpts, err := marketplace.helper.getTxOptions(ctx)
+	txOpts, err := marketplace.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +179,7 @@ func (marketplace *Marketplace) CancelListing(ctx context.Context, listingId int
 		return nil, err
 	}
 
-	return marketplace.helper.awaitTx(tx.Hash())
+	return marketplace.Helper.AwaitTx(tx.Hash())
 }
 
 // Buy a specific listing from the marketplace.
@@ -190,7 +190,7 @@ func (marketplace *Marketplace) CancelListing(ctx context.Context, listingId int
 //
 // returns: transaction receipt of the purchase
 func (marketplace *Marketplace) BuyoutListing(ctx context.Context, listingId int, quantityDesired int) (*types.Transaction, error) {
-	return marketplace.BuyoutListingTo(ctx, listingId, quantityDesired, marketplace.helper.GetSignerAddress().Hex())
+	return marketplace.BuyoutListingTo(ctx, listingId, quantityDesired, marketplace.Helper.GetSignerAddress().Hex())
 }
 
 // Buy a specific listing from the marketplace to a specific address.
@@ -215,7 +215,7 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 		return nil, err
 	}
 
-	valid, err := isStillValidListing(ctx, marketplace.helper, listing, quantityDesired)
+	valid, err := isStillValidListing(ctx, marketplace.Helper, listing, quantityDesired)
 	if err != nil {
 		return nil, err
 	}
@@ -227,13 +227,13 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 	quantity := big.NewInt(int64(quantityDesired))
 	value := listing.BuyoutCurrencyValuePerToken.Value.Mul(listing.BuyoutCurrencyValuePerToken.Value, quantity)
 
-	txOpts, err := marketplace.helper.getTxOptions(ctx)
+	txOpts, err := marketplace.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	err = setErc20Allowance(
-		marketplace.helper,
+		marketplace.Helper,
 		value,
 		listing.CurrencyContractAddress,
 		txOpts,
@@ -254,7 +254,7 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 		return nil, err
 	}
 
-	return marketplace.helper.awaitTx(tx.Hash())
+	return marketplace.Helper.AwaitTx(tx.Hash())
 }
 
 // Create a new listing on the marketplace where people can buy an asset directly.
@@ -281,12 +281,12 @@ func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewD
 
 	err := handleTokenApproval(
 		ctx,
-		marketplace.helper.GetProvider(),
-		marketplace.helper,
-		marketplace.helper.getAddress().Hex(),
+		marketplace.Helper.GetProvider(),
+		marketplace.Helper,
+		marketplace.Helper.getAddress().Hex(),
 		listing.AssetContractAddress,
 		listing.TokenId,
-		marketplace.helper.GetSignerAddress().Hex(),
+		marketplace.Helper.GetSignerAddress().Hex(),
 	)
 	if err != nil {
 		return 0, err
@@ -294,7 +294,7 @@ func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewD
 
 	normalizedPricePerToken, err := normalizePriceValue(
 		ctx,
-		marketplace.helper.GetProvider(),
+		marketplace.Helper.GetProvider(),
 		listing.BuyoutPricePerToken,
 		listing.CurrencyContractAddress,
 	)
@@ -302,7 +302,7 @@ func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewD
 		return 0, err
 	}
 
-	txOpts, err := marketplace.helper.getTxOptions(ctx)
+	txOpts, err := marketplace.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return 0, err
 	}
@@ -318,9 +318,9 @@ func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewD
 		ListingType:          0,
 	})
 
-	receipt, err := marketplace.helper.awaitTx(tx.Hash())
+	receipt, err := marketplace.Helper.AwaitTx(tx.Hash())
 
-	txReceipt, err := marketplace.helper.GetProvider().TransactionReceipt(context.Background(), receipt.Hash())
+	txReceipt, err := marketplace.Helper.GetProvider().TransactionReceipt(context.Background(), receipt.Hash())
 	if err != nil {
 		return 0, err
 	}

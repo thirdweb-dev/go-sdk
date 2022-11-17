@@ -2,10 +2,8 @@ package thirdweb
 
 import (
 	"context"
-	"encoding/hex"
 	"encoding/json"
 	"math/big"
-	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -60,7 +58,7 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 		return nil, err
 	}
 
-  merkle, err := claim.GetMerkleMetadata()
+  merkle, err := claim.getMerkleMetadata()
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +85,7 @@ func (claim *NFTDropClaimConditions) Get(claimConditionId int) (*ClaimConditionO
 	}
 
 	provider := claim.helper.GetProvider()
-	merkle, err := claim.GetMerkleMetadata()
+	merkle, err := claim.getMerkleMetadata()
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +137,7 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 			return nil, err
 		}
 
-		merkle, err := claim.GetMerkleMetadata()
+		merkle, err := claim.getMerkleMetadata()
 		if err != nil {
 			return nil, err
 		}
@@ -161,7 +159,7 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 	return conditions, nil
 }
 
-func (claim *NFTDropClaimConditions) GetMerkleMetadata() (*map[string]string, error) {
+func (claim *NFTDropClaimConditions) getMerkleMetadata() (*map[string]string, error) {
 	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{});
 	if err != nil {
 		return nil, err
@@ -182,6 +180,7 @@ func (claim *NFTDropClaimConditions) GetMerkleMetadata() (*map[string]string, er
 	return &rawMetadata.Merkle, nil;
 }
 
+/**
 func (claim *NFTDropClaimConditions) GetClaimerProofs(
 	ctx context.Context,
 	claimerAddress string,
@@ -211,7 +210,6 @@ func (claim *NFTDropClaimConditions) GetClaimerProofs(
 	}
 }
 
-/**
 func (claim *NFTDropClaimConditions) CanClaim(
 	quantity int,
 	addressToCheck string,

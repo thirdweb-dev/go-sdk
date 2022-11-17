@@ -76,7 +76,7 @@ import (
 type SmartContract struct {
 	abi      *abi.ABI
 	contract *bind.BoundContract
-	helper   *contractHelper
+	Helper   *contractHelper
 	Encoder  *ContractEncoder
 	Events   *ContractEvents
 }
@@ -109,7 +109,7 @@ func newSmartContract(provider *ethclient.Client, address common.Address, contra
 	contract := &SmartContract{
 		abi:      &parsedAbi,
 		contract: boundContract,
-		helper:   helper,
+		Helper:   helper,
 		Encoder:  encoder,
 		Events:   events,
 	}
@@ -134,7 +134,7 @@ func newSmartContract(provider *ethclient.Client, address common.Address, contra
 func (c *SmartContract) Call(ctx context.Context, method string, args ...interface{}) (interface{}, error) {
 	abiMethod, exist := c.abi.Methods[method]
 	if !exist {
-		return nil, fmt.Errorf("function '%s' not found in contract '%s'", method, c.helper.getAddress().String())
+		return nil, fmt.Errorf("function '%s' not found in contract '%s'", method, c.Helper.getAddress().String())
 	}
 
 	if len(abiMethod.Inputs) != len(args) {
@@ -197,7 +197,7 @@ func (c *SmartContract) Call(ctx context.Context, method string, args ...interfa
 
 		return out, nil
 	} else {
-		txOpts, err := c.helper.getTxOptions(ctx)
+		txOpts, err := c.Helper.GetTxOptions(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -206,6 +206,6 @@ func (c *SmartContract) Call(ctx context.Context, method string, args ...interfa
 			return nil, err
 		}
 
-		return c.helper.awaitTx(tx.Hash())
+		return c.Helper.AwaitTx(tx.Hash())
 	}
 }

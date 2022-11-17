@@ -228,7 +228,7 @@ func (erc1155 *ERC1155) IsApproved(ctx context.Context, address string, operator
 //
 //	tx, err := contract.Transfer(context.Background(), to, tokenId, amount)
 func (erc1155 *ERC1155) Transfer(ctx context.Context, to string, tokenId int, amount int) (*types.Transaction, error) {
-	txOpts, err := erc1155.helper.getTxOptions(ctx)
+	txOpts, err := erc1155.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -242,7 +242,7 @@ func (erc1155 *ERC1155) Transfer(ctx context.Context, to string, tokenId int, am
 	); err != nil {
 		return nil, err
 	} else {
-		return erc1155.helper.awaitTx(tx.Hash())
+		return erc1155.helper.AwaitTx(tx.Hash())
 	}
 }
 
@@ -261,7 +261,7 @@ func (erc1155 *ERC1155) Transfer(ctx context.Context, to string, tokenId int, am
 //	tx, err := contract.Burn(context.Background(), tokenId, amount)
 func (erc1155 *ERC1155) Burn(ctx context.Context, tokenId int, amount int) (*types.Transaction, error) {
 	address := erc1155.helper.GetSignerAddress()
-	txOpts, err := erc1155.helper.getTxOptions(ctx)
+	txOpts, err := erc1155.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -273,7 +273,7 @@ func (erc1155 *ERC1155) Burn(ctx context.Context, tokenId int, amount int) (*typ
 	); err != nil {
 		return nil, err
 	} else {
-		return erc1155.helper.awaitTx(tx.Hash())
+		return erc1155.helper.AwaitTx(tx.Hash())
 	}
 }
 
@@ -287,7 +287,7 @@ func (erc1155 *ERC1155) Burn(ctx context.Context, tokenId int, amount int) (*typ
 //
 // returns: the transaction receipt of the approval
 func (erc1155 *ERC1155) SetApprovalForAll(ctx context.Context, operator string, approved bool) (*types.Transaction, error) {
-	txOpts, err := erc1155.helper.getTxOptions(ctx)
+	txOpts, err := erc1155.helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -298,7 +298,7 @@ func (erc1155 *ERC1155) SetApprovalForAll(ctx context.Context, operator string, 
 	); err != nil {
 		return nil, err
 	} else {
-		return erc1155.helper.awaitTx(tx.Hash())
+		return erc1155.helper.AwaitTx(tx.Hash())
 	}
 }
 

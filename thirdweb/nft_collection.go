@@ -25,9 +25,9 @@ import (
 //
 //	contract, err := sdk.GetNFTCollection("{{contract_address}}")
 type NFTCollection struct {
-	abi    *abi.TokenERC721
-	helper *contractHelper
 	*ERC721
+	abi    *abi.TokenERC721
+	Helper *contractHelper
 	Signature *ERC721SignatureMinting
 	Encoder   *ContractEncoder
 	Events    *ContractEvents
@@ -59,9 +59,9 @@ func newNFTCollection(provider *ethclient.Client, address common.Address, privat
 				}
 
 				nftCollection := &NFTCollection{
+					erc721,
 					contractAbi,
 					helper,
-					erc721,
 					signature,
 					encoder,
 					events,
@@ -85,7 +85,7 @@ func newNFTCollection(provider *ethclient.Client, address common.Address, privat
 //	name := nfts[0].Metadata.Name
 func (nft *NFTCollection) GetOwned(ctx context.Context, address string) ([]*NFTMetadataOwner, error) {
 	if address == "" {
-		address = nft.helper.GetSignerAddress().String()
+		address = nft.Helper.GetSignerAddress().String()
 	}
 
 	if tokenIds, err := nft.GetOwnedTokenIDs(ctx, address); err != nil {
@@ -102,7 +102,7 @@ func (nft *NFTCollection) GetOwned(ctx context.Context, address string) ([]*NFTM
 // returns: the tokenIds of all the NFTs owned by the address
 func (nft *NFTCollection) GetOwnedTokenIDs(ctx context.Context, address string) ([]*big.Int, error) {
 	if address == "" {
-		address = nft.helper.GetSignerAddress().String()
+		address = nft.Helper.GetSignerAddress().String()
 	}
 
 	if balance, err := nft.abi.BalanceOf(&bind.CallOpts{Context: ctx}, common.HexToAddress(address)); err != nil {
@@ -126,7 +126,7 @@ func (nft *NFTCollection) GetOwnedTokenIDs(ctx context.Context, address string) 
 //
 // returns: the transaction receipt of the mint
 func (nft *NFTCollection) Mint(ctx context.Context, metadata *NFTMetadataInput) (*types.Transaction, error) {
-	address := nft.helper.GetSignerAddress().String()
+	address := nft.Helper.GetSignerAddress().String()
 	return nft.MintTo(ctx, address, metadata)
 }
 
@@ -156,7 +156,7 @@ func (nft *NFTCollection) MintTo(ctx context.Context, address string, metadata *
 		return nil, err
 	}
 
-	txOpts, err := nft.helper.getTxOptions(ctx)
+	txOpts, err := nft.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +169,7 @@ func (nft *NFTCollection) MintTo(ctx context.Context, address string, metadata *
 		return nil, err
 	}
 
-	return nft.helper.awaitTx(tx.Hash())
+	return nft.Helper.AwaitTx(tx.Hash())
 }
 
 // Mint a batch of new NFTs to the connected wallet.
@@ -178,7 +178,7 @@ func (nft *NFTCollection) MintTo(ctx context.Context, address string, metadata *
 //
 // returns: the transaction receipt of the mint
 func (nft *NFTCollection) MintBatch(ctx context.Context, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
-	address := nft.helper.GetSignerAddress().String()
+	address := nft.Helper.GetSignerAddress().String()
 	return nft.MintBatchTo(ctx, address, metadatas)
 }
 
@@ -212,7 +212,7 @@ func (nft *NFTCollection) MintBatchTo(ctx context.Context, address string, metad
 
 	encoded := [][]byte{}
 	for _, uri := range uris {
-		txOpts, err := nft.helper.getEncodedTxOptions(ctx)
+		txOpts, err := nft.Helper.getEncodedTxOptions(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -228,7 +228,7 @@ func (nft *NFTCollection) MintBatchTo(ctx context.Context, address string, metad
 		encoded = append(encoded, tx.Data())
 	}
 
-	txOpts, err := nft.helper.getTxOptions(ctx)
+	txOpts, err := nft.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -237,5 +237,5 @@ func (nft *NFTCollection) MintBatchTo(ctx context.Context, address string, metad
 		return nil, err
 	}
 
-	return nft.helper.awaitTx(tx.Hash())
+	return nft.Helper.AwaitTx(tx.Hash())
 }

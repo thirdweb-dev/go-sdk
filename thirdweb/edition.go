@@ -24,9 +24,9 @@ import (
 //
 //	contract, err := sdk.GetEdition("{{contract_address}}")
 type Edition struct {
-	abi    *abi.TokenERC1155
-	helper *contractHelper
 	*ERC1155
+	abi       *abi.TokenERC1155
+	Helper    *contractHelper
 	Signature *ERC1155SignatureMinting
 	Encoder   *ContractEncoder
 	Events   	*ContractEvents
@@ -60,9 +60,9 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 			}
 
 			edition := &Edition{
+				erc1155,
 				contractAbi,
 				helper,
-				erc1155,
 				signature,
 				encoder,
 				events,
@@ -78,7 +78,7 @@ func newEdition(provider *ethclient.Client, address common.Address, privateKey s
 //
 // returns: the transaction receipt of the mint
 func (edition *Edition) Mint(ctx context.Context, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
-	address := edition.helper.GetSignerAddress().String()
+	address := edition.Helper.GetSignerAddress().String()
 	return edition.MintTo(ctx, address, metadataWithSupply)
 }
 
@@ -113,7 +113,7 @@ func (edition *Edition) MintTo(ctx context.Context, address string, metadataWith
 	}
 
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
-	txOpts, err := edition.helper.getTxOptions(ctx)
+	txOpts, err := edition.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +128,7 @@ func (edition *Edition) MintTo(ctx context.Context, address string, metadataWith
 		return nil, err
 	}
 
-	return edition.helper.awaitTx((tx.Hash()))
+	return edition.Helper.AwaitTx((tx.Hash()))
 }
 
 // Mint additionaly supply of a token to the connected wallet.
@@ -139,7 +139,7 @@ func (edition *Edition) MintTo(ctx context.Context, address string, metadataWith
 //
 // returns: the transaction receipt of the mint
 func (edition *Edition) MintAdditionalSupply(ctx context.Context, tokenId int, additionalSupply int) (*types.Transaction, error) {
-	address := edition.helper.GetSignerAddress().String()
+	address := edition.Helper.GetSignerAddress().String()
 	return edition.MintAdditionalSupplyTo(ctx, address, tokenId, additionalSupply)
 }
 
@@ -158,7 +158,7 @@ func (edition *Edition) MintAdditionalSupplyTo(ctx context.Context, to string, t
 		return nil, err
 	}
 
-	txOpts, err := edition.helper.getTxOptions(ctx)
+	txOpts, err := edition.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +173,7 @@ func (edition *Edition) MintAdditionalSupplyTo(ctx context.Context, to string, t
 		return nil, err
 	}
 
-	return edition.helper.awaitTx(tx.Hash())
+	return edition.Helper.AwaitTx(tx.Hash())
 }
 
 // Mint a batch of NFTs to the connected wallet.
@@ -182,7 +182,7 @@ func (edition *Edition) MintAdditionalSupplyTo(ctx context.Context, to string, t
 //
 // returns: the transaction receipt of the mint
 func (edition *Edition) MintBatch(ctx context.Context, metadatasWithSupply []*EditionMetadataInput) (*types.Transaction, error) {
-	return edition.MintBatchTo(ctx, edition.helper.GetSignerAddress().String(), metadatasWithSupply)
+	return edition.MintBatchTo(ctx, edition.Helper.GetSignerAddress().String(), metadatasWithSupply)
 }
 
 // Mint a batch of NFTs to a specific wallet.
@@ -232,7 +232,7 @@ func (edition *Edition) MintBatchTo(ctx context.Context, to string, metadatasWit
 	encoded := [][]byte{}
 	MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 	for index, uri := range uris {
-		txOpts, err := edition.helper.getEncodedTxOptions(ctx)
+		txOpts, err := edition.Helper.getEncodedTxOptions(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -250,7 +250,7 @@ func (edition *Edition) MintBatchTo(ctx context.Context, to string, metadatasWit
 		encoded = append(encoded, tx.Data())
 	}
 
-	txOpts, err := edition.helper.getTxOptions(ctx)
+	txOpts, err := edition.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -259,5 +259,5 @@ func (edition *Edition) MintBatchTo(ctx context.Context, to string, metadatasWit
 		return nil, err
 	}
 
-	return edition.helper.awaitTx(tx.Hash())
+	return edition.Helper.AwaitTx(tx.Hash())
 }

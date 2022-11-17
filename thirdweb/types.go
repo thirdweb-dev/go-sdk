@@ -4,7 +4,6 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
@@ -522,7 +521,7 @@ type MarketplaceFilter struct {
 // CLAIM CONDITIONS
 
 type ClaimArguments struct {
-	Opts           *bind.TransactOpts
+	TxValue        *big.Int
 	Receiver       common.Address
 	Quantity       *big.Int
 	Currency       common.Address
