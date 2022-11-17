@@ -161,6 +161,13 @@ var nftDropClaimCmd = &cobra.Command{
 
 		awaitTx(tx.Hash())
 
+		unclaimed, err := nftDrop.TotalUnclaimedSupply()
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(unclaimed)
+
 		// tx, err := nftDrop.Claim(context.Background(), 1)
 		// if err != nil {
 		// 	panic(err)
