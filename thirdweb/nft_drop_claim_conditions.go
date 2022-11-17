@@ -10,6 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -40,7 +41,7 @@ func newNFTDropClaimConditions(address common.Address, provider *ethclient.Clien
 //
 // Example
 //
-//	condition, err := contract.ClaimConditions.GetActive()
+//	condition, err := contract.ClaimConditions.GetActive(context.Background())
 //
 //	// Now you have access to all the claim condition metadata
 //	fmt.Println("Start Time:", condition.StartTime)
@@ -49,18 +50,18 @@ func newNFTDropClaimConditions(address common.Address, provider *ethclient.Clien
 //	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
 //	fmt.Println("Price:", condition.Price)
 //	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
-func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) {
-	id, err := claim.abi.GetActiveClaimConditionId(&bind.CallOpts{})
+func (claim *NFTDropClaimConditions) GetActive(ctx context.Context) (*ClaimConditionOutput, error) {
+	id, err := claim.abi.GetActiveClaimConditionId(&bind.CallOpts{Context: ctx})
 	if err != nil {
 		return nil, err
 	}
 
-	active, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, id)
+	active, err := claim.abi.GetClaimConditionById(&bind.CallOpts{Context: ctx}, id)
 	if err != nil {
 		return nil, err
 	}
 
-  merkle, err := claim.GetMerkleMetadata()
+	merkle, err := claim.GetMerkleMetadata(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -80,14 +81,14 @@ func (claim *NFTDropClaimConditions) GetActive() (*ClaimConditionOutput, error) 
 	return claimCondition, nil
 }
 
-func (claim *NFTDropClaimConditions) Get(claimConditionId int) (*ClaimConditionOutput, error) {
-	condition, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, big.NewInt(int64(claimConditionId)))
+func (claim *NFTDropClaimConditions) Get(ctx context.Context, claimConditionId int) (*ClaimConditionOutput, error) {
+	condition, err := claim.abi.GetClaimConditionById(&bind.CallOpts{Context: ctx}, big.NewInt(int64(claimConditionId)))
 	if err != nil {
 		return nil, err
 	}
 
 	provider := claim.helper.GetProvider()
-	merkle, err := claim.GetMerkleMetadata()
+	merkle, err := claim.GetMerkleMetadata(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +113,7 @@ func (claim *NFTDropClaimConditions) Get(claimConditionId int) (*ClaimConditionO
 //
 // Example
 //
-//	conditions, err := contract.ClaimConditions.GetAll()
+//	conditions, err := contract.ClaimConditions.GetAll(context.Background())
 //
 //	// Now you have access to all the claim condition metadata
 //	condition := conditions[0]
@@ -122,8 +123,8 @@ func (claim *NFTDropClaimConditions) Get(claimConditionId int) (*ClaimConditionO
 //	fmt.Println("Quantity Limit:", condition.QuantityLimitPerTransaction)
 //	fmt.Println("Price:", condition.Price)
 //	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
-func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
-	condition, err := claim.abi.ClaimCondition(&bind.CallOpts{})
+func (claim *NFTDropClaimConditions) GetAll(ctx context.Context) ([]*ClaimConditionOutput, error) {
+	condition, err := claim.abi.ClaimCondition(&bind.CallOpts{Context: ctx})
 	if err != nil {
 		return nil, err
 	}
@@ -134,16 +135,16 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 
 	conditions := []*ClaimConditionOutput{}
 	for i := startId; i < count; i++ {
-		mc, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, big.NewInt(i))
+		mc, err := claim.abi.GetClaimConditionById(&bind.CallOpts{Context: ctx}, big.NewInt(i))
 		if err != nil {
 			return nil, err
 		}
 
-		merkle, err := claim.GetMerkleMetadata()
+		merkle, err := claim.GetMerkleMetadata(ctx)
 		if err != nil {
 			return nil, err
 		}
-	
+
 		claimCondition, err := transformResultToClaimCondition(
 			context.Background(),
 			&mc,
@@ -161,43 +162,43 @@ func (claim *NFTDropClaimConditions) GetAll() ([]*ClaimConditionOutput, error) {
 	return conditions, nil
 }
 
-func (claim *NFTDropClaimConditions) GetMerkleMetadata() (*map[string]string, error) {
-	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{});
+func (claim *NFTDropClaimConditions) GetMerkleMetadata(ctx context.Context) (*map[string]string, error) {
+	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{Context: ctx})
 	if err != nil {
 		return nil, err
 	}
 
-	body, err := claim.storage.Get(uri);
+	body, err := claim.storage.Get(uri)
 	if err != nil {
 		return nil, err
 	}
 
 	var rawMetadata struct {
 		Merkle map[string]string `json:"merkle"`
-	};
+	}
 	if err := json.Unmarshal(body, &rawMetadata); err != nil {
 		return nil, err
 	}
 
-	return &rawMetadata.Merkle, nil;
+	return &rawMetadata.Merkle, nil
 }
 
 func (claim *NFTDropClaimConditions) GetClaimerProofs(
 	ctx context.Context,
 	claimerAddress string,
-  claimConditionId int,
+	claimConditionId int,
 ) (*SnapshotEntryWithProof, error) {
-	claimCondition, err := claim.Get(claimConditionId)
+	claimCondition, err := claim.Get(ctx, claimConditionId)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if !strings.HasPrefix(hex.EncodeToString(claimCondition.MerkleRootHash[:]), zeroAddress) {
-		merkleMetadata, err := claim.GetMerkleMetadata()
+		merkleMetadata, err := claim.GetMerkleMetadata(ctx)
 		if err != nil {
 			return nil, err
 		}
-		
+
 		return fetchSnapshotEntryForAddress(
 			ctx,
 			common.HexToAddress(claimerAddress),

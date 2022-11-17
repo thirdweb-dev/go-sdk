@@ -8,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -123,11 +124,11 @@ func (encoder *NFTDropEncoder) ApproveClaimTo(ctx context.Context, signerAddress
 //	fmt.Println(tx.Data()) // Ex: get the data field or the nonce field (others are available)
 //	fmt.Println(tx.Nonce())
 func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string, destinationAddress string, quantity int) (*types.Transaction, error) {
-	active, err := encoder.claimConditions.GetActive()
+	active, err := encoder.claimConditions.GetActive(ctx)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	claimVerification, err := encoder.prepareClaim(ctx, quantity)
 	if err != nil {
 		return nil, err
@@ -167,10 +168,10 @@ func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string
 	}
 
 	proof := abi.IDropAllowlistProof{
-		Proof: claimVerification.Proofs,
+		Proof:                  claimVerification.Proofs,
 		QuantityLimitPerWallet: claimVerification.MaxClaimable,
-		PricePerToken: claimVerification.Price,
-		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+		PricePerToken:          claimVerification.Price,
+		Currency:               common.HexToAddress(claimVerification.CurrencyAddress),
 	}
 
 	return encoder.abi.Claim(
@@ -185,12 +186,12 @@ func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string
 }
 
 func (encoder *NFTDropEncoder) prepareClaim(ctx context.Context, quantity int) (*ClaimVerification, error) {
-	active, err := encoder.claimConditions.GetActive()
+	active, err := encoder.claimConditions.GetActive(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	merkleMetadata, err := encoder.claimConditions.GetMerkleMetadata()
+	merkleMetadata, err := encoder.claimConditions.GetMerkleMetadata(ctx)
 	if err != nil {
 		return nil, err
 	}
