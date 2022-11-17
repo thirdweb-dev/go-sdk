@@ -211,7 +211,7 @@ func (drop *NFTDrop) TotalUnclaimedSupply() (int, error) {
 func (drop *NFTDrop) GetTotalClaimed(ctx context.Context, address string) (*big.Int, error) {
 	events, err := drop.Events.GetEvents(ctx, "TokensClaimed", EventQueryOptions{
 		Filters: map[string]interface{}{
-			"receiver": address,
+			"receiver": common.HexToAddress(address),
 		},
 	})
 	if err != nil {
@@ -232,14 +232,20 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 		return nil, err
 	}
 
-	totalClaimed, err := drop.GetTotalClaimed(ctx, address)
+	activeConditionIndex, err := drop.Abi.GetActiveClaimConditionId(&bind.CallOpts{})
+	if err != nil {
+		return nil, err
+	}
+
+
+	totalClaimedInPhase, err := drop.Abi.GetSupplyClaimedByWallet(&bind.CallOpts{}, activeConditionIndex, common.HexToAddress(address))
 	if err != nil {
 		return nil, err
 	}
 
 	return &ClaimInfo{
 		PricePerToken: claimVerification.Price,
-		RemainingClaimable: big.NewInt(0).Sub(claimVerification.MaxClaimable, totalClaimed),
+		RemainingClaimable: big.NewInt(0).Sub(claimVerification.MaxClaimable, totalClaimedInPhase),
 		CurrencyAddress: common.HexToAddress(claimVerification.CurrencyAddress),
 	}, nil
 }
@@ -258,7 +264,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 		}
 	}
 
-	totalClaimed, err := drop.GetTotalClaimed(ctx, addressToCheck)
+	totalClaimedInPhase, err := drop.GetTotalClaimed(ctx, addressToCheck)
 	if err != nil {
 		return nil, err
 	}
@@ -296,7 +302,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 				claimVerification.MaxClaimable.Cmp(big.NewInt(0)) == 0) {
 				reasons = append(reasons, AddressNotAllowed)
 				return reasons, nil
-			} else if totalClaimed.Add(totalClaimed, big.NewInt(int64(quantity))).Cmp(claimVerification.MaxClaimable) > 0 {
+			} else if totalClaimedInPhase.Add(totalClaimedInPhase, big.NewInt(int64(quantity))).Cmp(claimVerification.MaxClaimable) > 0 {
 				reasons = append(reasons, ExceedsMaxClaimable)
 				return reasons, nil
 			}
@@ -335,7 +341,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 			reasons = append(reasons, AddressNotAllowed)
 			return reasons, nil
 		} else {
-			if totalClaimed.Add(totalClaimed, big.NewInt(int64(quantity))).Cmp(active.MaxClaimablePerWallet) > 0 {
+			if totalClaimedInPhase.Add(totalClaimedInPhase, big.NewInt(int64(quantity))).Cmp(active.MaxClaimablePerWallet) > 0 {
 				reasons = append(reasons, ExceedsMaxClaimable)
 				return reasons, nil
 			}
