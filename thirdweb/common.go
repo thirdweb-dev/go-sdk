@@ -411,8 +411,8 @@ func prepareClaim(
 	claimVerification := &ClaimVerification{
 		Proofs:          proofs,
 		MaxClaimable:    maxClaimable,
-		Price:           priceInProof,
-		CurrencyAddress: currencyAddressInProof,
+		Price:           pricePerToken,
+		CurrencyAddress: currencyAddress,
 		Value:           value,
 	}
 

@@ -472,12 +472,7 @@ func (drop *NFTDrop) Claim(ctx context.Context, quantity int) (*types.Transactio
 //	quantity = 1
 //
 //	tx, err := contract.ClaimTo(context.Background(), address, quantity)
-func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, quantity int) (*types.Transaction, error) {
-	active, err := drop.ClaimConditions.GetActive()
-	if err != nil {
-		return nil, err
-	}
-	
+func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, quantity int) (*types.Transaction, error) {	
 	claimVerification, err := drop.prepareClaim(ctx, destinationAddress, quantity, true)
 	if err != nil {
 		return nil, err
@@ -501,8 +496,8 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 		txOpts,
 		common.HexToAddress(destinationAddress),
 		big.NewInt(int64(quantity)),
-		common.HexToAddress(active.CurrencyAddress),
-		active.Price,
+		common.HexToAddress(claimVerification.CurrencyAddress),
+		claimVerification.Price,
 		proof,
 		[]byte{},
 	)
@@ -521,11 +516,6 @@ func (drop *NFTDrop) GetClaimArguments(
 	*ClaimArguments,
 	error,
 ) {
-	active, err := drop.ClaimConditions.GetActive()
-	if err != nil {
-		return nil, err
-	}
-	
 	claimVerification, err := drop.prepareClaim(ctx, destinationAddress, quantity, false)
 	if err != nil {
 		return nil, err
@@ -542,8 +532,8 @@ func (drop *NFTDrop) GetClaimArguments(
 		claimVerification.Value, 
 		common.HexToAddress(destinationAddress), 
 		big.NewInt(int64(quantity)),  
-		common.HexToAddress(active.CurrencyAddress), 
-		active.Price, 
+		common.HexToAddress(claimVerification.CurrencyAddress), 
+		claimVerification.Price, 
 		proof, 
 		[]byte{}, 
 	}, nil
@@ -573,7 +563,6 @@ func (drop *NFTDrop) prepareClaim(ctx context.Context, addressToClaim string, qu
 		return nil, err
 	}
 
-	
 	// Handle approval for ERC20
 	if handleApproval {
 		MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
