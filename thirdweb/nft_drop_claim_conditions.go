@@ -2,8 +2,10 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	"math/big"
+	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -180,19 +182,17 @@ func (claim *NFTDropClaimConditions) getMerkleMetadata() (*map[string]string, er
 	return &rawMetadata.Merkle, nil;
 }
 
-/**
 func (claim *NFTDropClaimConditions) GetClaimerProofs(
 	ctx context.Context,
 	claimerAddress string,
-  claimConditionId int,
 ) (*SnapshotEntryWithProof, error) {
-	claimCondition, err := claim.Get(claimConditionId)
+	claimCondition, err := claim.GetActive()
 	if err != nil {
 		return nil, err
 	}
 	
 	if !strings.HasPrefix(hex.EncodeToString(claimCondition.MerkleRootHash[:]), zeroAddress) {
-		merkleMetadata, err := claim.GetMerkleMetadata()
+		merkleMetadata, err := claim.getMerkleMetadata()
 		if err != nil {
 			return nil, err
 		}
@@ -210,6 +210,7 @@ func (claim *NFTDropClaimConditions) GetClaimerProofs(
 	}
 }
 
+/**
 func (claim *NFTDropClaimConditions) CanClaim(
 	quantity int,
 	addressToCheck string,

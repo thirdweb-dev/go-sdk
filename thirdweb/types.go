@@ -530,6 +530,12 @@ type ClaimArguments struct {
 	Data 					 []byte
 }
 
+type ClaimInfo struct {
+	PricePerToken      *big.Int
+	CurrencyAddress    common.Address
+	RemainingClaimable *big.Int
+}
+
 type ClaimConditionInput struct {
 	StartTime                   *time.Time
 	CurrencyAddress             string
