@@ -232,6 +232,11 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 		return nil, err
 	}
 
+	active, err := drop.ClaimConditions.GetActive()
+	if err != nil {
+		return nil, err
+	}
+
 	activeConditionIndex, err := drop.Abi.GetActiveClaimConditionId(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
@@ -245,6 +250,9 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 	remainingClaimable := big.NewInt(0).Sub(claimVerification.MaxClaimable, totalClaimedInPhase)
 	if remainingClaimable.Cmp(big.NewInt(0)) < 0 {
 		remainingClaimable = big.NewInt(0)
+	}
+	if active.AvailableSupply.Cmp(remainingClaimable) < 0 {
+		remainingClaimable = active.AvailableSupply
 	}
 
 	return &ClaimInfo{
@@ -262,17 +270,15 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 		if strings.Contains(err.Error(), "!CONDITION") || strings.Contains(err.Error(), "no active mint condition") {
 			reasons = append(reasons, NoClaimConditionSet)
 			return reasons, nil
-		} else {
-			reasons = append(reasons, Unknown)
-			return reasons, nil
-		}
+		} 
+		
+		return reasons, err
 	}
 
 	activeConditionIndex, err := drop.Abi.GetActiveClaimConditionId(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
-
 	totalClaimedInPhase, err := drop.Abi.GetSupplyClaimedByWallet(&bind.CallOpts{}, activeConditionIndex, common.HexToAddress(addressToCheck))
 	if err != nil {
 		return nil, err
@@ -282,6 +288,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 	if active.AvailableSupply.Cmp(MaxUint256) != 0 {
 		if active.AvailableSupply.Cmp(big.NewInt(int64(quantity))) < 0 {
 			reasons = append(reasons, NotEnoughSupply)
+			return reasons, nil
 		}
 	}
 
@@ -365,6 +372,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 
 		if balance.Cmp(totalPrice) < 0 {
 			reasons = append(reasons, InsufficientBalance)
+			return reasons, nil
 		}
 	} else {
 		provider := drop.Helper.GetProvider()
@@ -380,6 +388,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 
 		if balance.Cmp(totalPrice) < 0 {
 			reasons = append(reasons, InsufficientBalance)
+			return reasons, nil
 		}
 	}
 	
