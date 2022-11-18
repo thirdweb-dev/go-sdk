@@ -280,7 +280,6 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 	if err != nil {
 		return nil, err
 	}
-
 	totalClaimedInPhase, err := drop.Abi.GetSupplyClaimedByWallet(&bind.CallOpts{}, activeConditionIndex, common.HexToAddress(addressToCheck))
 	if err != nil {
 		return nil, err
