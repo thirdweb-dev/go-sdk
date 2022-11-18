@@ -75,7 +75,7 @@ type ClaimVerification struct {
 }
 
 type ClaimConditionOutput struct {
-	StartTime                   *big.Int
+	StartTime                   *time.Time
 	MaxClaimableSupply 					*big.Int
 	MaxClaimablePerWallet 		  *big.Int
 	CurrentMintSupply           *big.Int

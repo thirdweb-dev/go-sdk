@@ -10,6 +10,7 @@ import (
 	"math/big"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/btcsuite/btcutil/base58"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -469,8 +470,10 @@ func transformResultToClaimCondition(
 		return nil, err
 	}
 
+	startTime := time.Unix(pm.StartTimestamp.Int64(), 0)
+
 	return &ClaimConditionOutput{
-		StartTime:                   pm.StartTimestamp,
+		StartTime:                   &startTime,
 		MaxClaimableSupply:          pm.MaxClaimableSupply,
 		MaxClaimablePerWallet:       pm.QuantityLimitPerWallet,
 		CurrentMintSupply:           pm.SupplyClaimed,

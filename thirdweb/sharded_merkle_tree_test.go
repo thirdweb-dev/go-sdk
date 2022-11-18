@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMerkleTree(t *testing.T) {
+func TestMerkleTreeSmall(t *testing.T) {
 	sdk, err := NewThirdwebSDK("http://localhost:8545", nil)
 	if err != nil {
 		panic(err)
