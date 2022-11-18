@@ -290,6 +290,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 	if active.AvailableSupply.Cmp(MaxUint256) != 0 {
 		if active.AvailableSupply.Cmp(big.NewInt(int64(quantity))) < 0 {
 			reasons = append(reasons, NotEnoughSupply)
+			return reasons, nil
 		}
 	}
 
@@ -373,6 +374,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 
 		if balance.Cmp(totalPrice) < 0 {
 			reasons = append(reasons, InsufficientBalance)
+			return reasons, nil
 		}
 	} else {
 		provider := drop.Helper.GetProvider()
@@ -388,6 +390,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 
 		if balance.Cmp(totalPrice) < 0 {
 			reasons = append(reasons, InsufficientBalance)
+			return reasons, nil
 		}
 	}
 	
