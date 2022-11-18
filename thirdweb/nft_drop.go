@@ -242,9 +242,14 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 		return nil, err
 	}
 
+	remainingClaimable := big.NewInt(0).Sub(claimVerification.MaxClaimable, totalClaimedInPhase)
+	if remainingClaimable.Cmp(big.NewInt(0)) < 0 {
+		remainingClaimable = big.NewInt(0)
+	}
+
 	return &ClaimInfo{
 		PricePerToken: claimVerification.Price,
-		RemainingClaimable: big.NewInt(0).Sub(claimVerification.MaxClaimable, totalClaimedInPhase),
+		RemainingClaimable: remainingClaimable,
 		CurrencyAddress: common.HexToAddress(claimVerification.CurrencyAddress),
 	}, nil
 }
