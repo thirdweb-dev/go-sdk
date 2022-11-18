@@ -270,10 +270,9 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 		if strings.Contains(err.Error(), "!CONDITION") || strings.Contains(err.Error(), "no active mint condition") {
 			reasons = append(reasons, NoClaimConditionSet)
 			return reasons, nil
-		} else {
-			reasons = append(reasons, Unknown)
-			return reasons, nil
-		}
+		} 
+		
+		return reasons, err
 	}
 
 	activeConditionIndex, err := drop.Abi.GetActiveClaimConditionId(&bind.CallOpts{})
