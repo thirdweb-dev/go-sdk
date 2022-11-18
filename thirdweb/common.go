@@ -409,11 +409,13 @@ func prepareClaim(
 	}
 
 	claimVerification := &ClaimVerification{
-		Proofs:          proofs,
-		MaxClaimable:    maxClaimable,
-		Price:           priceInProof,
-		CurrencyAddress: currencyAddressInProof,
-		Value:           value,
+		Value:           				value,
+		Proofs:          				proofs,
+		MaxClaimable:    				maxClaimable,
+		Price:           				pricePerToken,
+		CurrencyAddress: 				currencyAddress,
+		PriceInProof:    				priceInProof,
+		CurrencyAddressInProof: currencyAddressInProof,
 	}
 
 	return claimVerification, nil

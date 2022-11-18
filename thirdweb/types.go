@@ -70,6 +70,8 @@ type ClaimVerification struct {
 	MaxClaimable              *big.Int
 	Price                     *big.Int
 	CurrencyAddress           string
+	PriceInProof              *big.Int
+	CurrencyAddressInProof    string
 }
 
 type ClaimConditionOutput struct {
@@ -528,6 +530,12 @@ type ClaimArguments struct {
 	PricePerToken  *big.Int
 	AllowlistProof abi.IDropAllowlistProof
 	Data 					 []byte
+}
+
+type ClaimInfo struct {
+	PricePerToken      *big.Int
+	CurrencyAddress    common.Address
+	RemainingClaimable *big.Int
 }
 
 type ClaimConditionInput struct {
