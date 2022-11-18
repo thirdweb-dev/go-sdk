@@ -84,7 +84,6 @@ type ClaimConditionOutput struct {
 	Price                       *big.Int
 	CurrencyAddress             string
 	CurrencyMetadata            *CurrencyValue
-	MaxQuantity                 *big.Int
 	MerkleRootHash              [32]byte
 }
 type Currency struct {

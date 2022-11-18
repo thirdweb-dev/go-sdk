@@ -232,6 +232,11 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 		return nil, err
 	}
 
+	active, err := drop.ClaimConditions.GetActive()
+	if err != nil {
+		return nil, err
+	}
+
 	activeConditionIndex, err := drop.Abi.GetActiveClaimConditionId(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
@@ -245,6 +250,9 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 	remainingClaimable := big.NewInt(0).Sub(claimVerification.MaxClaimable, totalClaimedInPhase)
 	if remainingClaimable.Cmp(big.NewInt(0)) < 0 {
 		remainingClaimable = big.NewInt(0)
+	}
+	if active.AvailableSupply.Cmp(remainingClaimable) < 0 {
+		remainingClaimable = active.AvailableSupply
 	}
 
 	return &ClaimInfo{
