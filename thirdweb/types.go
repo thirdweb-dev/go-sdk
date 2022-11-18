@@ -70,6 +70,8 @@ type ClaimVerification struct {
 	MaxClaimable              *big.Int
 	Price                     *big.Int
 	CurrencyAddress           string
+	PriceInProof              *big.Int
+	CurrencyAddressInProof    string
 }
 
 type ClaimConditionOutput struct {

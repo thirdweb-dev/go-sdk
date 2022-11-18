@@ -318,8 +318,8 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 			proof := abi.IDropAllowlistProof{
 				Proof: claimVerification.Proofs,
 				QuantityLimitPerWallet: claimVerification.MaxClaimable,
-				PricePerToken: claimVerification.Price,
-				Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+				PricePerToken: claimVerification.PriceInProof,
+				Currency: common.HexToAddress(claimVerification.CurrencyAddressInProof),
 			}
 	
 			isValid, err := drop.Abi.VerifyClaim(
@@ -491,8 +491,8 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 	proof := abi.IDropAllowlistProof{
 		Proof: claimVerification.Proofs,
 		QuantityLimitPerWallet: claimVerification.MaxClaimable,
-		PricePerToken: claimVerification.Price,
-		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+		PricePerToken: claimVerification.PriceInProof,
+		Currency: common.HexToAddress(claimVerification.CurrencyAddressInProof),
 	}
 
 	tx, err := drop.Abi.Claim(
@@ -527,8 +527,8 @@ func (drop *NFTDrop) GetClaimArguments(
 	proof := abi.IDropAllowlistProof{
 		Proof: claimVerification.Proofs,
 		QuantityLimitPerWallet: claimVerification.MaxClaimable,
-		PricePerToken: claimVerification.Price,
-		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+		PricePerToken: claimVerification.PriceInProof,
+		Currency: common.HexToAddress(claimVerification.CurrencyAddressInProof),
 	}
 
 	return &ClaimArguments{ 
