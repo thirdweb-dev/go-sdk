@@ -6,6 +6,7 @@ import (
 	"errors"
 	"math"
 	"reflect"
+	"sort"
 	"sync"
 )
 
@@ -43,6 +44,10 @@ type Config struct {
 	// If true, generate a dummy node with random hash value.
 	// Otherwise, then the odd node situation is handled by duplicating the previous node.
 	NoDuplicates bool
+	// IMPORTANT: To match the behavior of merkletreejs, sort leaves before building tree
+	SortLeaves bool
+	// IMPORTANT: To match the behavior of merkletreejs, sort pairs before hashing them
+	SortPairs bool
 }
 
 // MerkleTree implements the Merkle Tree structure
@@ -307,6 +312,7 @@ func getDummyHash() ([]byte, error) {
 	return dummyBytes, nil
 }
 
+// IMPORTANT: Do not call hash function on leaves!
 func (m *MerkleTree) leafGen(blocks []DataBlock) ([][]byte, error) {
 	var (
 		lenLeaves = len(blocks)
@@ -317,12 +323,17 @@ func (m *MerkleTree) leafGen(blocks []DataBlock) ([][]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		var hash []byte
-		if hash, err = m.HashFunc(data); err != nil {
-			return nil, err
-		}
-		leaves[i] = hash
+
+		leaves[i] = data
 	}
+
+	// IMPORTANT: To match merkletreejs, we need to sort the leaves before hashing
+	if m.SortLeaves {
+		sort.Slice(leaves, func(i, j int) bool {
+			return bytes.Compare(leaves[i], leaves[j]) < 0
+		})
+	}
+
 	return leaves, nil
 }
 
@@ -388,7 +399,16 @@ func (m *MerkleTree) treeBuild() (err error) {
 			if (reflect.DeepEqual(m.tree[i][j], m.tree[i][j+1])) {
 				m.tree[i+1][j>>1] = m.tree[i][j]
 			} else {
-				m.tree[i+1][j>>1], err = m.HashFunc(append(m.tree[i][j], m.tree[i][j+1]...))
+				// IMPORTANT: To match merkletreejs, we sort the two leaves before hashing them together
+				if m.SortPairs {
+					if bytes.Compare(m.tree[i][j], m.tree[i][j+1]) < 0 {
+						m.tree[i+1][j>>1], err = m.HashFunc(append(m.tree[i][j], m.tree[i][j+1]...))
+					} else {
+						m.tree[i+1][j>>1], err = m.HashFunc(append(m.tree[i][j+1], m.tree[i][j]...))
+					}
+				} else {
+					m.tree[i+1][j>>1], err = m.HashFunc(append(m.tree[i][j], m.tree[i][j+1]...))
+				}
 			}
 
 			if err != nil {
