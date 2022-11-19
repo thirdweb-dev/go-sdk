@@ -473,7 +473,7 @@ func transformResultToClaimCondition(
 	startTime := time.Unix(pm.StartTimestamp.Int64(), 0)
 
 	return &ClaimConditionOutput{
-		StartTime:                   &startTime,
+		StartTime:                   startTime,
 		MaxClaimableSupply:          pm.MaxClaimableSupply,
 		MaxClaimablePerWallet:       pm.QuantityLimitPerWallet,
 		CurrentMintSupply:           pm.SupplyClaimed,
