@@ -58,12 +58,18 @@ func (tree *ShardedMerkleTree) FetchAndCacheDecimals(
 	provider *ethclient.Client,
 	currencyAddress string,
 ) (int, error) {
+	if currencyAddress == "" {
+		return 18, nil
+	}
+
 	decimals, exists := cache[currencyAddress]
 	if !exists {
 		currencyMetadata, err := fetchCurrencyMetadata(ctx, provider, currencyAddress)
 		if err != nil {
 			return 0, err
 		}
+
+		fmt.Printf("%#v\n", currencyMetadata)
 
 		decimals = currencyMetadata.Decimals
 		cache[currencyAddress] = decimals

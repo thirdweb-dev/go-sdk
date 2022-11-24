@@ -121,59 +121,12 @@ var nftDropClaimCmd = &cobra.Command{
 			panic(err)
 		}
 
-		emptySdk, err := thirdweb.NewThirdwebSDK(
-			chainRpcUrl,
-			nil,
-		)
+		tx, err := nftDrop.Claim(context.Background(), 1)
 		if err != nil {
 			panic(err)
 		}
 
-		emptyDrop, err := emptySdk.GetNFTDrop(nftDropContractAddress)
-
-		address := thirdwebSDK.GetSignerAddress().String()
-		claimArgs, err := emptyDrop.GetClaimArguments(context.Background(), address, 1)	
-		if err != nil {
-			panic(err)
-		}
-
-		fmt.Printf("%#v\n", claimArgs)
-
-		txOpts, err := nftDrop.Helper.GetTxOptions(context.Background())
-		if err != nil {
-			panic(err)
-		}
-
-		txOpts.Value = claimArgs.TxValue
-
-		tx, err := nftDrop.Abi.Claim(
-			txOpts,
-			claimArgs.Receiver,
-			claimArgs.Quantity,
-			claimArgs.Currency,
-			claimArgs.PricePerToken,
-			claimArgs.AllowlistProof,
-			claimArgs.Data,
-		)
-		if err != nil {
-			panic(err)
-		}
-
-		awaitTx(tx.Hash())
-
-		unclaimed, err := nftDrop.TotalUnclaimedSupply()
-		if err != nil {
-			panic(err)
-		}
-
-		fmt.Println(unclaimed)
-
-		// tx, err := nftDrop.Claim(context.Background(), 1)
-		// if err != nil {
-		// 	panic(err)
-		// }
-
-		// log.Println("Claimed nft with tx hash", tx.Hash().String())
+		log.Println("Claimed nft with tx hash", tx.Hash().String())
 	},
 }
 
