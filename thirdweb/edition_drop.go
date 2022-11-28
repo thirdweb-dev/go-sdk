@@ -178,7 +178,7 @@ func (drop *EditionDrop) Claim(ctx context.Context, tokenId int, quantity int) (
 //
 //	tx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)
 func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string, tokenId int, quantity int) (*types.Transaction, error) {
-	claimVerification, err := drop.prepareClaim(ctx, destinationAddress, tokenId, quantity)
+	claimVerification, err := drop.prepareClaim(ctx, tokenId, quantity)
 	if err != nil {
 		return nil, err
 	}
@@ -219,7 +219,8 @@ func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string,
 	return drop.Helper.AwaitTx(tx.Hash())
 }
 
-func (drop *EditionDrop) prepareClaim(ctx context.Context, addressToClaim string, tokenId int, quantity int) (*ClaimVerification, error) {
+func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity int) (*ClaimVerification, error) {
+	addressToClaim := drop.helper.GetSignerAddress().Hex()
 	claimCondition, err := drop.ClaimConditions.GetActive(ctx, tokenId)
 	if err != nil {
 		return nil, err
