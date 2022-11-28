@@ -490,7 +490,8 @@ func (drop *NFTDrop) Claim(ctx context.Context, quantity int) (*types.Transactio
 //
 //	tx, err := contract.ClaimTo(context.Background(), address, quantity)
 func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, quantity int) (*types.Transaction, error) {	
-	claimVerification, err := drop.prepareClaim(ctx, destinationAddress, quantity, true)
+	addressToClaim := drop.helper.GetSignerAddress().Hex()
+	claimVerification, err := drop.prepareClaim(ctx, addressToClaim, quantity, true)
 	if err != nil {
 		return nil, err
 	}
