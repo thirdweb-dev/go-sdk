@@ -34,12 +34,14 @@ type uploadResponse struct {
 }
 
 type IpfsStorage struct {
-	GatewayUrl string
+	gatewayUrl string
+	httpClient *http.Client
 }
 
-func newIpfsStorage(gatewayUrl string) *IpfsStorage {
+func newIpfsStorage(gatewayUrl string, httpClient *http.Client) *IpfsStorage {
 	return &IpfsStorage{
-		GatewayUrl: gatewayUrl,
+		gatewayUrl: gatewayUrl,
+		httpClient: httpClient,
 	}
 }
 
@@ -51,8 +53,8 @@ func newIpfsStorage(gatewayUrl string) *IpfsStorage {
 //
 // returns: byte data of the IPFS data at the URI
 func (ipfs *IpfsStorage) Get(uri string) ([]byte, error) {
-	gatewayUrl := replaceHashWithGatewayUrl(uri, ipfs.GatewayUrl)
-	resp, err := http.Get(gatewayUrl)
+	gatewayUrl := replaceHashWithGatewayUrl(uri, ipfs.gatewayUrl)
+	resp, err := ipfs.httpClient.Get(gatewayUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +260,7 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 
 // returns - map[string]interface{}
 func (ipfs *IpfsStorage) batchUploadProperties(data []map[string]interface{}) (interface{}, error) {
-	sanitizedMetadatas, err := ipfs.replaceGatewayUrlWithHash(data, "ipfs://", ipfs.GatewayUrl)
+	sanitizedMetadatas, err := ipfs.replaceGatewayUrlWithHash(data, "ipfs://", ipfs.gatewayUrl)
 	if err != nil {
 		return nil, err
 	}
