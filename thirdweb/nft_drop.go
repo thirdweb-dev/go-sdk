@@ -30,8 +30,8 @@ import (
 //	contract, err := sdk.GetNFTDrop("{{contract_address}}")
 type NFTDrop struct {
 	*ERC721
-	Abi    *abi.DropERC721
-	Helper *contractHelper
+	Abi             *abi.DropERC721
+	Helper          *contractHelper
 	ClaimConditions *NFTDropClaimConditions
 	Encoder         *NFTDropEncoder
 	Events          *ContractEvents
@@ -119,7 +119,7 @@ func (nft *NFTDrop) GetOwnedTokenIDs(ctx context.Context, address string) ([]*bi
 		owner, err := nft.abi.OwnerOf(&bind.CallOpts{}, big.NewInt(int64(i)))
 		if err != nil {
 			return nil, err
-		} 
+		}
 
 		if strings.ToLower(owner.String()) == strings.ToLower(address) {
 			tokenIds = append(tokenIds, big.NewInt(int64(i)))
@@ -128,7 +128,6 @@ func (nft *NFTDrop) GetOwnedTokenIDs(ctx context.Context, address string) ([]*bi
 
 	return tokenIds, nil
 }
-
 
 // Get a list of all the NFTs that have been claimed from this contract.
 //
@@ -232,7 +231,7 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 		return nil, err
 	}
 
-	active, err := drop.ClaimConditions.GetActive()
+	active, err := drop.ClaimConditions.GetActive(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -256,22 +255,22 @@ func (drop *NFTDrop) GetClaimInfo(ctx context.Context, address string) (*ClaimIn
 	}
 
 	return &ClaimInfo{
-		PricePerToken: claimVerification.Price,
+		PricePerToken:      claimVerification.Price,
 		RemainingClaimable: remainingClaimable,
-		CurrencyAddress: common.HexToAddress(claimVerification.CurrencyAddress),
+		CurrencyAddress:    common.HexToAddress(claimVerification.CurrencyAddress),
 	}, nil
 }
 
 func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity int, addressToCheck string) ([]ClaimEligibility, error) {
 	reasons := []ClaimEligibility{}
 
-	active, err := drop.ClaimConditions.GetActive()
+	active, err := drop.ClaimConditions.GetActive(ctx)
 	if err != nil {
 		if strings.Contains(err.Error(), "!CONDITION") || strings.Contains(err.Error(), "no active mint condition") {
 			reasons = append(reasons, NoClaimConditionSet)
 			return reasons, nil
-		} 
-		
+		}
+
 		return reasons, err
 	}
 
@@ -310,30 +309,29 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 			if err != nil {
 				return reasons, err
 			}
-	
-			if (
-				(active.MaxClaimablePerWallet.Cmp(big.NewInt(0)) == 0 && 
-				claimVerification.MaxClaimable.Cmp(MaxUint256) == 0) || 
-				claimVerification.MaxClaimable.Cmp(big.NewInt(0)) == 0) {
+
+			if (active.MaxClaimablePerWallet.Cmp(big.NewInt(0)) == 0 &&
+				claimVerification.MaxClaimable.Cmp(MaxUint256) == 0) ||
+				claimVerification.MaxClaimable.Cmp(big.NewInt(0)) == 0 {
 				reasons = append(reasons, AddressNotAllowed)
 				return reasons, nil
 			} else if totalClaimedInPhase.Add(totalClaimedInPhase, big.NewInt(int64(quantity))).Cmp(claimVerification.MaxClaimable) > 0 {
 				reasons = append(reasons, ExceedsMaxClaimable)
 				return reasons, nil
 			}
-	
+
 			activeConditionIndex, err := drop.Abi.GetActiveClaimConditionId(&bind.CallOpts{})
 			if err != nil {
 				return reasons, err
 			}
-	
+
 			proof := abi.IDropAllowlistProof{
-				Proof: claimVerification.Proofs,
+				Proof:                  claimVerification.Proofs,
 				QuantityLimitPerWallet: claimVerification.MaxClaimable,
-				PricePerToken: claimVerification.PriceInProof,
-				Currency: common.HexToAddress(claimVerification.CurrencyAddressInProof),
+				PricePerToken:          claimVerification.PriceInProof,
+				Currency:               common.HexToAddress(claimVerification.CurrencyAddressInProof),
 			}
-	
+
 			isValid, err := drop.Abi.VerifyClaim(
 				&bind.CallOpts{},
 				activeConditionIndex,
@@ -343,7 +341,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 				claimVerification.Price,
 				proof,
 			)
-	
+
 			if err != nil || !isValid {
 				reasons = append(reasons, AddressNotAllowed)
 				return reasons, nil
@@ -391,7 +389,7 @@ func (drop *NFTDrop) GetClaimIneligibilityReasons(ctx context.Context, quantity 
 			return reasons, nil
 		}
 	}
-	
+
 	return reasons, nil
 }
 
@@ -489,9 +487,9 @@ func (drop *NFTDrop) Claim(ctx context.Context, quantity int) (*types.Transactio
 //	quantity = 1
 //
 //	tx, err := contract.ClaimTo(context.Background(), address, quantity)
-func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, quantity int) (*types.Transaction, error) {	
+func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, quantity int) (*types.Transaction, error) {
 	addressToClaim := drop.helper.GetSignerAddress().Hex()
-	
+
 	claimVerification, err := drop.prepareClaim(ctx, addressToClaim, quantity, true)
 	if err != nil {
 		return nil, err
@@ -505,10 +503,10 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 	txOpts.Value = claimVerification.Value
 
 	proof := abi.IDropAllowlistProof{
-		Proof: claimVerification.Proofs,
+		Proof:                  claimVerification.Proofs,
 		QuantityLimitPerWallet: claimVerification.MaxClaimable,
-		PricePerToken: claimVerification.PriceInProof,
-		Currency: common.HexToAddress(claimVerification.CurrencyAddressInProof),
+		PricePerToken:          claimVerification.PriceInProof,
+		Currency:               common.HexToAddress(claimVerification.CurrencyAddressInProof),
 	}
 
 	tx, err := drop.Abi.Claim(
@@ -541,25 +539,25 @@ func (drop *NFTDrop) GetClaimArguments(
 	}
 
 	proof := abi.IDropAllowlistProof{
-		Proof: claimVerification.Proofs,
+		Proof:                  claimVerification.Proofs,
 		QuantityLimitPerWallet: claimVerification.MaxClaimable,
-		PricePerToken: claimVerification.PriceInProof,
-		Currency: common.HexToAddress(claimVerification.CurrencyAddressInProof),
+		PricePerToken:          claimVerification.PriceInProof,
+		Currency:               common.HexToAddress(claimVerification.CurrencyAddressInProof),
 	}
 
-	return &ClaimArguments{ 
-		claimVerification.Value, 
-		common.HexToAddress(destinationAddress), 
-		big.NewInt(int64(quantity)),  
-		common.HexToAddress(claimVerification.CurrencyAddress), 
-		claimVerification.Price, 
-		proof, 
-		[]byte{}, 
+	return &ClaimArguments{
+		claimVerification.Value,
+		common.HexToAddress(destinationAddress),
+		big.NewInt(int64(quantity)),
+		common.HexToAddress(claimVerification.CurrencyAddress),
+		claimVerification.Price,
+		proof,
+		[]byte{},
 	}, nil
 }
 
 func (drop *NFTDrop) prepareClaim(ctx context.Context, addressToClaim string, quantity int, handleApproval bool) (*ClaimVerification, error) {
-	active, err := drop.ClaimConditions.GetActive()
+	active, err := drop.ClaimConditions.GetActive(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -592,7 +590,7 @@ func (drop *NFTDrop) prepareClaim(ctx context.Context, addressToClaim string, qu
 		} else {
 			pricePerToken = claimVerification.Price
 		}
-	
+
 		var currencyAddress string
 		if claimVerification.CurrencyAddress != zeroAddress {
 			currencyAddress = claimVerification.CurrencyAddress
