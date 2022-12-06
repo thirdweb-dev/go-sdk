@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"math/big"
+	"net/http"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -11,6 +12,7 @@ import (
 type SDKOptions struct {
 	PrivateKey string
 	GatewayUrl string
+	HttpClient *http.Client
 }
 
 type Metadata struct {
@@ -65,26 +67,26 @@ type EditionMetadataInput struct {
 }
 
 type ClaimVerification struct {
-	Value                     *big.Int
-	Proofs                    [][32]byte
-	MaxClaimable              *big.Int
-	Price                     *big.Int
-	CurrencyAddress           string
-	PriceInProof              *big.Int
-	CurrencyAddressInProof    string
+	Value                  *big.Int
+	Proofs                 [][32]byte
+	MaxClaimable           *big.Int
+	Price                  *big.Int
+	CurrencyAddress        string
+	PriceInProof           *big.Int
+	CurrencyAddressInProof string
 }
 
 type ClaimConditionOutput struct {
-	StartTime                   time.Time
-	MaxClaimableSupply 					*big.Int
-	MaxClaimablePerWallet 		  *big.Int
-	CurrentMintSupply           *big.Int
-	AvailableSupply             *big.Int
-	WaitInSeconds               *big.Int
-	Price                       *big.Int
-	CurrencyAddress             string
-	CurrencyMetadata            *CurrencyValue
-	MerkleRootHash              [32]byte
+	StartTime             time.Time
+	MaxClaimableSupply    *big.Int
+	MaxClaimablePerWallet *big.Int
+	CurrentMintSupply     *big.Int
+	AvailableSupply       *big.Int
+	WaitInSeconds         *big.Int
+	Price                 *big.Int
+	CurrencyAddress       string
+	CurrencyMetadata      *CurrencyValue
+	MerkleRootHash        [32]byte
 }
 type Currency struct {
 	Name     string
@@ -528,7 +530,7 @@ type ClaimArguments struct {
 	Currency       common.Address
 	PricePerToken  *big.Int
 	AllowlistProof abi.IDropAllowlistProof
-	Data 					 []byte
+	Data           []byte
 }
 
 type ClaimInfo struct {
@@ -557,7 +559,7 @@ func (condition *ClaimConditionInput) fillDefaults() {
 type SnapshotEntryWithProof struct {
 	Address         string
 	MaxClaimable    string
-	Price 					string
+	Price           string
 	CurrencyAddress string
 	Proof           [][32]byte
 }
@@ -569,20 +571,20 @@ func (entry *SnapshotEntryWithProof) fillDefaults() {
 }
 
 type ShardedMerkleTreeInfo struct {
-	MerkleRoot 				 string 					 `json:"merkleRoot"`
-	BaseUri            string 					 `json:"baseUri"`
-	OriginalEntriesUri string 					 `json:"originalEntriesUri"`
-	ShardNybbles			 int    					 `json:"shardNybbles"`
-	TokenDecimals      int               `json:"tokenDecimals"`
+	MerkleRoot         string `json:"merkleRoot"`
+	BaseUri            string `json:"baseUri"`
+	OriginalEntriesUri string `json:"originalEntriesUri"`
+	ShardNybbles       int    `json:"shardNybbles"`
+	TokenDecimals      int    `json:"tokenDecimals"`
 }
 
 type SnapshotEntry struct {
-	Address         string   `json:"address"`
-	MaxClaimable    string   `json:"maxClaimable"`
-	Price 					string   `json:"price"`
-	CurrencyAddress string   `json:"currencyAddress"`
+	Address         string `json:"address"`
+	MaxClaimable    string `json:"maxClaimable"`
+	Price           string `json:"price"`
+	CurrencyAddress string `json:"currencyAddress"`
 }
 type ShardData struct {
-	Proofs  []string `json:"proofs"`
+	Proofs  []string        `json:"proofs"`
 	Entries []SnapshotEntry `json:"entries"`
 }

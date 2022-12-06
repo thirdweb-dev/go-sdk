@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,7 +19,7 @@ func TestMerkleTreeSmall(t *testing.T) {
 	}
 
 	uri := "ipfs://QmeAx8aRvsYXN6mzky72b9V1HWokb271FoBmDu4tatC8hE/0"
-	storage := newIpfsStorage(defaultIpfsGatewayUrl)
+	storage := newIpfsStorage(defaultIpfsGatewayUrl, http.DefaultClient)
 
 	body, err := storage.Get(uri)
 	if err != nil {
@@ -48,7 +49,7 @@ func TestMerkleTreeEdgeCase(t *testing.T) {
 	}
 
 	uri := "ipfs://QmacDnA4i7Za19LpE3pngwLfUtakn71ghaKKjTkM2Phzj8/0"
-	storage := newIpfsStorage(defaultIpfsGatewayUrl)
+	storage := newIpfsStorage(defaultIpfsGatewayUrl, http.DefaultClient)
 
 	body, err := storage.Get(uri)
 	if err != nil {

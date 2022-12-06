@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -40,6 +41,7 @@ func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions)
 	// Define defaults for all the options
 	privateKey := ""
 	gatewayUrl := defaultIpfsGatewayUrl
+	httpClient := http.DefaultClient
 
 	// Override defaults with the options that are defined
 	if options != nil {
@@ -50,9 +52,13 @@ func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions)
 		if options.GatewayUrl != "" {
 			gatewayUrl = options.GatewayUrl
 		}
+
+		if options.HttpClient != nil {
+			httpClient = options.HttpClient
+		}
 	}
 
-	storage := newIpfsStorage(gatewayUrl)
+	storage := newIpfsStorage(gatewayUrl, httpClient)
 
 	handler, err := NewProviderHandler(provider, privateKey)
 	if err != nil {
@@ -230,13 +236,13 @@ func getDefaultRpcUrl(rpcUrlorName string) (string, error) {
 	case "avalanche":
 		return defaultRpc("avalanche")
 	case "optimism":
-		return defaultRpc("optimism");
+		return defaultRpc("optimism")
 	case "optimism-goerli":
-		return defaultRpc("optimism-goerli");
+		return defaultRpc("optimism-goerli")
 	case "arbitrum":
-		return defaultRpc("arbitrum");
+		return defaultRpc("arbitrum")
 	case "arbitrum-goerli":
-		return defaultRpc("arbitrum-goerli");
+		return defaultRpc("arbitrum-goerli")
 	default:
 		if strings.HasPrefix(rpcUrlorName, "http") {
 			return rpcUrlorName, nil
