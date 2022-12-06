@@ -59,12 +59,14 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 	if err != nil {
 		return nil, err
 	}
-	setErc20Allowance(
+	if err := setErc20Allowance(
 		signature.helper,
 		message.Price,
 		message.Currency.String(),
 		txOpts,
-	)
+	); err != nil {
+		return nil, err
+	}
 
 	tx, err := signature.abi.MintWithSignature(txOpts, *message, signedPayload.Signature)
 	if err != nil {
