@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
 	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
@@ -83,7 +84,7 @@ var nftDropGetActiveCmd = &cobra.Command{
 			panic(err)
 		}
 
-		active, err := nftDrop.ClaimConditions.GetActive()
+		active, err := nftDrop.ClaimConditions.GetActive(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -95,7 +96,7 @@ var nftDropGetActiveCmd = &cobra.Command{
 		fmt.Println("Price:", active.Price)
 		fmt.Println("Wait In Seconds", active.WaitInSeconds)
 
-		all, err := nftDrop.ClaimConditions.GetAll()
+		all, err := nftDrop.ClaimConditions.GetAll(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -132,7 +133,7 @@ var nftDropClaimCmd = &cobra.Command{
 		emptyDrop, err := emptySdk.GetNFTDrop(nftDropContractAddress)
 
 		address := thirdwebSDK.GetSignerAddress().String()
-		claimArgs, err := emptyDrop.GetClaimArguments(context.Background(), address, 1)	
+		claimArgs, err := emptyDrop.GetClaimArguments(context.Background(), address, 1)
 		if err != nil {
 			panic(err)
 		}

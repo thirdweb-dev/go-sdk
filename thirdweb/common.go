@@ -82,7 +82,7 @@ func convertToReadableQuantity(bn *big.Int, decimals int) string {
 }
 
 func convertQuantityToBigNumber(quantity string, decimals int) (*big.Int, error) {
-  if quantity == "unlimited" {
+	if quantity == "unlimited" {
 		MaxUint256 := new(big.Int).Sub(new(big.Int).Lsh(common.Big1, 256), common.Big1)
 		return MaxUint256, nil
 	} else {
@@ -374,9 +374,9 @@ func prepareClaim(
 				}
 
 				priceInProof, err = normalizePriceValue(
-					ctx, 
-					contractHelper.GetProvider(), 
-					flt, 
+					ctx,
+					contractHelper.GetProvider(),
+					flt,
 					snapshotEntry.CurrencyAddress,
 				)
 			}
@@ -406,16 +406,16 @@ func prepareClaim(
 	if pricePerToken.Cmp(big.NewInt(0)) > 0 {
 		if isNativeToken(currencyAddress) {
 			value = big.NewInt(0).Mul(big.NewInt(int64(quantity)), pricePerToken)
-		} 
+		}
 	}
 
 	claimVerification := &ClaimVerification{
-		Value:           				value,
-		Proofs:          				proofs,
-		MaxClaimable:    				maxClaimable,
-		Price:           				pricePerToken,
-		CurrencyAddress: 				currencyAddress,
-		PriceInProof:    				priceInProof,
+		Value:                  value,
+		Proofs:                 proofs,
+		MaxClaimable:           maxClaimable,
+		Price:                  pricePerToken,
+		CurrencyAddress:        currencyAddress,
+		PriceInProof:           priceInProof,
 		CurrencyAddressInProof: currencyAddressInProof,
 	}
 
@@ -443,7 +443,7 @@ func fetchSnapshotEntryForAddress(
 		if err != nil {
 			return nil, err
 		}
-	
+
 		metadata := &ShardedMerkleTreeInfo{}
 		if err := json.Unmarshal(body, &metadata); err != nil {
 			return nil, err
@@ -461,9 +461,7 @@ func fetchSnapshotEntryForAddress(
 func transformResultToClaimCondition(
 	ctx context.Context,
 	pm *abi.IClaimConditionClaimCondition,
-	merkleMetadata interface{},
 	provider *ethclient.Client,
-	storage storage,
 ) (*ClaimConditionOutput, error) {
 	currencyValue, err := fetchCurrencyValue(ctx, provider, pm.Currency.String(), pm.PricePerToken)
 	if err != nil {
@@ -473,16 +471,16 @@ func transformResultToClaimCondition(
 	startTime := time.Unix(pm.StartTimestamp.Int64(), 0)
 
 	return &ClaimConditionOutput{
-		StartTime:                   startTime,
-		MaxClaimableSupply:          pm.MaxClaimableSupply,
-		MaxClaimablePerWallet:       pm.QuantityLimitPerWallet,
-		CurrentMintSupply:           pm.SupplyClaimed,
-		AvailableSupply:             big.NewInt(0).Sub(pm.MaxClaimableSupply, pm.SupplyClaimed),
-		WaitInSeconds:               big.NewInt(0),
-		Price:                       pm.PricePerToken,
-		CurrencyAddress:             pm.Currency.String(),
-		CurrencyMetadata:            currencyValue,
-		MerkleRootHash:              pm.MerkleRoot,
+		StartTime:             startTime,
+		MaxClaimableSupply:    pm.MaxClaimableSupply,
+		MaxClaimablePerWallet: pm.QuantityLimitPerWallet,
+		CurrentMintSupply:     pm.SupplyClaimed,
+		AvailableSupply:       big.NewInt(0).Sub(pm.MaxClaimableSupply, pm.SupplyClaimed),
+		WaitInSeconds:         big.NewInt(0),
+		Price:                 pm.PricePerToken,
+		CurrencyAddress:       pm.Currency.String(),
+		CurrencyMetadata:      currencyValue,
+		MerkleRootHash:        pm.MerkleRoot,
 	}, nil
 }
 

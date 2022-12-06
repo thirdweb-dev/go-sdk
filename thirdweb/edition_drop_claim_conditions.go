@@ -8,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -51,17 +52,12 @@ func newEditionDropClaimConditions(address common.Address, provider *ethclient.C
 //	fmt.Println("Price:", condition.Price)
 //	fmt.Println("Wait In Seconds", condition.WaitInSeconds)
 func (claim *EditionDropClaimConditions) GetActive(ctx context.Context, tokenId int) (*ClaimConditionOutput, error) {
-	id, err := claim.abi.GetActiveClaimConditionId(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+	id, err := claim.abi.GetActiveClaimConditionId(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 	if err != nil {
 		return nil, err
 	}
 
-	mc, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, big.NewInt(int64(tokenId)), id)
-	if err != nil {
-		return nil, err
-	}
-
-	merkle, err := claim.GetMerkleMetadata()
+	mc, err := claim.abi.GetClaimConditionById(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)), id)
 	if err != nil {
 		return nil, err
 	}
@@ -70,9 +66,7 @@ func (claim *EditionDropClaimConditions) GetActive(ctx context.Context, tokenId 
 	claimCondition, err := transformResultToClaimCondition(
 		ctx,
 		&mc,
-		merkle,
 		provider,
-		claim.storage,
 	)
 	if err != nil {
 		return nil, err
@@ -112,12 +106,7 @@ func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int
 
 	conditions := []*ClaimConditionOutput{}
 	for i := startId; i < count; i++ {
-		mc, err := claim.abi.GetClaimConditionById(&bind.CallOpts{}, big.NewInt(int64(tokenId)), big.NewInt(i))
-		if err != nil {
-			return nil, err
-		}
-
-		merkle, err := claim.GetMerkleMetadata()
+		mc, err := claim.abi.GetClaimConditionById(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)), big.NewInt(i))
 		if err != nil {
 			return nil, err
 		}
@@ -125,9 +114,7 @@ func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int
 		claimCondition, err := transformResultToClaimCondition(
 			ctx,
 			&mc,
-			merkle,
 			provider,
-			claim.storage,
 		)
 		if err != nil {
 			return nil, err
@@ -140,22 +127,22 @@ func (claim *EditionDropClaimConditions) GetAll(ctx context.Context, tokenId int
 }
 
 func (claim *EditionDropClaimConditions) GetMerkleMetadata() (*map[string]string, error) {
-	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{});
+	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{})
 	if err != nil {
 		return nil, err
 	}
 
-	body, err := claim.storage.Get(uri);
+	body, err := claim.storage.Get(uri)
 	if err != nil {
 		return nil, err
 	}
 
 	var rawMetadata struct {
 		Merkle map[string]string `json:"merkle"`
-	};
+	}
 	if err := json.Unmarshal(body, &rawMetadata); err != nil {
 		return nil, err
 	}
 
-	return &rawMetadata.Merkle, nil;
+	return &rawMetadata.Merkle, nil
 }
