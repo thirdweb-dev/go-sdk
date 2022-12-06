@@ -63,7 +63,7 @@ func (claim *NFTDropClaimConditions) GetActive(ctx context.Context) (*ClaimCondi
 
 	provider := claim.helper.GetProvider()
 	claimCondition, err := transformResultToClaimCondition(
-		context.Background(),
+		ctx,
 		&active,
 		provider,
 	)
@@ -83,7 +83,7 @@ func (claim *NFTDropClaimConditions) Get(ctx context.Context, claimConditionId i
 	provider := claim.helper.GetProvider()
 
 	claimCondition, err := transformResultToClaimCondition(
-		context.Background(),
+		ctx,
 		&condition,
 		provider,
 	)
@@ -128,7 +128,7 @@ func (claim *NFTDropClaimConditions) GetAll(ctx context.Context) ([]*ClaimCondit
 		}
 
 		claimCondition, err := transformResultToClaimCondition(
-			context.Background(),
+			ctx,
 			&mc,
 			provider,
 		)
