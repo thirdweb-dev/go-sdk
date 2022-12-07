@@ -122,7 +122,9 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 		data = append(data, metadata)
 	}
 	dataToUpload := []map[string]interface{}{}
-	mapstructure.Decode(data, &dataToUpload)
+	if err := mapstructure.Decode(data, &dataToUpload); err != nil {
+		return nil, err
+	}
 
 	batch, err := drop.storage.UploadBatch(
 		dataToUpload,
@@ -196,10 +198,10 @@ func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string,
 	txOpts.Value = claimVerification.Value
 
 	proof := abi.IDrop1155AllowlistProof{
-		Proof: claimVerification.Proofs,
+		Proof:                  claimVerification.Proofs,
 		QuantityLimitPerWallet: claimVerification.MaxClaimable,
-		PricePerToken: claimVerification.Price,
-		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+		PricePerToken:          claimVerification.Price,
+		Currency:               common.HexToAddress(claimVerification.CurrencyAddress),
 	}
 
 	tx, err := drop.abi.Claim(
@@ -226,12 +228,10 @@ func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity
 		return nil, err
 	}
 
-
 	merkleMetadata, err := drop.ClaimConditions.GetMerkleMetadata()
 	if err != nil {
 		return nil, err
 	}
-
 
 	claimVerification, err := prepareClaim(
 		ctx,

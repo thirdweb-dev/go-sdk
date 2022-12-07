@@ -101,7 +101,9 @@ func createSnapshot(
 
 	// TODO: Upload metadata to IPFS
 	snapshotToUpload := map[string]interface{}{}
-	mapstructure.Decode(snapshot, &snapshotToUpload)
+	if err := mapstructure.Decode(snapshot, &snapshotToUpload); err != nil {
+		return nil, err
+	}
 	uri, err := storage.Upload(snapshotToUpload, "", "")
 	if err != nil {
 		return nil, err
