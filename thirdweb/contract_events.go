@@ -18,22 +18,21 @@ import (
 // This interface provides a way to query past events or listen for future events on any contract.
 // It's currently support on all pre-built and custom contracts!
 //
-//
 // Example
 //
-// 	// First get an instance of your contract
-// 	contract, _ := sdk.GetContract("0x...");
+//	// First get an instance of your contract
+//	contract, _ := sdk.GetContract("0x...");
 //
-// 	// Now, get all Transfer events from a specific block range
-// 	contract.Events.GetEvents("Transfer", thirdweb.EventQueryOptions{
-// 	  FromBlock: 100000000,
-// 	  ToBlock:   100000001,
-// 	})
+//	// Now, get all Transfer events from a specific block range
+//	contract.Events.GetEvents("Transfer", thirdweb.EventQueryOptions{
+//	  FromBlock: 100000000,
+//	  ToBlock:   100000001,
+//	})
 //
-// 	// And setup a listener to listen for future Transfer events
-// 	contract.Events.AddEventListener("Transfer", func (event thirdweb.ContractEvent) {
-// 	  fmt.Printf("%#v\n", event)
-// 	})
+//	// And setup a listener to listen for future Transfer events
+//	contract.Events.AddEventListener("Transfer", func (event thirdweb.ContractEvent) {
+//	  fmt.Printf("%#v\n", event)
+//	})
 type ContractEvents struct {
 	abi      *abi.ABI
 	contract *bind.BoundContract
@@ -53,8 +52,8 @@ type ContractEvent struct {
 }
 
 type EventSubscription struct {
-  Err 				func () <- chan error
-	Unsubscribe func ()
+	Err         func() <-chan error
+	Unsubscribe func()
 }
 
 func newContractEvents(contractAbi string, helper *contractHelper) (*ContractEvents, error) {
@@ -82,17 +81,17 @@ func newContractEvents(contractAbi string, helper *contractHelper) (*ContractEve
 //
 // Example
 //
-// 	// Define a listener function to be called whenever a new Transfer event is received
-// 	listener := func (event thirdweb.ContractEvent) {
-// 	  fmt.Printf("%#v\n", event)
-// 	} 
+//	// Define a listener function to be called whenever a new Transfer event is received
+//	listener := func (event thirdweb.ContractEvent) {
+//	  fmt.Printf("%#v\n", event)
+//	}
 //
-// 	// Add a new listener for the Transfer event
-// 	subscription := contract.Events.AddEventListener(context.Background(), "Transfer", listener)
+//	// Add a new listener for the Transfer event
+//	subscription := contract.Events.AddEventListener(context.Background(), "Transfer", listener)
 //
-// 	// Unsubscribe from the Transfer event at some time in the future, closing the listener
-// 	subscription.Unsubscribe()
-func (events *ContractEvents) AddEventListener(ctx context.Context, eventName string, listener func (event ContractEvent)) (EventSubscription) {
+//	// Unsubscribe from the Transfer event at some time in the future, closing the listener
+//	subscription.Unsubscribe()
+func (events *ContractEvents) AddEventListener(ctx context.Context, eventName string, listener func(event ContractEvent)) EventSubscription {
 	ticker := time.NewTicker(2 * time.Second)
 	done := make(chan bool)
 	errors := make(chan error)
@@ -106,9 +105,9 @@ func (events *ContractEvents) AddEventListener(ctx context.Context, eventName st
 
 		for {
 			select {
-			case <- done:
+			case <-done:
 				return
-			case <- ticker.C:
+			case <-ticker.C:
 				currentBlockNumber, err := events.helper.GetProvider().BlockNumber(ctx)
 				if err != nil {
 					errors <- err
@@ -118,7 +117,7 @@ func (events *ContractEvents) AddEventListener(ctx context.Context, eventName st
 				if currentBlockNumber >= nextBlockToCheck {
 					recentEvents, err := events.GetEvents(ctx, eventName, EventQueryOptions{
 						FromBlock: nextBlockToCheck,
-						ToBlock: &currentBlockNumber,
+						ToBlock:   &currentBlockNumber,
 					})
 					if err != nil {
 						errors <- err
@@ -136,10 +135,10 @@ func (events *ContractEvents) AddEventListener(ctx context.Context, eventName st
 	}()
 
 	subscription := EventSubscription{
-		Err: func () (<-chan error) {
+		Err: func() <-chan error {
 			return errors
 		},
-		Unsubscribe: func () {
+		Unsubscribe: func() {
 			done <- true
 		},
 	}
@@ -157,21 +156,21 @@ func (events *ContractEvents) AddEventListener(ctx context.Context, eventName st
 //
 // Example
 //
-// 	// First we define a filter to only get Transfer events where the "from" address is "0x..."
-// 	// Note that you can only add filters for indexed parameters on events
-// 	filters := map[string]interface{} {
-// 	  "from": common.HexToAddress("0x...")
-// 	}
+//	// First we define a filter to only get Transfer events where the "from" address is "0x..."
+//	// Note that you can only add filters for indexed parameters on events
+//	filters := map[string]interface{} {
+//	  "from": common.HexToAddress("0x...")
+//	}
 //
-// 	// Now we can define the query options, including the block range and the filter
-// 	queryOptions := thirdweb.EventQueryOptions{
-// 	  FromBlock: 100000000, // Defaults to block 0 if you don't specify this field
-// 	  ToBlock:   100000001, // Defaults to latest block if you don't specify this field
-// 	  Filters:   filters,	
-// 	}
+//	// Now we can define the query options, including the block range and the filter
+//	queryOptions := thirdweb.EventQueryOptions{
+//	  FromBlock: 100000000, // Defaults to block 0 if you don't specify this field
+//	  ToBlock:   100000001, // Defaults to latest block if you don't specify this field
+//	  Filters:   filters,
+//	}
 //
-// 	// Now we can query for the Transfer events
-// 	events, _ := contract.Events.GetEvents("Transfer", queryOptions)
+//	// Now we can query for the Transfer events
+//	events, _ := contract.Events.GetEvents("Transfer", queryOptions)
 func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, options EventQueryOptions) ([]ContractEvent, error) {
 	eventSignature, ok := events.abi.Events[eventName]
 	if !ok {
@@ -188,12 +187,12 @@ func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, o
 					// If a filter is provided, check if the type is correct
 					if reflect.TypeOf(value) != input.Type.GetType() {
 						return nil, fmt.Errorf(
-							"Filter for indexed input '%s' is of wrong type, expected type '%s'", 
-							input.Name, 
+							"Filter for indexed input '%s' is of wrong type, expected type '%s'",
+							input.Name,
 							input.Type.GetType().String(),
 						)
 					}
-	
+
 					// If the type is correct, add the filter to the query
 					query = append(query, []interface{}{value})
 				} else {
@@ -203,7 +202,7 @@ func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, o
 			}
 		}
 	}
-	
+
 	topics, err := abi.MakeTopics(query...)
 	if err != nil {
 		return nil, err
@@ -238,8 +237,10 @@ func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, o
 
 func (events *ContractEvents) transformEvent(eventName string, log types.Log) (ContractEvent, error) {
 	parsedLog := map[string]interface{}{}
-	events.contract.UnpackLogIntoMap(parsedLog, eventName, log)
-	event := ContractEvent{ eventName, parsedLog, log }
+	if err := events.contract.UnpackLogIntoMap(parsedLog, eventName, log); err != nil {
+		return ContractEvent{}, err
+	}
+	event := ContractEvent{eventName, parsedLog, log}
 
 	return event, nil
 }

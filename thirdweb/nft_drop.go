@@ -437,7 +437,9 @@ func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataIn
 	}
 
 	dataToUpload := []map[string]interface{}{}
-	mapstructure.Decode(data, &dataToUpload)
+	if err := mapstructure.Decode(data, &dataToUpload); err != nil {
+		return nil, err
+	}
 
 	batch, err := drop.storage.UploadBatch(
 		dataToUpload,

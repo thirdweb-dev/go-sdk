@@ -43,7 +43,9 @@ func fetchTokenMetadata(tokenId int, uri string, storage storage) (*NFTMetadata,
 
 func uploadOrExtractUri(metadata *NFTMetadataInput, storage storage) (string, error) {
 	metadataToUpload := map[string]interface{}{}
-	mapstructure.Decode(metadata, &metadataToUpload)
+	if err := mapstructure.Decode(metadata, &metadataToUpload); err != nil {
+		return "", err
+	}
 	return storage.Upload(metadataToUpload, "", "")
 }
 
@@ -55,7 +57,9 @@ func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]stri
 	}
 
 	dataToUpload := []map[string]interface{}{}
-	mapstructure.Decode(data, &dataToUpload)
+	if err := mapstructure.Decode(data, &dataToUpload); err != nil {
+		return nil, err
+	}
 
 	baseUriWithUris, err := storage.UploadBatch(dataToUpload, 0, "", "")
 	if err != nil {
