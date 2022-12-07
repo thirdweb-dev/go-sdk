@@ -442,6 +442,7 @@ func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataIn
 	}
 
 	batch, err := drop.storage.UploadBatch(
+		ctx,
 		dataToUpload,
 		fileStartNumber,
 		contractAddress,
@@ -564,7 +565,7 @@ func (drop *NFTDrop) prepareClaim(ctx context.Context, addressToClaim string, qu
 		return nil, err
 	}
 
-	merkleMetadata, err := drop.ClaimConditions.getMerkleMetadata()
+	merkleMetadata, err := drop.ClaimConditions.getMerkleMetadata(ctx)
 	if err != nil {
 		return nil, err
 	}

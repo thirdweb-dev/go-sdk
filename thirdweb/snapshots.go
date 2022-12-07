@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -104,7 +105,7 @@ func createSnapshot(
 	if err := mapstructure.Decode(snapshot, &snapshotToUpload); err != nil {
 		return nil, err
 	}
-	uri, err := storage.Upload(snapshotToUpload, "", "")
+	uri, err := storage.Upload(context.Background(), snapshotToUpload, "", "")
 	if err != nil {
 		return nil, err
 	}

@@ -10,6 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -264,7 +265,7 @@ func (erc721 *ERC721) getTokenMetadata(ctx context.Context, tokenId int) (*NFTMe
 	}, big.NewInt(int64(tokenId))); err != nil {
 		return nil, err
 	} else {
-		if nft, err := fetchTokenMetadata(tokenId, uri, erc721.storage); err != nil {
+		if nft, err := fetchTokenMetadata(ctx, tokenId, uri, erc721.storage); err != nil {
 			return nil, err
 		} else {
 			return nft, nil
