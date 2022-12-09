@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	signerTypes "github.com/ethereum/go-ethereum/signer/core/apitypes"
 	"github.com/google/uuid"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -232,7 +233,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 		metadatas = append(metadatas, payload.Metadata)
 	}
 
-	uris, err := uploadOrExtractUris(metadatas, signature.storage)
+	uris, err := uploadOrExtractUris(ctx, metadatas, signature.storage)
 	if err != nil {
 		return nil, err
 	}

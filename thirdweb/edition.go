@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -29,7 +30,7 @@ type Edition struct {
 	Helper    *contractHelper
 	Signature *ERC1155SignatureMinting
 	Encoder   *ContractEncoder
-	Events   	*ContractEvents
+	Events    *ContractEvents
 }
 
 func newEdition(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*Edition, error) {
@@ -107,7 +108,7 @@ func (edition *Edition) Mint(ctx context.Context, metadataWithSupply *EditionMet
 //
 //		tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", metadataWithSupply)
 func (edition *Edition) MintTo(ctx context.Context, address string, metadataWithSupply *EditionMetadataInput) (*types.Transaction, error) {
-	uri, err := uploadOrExtractUri(metadataWithSupply.Metadata, edition.storage)
+	uri, err := uploadOrExtractUri(ctx, metadataWithSupply.Metadata, edition.storage)
 	if err != nil {
 		return nil, err
 	}
@@ -224,7 +225,7 @@ func (edition *Edition) MintBatchTo(ctx context.Context, to string, metadatasWit
 		supplies = append(supplies, metadataWithSupply.Supply)
 	}
 
-	uris, err := uploadOrExtractUris(metadatas, edition.storage)
+	uris, err := uploadOrExtractUris(ctx, metadatas, edition.storage)
 	if err != nil {
 		return nil, err
 	}

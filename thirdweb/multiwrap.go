@@ -10,6 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -28,8 +29,8 @@ import (
 //	contract, err := sdk.GetMultiwrap("{{contract_address}}")
 type Multiwrap struct {
 	*ERC721
-	abi    *abi.Multiwrap
-	Helper *contractHelper
+	abi     *abi.Multiwrap
+	Helper  *contractHelper
 	Encoder *ContractEncoder
 }
 
@@ -163,7 +164,7 @@ func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle,
 	if !ok {
 		tokenMetadata, ok := wrappedTokenMetadata.(*NFTMetadataInput)
 		if ok {
-			tokenUri, err := uploadOrExtractUri(tokenMetadata, multiwrap.storage)
+			tokenUri, err := uploadOrExtractUri(ctx, tokenMetadata, multiwrap.storage)
 			if err != nil {
 				return nil, err
 			}

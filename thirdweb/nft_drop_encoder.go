@@ -191,7 +191,7 @@ func (encoder *NFTDropEncoder) prepareClaim(ctx context.Context, quantity int) (
 		return nil, err
 	}
 
-	merkleMetadata, err := encoder.claimConditions.getMerkleMetadata()
+	merkleMetadata, err := encoder.claimConditions.getMerkleMetadata(ctx)
 	if err != nil {
 		return nil, err
 	}

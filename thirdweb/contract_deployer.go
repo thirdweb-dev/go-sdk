@@ -224,6 +224,7 @@ func (deployer *ContractDeployer) deployContract(ctx context.Context, contractTy
 	}
 
 	contractUri, err := deployer.storage.Upload(
+		ctx,
 		metadataToUpload,
 		deployer.helper.getAddress().String(),
 		deployer.helper.GetSignerAddress().String(),

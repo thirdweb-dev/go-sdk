@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/cobra"
+
 	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
@@ -37,7 +39,7 @@ var storageUploadCmd = &cobra.Command{
 			},
 		}
 
-		uri, err := storage.Upload(assetToUpload, "", "")
+		uri, err := storage.Upload(context.Background(), assetToUpload, "", "")
 		if err != nil {
 			panic(err)
 		}
@@ -71,9 +73,12 @@ var storageUploadBatchCmd = &cobra.Command{
 			&thirdweb.NFTMetadataInput{Name: "Test NFT 3", Description: "Description 3"},
 		}
 		assetToUpload := []map[string]interface{}{}
-		err = mapstructure.Decode(asset, &assetToUpload)
+		if err := mapstructure.Decode(asset, &assetToUpload); err != nil {
+			panic(err)
+		}
 
 		uriWithBaseUris, err := storage.UploadBatch(
+			context.Background(),
 			assetToUpload,
 			0,
 			"",
@@ -106,8 +111,11 @@ var storageUploadImageCmd = &cobra.Command{
 		}
 		assetToUpload := map[string]interface{}{}
 		err = mapstructure.Decode(asset, &assetToUpload)
+		if err != nil {
+			panic(err)
+		}
 
-		uri, err := storage.Upload(assetToUpload, "", "")
+		uri, err := storage.Upload(context.Background(), assetToUpload, "", "")
 		if err != nil {
 			panic(err)
 		}
@@ -134,8 +142,11 @@ var storageUploadImageLinkCmd = &cobra.Command{
 		}
 		assetToUpload := map[string]interface{}{}
 		err = mapstructure.Decode(asset, &assetToUpload)
+		if err != nil {
+			panic(err)
+		}
 
-		uri, err := storage.Upload(assetToUpload, "", "")
+		uri, err := storage.Upload(context.Background(), assetToUpload, "", "")
 		if err != nil {
 			panic(err)
 		}

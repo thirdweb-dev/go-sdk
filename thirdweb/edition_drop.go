@@ -9,6 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/mitchellh/mapstructure"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -127,6 +128,7 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 	}
 
 	batch, err := drop.storage.UploadBatch(
+		ctx,
 		dataToUpload,
 		fileStartNumber,
 		contractAddress,
@@ -228,7 +230,7 @@ func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity
 		return nil, err
 	}
 
-	merkleMetadata, err := drop.ClaimConditions.GetMerkleMetadata()
+	merkleMetadata, err := drop.ClaimConditions.GetMerkleMetadata(ctx)
 	if err != nil {
 		return nil, err
 	}

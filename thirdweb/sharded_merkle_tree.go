@@ -10,18 +10,19 @@ import (
 
 	"github.com/ethereum/go-ethereum/ethclient"
 	solsha3 "github.com/miguelmota/go-solidity-sha3"
-	merkletree "github.com/thirdweb-dev/go-sdk/v2/merkle"
 	"golang.org/x/crypto/sha3"
+
+	merkletree "github.com/thirdweb-dev/go-sdk/v2/merkle"
 )
 
 type ShardedMerkleTree struct {
-	storage storage
-	baseUri string
+	storage            storage
+	baseUri            string
 	originalEntriesUri string
-	shardNybbles int
-	tokenDecimals int
-	shards map[string]ShardData
-	trees map[string]*merkletree.MerkleTree
+	shardNybbles       int
+	tokenDecimals      int
+	shards             map[string]ShardData
+	trees              map[string]*merkletree.MerkleTree
 }
 
 func newShardedMerkleTree(
@@ -79,7 +80,7 @@ func (tree *ShardedMerkleTree) HashEntry(
 ) (string, error) {
 	maxClaimable, err := convertQuantityToBigNumber(entry.MaxClaimable, tokenDecimals)
 	if err != nil {
-		return "", err 
+		return "", err
 	}
 
 	entryPrice := entry.Price
@@ -89,7 +90,7 @@ func (tree *ShardedMerkleTree) HashEntry(
 
 	price, err := convertQuantityToBigNumber(entryPrice, currencyDecimals)
 	if err != nil {
-		return "", err 
+		return "", err
 	}
 
 	currencyAddress := entry.CurrencyAddress
@@ -111,11 +112,11 @@ func (tree *ShardedMerkleTree) HashEntry(
 }
 
 func (tree *ShardedMerkleTree) GetProof(
-	ctx context.Context, 
+	ctx context.Context,
 	address string,
 	provider *ethclient.Client,
 ) (*SnapshotEntryWithProof, error) {
-	shardId := strings.ToLower(address[2:tree.shardNybbles + 2])
+	shardId := strings.ToLower(address[2 : tree.shardNybbles+2])
 	shard, exists := tree.shards[shardId]
 
 	currencyDecimalMap := make(map[string]int)
@@ -123,12 +124,12 @@ func (tree *ShardedMerkleTree) GetProof(
 	if !exists {
 		var shardData ShardData
 		uri := tree.baseUri + `/` + shardId + `.json`
-		raw, err := tree.storage.Get(uri)
+		raw, err := tree.storage.Get(ctx, uri)
 		if err != nil {
 			fmt.Println("[warning] specified address is not in merkle tree")
 			return nil, nil
 		}
-		
+
 		err = json.Unmarshal(raw, &shardData)
 		if err != nil {
 			return nil, err
@@ -154,12 +155,11 @@ func (tree *ShardedMerkleTree) GetProof(
 				return nil, err
 			}
 
-
 			hashedEntries = append(hashedEntries, &MerkleNode{data: hashBytes})
 		}
 
 		// Define our own hash function so we can match merkletreejs
-		calculateHash := func (data []byte) ([]byte, error) {
+		calculateHash := func(data []byte) ([]byte, error) {
 			// Avoid hashing the leaf nodes to match merkletreejs implementation
 			for _, node := range hashedEntries {
 				node, err := node.Serialize()
@@ -173,27 +173,27 @@ func (tree *ShardedMerkleTree) GetProof(
 			}
 
 			h := sha3.NewLegacyKeccak256()
-		
-			if _, err := h.Write([]byte(data)); err != nil {
+
+			if _, err := h.Write(data); err != nil {
 				return nil, err
 			}
-		
+
 			return h.Sum(nil), nil
 		}
 
 		if len(hashedEntries) > 1 {
 			config := &merkletree.Config{
-				Mode: merkletree.ModeProofGenAndTreeBuild,
-				HashFunc: calculateHash,
+				Mode:       merkletree.ModeProofGenAndTreeBuild,
+				HashFunc:   calculateHash,
 				SortLeaves: true,
-				SortPairs: true,
+				SortPairs:  true,
 			}
-	
+
 			merkleTree, err := merkletree.New(config, hashedEntries)
 			if err != nil {
 				return nil, err
 			}
-	
+
 			tree.trees[shardId] = merkleTree
 		}
 	}
@@ -225,7 +225,7 @@ func (tree *ShardedMerkleTree) GetProof(
 		return nil, err
 	}
 
-	proof := [][32]byte{};
+	proof := [][32]byte{}
 	currentTree := tree.trees[shardId]
 	if currentTree != nil {
 		proofData, err := currentTree.GenerateProof(&MerkleNode{data: leafBytes})
@@ -252,11 +252,11 @@ func (tree *ShardedMerkleTree) GetProof(
 	}
 
 	return &SnapshotEntryWithProof{
-		Address: entry.Address,
-		MaxClaimable: entry.MaxClaimable,
-		Price: entry.Price,
+		Address:         entry.Address,
+		MaxClaimable:    entry.MaxClaimable,
+		Price:           entry.Price,
 		CurrencyAddress: entry.CurrencyAddress,
-		Proof: proof,
+		Proof:           proof,
 	}, nil
 }
 

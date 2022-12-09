@@ -142,13 +142,13 @@ func (claim *NFTDropClaimConditions) GetAll(ctx context.Context) ([]*ClaimCondit
 	return conditions, nil
 }
 
-func (claim *NFTDropClaimConditions) getMerkleMetadata() (*map[string]string, error) {
-	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{})
+func (claim *NFTDropClaimConditions) getMerkleMetadata(ctx context.Context) (*map[string]string, error) {
+	uri, err := claim.abi.InternalContractURI(&bind.CallOpts{Context: ctx})
 	if err != nil {
 		return nil, err
 	}
 
-	body, err := claim.storage.Get(uri)
+	body, err := claim.storage.Get(ctx, uri)
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +173,7 @@ func (claim *NFTDropClaimConditions) GetClaimerProofs(
 	}
 
 	if !strings.HasPrefix(hex.EncodeToString(claimCondition.MerkleRootHash[:]), zeroAddress) {
-		merkleMetadata, err := claim.getMerkleMetadata()
+		merkleMetadata, err := claim.getMerkleMetadata(ctx)
 		if err != nil {
 			return nil, err
 		}
