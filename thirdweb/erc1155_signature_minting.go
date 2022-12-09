@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	signerTypes "github.com/ethereum/go-ethereum/signer/core/apitypes"
 	"github.com/google/uuid"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -59,12 +60,14 @@ func (signature *ERC1155SignatureMinting) Mint(ctx context.Context, signedPayloa
 	if err != nil {
 		return nil, err
 	}
-	setErc20Allowance(
+	if err := setErc20Allowance(
 		signature.helper,
 		big.NewInt(message.PricePerToken.Int64()).Mul(message.PricePerToken, message.Quantity),
 		message.Currency.String(),
 		txOpts,
-	)
+	); err != nil {
+		return nil, err
+	}
 
 	tx, err := signature.abi.MintWithSignature(txOpts, *message, signedPayload.Signature)
 	if err != nil {
@@ -344,7 +347,7 @@ func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(ctx context.
 		metadatas = append(metadatas, payload.Metadata)
 	}
 
-	uris, err := uploadOrExtractUris(metadatas, signature.storage)
+	uris, err := uploadOrExtractUris(ctx, metadatas, signature.storage)
 	if err != nil {
 		return nil, err
 	}

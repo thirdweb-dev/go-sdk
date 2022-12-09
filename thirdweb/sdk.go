@@ -1,6 +1,7 @@
 package thirdweb
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -190,8 +191,8 @@ func (sdk *ThirdwebSDK) GetMarketplace(address string) (*Marketplace, error) {
 // # Get an instance of a custom contract deployed with thirdweb deploy
 //
 // address: the address of the contract
-func (sdk *ThirdwebSDK) GetContract(address string) (*SmartContract, error) {
-	abi, err := fetchContractMetadataFromAddress(address, sdk.GetProvider(), &sdk.Storage)
+func (sdk *ThirdwebSDK) GetContract(ctx context.Context, address string) (*SmartContract, error) {
+	abi, err := fetchContractMetadataFromAddress(ctx, address, sdk.GetProvider(), &sdk.Storage)
 	if err != nil {
 		return nil, err
 	}

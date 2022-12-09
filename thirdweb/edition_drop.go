@@ -9,6 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/mitchellh/mapstructure"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -122,9 +123,12 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 		data = append(data, metadata)
 	}
 	dataToUpload := []map[string]interface{}{}
-	mapstructure.Decode(data, &dataToUpload)
+	if err := mapstructure.Decode(data, &dataToUpload); err != nil {
+		return nil, err
+	}
 
 	batch, err := drop.storage.UploadBatch(
+		ctx,
 		dataToUpload,
 		fileStartNumber,
 		contractAddress,
@@ -196,10 +200,10 @@ func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string,
 	txOpts.Value = claimVerification.Value
 
 	proof := abi.IDrop1155AllowlistProof{
-		Proof: claimVerification.Proofs,
+		Proof:                  claimVerification.Proofs,
 		QuantityLimitPerWallet: claimVerification.MaxClaimable,
-		PricePerToken: claimVerification.Price,
-		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+		PricePerToken:          claimVerification.Price,
+		Currency:               common.HexToAddress(claimVerification.CurrencyAddress),
 	}
 
 	tx, err := drop.abi.Claim(
@@ -226,12 +230,10 @@ func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity
 		return nil, err
 	}
 
-
-	merkleMetadata, err := drop.ClaimConditions.GetMerkleMetadata()
+	merkleMetadata, err := drop.ClaimConditions.GetMerkleMetadata(ctx)
 	if err != nil {
 		return nil, err
 	}
-
 
 	claimVerification, err := prepareClaim(
 		ctx,

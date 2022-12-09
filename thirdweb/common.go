@@ -26,8 +26,8 @@ import (
 
 // NFT
 
-func fetchTokenMetadata(tokenId int, uri string, storage storage) (*NFTMetadata, error) {
-	if body, err := storage.Get(uri); err != nil {
+func fetchTokenMetadata(ctx context.Context, tokenId int, uri string, storage storage) (*NFTMetadata, error) {
+	if body, err := storage.Get(ctx, uri); err != nil {
 		return nil, err
 	} else {
 		metadata := &NFTMetadata{
@@ -41,13 +41,15 @@ func fetchTokenMetadata(tokenId int, uri string, storage storage) (*NFTMetadata,
 	}
 }
 
-func uploadOrExtractUri(metadata *NFTMetadataInput, storage storage) (string, error) {
+func uploadOrExtractUri(ctx context.Context, metadata *NFTMetadataInput, storage storage) (string, error) {
 	metadataToUpload := map[string]interface{}{}
-	mapstructure.Decode(metadata, &metadataToUpload)
-	return storage.Upload(metadataToUpload, "", "")
+	if err := mapstructure.Decode(metadata, &metadataToUpload); err != nil {
+		return "", err
+	}
+	return storage.Upload(ctx, metadataToUpload, "", "")
 }
 
-func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]string, error) {
+func uploadOrExtractUris(ctx context.Context, metadatas []*NFTMetadataInput, storage storage) ([]string, error) {
 	// Why is this necessary?
 	data := []interface{}{}
 	for _, metadata := range metadatas {
@@ -55,9 +57,11 @@ func uploadOrExtractUris(metadatas []*NFTMetadataInput, storage storage) ([]stri
 	}
 
 	dataToUpload := []map[string]interface{}{}
-	mapstructure.Decode(data, &dataToUpload)
+	if err := mapstructure.Decode(data, &dataToUpload); err != nil {
+		return nil, err
+	}
 
-	baseUriWithUris, err := storage.UploadBatch(dataToUpload, 0, "", "")
+	baseUriWithUris, err := storage.UploadBatch(ctx, dataToUpload, 0, "", "")
 	if err != nil {
 		return nil, err
 	}
@@ -296,7 +300,9 @@ func approveErc20Allowance(
 			return err
 		}
 
-		contractToApprove.AwaitTx(tx.Hash())
+		if _, err := contractToApprove.AwaitTx(tx.Hash()); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -439,7 +445,7 @@ func fetchSnapshotEntryForAddress(
 
 	snapshotUri, exists := (*merkleMetadata)[merkleRoot]
 	if exists {
-		body, err := storage.Get(snapshotUri)
+		body, err := storage.Get(ctx, snapshotUri)
 		if err != nil {
 			return nil, err
 		}
@@ -601,13 +607,13 @@ func isTokenApprovedForTransfer(
 
 // CUSTOM CONTRACTS
 
-func fetchContractMetadataFromAddress(address string, provider *ethclient.Client, storage storage) (string, error) {
-	metadataUri, err := resolveContractUriFromAddress(address, provider)
+func fetchContractMetadataFromAddress(ctx context.Context, address string, provider *ethclient.Client, storage storage) (string, error) {
+	metadataUri, err := resolveContractUriFromAddress(ctx, address, provider)
 	if err != nil {
 		return "", err
 	}
 
-	metadata, err := fetchContractMetadata(metadataUri, storage)
+	metadata, err := fetchContractMetadata(ctx, metadataUri, storage)
 	if err != nil {
 		return "", err
 	}
@@ -615,8 +621,8 @@ func fetchContractMetadataFromAddress(address string, provider *ethclient.Client
 	return metadata, nil
 }
 
-func resolveContractUriFromAddress(address string, provider *ethclient.Client) (string, error) {
-	bytecode, err := provider.CodeAt(context.Background(), common.HexToAddress(address), nil)
+func resolveContractUriFromAddress(ctx context.Context, address string, provider *ethclient.Client) (string, error) {
+	bytecode, err := provider.CodeAt(ctx, common.HexToAddress(address), nil)
 	if err != nil {
 		return "", err
 	}
@@ -637,8 +643,8 @@ func extractIPFSHashFromBytecode(bytecode []byte) (string, error) {
 	return fmt.Sprintf("ipfs://%v", ipfsHash), nil
 }
 
-func fetchContractMetadata(uri string, storage storage) (string, error) {
-	body, err := storage.Get(uri)
+func fetchContractMetadata(ctx context.Context, uri string, storage storage) (string, error) {
+	body, err := storage.Get(ctx, uri)
 	if err != nil {
 		return "", err
 	}
@@ -697,7 +703,7 @@ func fetchTokenMetadataForContract(
 		uri, err = contract.Uri(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 	}
 
-	return fetchTokenMetadata(tokenId, uri, storage)
+	return fetchTokenMetadata(ctx, tokenId, uri, storage)
 }
 
 func handleTokenApproval(

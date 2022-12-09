@@ -8,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -26,8 +27,8 @@ import (
 //	contract, err := sdk.GetNFTCollection("{{contract_address}}")
 type NFTCollection struct {
 	*ERC721
-	abi    *abi.TokenERC721
-	Helper *contractHelper
+	abi       *abi.TokenERC721
+	Helper    *contractHelper
 	Signature *ERC721SignatureMinting
 	Encoder   *ContractEncoder
 	Events    *ContractEvents
@@ -151,7 +152,7 @@ func (nft *NFTCollection) Mint(ctx context.Context, metadata *NFTMetadataInput) 
 //
 //	tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", metadata)
 func (nft *NFTCollection) MintTo(ctx context.Context, address string, metadata *NFTMetadataInput) (*types.Transaction, error) {
-	uri, err := uploadOrExtractUri(metadata, nft.storage)
+	uri, err := uploadOrExtractUri(ctx, metadata, nft.storage)
 	if err != nil {
 		return nil, err
 	}
@@ -205,7 +206,7 @@ func (nft *NFTCollection) MintBatch(ctx context.Context, metadatas []*NFTMetadat
 //
 //	tx, err := contract.MintBatchTo(context.Background(), "{{wallet_address}}", metadatas)
 func (nft *NFTCollection) MintBatchTo(ctx context.Context, address string, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
-	uris, err := uploadOrExtractUris(metadatas, nft.storage)
+	uris, err := uploadOrExtractUris(ctx, metadatas, nft.storage)
 	if err != nil {
 		return nil, err
 	}

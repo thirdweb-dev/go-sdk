@@ -8,6 +8,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+
 	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
@@ -171,7 +172,7 @@ func getCustom() (*thirdweb.SmartContract, error) {
 
 	log.Printf("Obtaining a Custom on chain %v, contract %v\n", chainRpcUrl, customContractAddress)
 
-	if contract, err := thirdwebSDK.GetContract(customContractAddress); err != nil {
+	if contract, err := thirdwebSDK.GetContract(context.Background(), customContractAddress); err != nil {
 		log.Println("Failed to create an Custom object")
 		return nil, err
 	} else {
