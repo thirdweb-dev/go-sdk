@@ -100,7 +100,6 @@ func newSmartContract(provider *ethclient.Client, address common.Address, contra
 		return nil, err
 	}
 
-
 	events, err := newContractEvents(contractAbi, helper)
 	if err != nil {
 		return nil, err
@@ -185,7 +184,7 @@ func (c *SmartContract) Call(ctx context.Context, method string, args ...interfa
 
 	if abiMethod.StateMutability == "view" {
 		var out []interface{}
-		err := c.contract.Call(&bind.CallOpts{}, &out, method, typedArgs...)
+		err := c.contract.Call(&bind.CallOpts{Context: ctx}, &out, method, typedArgs...)
 		if err != nil {
 			return nil, err
 		}
@@ -206,6 +205,6 @@ func (c *SmartContract) Call(ctx context.Context, method string, args ...interfa
 			return nil, err
 		}
 
-		return c.Helper.AwaitTx(tx.Hash())
+		return c.Helper.AwaitTx(ctx, tx.Hash())
 	}
 }

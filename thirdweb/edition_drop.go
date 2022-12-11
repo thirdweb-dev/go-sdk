@@ -109,7 +109,7 @@ func newEditionDrop(provider *ethclient.Client, address common.Address, privateK
 //
 //	tx, err := contract.MintBatchTo(context.Background(), "{{wallet_address}}", metadatasWithSupply)
 func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
-	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{})
+	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{Context: ctx})
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +149,7 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 		return nil, err
 	}
 
-	return drop.Helper.AwaitTx(tx.Hash())
+	return drop.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Claim NFTs from this contract to the connect wallet.
@@ -220,7 +220,7 @@ func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string,
 		return nil, err
 	}
 
-	return drop.Helper.AwaitTx(tx.Hash())
+	return drop.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity int) (*ClaimVerification, error) {

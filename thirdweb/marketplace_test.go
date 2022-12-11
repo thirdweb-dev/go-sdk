@@ -149,8 +149,8 @@ func TestBuyoutListingNft(t *testing.T) {
 	assert.Equal(t, adminBalance, 2)
 	assert.Equal(t, secondaryBalance, 0)
 
-	adminTokens, _ := token.BalanceOf(adminWallet)
-	secondaryTokens, _ := token.BalanceOf(secondaryWallet)
+	adminTokens, _ := token.BalanceOf(context.Background(), adminWallet)
+	secondaryTokens, _ := token.BalanceOf(context.Background(), secondaryWallet)
 	assert.Equal(t, adminTokens.DisplayValue, float64(100))
 	assert.Equal(t, secondaryTokens.DisplayValue, float64(100))
 
@@ -174,8 +174,8 @@ func TestBuyoutListingNft(t *testing.T) {
 	assert.Equal(t, adminBalance, 1)
 	assert.Equal(t, secondaryBalance, 1)
 
-	adminTokens, _ = token.BalanceOf(adminWallet)
-	secondaryTokens, _ = token.BalanceOf(secondaryWallet)
+	adminTokens, _ = token.BalanceOf(context.Background(), adminWallet)
+	secondaryTokens, _ = token.BalanceOf(context.Background(), secondaryWallet)
 	assert.Equal(t, adminTokens.DisplayValue, float64(110))
 	assert.Equal(t, secondaryTokens.DisplayValue, float64(90))
 }
@@ -190,8 +190,8 @@ func TestBuyoutListingEdition(t *testing.T) {
 	assert.Equal(t, adminBalance, 100)
 	assert.Equal(t, secondaryBalance, 0)
 
-	adminTokens, _ := token.BalanceOf(adminWallet)
-	secondaryTokens, _ := token.BalanceOf(secondaryWallet)
+	adminTokens, _ := token.BalanceOf(context.Background(), adminWallet)
+	secondaryTokens, _ := token.BalanceOf(context.Background(), secondaryWallet)
 	assert.Equal(t, adminTokens.DisplayValue, float64(100))
 	assert.Equal(t, secondaryTokens.DisplayValue, float64(100))
 
@@ -216,8 +216,8 @@ func TestBuyoutListingEdition(t *testing.T) {
 	assert.Equal(t, adminBalance, 90)
 	assert.Equal(t, secondaryBalance, 10)
 
-	adminTokens, _ = token.BalanceOf(adminWallet)
-	secondaryTokens, _ = token.BalanceOf(secondaryWallet)
+	adminTokens, _ = token.BalanceOf(context.Background(), adminWallet)
+	secondaryTokens, _ = token.BalanceOf(context.Background(), secondaryWallet)
 	assert.Equal(t, adminTokens.DisplayValue, float64(110))
 	assert.Equal(t, secondaryTokens.DisplayValue, float64(90))
 }

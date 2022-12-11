@@ -219,6 +219,7 @@ func setErc20AllowanceEncoder(
 }
 
 func setErc20Allowance(
+	ctx context.Context,
 	contractToApprove *contractHelper,
 	value *big.Int,
 	currencyAddress string,
@@ -236,7 +237,7 @@ func setErc20Allowance(
 
 		owner := contractToApprove.GetSignerAddress()
 		spender := contractToApprove.getAddress()
-		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
+		allowance, err := erc20.Allowance(&bind.CallOpts{Context: ctx}, owner, spender)
 		if err != nil {
 			return err
 		}
@@ -253,7 +254,7 @@ func setErc20Allowance(
 				return err
 			}
 
-			_, err = contractToApprove.AwaitTx(tx.Hash())
+			_, err = contractToApprove.AwaitTx(ctx, tx.Hash())
 			if err != nil {
 				return err
 			}
@@ -300,7 +301,7 @@ func approveErc20Allowance(
 			return err
 		}
 
-		if _, err := contractToApprove.AwaitTx(tx.Hash()); err != nil {
+		if _, err := contractToApprove.AwaitTx(ctx, tx.Hash()); err != nil {
 			return err
 		}
 	}
@@ -308,7 +309,7 @@ func approveErc20Allowance(
 	return nil
 }
 
-func hasErc20Allowance(contractToApprove *contractHelper, currencyAddress string, value *big.Int) (bool, error) {
+func hasErc20Allowance(ctx context.Context, contractToApprove *contractHelper, currencyAddress string, value *big.Int) (bool, error) {
 	if isNativeToken(currencyAddress) {
 		return true, nil
 	} else {
@@ -320,7 +321,7 @@ func hasErc20Allowance(contractToApprove *contractHelper, currencyAddress string
 
 		owner := contractToApprove.GetSignerAddress()
 		spender := contractToApprove.getAddress()
-		allowance, err := contractAbi.Allowance(&bind.CallOpts{}, owner, spender)
+		allowance, err := contractAbi.Allowance(&bind.CallOpts{Context: ctx}, owner, spender)
 		if err != nil {
 			return false, err
 		}
@@ -760,7 +761,7 @@ func handleTokenApproval(
 					return err
 				}
 
-				_, err = helper.AwaitTx(tx.Hash())
+				_, err = helper.AwaitTx(ctx, tx.Hash())
 				if err != nil {
 					return err
 				}
@@ -788,7 +789,7 @@ func handleTokenApproval(
 				return err
 			}
 
-			_, err = helper.AwaitTx(tx.Hash())
+			_, err = helper.AwaitTx(ctx, tx.Hash())
 			if err != nil {
 				return err
 			}

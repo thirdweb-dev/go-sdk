@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+
 	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
@@ -32,7 +33,7 @@ var tokenGetCmd = &cobra.Command{
 			panic(err)
 		}
 
-		data, err := token.Get()
+		data, err := token.Get(context.Background())
 		if err != nil {
 			panic(err)
 		}
@@ -41,7 +42,7 @@ var tokenGetCmd = &cobra.Command{
 		log.Println("Symbols: ", data.Symbol)
 		log.Println("Decimals: ", data.Decimals)
 
-		balance, err := token.Balance()
+		balance, err := token.Balance(context.Background())
 		if err != nil {
 			panic(err)
 		}

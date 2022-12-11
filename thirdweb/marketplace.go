@@ -11,6 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -56,7 +57,7 @@ func newMarketplace(provider *ethclient.Client, address common.Address, privateK
 			Abi:     contractAbi,
 			Helper:  helper,
 			Encoder: encoder,
-			Events: events,
+			Events:  events,
 		}
 		return marketplace, nil
 	}
@@ -179,7 +180,7 @@ func (marketplace *Marketplace) CancelListing(ctx context.Context, listingId int
 		return nil, err
 	}
 
-	return marketplace.Helper.AwaitTx(tx.Hash())
+	return marketplace.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Buy a specific listing from the marketplace.
@@ -233,6 +234,7 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 	}
 
 	err = setErc20Allowance(
+		ctx,
 		marketplace.Helper,
 		value,
 		listing.CurrencyContractAddress,
@@ -254,7 +256,7 @@ func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId i
 		return nil, err
 	}
 
-	return marketplace.Helper.AwaitTx(tx.Hash())
+	return marketplace.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Create a new listing on the marketplace where people can buy an asset directly.
@@ -318,9 +320,9 @@ func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewD
 		ListingType:          0,
 	})
 
-	receipt, err := marketplace.Helper.AwaitTx(tx.Hash())
+	receipt, err := marketplace.Helper.AwaitTx(ctx, tx.Hash())
 
-	txReceipt, err := marketplace.Helper.GetProvider().TransactionReceipt(context.Background(), receipt.Hash())
+	txReceipt, err := marketplace.Helper.GetProvider().TransactionReceipt(ctx, receipt.Hash())
 	if err != nil {
 		return 0, err
 	}

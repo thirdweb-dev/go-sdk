@@ -463,7 +463,7 @@ func (drop *NFTDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataIn
 		return nil, err
 	}
 
-	return drop.Helper.AwaitTx(tx.Hash())
+	return drop.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Claim NFTs from this contract to the connect wallet.
@@ -525,7 +525,7 @@ func (drop *NFTDrop) ClaimTo(ctx context.Context, destinationAddress string, qua
 		return nil, err
 	}
 
-	return drop.Helper.AwaitTx(tx.Hash())
+	return drop.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 func (drop *NFTDrop) GetClaimArguments(

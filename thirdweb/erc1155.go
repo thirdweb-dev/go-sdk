@@ -243,7 +243,7 @@ func (erc1155 *ERC1155) Transfer(ctx context.Context, to string, tokenId int, am
 	); err != nil {
 		return nil, err
 	} else {
-		return erc1155.helper.AwaitTx(tx.Hash())
+		return erc1155.helper.AwaitTx(ctx, tx.Hash())
 	}
 }
 
@@ -274,7 +274,7 @@ func (erc1155 *ERC1155) Burn(ctx context.Context, tokenId int, amount int) (*typ
 	); err != nil {
 		return nil, err
 	} else {
-		return erc1155.helper.AwaitTx(tx.Hash())
+		return erc1155.helper.AwaitTx(ctx, tx.Hash())
 	}
 }
 
@@ -299,7 +299,7 @@ func (erc1155 *ERC1155) SetApprovalForAll(ctx context.Context, operator string, 
 	); err != nil {
 		return nil, err
 	} else {
-		return erc1155.helper.AwaitTx(tx.Hash())
+		return erc1155.helper.AwaitTx(ctx, tx.Hash())
 	}
 }
 
