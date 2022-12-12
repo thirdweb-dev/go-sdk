@@ -43,7 +43,7 @@ func (helper *contractHelper) getUnsignedTxOptions(ctx context.Context, signerAd
 	var tipCap, feeCap *big.Int
 
 	provider := helper.GetProvider()
-	block, err := provider.BlockByNumber(context.Background(), nil)
+	block, err := provider.BlockByNumber(ctx, nil)
 	if err == nil && block.BaseFee() != nil {
 		tipCap, _ = big.NewInt(0).SetString("2500000000", 10)
 		baseFee := big.NewInt(0).Mul(block.BaseFee(), big.NewInt(2))
@@ -81,18 +81,22 @@ func (helper *contractHelper) getRawTxOptions(ctx context.Context, noSend bool) 
 	var tipCap, feeCap *big.Int
 
 	provider := helper.GetProvider()
-	block, err := provider.BlockByNumber(context.Background(), nil)
+	block, err := provider.BlockByNumber(ctx, nil)
 	if err == nil && block.BaseFee() != nil {
 		tipCap, _ = big.NewInt(0).SetString("2500000000", 10)
 		baseFee := big.NewInt(0).Mul(block.BaseFee(), big.NewInt(2))
 		feeCap = big.NewInt(0).Add(baseFee, tipCap)
 	}
 
+	signer, err := helper.getSigner(ctx)
+	if err != nil {
+		return nil, err
+	}
 	txOpts := &bind.TransactOpts{
 		Context:   ctx,
 		NoSend:    noSend,
 		From:      helper.GetSignerAddress(),
-		Signer:    helper.getSigner(),
+		Signer:    signer,
 		GasTipCap: tipCap,
 		GasFeeCap: feeCap,
 	}
@@ -100,7 +104,7 @@ func (helper *contractHelper) getRawTxOptions(ctx context.Context, noSend bool) 
 	return txOpts, nil
 }
 
-func (helper *contractHelper) AwaitTx(hash common.Hash) (*types.Transaction, error) {
+func (helper *contractHelper) AwaitTx(ctx context.Context, hash common.Hash) (*types.Transaction, error) {
 	provider := helper.GetProvider()
 	wait := txWaitTimeBetweenAttempts
 	maxAttempts := uint8(txMaxAttempts)
@@ -113,7 +117,7 @@ func (helper *contractHelper) AwaitTx(hash common.Hash) (*types.Transaction, err
 			return nil, syncError
 		}
 
-		if tx, isPending, err := provider.TransactionByHash(context.Background(), hash); err != nil {
+		if tx, isPending, err := provider.TransactionByHash(ctx, hash); err != nil {
 			syncError = err
 			log.Printf("Failed to get tx %v, err = %v\n", hash.String(), err)
 			attempts += 1

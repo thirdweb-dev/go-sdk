@@ -193,7 +193,7 @@ func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle,
 		return nil, err
 	}
 
-	return multiwrap.Helper.AwaitTx(tx.Hash())
+	return multiwrap.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Unwrap a wrapped token bundle into its contents
@@ -222,7 +222,7 @@ func (multiwrap *Multiwrap) Unwrap(ctx context.Context, wrappedTokenId int, reci
 		return nil, err
 	}
 
-	return multiwrap.Helper.AwaitTx(tx.Hash())
+	return multiwrap.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *MultiwrapBundle) ([]abi.ITokenBundleToken, error) {
@@ -242,6 +242,7 @@ func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *Mul
 		}
 
 		hasAllowance, err := hasErc20Allowance(
+			ctx,
 			multiwrap.Helper,
 			erc20.ContractAddress,
 			normalizedQuantity,

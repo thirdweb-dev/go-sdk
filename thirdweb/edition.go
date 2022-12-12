@@ -129,7 +129,7 @@ func (edition *Edition) MintTo(ctx context.Context, address string, metadataWith
 		return nil, err
 	}
 
-	return edition.Helper.AwaitTx((tx.Hash()))
+	return edition.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Mint additionaly supply of a token to the connected wallet.
@@ -174,7 +174,7 @@ func (edition *Edition) MintAdditionalSupplyTo(ctx context.Context, to string, t
 		return nil, err
 	}
 
-	return edition.Helper.AwaitTx(tx.Hash())
+	return edition.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Mint a batch of NFTs to the connected wallet.
@@ -260,5 +260,5 @@ func (edition *Edition) MintBatchTo(ctx context.Context, to string, metadatasWit
 		return nil, err
 	}
 
-	return edition.Helper.AwaitTx(tx.Hash())
+	return edition.Helper.AwaitTx(ctx, tx.Hash())
 }

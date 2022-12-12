@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -25,8 +26,8 @@ import (
 //	contract, err := sdk.GetToken("{{contract_address}}")
 type Token struct {
 	*ERC20
-	abi    *abi.TokenERC20
-	Helper *contractHelper
+	abi     *abi.TokenERC20
+	Helper  *contractHelper
 	Encoder *ContractEncoder
 	Events  *ContractEvents
 }
@@ -80,21 +81,21 @@ func (token *Token) GetVoteBalanceOf(ctx context.Context, address string) (*Curr
 		return nil, err
 	}
 
-	return token.getValue(votes)
+	return token.getValue(ctx, votes)
 }
 
 // Get the connected wallets delegatee address for this token.
 //
 // returns: delegation address of the connected wallet
-func (token *Token) GetDelegation() (string, error) {
-	return token.GetDelegationOf(token.Helper.GetSignerAddress().String())
+func (token *Token) GetDelegation(ctx context.Context) (string, error) {
+	return token.GetDelegationOf(ctx, token.Helper.GetSignerAddress().String())
 }
 
 // Get a specified wallets delegatee for this token.
 //
 // returns: delegation address of the connected wallet
-func (token *Token) GetDelegationOf(address string) (string, error) {
-	delegation, err := token.abi.Delegates(&bind.CallOpts{}, common.HexToAddress(address))
+func (token *Token) GetDelegationOf(ctx context.Context, address string) (string, error) {
+	delegation, err := token.abi.Delegates(&bind.CallOpts{Context: ctx}, common.HexToAddress(address))
 	if err != nil {
 		return "", err
 	}
@@ -123,7 +124,7 @@ func (token *Token) Mint(ctx context.Context, amount float64) (*types.Transactio
 //
 //	tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", 1)
 func (token *Token) MintTo(ctx context.Context, to string, amount float64) (*types.Transaction, error) {
-	amountWithDecimals, err := token.normalizeAmount(amount)
+	amountWithDecimals, err := token.normalizeAmount(ctx, amount)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +138,7 @@ func (token *Token) MintTo(ctx context.Context, to string, amount float64) (*typ
 		return nil, err
 	}
 
-	return token.Helper.AwaitTx(tx.Hash())
+	return token.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Mint tokens to a list of wallets.
@@ -164,7 +165,7 @@ func (token *Token) MintBatchTo(ctx context.Context, args []*TokenAmount) (*type
 	encoded := [][]byte{}
 
 	for _, arg := range args {
-		amountWithDecimals, err := token.normalizeAmount(arg.Amount)
+		amountWithDecimals, err := token.normalizeAmount(ctx, arg.Amount)
 		if err != nil {
 			return nil, err
 		}
@@ -190,7 +191,7 @@ func (token *Token) MintBatchTo(ctx context.Context, args []*TokenAmount) (*type
 		return nil, err
 	}
 
-	return token.Helper.AwaitTx(tx.Hash())
+	return token.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Delegate the connected wallets tokens to a specified wallet.
@@ -208,5 +209,5 @@ func (token *Token) DelegateTo(ctx context.Context, delegatreeAddress string) (*
 		return nil, err
 	}
 
-	return token.Helper.AwaitTx(tx.Hash())
+	return token.Helper.AwaitTx(ctx, tx.Hash())
 }
