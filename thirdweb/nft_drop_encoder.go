@@ -158,12 +158,12 @@ func (encoder *NFTDropEncoder) ClaimTo(ctx context.Context, signerAddress string
 	}
 
 	totalPrice := pricePerToken.Mul(big.NewInt(int64(quantity)), pricePerToken)
-	err = encoder.checkErc20Allowance(
+	if err := encoder.checkErc20Allowance(
+		ctx,
 		signerAddress,
 		totalPrice,
 		currencyAddress,
-	)
-	if err != nil {
+	); err != nil {
 		return nil, err
 	}
 
@@ -214,6 +214,7 @@ func (encoder *NFTDropEncoder) prepareClaim(ctx context.Context, quantity int) (
 }
 
 func (encoder *NFTDropEncoder) checkErc20Allowance(
+	ctx context.Context,
 	signerAddress string,
 	value *big.Int,
 	currencyAddress string,
@@ -227,7 +228,7 @@ func (encoder *NFTDropEncoder) checkErc20Allowance(
 
 		owner := common.HexToAddress(signerAddress)
 		spender := encoder.helper.getAddress()
-		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
+		allowance, err := erc20.Allowance(&bind.CallOpts{Context: ctx}, owner, spender)
 		if err != nil {
 			return err
 		}

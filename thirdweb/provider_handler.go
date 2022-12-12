@@ -6,6 +6,7 @@ import (
 	"errors"
 	"math/big"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -61,15 +62,18 @@ func (handler *ProviderHandler) GetPrivateKey() *ecdsa.PrivateKey {
 	return handler.privateKey
 }
 
-func (handler *ProviderHandler) GetChainID() (*big.Int, error) {
-	return handler.provider.ChainID(context.Background())
+func (handler *ProviderHandler) GetChainID(ctx context.Context) (*big.Int, error) {
+	return handler.provider.ChainID(ctx)
 }
 
-func (handler *ProviderHandler) getSigner() func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
-		chainId, _ := handler.GetChainID()
-		return types.SignTx(transaction, types.LatestSignerForChainID(chainId), handler.privateKey)
+func (handler *ProviderHandler) getSigner(ctx context.Context) (bind.SignerFn, error) {
+	chainId, err := handler.GetChainID(ctx)
+	if err != nil {
+		return nil, err
 	}
+	return func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
+		return types.SignTx(transaction, types.LatestSignerForChainID(chainId), handler.privateKey)
+	}, nil
 }
 
 func (handler *ProviderHandler) updateAccount(privateKey string) error {

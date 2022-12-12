@@ -20,20 +20,20 @@ func getToken() *Token {
 func TestMintToken(t *testing.T) {
 	token := getToken()
 
-	balance, _ := token.Balance()
+	balance, _ := token.Balance(context.Background())
 	assert.Equal(t, float64(0), balance.DisplayValue)
 
 	_, err := token.Mint(context.Background(), 0.1)
 	assert.Nil(t, err)
 
-	balance, _ = token.Balance()
+	balance, _ = token.Balance(context.Background())
 	assert.Equal(t, float64(0.1), balance.DisplayValue)
 }
 
 func TestBatchMintToken(t *testing.T) {
 	token := getToken()
 
-	balance, _ := token.Balance()
+	balance, _ := token.Balance(context.Background())
 	assert.Equal(t, float64(0), balance.DisplayValue)
 
 	_, err := token.MintBatchTo(
@@ -51,10 +51,10 @@ func TestBatchMintToken(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	balance, _ = token.Balance()
+	balance, _ = token.Balance(context.Background())
 	assert.Equal(t, float64(1.5), balance.DisplayValue)
 
-	supply, _ := token.TotalSupply()
+	supply, _ := token.TotalSupply(context.Background())
 	assert.Equal(t, float64(4), supply.DisplayValue)
 }
 
@@ -63,13 +63,13 @@ func TestBurnToken(t *testing.T) {
 
 	token.Mint(context.Background(), 10)
 
-	balance, _ := token.Balance()
+	balance, _ := token.Balance(context.Background())
 	assert.Equal(t, float64(10), balance.DisplayValue)
 
 	_, err := token.Burn(context.Background(), 10)
 	assert.Nil(t, err)
 
-	balance, _ = token.Balance()
+	balance, _ = token.Balance(context.Background())
 	assert.Equal(t, float64(0), balance.DisplayValue)
 }
 
@@ -78,12 +78,12 @@ func TestTransferToken(t *testing.T) {
 
 	token.Mint(context.Background(), 10)
 
-	balance, _ := token.Balance()
+	balance, _ := token.Balance(context.Background())
 	assert.Equal(t, float64(10), balance.DisplayValue)
 
 	_, err := token.Transfer(context.Background(), secondaryWallet, 10)
 	assert.Nil(t, err)
 
-	balance, _ = token.Balance()
+	balance, _ = token.Balance(context.Background())
 	assert.Equal(t, float64(0), balance.DisplayValue)
 }

@@ -170,7 +170,7 @@ func (nft *NFTCollection) MintTo(ctx context.Context, address string, metadata *
 		return nil, err
 	}
 
-	return nft.Helper.AwaitTx(tx.Hash())
+	return nft.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Mint a batch of new NFTs to the connected wallet.
@@ -238,5 +238,5 @@ func (nft *NFTCollection) MintBatchTo(ctx context.Context, address string, metad
 		return nil, err
 	}
 
-	return nft.Helper.AwaitTx(tx.Hash())
+	return nft.Helper.AwaitTx(ctx, tx.Hash())
 }

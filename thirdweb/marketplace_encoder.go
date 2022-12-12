@@ -11,6 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
 
@@ -204,12 +205,12 @@ func (encoder *MarketplaceEncoder) BuyoutListing(
 	quantity := big.NewInt(int64(quantityDesired))
 	value := listing.BuyoutCurrencyValuePerToken.Value.Mul(listing.BuyoutCurrencyValuePerToken.Value, quantity)
 
-	err = encoder.checkErc20Allowance(
+	if err := encoder.checkErc20Allowance(
+		ctx,
 		signerAddress,
 		value,
 		listing.CurrencyContractAddress,
-	)
-	if err != nil {
+	); err != nil {
 		return nil, err
 	}
 
@@ -362,6 +363,7 @@ func (encoder *MarketplaceEncoder) validateListing(ctx context.Context, listingI
 }
 
 func (encoder *MarketplaceEncoder) checkErc20Allowance(
+	ctx context.Context,
 	signerAddress string,
 	value *big.Int,
 	currencyAddress string,
@@ -377,7 +379,7 @@ func (encoder *MarketplaceEncoder) checkErc20Allowance(
 
 		owner := common.HexToAddress(signerAddress)
 		spender := encoder.helper.getAddress()
-		allowance, err := erc20.Allowance(&bind.CallOpts{}, owner, spender)
+		allowance, err := erc20.Allowance(&bind.CallOpts{Context: ctx}, owner, spender)
 		if err != nil {
 			return err
 		}
@@ -495,12 +497,12 @@ func (encoder *MarketplaceEncoder) handleTokenApproval(
 		return nil, err
 	}
 
-	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
+	isErc721, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0x80, 0xAC, 0x58, 0xCD})
 	if err != nil {
 		return nil, err
 	}
 
-	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
+	isErc1155, err := erc165.SupportsInterface(&bind.CallOpts{Context: ctx}, [4]byte{0xD9, 0xB6, 0x7A, 0x26})
 	if err != nil {
 		return nil, err
 	}
@@ -519,7 +521,7 @@ func (encoder *MarketplaceEncoder) handleTokenApproval(
 		}
 
 		if !approved {
-			tokenApproved, err := contract.GetApproved(&bind.CallOpts{}, big.NewInt(int64(tokenId)))
+			tokenApproved, err := contract.GetApproved(&bind.CallOpts{Context: ctx}, big.NewInt(int64(tokenId)))
 			if err != nil {
 				return nil, err
 			}
@@ -539,7 +541,7 @@ func (encoder *MarketplaceEncoder) handleTokenApproval(
 			return nil, err
 		}
 
-		approved, err := contract.IsApprovedForAll(&bind.CallOpts{}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
+		approved, err := contract.IsApprovedForAll(&bind.CallOpts{Context: ctx}, common.HexToAddress(from), common.HexToAddress(marketplaceAddress))
 		if err != nil {
 			return nil, err
 		}

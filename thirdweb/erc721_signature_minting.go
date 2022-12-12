@@ -61,6 +61,7 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 		return nil, err
 	}
 	if err := setErc20Allowance(
+		ctx,
 		signature.helper,
 		message.Price,
 		message.Currency.String(),
@@ -74,7 +75,7 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 		return nil, err
 	}
 
-	return signature.helper.AwaitTx(tx.Hash())
+	return signature.helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Mint a batch of token with the data in given payload.
@@ -126,7 +127,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 		return nil, err
 	}
 
-	return signature.helper.AwaitTx(tx.Hash())
+	return signature.helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Verify that a signed payload is valid
@@ -238,7 +239,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 		return nil, err
 	}
 
-	chainId, err := signature.helper.GetChainID()
+	chainId, err := signature.helper.GetChainID(ctx)
 	if err != nil {
 		return nil, err
 	}

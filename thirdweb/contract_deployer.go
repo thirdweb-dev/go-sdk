@@ -264,7 +264,7 @@ func (deployer *ContractDeployer) deployContract(ctx context.Context, contractTy
 		return "", err
 	}
 
-	receipt, err := deployer.helper.AwaitTx(tx.Hash())
+	receipt, err := deployer.helper.AwaitTx(ctx, tx.Hash())
 	if err != nil {
 		return "", err
 	}
