@@ -182,7 +182,7 @@ func (c *SmartContract) Call(ctx context.Context, method string, args ...interfa
 		typedArgs = append(typedArgs, arg)
 	}
 
-	if abiMethod.StateMutability == "view" {
+	if abiMethod.StateMutability == "view" || abiMethod.StateMutability == "pure" {
 		var out []interface{}
 		err := c.contract.Call(&bind.CallOpts{Context: ctx}, &out, method, typedArgs...)
 		if err != nil {
