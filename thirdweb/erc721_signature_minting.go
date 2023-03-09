@@ -21,7 +21,7 @@ import (
 // signature interface.
 type ERC721SignatureMinting struct {
 	abi     *abi.TokenERC721
-	helper  *contractHelper
+	Helper  *contractHelper
 	storage storage
 }
 
@@ -56,13 +56,13 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 		return nil, err
 	}
 
-	txOpts, err := signature.helper.GetTxOptions(ctx)
+	txOpts, err := signature.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if err := setErc20Allowance(
 		ctx,
-		signature.helper,
+		signature.Helper,
 		message.Price,
 		message.Currency.String(),
 		txOpts,
@@ -75,7 +75,7 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 		return nil, err
 	}
 
-	return signature.helper.AwaitTx(ctx, tx.Hash())
+	return signature.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Mint a batch of token with the data in given payload.
@@ -106,7 +106,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 
 	encoded := [][]byte{}
 	for i, payload := range contractPayloads {
-		txOpts, err := signature.helper.getEncodedTxOptions(ctx)
+		txOpts, err := signature.Helper.getEncodedTxOptions(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -118,7 +118,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 		encoded = append(encoded, tx.Data())
 	}
 
-	txOpts, err := signature.helper.GetTxOptions(ctx)
+	txOpts, err := signature.Helper.GetTxOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 		return nil, err
 	}
 
-	return signature.helper.AwaitTx(ctx, tx.Hash())
+	return signature.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Verify that a signed payload is valid
@@ -239,7 +239,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 		return nil, err
 	}
 
-	chainId, err := signature.helper.GetChainID(ctx)
+	chainId, err := signature.Helper.GetChainID(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -300,7 +300,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 				Name:              "TokenERC721",
 				Version:           "1",
 				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
-				VerifyingContract: signature.helper.getAddress().String(),
+				VerifyingContract: signature.Helper.getAddress().String(),
 			},
 			Message: mappedPayload,
 		}
@@ -318,7 +318,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 		rawData := []byte(fmt.Sprintf("\x19\x01%s%s", string(domainSeparator), string(typedDataHash)))
 		sigHash := crypto.Keccak256(rawData)
 
-		privateKey := signature.helper.GetPrivateKey()
+		privateKey := signature.Helper.GetPrivateKey()
 		signatureHash, err := crypto.Sign(sigHash, privateKey)
 		if err != nil {
 			return nil, err
@@ -339,7 +339,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 }
 
 func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
-	provider := signature.helper.GetProvider()
+	provider := signature.Helper.GetProvider()
 	price, err := normalizePriceValue(ctx, provider, mintRequest.Price, mintRequest.CurrencyAddress)
 	if err != nil {
 		return nil, err
@@ -362,7 +362,7 @@ func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mi
 }
 
 func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(ctx context.Context, mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
-	provider := signature.helper.GetProvider()
+	provider := signature.Helper.GetProvider()
 	price, err := normalizePriceValue(ctx, provider, mintRequest.Price, mintRequest.CurrencyAddress)
 	if err != nil {
 		return nil, err
