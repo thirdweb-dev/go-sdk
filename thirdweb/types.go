@@ -133,22 +133,22 @@ type Signature721PayloadInput struct {
 }
 
 type Signature721PayloadOutput struct {
-	To                   string
-	Price                float64
-	CurrencyAddress      string
-	MintStartTime        int
-	MintEndTime          int
-	PrimarySaleRecipient string
-	Metadata             *NFTMetadataInput
-	RoyaltyRecipient     string
-	RoyaltyBps           int
-	Uri                  string
-	Uid                  [32]byte
+	To                   string             `json:"to"`
+	Price                string            `json:"price"`
+	CurrencyAddress      string             `json:"currencyAddress"`
+	MintStartTime        int                `json:"mintStartTime"`
+	MintEndTime          int								`json:"mintEndTime"`
+	PrimarySaleRecipient string				      `json:"primarySaleRecipient"`
+	Metadata             *NFTMetadataInput  `json:"metadata"`
+	RoyaltyRecipient     string             `json:"royaltyRecipient"`
+	RoyaltyBps           int                `json:"royaltyBps"`
+	Uri                  string             `json:"uri"`
+	Uid                  [32]byte           `json:"uid"`
 }
 
 type SignedPayload721 struct {
-	Payload   *Signature721PayloadOutput
-	Signature []byte
+	Payload   *Signature721PayloadOutput `json:"payload"`
+	Signature string                     `json:"signature"`
 }
 
 type Signature1155PayloadInput struct {
@@ -179,24 +179,24 @@ type Signature1155PayloadInputWithTokenId struct {
 }
 
 type Signature1155PayloadOutput struct {
-	To                   string
-	Price                float64
-	CurrencyAddress      string
-	MintStartTime        int
-	MintEndTime          int
-	PrimarySaleRecipient string
-	Metadata             *NFTMetadataInput
-	RoyaltyRecipient     string
-	RoyaltyBps           int
-	TokenId              int
-	Quantity             int
-	Uri                  string
-	Uid                  [32]byte
+	To                   string            `json:"to"`
+	Price                string            `json:"price"`
+	CurrencyAddress      string            `json:"currencyAddress"`
+	MintStartTime        int               `json:"mintStartTime"`
+	MintEndTime          int               `json:"mintEndTime"`
+	PrimarySaleRecipient string            `json:"primarySaleRecipient"`
+	Metadata             *NFTMetadataInput `json:"metadata"`
+	RoyaltyRecipient     string            `json:"royaltyRecipient"`
+	RoyaltyBps           int               `json:"royaltyBps"`
+	TokenId              int               `json:"tokenId"`
+	Quantity             int               `json:"quantity"`
+	Uri                  string            `json:"uri"`
+	Uid                  [32]byte          `json:"uid"`
 }
 
 type SignedPayload1155 struct {
-	Payload   *Signature1155PayloadOutput
-	Signature []byte
+	Payload   *Signature1155PayloadOutput `json:"payload"`
+	Signature string                      `json:"signature"`
 }
 
 type MultiwrapERC20 struct {

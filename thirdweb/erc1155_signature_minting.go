@@ -2,6 +2,8 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/hex"
+	"errors"
 	"fmt"
 	"math/big"
 
@@ -70,7 +72,12 @@ func (signature *ERC1155SignatureMinting) Mint(ctx context.Context, signedPayloa
 		return nil, err
 	}
 
-	tx, err := signature.abi.MintWithSignature(txOpts, *message, signedPayload.Signature)
+	signatureBytes, err := hex.DecodeString(signedPayload.Signature)
+	if err != nil {
+		return nil, err
+	}
+
+	tx, err := signature.abi.MintWithSignature(txOpts, *message, signatureBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -92,8 +99,13 @@ func (signature *ERC1155SignatureMinting) Mint(ctx context.Context, signedPayloa
 func (signature *ERC1155SignatureMinting) MintBatch(ctx context.Context, signedPayloads []*SignedPayload1155) (*types.Transaction, error) {
 	contractPayloads := []*abi.ITokenERC1155MintRequest{}
 	for _, signedPayload := range signedPayloads {
-		if signedPayload.Payload.Price > 0 {
-			return nil, fmt.Errorf("Can only batch free mints. For mints with a price, use the Mint() function.")
+		price, ok := big.NewInt(0).SetString(signedPayload.Payload.Price, 10)
+		if !ok {
+			return nil, errors.New("specified price was not a valid big.Int")
+		}
+
+		if price.Cmp(big.NewInt(0)) == 1 {
+			return nil, fmt.Errorf("can only batch free mints. For mints with a price, use the Mint() function")
 		}
 
 		payload, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
@@ -110,7 +122,13 @@ func (signature *ERC1155SignatureMinting) MintBatch(ctx context.Context, signedP
 		if err != nil {
 			return nil, err
 		}
-		tx, err := signature.abi.MintWithSignature(txOpts, *payload, signedPayloads[i].Signature)
+
+		signatureBytes, err := hex.DecodeString(signedPayloads[i].Signature)
+		if err != nil {
+			return nil, err
+		}
+
+		tx, err := signature.abi.MintWithSignature(txOpts, *payload, signatureBytes)
 		if err != nil {
 			return nil, err
 		}
@@ -143,14 +161,17 @@ func (signature *ERC1155SignatureMinting) MintBatch(ctx context.Context, signedP
 //	isValid, err := contract.Signature.Verify(context.Background(), signedPayload)
 func (signature *ERC1155SignatureMinting) Verify(ctx context.Context, signedPayload *SignedPayload1155) (bool, error) {
 	mintRequest := signedPayload.Payload
-	mintSignature := signedPayload.Signature
+	mintSignatureBytes, err := hex.DecodeString(signedPayload.Signature)
+	if err != nil {
+		return false, err
+	}
 
 	message, err := signature.mapPayloadToContractStruct(ctx, mintRequest)
 	if err != nil {
 		return false, err
 	}
 
-	verification, _, err := signature.abi.Verify(&bind.CallOpts{}, *message, mintSignature)
+	verification, _, err := signature.abi.Verify(&bind.CallOpts{}, *message, mintSignatureBytes)
 	return verification, err
 }
 
@@ -369,9 +390,15 @@ func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(ctx context.
 			id[16+i] = generatedId[i]
 		}
 
+		provider := signature.Helper.GetProvider()
+		price, err := normalizePriceValue(ctx, provider, p.Price, p.CurrencyAddress)
+		if err != nil {
+			return nil, err
+		}
+
 		payload := &Signature1155PayloadOutput{
 			To:                   p.To,
-			Price:                p.Price,
+			Price:                price.String(),
 			CurrencyAddress:      p.CurrencyAddress,
 			MintStartTime:        p.MintStartTime,
 			MintEndTime:          p.MintEndTime,
@@ -449,7 +476,7 @@ func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(ctx context.
 
 		signedPayloads = append(signedPayloads, &SignedPayload1155{
 			Payload:   payload,
-			Signature: signatureHash,
+			Signature: hex.EncodeToString(signatureHash),
 		})
 	}
 
@@ -457,12 +484,6 @@ func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(ctx context.
 }
 
 func (signature *ERC1155SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature1155PayloadOutput) (signerTypes.TypedDataMessage, error) {
-	provider := signature.Helper.GetProvider()
-	price, err := normalizePriceValue(ctx, provider, mintRequest.Price, mintRequest.CurrencyAddress)
-	if err != nil {
-		return nil, err
-	}
-
 	// If tokenID < 0, set it to MaxUin256 (to mint a new NFT)
 	tokenId := big.NewInt(int64(mintRequest.TokenId))
 	if mintRequest.TokenId < 0 {
@@ -476,7 +497,7 @@ func (signature *ERC1155SignatureMinting) generateMessage(ctx context.Context, m
 		"royaltyBps":             fmt.Sprintf("%v", mintRequest.RoyaltyBps),
 		"primarySaleRecipient":   mintRequest.PrimarySaleRecipient,
 		"uri":                    mintRequest.Uri,
-		"pricePerToken":          fmt.Sprintf("%v", int(price.Int64())),
+		"pricePerToken":          fmt.Sprintf("%v", mintRequest.Price),
 		"tokenId":                tokenId.String(),
 		"quantity":               fmt.Sprintf("%v", mintRequest.Quantity),
 		"currency":               mintRequest.CurrencyAddress,
@@ -489,11 +510,11 @@ func (signature *ERC1155SignatureMinting) generateMessage(ctx context.Context, m
 }
 
 func (signature *ERC1155SignatureMinting) mapPayloadToContractStruct(ctx context.Context, mintRequest *Signature1155PayloadOutput) (*abi.ITokenERC1155MintRequest, error) {
-	provider := signature.Helper.GetProvider()
-	price, err := normalizePriceValue(ctx, provider, mintRequest.Price, mintRequest.CurrencyAddress)
-	if err != nil {
-		return nil, err
+	price, ok := big.NewInt(0).SetString(mintRequest.Price, 10)
+	if !ok {
+		return nil, errors.New("Specified price was not a valid big.Int")
 	}
+
 
 	// If tokenID < 0, set it to MaxUin256 (to mint a new NFT)
 	tokenId := big.NewInt(int64(mintRequest.TokenId))
