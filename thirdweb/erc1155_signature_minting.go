@@ -476,7 +476,7 @@ func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(ctx context.
 
 		signedPayloads = append(signedPayloads, &SignedPayload1155{
 			Payload:   payload,
-			Signature: hex.EncodeToString(signatureHash),
+			Signature: "0x" + hex.EncodeToString(signatureHash),
 		})
 	}
 
