@@ -359,7 +359,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 
 		signedPayloads = append(signedPayloads, &SignedPayload721{
 			Payload:   payload,
-			Signature: hex.EncodeToString(signatureHash),
+			Signature: "0x" + hex.EncodeToString(signatureHash),
 		})
 	}
 
