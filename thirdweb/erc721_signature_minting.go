@@ -72,7 +72,7 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 		return nil, err
 	}
 
-	signatureBytes, err := hex.DecodeString(signedPayload.Signature)
+	signatureBytes, err := hex.DecodeString(signedPayload.Signature[2:])
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +123,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 			return nil, err
 		}
 
-		signatureBytes, err := hex.DecodeString(signedPayloads[i].Signature)
+		signatureBytes, err := hex.DecodeString(signedPayloads[i].Signature[2:])
 		if err != nil {
 			return nil, err
 		}
@@ -161,7 +161,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 //	isValid, err := contract.Signature.Verify(signedPayload)
 func (signature *ERC721SignatureMinting) Verify(ctx context.Context, signedPayload *SignedPayload721) (bool, error) {
 	mintRequest := signedPayload.Payload
-	mintSignatureBytes, err := hex.DecodeString(signedPayload.Signature)
+	mintSignatureBytes, err := hex.DecodeString(signedPayload.Signature[2:])
 	if err != nil {
 		return false, err
 	}
