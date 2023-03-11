@@ -2,9 +2,12 @@ package thirdweb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"math/big"
+	"net/http"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -81,11 +84,22 @@ func (helper *contractHelper) getRawTxOptions(ctx context.Context, noSend bool) 
 	var tipCap, feeCap *big.Int
 
 	provider := helper.GetProvider()
+	chainId, err := provider.ChainID(ctx)
+	if err != nil {
+		return nil, err
+	}
 	block, err := provider.BlockByNumber(ctx, nil)
+
 	if err == nil && block.BaseFee() != nil {
-		tipCap, _ = big.NewInt(0).SetString("2500000000", 10)
+		// Use gas station to get maxPriorityFeePerGas if we're on polygon
+		if chainId.Cmp(big.NewInt(137)) == 0 {
+			tipCap, _ = helper.getPolygonGasPriorityFee(ctx)
+		} else {
+			tipCap, _ = big.NewInt(0).SetString("2500000000", 10) // maxPriorityFeePerGas
+		}
+
 		baseFee := big.NewInt(0).Mul(block.BaseFee(), big.NewInt(2))
-		feeCap = big.NewInt(0).Add(baseFee, tipCap)
+		feeCap = big.NewInt(0).Add(baseFee, tipCap) // maxFeePerGas
 	}
 
 	signer, err := helper.getSigner(ctx)
@@ -97,8 +111,8 @@ func (helper *contractHelper) getRawTxOptions(ctx context.Context, noSend bool) 
 		NoSend:    noSend,
 		From:      helper.GetSignerAddress(),
 		Signer:    signer,
-		GasTipCap: tipCap,
-		GasFeeCap: feeCap,
+		GasTipCap: tipCap, // maxPriorityFeePerGas
+		GasFeeCap: feeCap, // maxFeePerGas
 	}
 
 	return txOpts, nil
@@ -133,4 +147,40 @@ func (helper *contractHelper) AwaitTx(ctx context.Context, hash common.Hash) (*t
 			return tx, nil
 		}
 	}
+}
+
+func (helper *contractHelper) getPolygonGasPriorityFee(ctx context.Context) (*big.Int, error) {
+	getTipCap := func () (*big.Int, error) {
+		req, err := http.NewRequestWithContext(ctx, "GET", "https://gasstation-mainnet.matic.network/v2", nil)
+		if err != nil {
+			return nil, err
+		}
+
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			return nil, err
+		}
+
+		bodyBytes, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		var feeData map[string]map[string]interface{}
+		json.Unmarshal(bodyBytes, &feeData)
+
+		priorityFee, ok := feeData["standard"]["maxPriorityFee"].(float64)
+		if !ok {
+			return nil, err
+		}
+
+		return parseUnits(priorityFee, 9) // maxPriorityFeePerGas
+	}
+
+	tipCap, err := getTipCap()
+	if err == nil {
+		return tipCap, nil
+	}
+
+	return parseUnits(31, 9)
 }
