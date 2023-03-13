@@ -366,7 +366,131 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 	return signedPayloads, nil
 }
 
+func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Context, payloadsToSign []*Signature721PayloadInputWithUri) ([]*SignedPayload721WithUri, error) {
+	// TODO: Verify roles and return error
+
+	chainId, err := signature.Helper.GetChainID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	signedPayloads := []*SignedPayload721WithUri{}
+
+	for _, p := range payloadsToSign {
+
+		generatedId := uuid.New()
+		id := [32]byte{}
+		for i := 0; i < 16; i++ {
+			id[16+i] = generatedId[i]
+		}
+
+		provider := signature.Helper.GetProvider()
+		price, err := normalizePriceValue(ctx, provider, p.Price, p.CurrencyAddress)
+		if err != nil {
+			return nil, err
+		}
+
+		payload := &Signature721PayloadOutputWithUri{
+			To:                   p.To,
+			Price:                price.String(),
+			CurrencyAddress:      p.CurrencyAddress,
+			MintStartTime:        p.MintStartTime,
+			MintEndTime:          p.MintEndTime,
+			PrimarySaleRecipient: p.PrimarySaleRecipient,
+			RoyaltyRecipient:     p.RoyaltyRecipient,
+			RoyaltyBps:           p.RoyaltyBps,
+			Metadata:             p.MetadataUri,
+			Uri:                  p.MetadataUri,
+			Uid:                  id,
+		}
+
+		mappedPayload, err := signature.generateMessageWithUri(ctx, payload)
+		if err != nil {
+			return nil, err
+		}
+
+		typedData := signerTypes.TypedData{
+			Types: signerTypes.Types{
+				"MintRequest": []signerTypes.Type{
+					{Name: "to", Type: "address"},
+					{Name: "royaltyRecipient", Type: "address"},
+					{Name: "royaltyBps", Type: "uint256"},
+					{Name: "primarySaleRecipient", Type: "address"},
+					{Name: "uri", Type: "string"},
+					{Name: "price", Type: "uint256"},
+					{Name: "currency", Type: "address"},
+					{Name: "validityStartTimestamp", Type: "uint128"},
+					{Name: "validityEndTimestamp", Type: "uint128"},
+					{Name: "uid", Type: "bytes32"},
+				},
+				"EIP712Domain": []signerTypes.Type{
+					{Name: "name", Type: "string"},
+					{Name: "version", Type: "string"},
+					{Name: "chainId", Type: "uint256"},
+					{Name: "verifyingContract", Type: "address"},
+				},
+			},
+			PrimaryType: "MintRequest",
+			Domain: signerTypes.TypedDataDomain{
+				Name:              "TokenERC721",
+				Version:           "1",
+				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
+				VerifyingContract: signature.Helper.getAddress().String(),
+			},
+			Message: mappedPayload,
+		}
+
+		domainSeparator, err := typedData.HashStruct("EIP712Domain", typedData.Domain.Map())
+		if err != nil {
+			return nil, err
+		}
+
+		typedDataHash, err := typedData.HashStruct(typedData.PrimaryType, typedData.Message)
+		if err != nil {
+			return nil, err
+		}
+
+		rawData := []byte(fmt.Sprintf("\x19\x01%s%s", string(domainSeparator), string(typedDataHash)))
+		sigHash := crypto.Keccak256(rawData)
+
+		privateKey := signature.Helper.GetPrivateKey()
+		signatureHash, err := crypto.Sign(sigHash, privateKey)
+		if err != nil {
+			return nil, err
+		}
+
+		// We need this to correct v = 0,1 to v = 27,28 - or else all will break
+		if signatureHash[64] == 0 || signatureHash[64] == 1 {
+			signatureHash[64] += 27
+		}
+
+		signedPayloads = append(signedPayloads, &SignedPayload721WithUri{
+			Payload:   payload,
+			Signature: "0x" + hex.EncodeToString(signatureHash),
+		})
+	}
+
+	return signedPayloads, nil
+}
+
 func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
+	message := signerTypes.TypedDataMessage{
+		"to":                     mintRequest.To,
+		"royaltyRecipient":       mintRequest.RoyaltyRecipient,
+		"royaltyBps":             fmt.Sprintf("%v", mintRequest.RoyaltyBps),
+		"primarySaleRecipient":   mintRequest.PrimarySaleRecipient,
+		"uri":                    mintRequest.Uri,
+		"price":                  fmt.Sprintf("%v", mintRequest.Price),
+		"currency":               mintRequest.CurrencyAddress,
+		"validityStartTimestamp": fmt.Sprintf("%v", mintRequest.MintStartTime),
+		"validityEndTimestamp":   fmt.Sprintf("%v", mintRequest.MintEndTime),
+		"uid":                    mintRequest.Uid[:],
+	}
+
+	return message, nil
+}
+
+func (signature *ERC721SignatureMinting) generateMessageWithUri(ctx context.Context, mintRequest *Signature721PayloadOutputWithUri) (signerTypes.TypedDataMessage, error) {
 	message := signerTypes.TypedDataMessage{
 		"to":                     mintRequest.To,
 		"royaltyRecipient":       mintRequest.RoyaltyRecipient,
