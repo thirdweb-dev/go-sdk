@@ -132,6 +132,19 @@ type Signature721PayloadInput struct {
 	RoyaltyBps           int
 }
 
+type Signature721PayloadInputWithUri struct {
+	To                   string
+	Price                float64
+	CurrencyAddress      string
+	MintStartTime        int
+	MintEndTime          int
+	PrimarySaleRecipient string
+	MetadataUri          string
+	RoyaltyRecipient     string
+	RoyaltyBps           int
+}
+
+
 type Signature721PayloadOutput struct {
 	To                   string             `json:"to"`
 	Price                string            `json:"price"`
