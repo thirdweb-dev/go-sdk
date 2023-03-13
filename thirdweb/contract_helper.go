@@ -46,8 +46,10 @@ func (helper *contractHelper) getAddress() common.Address {
 }
 
 func (helper *contractHelper) mergeOverrides(opts *bind.TransactOpts) (*bind.TransactOpts, error) {
-	if err := mergo.Merge(opts, helper.nextOverrides); err != nil {
-		return nil, err
+	if (helper.nextOverrides != nil) {
+		if err := mergo.Merge(opts, helper.nextOverrides); err != nil {
+			return nil, err
+		}
 	}
 
 	return opts, nil

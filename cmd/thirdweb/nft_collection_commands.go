@@ -160,7 +160,7 @@ var nftSigmintCmd = &cobra.Command{
 		} else if !valid {
 			panic("Invalid signature")
 		}
-
+		
 		tx, err := nftCollection.Signature.Mint(context.Background(), payload)
 		if err != nil {
 			panic(err)
