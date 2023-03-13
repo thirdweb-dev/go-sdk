@@ -14,10 +14,12 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/imdario/mergo"
 )
 
 type contractHelper struct {
-	address common.Address
+	address       common.Address
+	nextOverrides *bind.TransactOpts
 	*ProviderHandler
 }
 
@@ -32,6 +34,7 @@ func newContractHelper(address common.Address, provider *ethclient.Client, priva
 	} else {
 		helper := &contractHelper{
 			address,
+			nil,
 			handler,
 		}
 		return helper, nil
@@ -40,6 +43,18 @@ func newContractHelper(address common.Address, provider *ethclient.Client, priva
 
 func (helper *contractHelper) getAddress() common.Address {
 	return helper.address
+}
+
+func (helper *contractHelper) mergeOverrides(opts *bind.TransactOpts) (*bind.TransactOpts, error) {
+	if err := mergo.Merge(opts, helper.nextOverrides); err != nil {
+		return nil, err
+	}
+
+	return opts, nil
+}
+
+func (helper *contractHelper) OverrideNextTransaction(opts *bind.TransactOpts) {
+	helper.nextOverrides = opts
 }
 
 func (helper *contractHelper) getUnsignedTxOptions(ctx context.Context, signerAddress string) (*bind.TransactOpts, error) {
@@ -63,6 +78,11 @@ func (helper *contractHelper) getUnsignedTxOptions(ctx context.Context, signerAd
 
 	txOpts.Signer = func(address common.Address, transaction *types.Transaction) (*types.Transaction, error) {
 		return transaction, nil
+	}
+
+	txOpts, err = helper.mergeOverrides(txOpts)
+	if err != nil {
+		return nil, err
 	}
 
 	return txOpts, nil
@@ -115,6 +135,11 @@ func (helper *contractHelper) getRawTxOptions(ctx context.Context, noSend bool) 
 		GasFeeCap: feeCap, // maxFeePerGas
 	}
 
+	txOpts, err = helper.mergeOverrides(txOpts)
+	if err != nil {
+		return nil, err
+	}
+
 	return txOpts, nil
 }
 
@@ -150,7 +175,7 @@ func (helper *contractHelper) AwaitTx(ctx context.Context, hash common.Hash) (*t
 }
 
 func (helper *contractHelper) getPolygonGasPriorityFee(ctx context.Context) (*big.Int, error) {
-	getTipCap := func () (*big.Int, error) {
+	getTipCap := func() (*big.Int, error) {
 		req, err := http.NewRequestWithContext(ctx, "GET", "https://gasstation-mainnet.matic.network/v2", nil)
 		if err != nil {
 			return nil, err
