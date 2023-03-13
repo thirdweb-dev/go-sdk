@@ -50,6 +50,8 @@ func (helper *contractHelper) mergeOverrides(opts *bind.TransactOpts) (*bind.Tra
 		if err := mergo.Merge(opts, helper.nextOverrides); err != nil {
 			return nil, err
 		}
+
+		helper.nextOverrides = nil
 	}
 
 	return opts, nil
