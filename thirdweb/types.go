@@ -159,29 +159,9 @@ type Signature721PayloadOutput struct {
 	Uid                  [32]byte           `json:"uid"`
 }
 
-
-type Signature721PayloadOutputWithUri struct {
-	To                   string             `json:"to"`
-	Price                string            `json:"price"`
-	CurrencyAddress      string             `json:"currencyAddress"`
-	MintStartTime        int                `json:"mintStartTime"`
-	MintEndTime          int								`json:"mintEndTime"`
-	PrimarySaleRecipient string				      `json:"primarySaleRecipient"`
-	Metadata             string  `json:"metadata"`
-	RoyaltyRecipient     string             `json:"royaltyRecipient"`
-	RoyaltyBps           int                `json:"royaltyBps"`
-	Uri                  string             `json:"uri"`
-	Uid                  [32]byte           `json:"uid"`
-}
-
 type SignedPayload721 struct {
 	Payload   *Signature721PayloadOutput `json:"payload"`
 	Signature string                     `json:"signature"`
-}
-
-type SignedPayload721WithUri struct {
-	Payload   *Signature721PayloadOutputWithUri `json:"payload"`
-	Signature string                            `json:"signature"`
 }
 
 type Signature1155PayloadInput struct {

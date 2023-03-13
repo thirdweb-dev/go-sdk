@@ -3,6 +3,7 @@ package thirdweb
 import (
 	"context"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/big"
@@ -366,7 +367,7 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 	return signedPayloads, nil
 }
 
-func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Context, payloadsToSign []*Signature721PayloadInputWithUri) ([]*SignedPayload721WithUri, error) {
+func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Context, payloadsToSign []*Signature721PayloadInputWithUri) ([]*SignedPayload721, error) {
 	// TODO: Verify roles and return error
 
 	chainId, err := signature.Helper.GetChainID(ctx)
@@ -374,7 +375,7 @@ func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Conte
 		return nil, err
 	}
 
-	signedPayloads := []*SignedPayload721WithUri{}
+	signedPayloads := []*SignedPayload721{}
 
 	for _, p := range payloadsToSign {
 
@@ -389,8 +390,19 @@ func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Conte
 		if err != nil {
 			return nil, err
 		}
+		
+		body, err := signature.storage.Get(ctx, p.MetadataUri)
+		if err != nil {
+			return nil, err
+		}
 
-		payload := &Signature721PayloadOutputWithUri{
+		metadata := NFTMetadataInput{}
+		err = json.Unmarshal(body, &metadata)
+		if err != nil {
+			return nil, err
+		}
+
+		payload := &Signature721PayloadOutput{
 			To:                   p.To,
 			Price:                price.String(),
 			CurrencyAddress:      p.CurrencyAddress,
@@ -399,12 +411,12 @@ func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Conte
 			PrimarySaleRecipient: p.PrimarySaleRecipient,
 			RoyaltyRecipient:     p.RoyaltyRecipient,
 			RoyaltyBps:           p.RoyaltyBps,
-			Metadata:             p.MetadataUri,
+			Metadata:             &metadata,
 			Uri:                  p.MetadataUri,
 			Uid:                  id,
 		}
 
-		mappedPayload, err := signature.generateMessageWithUri(ctx, payload)
+		mappedPayload, err := signature.generateMessage(ctx, payload)
 		if err != nil {
 			return nil, err
 		}
@@ -464,7 +476,7 @@ func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Conte
 			signatureHash[64] += 27
 		}
 
-		signedPayloads = append(signedPayloads, &SignedPayload721WithUri{
+		signedPayloads = append(signedPayloads, &SignedPayload721{
 			Payload:   payload,
 			Signature: "0x" + hex.EncodeToString(signatureHash),
 		})
@@ -474,23 +486,6 @@ func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Conte
 }
 
 func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
-	message := signerTypes.TypedDataMessage{
-		"to":                     mintRequest.To,
-		"royaltyRecipient":       mintRequest.RoyaltyRecipient,
-		"royaltyBps":             fmt.Sprintf("%v", mintRequest.RoyaltyBps),
-		"primarySaleRecipient":   mintRequest.PrimarySaleRecipient,
-		"uri":                    mintRequest.Uri,
-		"price":                  fmt.Sprintf("%v", mintRequest.Price),
-		"currency":               mintRequest.CurrencyAddress,
-		"validityStartTimestamp": fmt.Sprintf("%v", mintRequest.MintStartTime),
-		"validityEndTimestamp":   fmt.Sprintf("%v", mintRequest.MintEndTime),
-		"uid":                    mintRequest.Uid[:],
-	}
-
-	return message, nil
-}
-
-func (signature *ERC721SignatureMinting) generateMessageWithUri(ctx context.Context, mintRequest *Signature721PayloadOutputWithUri) (signerTypes.TypedDataMessage, error) {
 	message := signerTypes.TypedDataMessage{
 		"to":                     mintRequest.To,
 		"royaltyRecipient":       mintRequest.RoyaltyRecipient,
