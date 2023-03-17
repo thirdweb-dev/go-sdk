@@ -53,15 +53,26 @@ func newERC1155SignatureMinting(provider *ethclient.Client, address common.Addre
 //	signedPayload, err := contract.Signature.Generate(payload)
 //	tx, err := contract.Signature.Mint(signedPayload)
 func (signature *ERC1155SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload1155) (*types.Transaction, error) {
+	txOpts, err := signature.Helper.GetTxOptions(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	tx, err := signature.MintWithOpts(ctx, signedPayload, txOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	return signature.Helper.AwaitTx(ctx, tx.Hash())
+
+}
+
+func (signature *ERC1155SignatureMinting) MintWithOpts(ctx context.Context, signedPayload *SignedPayload1155, txOpts *bind.TransactOpts) (*types.Transaction, error) {
 	message, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	txOpts, err := signature.Helper.GetTxOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
 	if err := setErc20Allowance(
 		ctx,
 		signature.Helper,
@@ -77,12 +88,7 @@ func (signature *ERC1155SignatureMinting) Mint(ctx context.Context, signedPayloa
 		return nil, err
 	}
 
-	tx, err := signature.abi.MintWithSignature(txOpts, *message, signatureBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	return signature.Helper.AwaitTx(ctx, tx.Hash())
+	return signature.abi.MintWithSignature(txOpts, *message, signatureBytes)
 }
 
 // Mint a batch of token with the data in given payload.
@@ -514,7 +520,6 @@ func (signature *ERC1155SignatureMinting) mapPayloadToContractStruct(ctx context
 	if !ok {
 		return nil, errors.New("Specified price was not a valid big.Int")
 	}
-
 
 	// If tokenID < 0, set it to MaxUin256 (to mint a new NFT)
 	tokenId := big.NewInt(int64(mintRequest.TokenId))
