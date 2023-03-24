@@ -64,7 +64,6 @@ func (signature *ERC1155SignatureMinting) Mint(ctx context.Context, signedPayloa
 	}
 
 	return signature.Helper.AwaitTx(ctx, tx.Hash())
-
 }
 
 func (signature *ERC1155SignatureMinting) MintWithOpts(ctx context.Context, signedPayload *SignedPayload1155, txOpts *bind.TransactOpts) (*types.Transaction, error) {
