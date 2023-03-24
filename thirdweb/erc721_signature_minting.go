@@ -75,7 +75,7 @@ func (signature *ERC721SignatureMinting) MintAndAwait(ctx context.Context, signe
 }
 
 func (signature *ERC721SignatureMinting) MintWithOpts(ctx context.Context, signedPayload *SignedPayload721, txOpts *bind.TransactOpts) (*types.Transaction, error) {
-	message, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
+	message, err := signature.mapLegacyPayloadToContractStruct(ctx, signedPayload.Payload)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +121,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 			return nil, fmt.Errorf("Can only batch free mints. For mints with a price, use the Mint() function.")
 		}
 
-		payload, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
+		payload, err := signature.mapLegacyPayloadToContractStruct(ctx, signedPayload.Payload)
 		if err != nil {
 			return nil, err
 		}
@@ -179,7 +179,7 @@ func (signature *ERC721SignatureMinting) Verify(ctx context.Context, signedPaylo
 		return false, err
 	}
 
-	message, err := signature.mapPayloadToContractStruct(ctx, mintRequest)
+	message, err := signature.mapLegacyPayloadToContractStruct(ctx, mintRequest)
 
 	if err != nil {
 		return false, err
@@ -514,7 +514,19 @@ func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mi
 	return message, nil
 }
 
-func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(ctx context.Context, mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
+func (signature *ERC721SignatureMinting) isLegacyContract(ctx context.Context) (bool, error) {
+	contractType, err := signature.abi.ContractType(&bind.CallOpts{
+		Context: ctx,
+	});
+	if err != nil {
+		return false, err
+	}
+
+	// If contractType = TokenERC721
+	return hex.EncodeToString(contractType[:]) == "546f6b656e455243373231000000000000000000000000000000000000000000", nil
+}
+
+func (signature *ERC721SignatureMinting) mapLegacyPayloadToContractStruct(ctx context.Context, mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
 	price, ok := big.NewInt(0).SetString(mintRequest.Price, 10)
 	if !ok {
 		return nil, errors.New("Specified price was not a valid big.Int")
@@ -533,3 +545,25 @@ func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(ctx context.
 		Uid:                    mintRequest.Uid,
 	}, nil
 }
+
+func (signature *ERC721SignatureMinting) mapPayloadToContractStruct(ctx context.Context, mintRequest *Signature721PayloadOutput) (*abi.ISignatureMintERC721MintRequest, error) {
+	price, ok := big.NewInt(0).SetString(mintRequest.Price, 10)
+	if !ok {
+		return nil, errors.New("Specified price was not a valid big.Int")
+	}
+
+	return &abi.ISignatureMintERC721MintRequest{
+		To:                     common.HexToAddress(mintRequest.To),
+		RoyaltyRecipient:       common.HexToAddress(mintRequest.RoyaltyRecipient),
+		RoyaltyBps:             big.NewInt(int64(mintRequest.RoyaltyBps)),
+		PrimarySaleRecipient:   common.HexToAddress(mintRequest.PrimarySaleRecipient),
+		Uri:                    mintRequest.Uri,
+		Quantity:               big.NewInt(1), // Always has quantity of 1
+		PricePerToken:          price,
+		Currency:               common.HexToAddress(mintRequest.CurrencyAddress),
+		ValidityStartTimestamp: big.NewInt(int64(mintRequest.MintStartTime)),
+		ValidityEndTimestamp:   big.NewInt(int64(mintRequest.MintEndTime)),
+		Uid:                    mintRequest.Uid,
+	}, nil
+}
+

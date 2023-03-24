@@ -143,7 +143,8 @@ var nftSigmintCmd = &cobra.Command{
 				MintEndTime:          100000000000000,
 				PrimarySaleRecipient: "0x0000000000000000000000000000000000000000",
 				Metadata: &thirdweb.NFTMetadataInput{
-					Name:  "ERC721 Sigmint!",
+					Name:  "Go #1",
+					Description: "Minted with the Go SDK",
 					Image: imageFile,
 				},
 				RoyaltyRecipient: "0x0000000000000000000000000000000000000000",

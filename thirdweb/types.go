@@ -147,11 +147,11 @@ type Signature721PayloadInputWithUri struct {
 
 type Signature721PayloadOutput struct {
 	To                   string             `json:"to"`
-	Price                string            `json:"price"`
+	Price                string            	`json:"price"`
 	CurrencyAddress      string             `json:"currencyAddress"`
 	MintStartTime        int                `json:"mintStartTime"`
-	MintEndTime          int								`json:"mintEndTime"`
-	PrimarySaleRecipient string				      `json:"primarySaleRecipient"`
+	MintEndTime          int				`json:"mintEndTime"`
+	PrimarySaleRecipient string				`json:"primarySaleRecipient"`
 	Metadata             *NFTMetadataInput  `json:"metadata"`
 	RoyaltyRecipient     string             `json:"royaltyRecipient"`
 	RoyaltyBps           int                `json:"royaltyBps"`

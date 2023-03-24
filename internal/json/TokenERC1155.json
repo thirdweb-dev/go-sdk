@@ -5,6 +5,17 @@
     "type": "constructor"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      }
+    ],
+    "name": "OperatorNotAllowed",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -59,6 +70,19 @@
       }
     ],
     "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "restriction",
+        "type": "bool"
+      }
+    ],
+    "name": "OperatorRestriction",
     "type": "event"
   },
   {
@@ -995,6 +1019,19 @@
   },
   {
     "inputs": [],
+    "name": "operatorRestriction",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -1227,6 +1264,19 @@
       }
     ],
     "name": "setDefaultRoyaltyInfo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_restriction",
+        "type": "bool"
+      }
+    ],
+    "name": "setOperatorRestriction",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
