@@ -64,6 +64,8 @@ func newERC721(provider *ethclient.Client, address common.Address, privateKey st
 
 // Get an NFT
 //
+// @extension: ERC721
+//
 // tokenId: token ID of the token to get the metadata for
 //
 // returns: the metadata for the NFT and its owner
@@ -92,6 +94,8 @@ func (erc721 *ERC721) Get(ctx context.Context, tokenId int) (*NFTMetadataOwner, 
 
 // Get all NFTs
 //
+// @extension: ERC721Supply | ERC721Enumerable
+//
 // returns: the metadata of all the NFTs on this contract
 //
 // Example
@@ -112,6 +116,8 @@ func (erc721 *ERC721) GetAll(ctx context.Context) ([]*NFTMetadataOwner, error) {
 }
 
 // Get the total number of NFTs
+//
+// @extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
 //
 // returns: the total number of NFTs on this contract
 //
@@ -181,6 +187,8 @@ func (erc721 *ERC721) GetAllUnclaimed(ctx context.Context) ([]*NFTMetadata, erro
 
 // Get the number of claimed NFTs
 //
+// @extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
+//
 // Example
 //
 // 	totalClaimed, err := contract.ERC721.TotalClaimedSupply(context.Background())
@@ -194,6 +202,8 @@ func (erc721 *ERC721) TotalClaimedSupply(ctx context.Context) (int, error) {
 }
 
 // Get the number of unclaimed NFTs
+//
+// @extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
 //
 // Example
 //
@@ -215,6 +225,8 @@ func (erc721 *ERC721) TotalUnclaimedSupply(ctx context.Context) (int, error) {
 
 // Get the owner of an NFT
 //
+// @extension: ERC721
+//
 // tokenId: the token ID of the NFT to get the owner of
 //
 // returns: the owner of the NFT
@@ -235,6 +247,8 @@ func (erc721 *ERC721) OwnerOf(ctx context.Context, tokenId int) (string, error) 
 
 // Get the total number of NFTs
 //
+// @extension: ERC721
+//
 // returns: the supply of NFTs on this contract
 //
 // Example
@@ -253,6 +267,8 @@ func (erc721 *ERC721) TotalSupply(ctx context.Context) (int, error) {
 
 // Get NFT balance
 //
+// @extension: ERC721
+//
 // returns: the number of NFTs on this contract owned by the connected wallet
 //
 // Example
@@ -263,6 +279,8 @@ func (erc721 *ERC721) Balance(ctx context.Context) (int, error) {
 }
 
 // Get NFT balance of a specific wallet
+//
+// @extension: ERC721
 //
 // address: the address of the wallet to get the NFT balance of
 //
@@ -284,6 +302,8 @@ func (erc721 *ERC721) BalanceOf(ctx context.Context, address string) (int, error
 }
 
 // Check NFT approval
+//
+// @extension: ERC721
 //
 // address: the address whose assets are to be checked
 //
@@ -471,6 +491,8 @@ func (erc721 *ERC721) GetClaimIneligibilityReasons(ctx context.Context, quantity
 
 // Transfer an NFT
 //
+// @extension: ERC721
+//
 // to: wallet address to transfer the tokens to
 //
 // tokenId: the token ID of the NFT to transfer
@@ -497,6 +519,8 @@ func (erc721 *ERC721) Transfer(ctx context.Context, to string, tokenId int) (*ty
 
 // Burna an NFT
 //
+// @extension: ERC721Burnable
+//
 // tokenId: tokenID of the token to burn
 //
 // returns: the transaction receipt of the burn
@@ -518,6 +542,8 @@ func (erc721 *ERC721) Burn(ctx context.Context, tokenId int) (*types.Transaction
 }
 
 // Set approval for all NFTs
+//
+// @extension: ERC721
 //
 // address: the address whose assets are to be approved
 //
@@ -547,6 +573,8 @@ func (erc721 *ERC721) SetApprovalForAll(ctx context.Context, operator string, ap
 
 // Set approval for a specific NFT
 //
+// @extension: ERC721
+//
 // operator: the address of the operator to approve
 //
 // tokenId: the token ID of the NFT to approve
@@ -575,6 +603,8 @@ func (erc721 *ERC721) SetApprovalForToken(ctx context.Context, operator string, 
 
 // Mint an NFT
 //
+// @extension: ERC721Mintable
+//
 // metadata: metadata of the NFT to mint
 //
 // returns: the transaction receipt of the mint
@@ -597,6 +627,8 @@ func (erc721 *ERC721) Mint(ctx context.Context, metadata *NFTMetadataInput) (*ty
 }
 
 // Mint an NFT to a specific wallet
+//
+// @extension: ERC721Mintable
 //
 // address: the wallet address to mint to
 //
@@ -640,6 +672,8 @@ func (erc721 *ERC721) MintTo(ctx context.Context, address string, metadata *NFTM
 
 // Mint many NFTs
 //
+// @extension: ERC721BatchMintable
+//
 // metadatas: list of metadata of the NFTs to mint
 //
 // returns: the transaction receipt of the mint
@@ -664,6 +698,8 @@ func (erc721 *ERC721) MintBatch(ctx context.Context, metadatas []*NFTMetadataInp
 }
 
 // Mint many NFTs to a specific wallet
+//
+// @extension: ERC721BatchMintable
 //
 // to: the wallet address to mint to
 //
@@ -722,6 +758,8 @@ func (erc721 *ERC721) MintBatchTo(ctx context.Context, address string, metadatas
 }
 
 // Lazy mint NFTs
+//
+// @extension: ERC721LazyMintable
 //
 // metadatas: a list of the metadatas of the NFTs to create
 //
@@ -796,6 +834,8 @@ func (erc721 *ERC721) CreateBatch(ctx context.Context, metadatas []*NFTMetadataI
 
 // Claim an NFT
 //
+// @extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
+//
 // quantity: the number of NFTs to claim
 //
 // returns: the transaction receipt of the claim
@@ -811,6 +851,8 @@ func (erc721 *ERC721) Claim(ctx context.Context, quantity int) (*types.Transacti
 }
 
 // Claim NFTs to a specific wallet
+//
+// @extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
 //
 // destinationAddress: the address of the wallet to claim the NFTs to
 //

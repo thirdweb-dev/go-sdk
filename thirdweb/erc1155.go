@@ -63,6 +63,8 @@ func newERC1155(provider *ethclient.Client, address common.Address, privateKey s
 
 // Get an NFT
 //
+// @extension: ERC1155
+//
 // tokenId: token ID of the token to get the metadata for
 //
 // returns: the metadata for the NFT and its supply
@@ -91,6 +93,8 @@ func (erc1155 *ERC1155) Get(ctx context.Context, tokenId int) (*EditionMetadata,
 
 // Get all NFTs
 //
+// @extension: ERC1155
+//
 // returns: the metadatas and supplies of all the NFTs on this contract
 //
 // Example
@@ -112,6 +116,8 @@ func (erc1155 *ERC1155) GetAll(ctx context.Context) ([]*EditionMetadata, error) 
 
 // Get the total number of NFTs
 //
+// @extension: ERC1155Enumerable
+//
 // returns: the total number of NFTs on this contract
 //
 // Example
@@ -127,6 +133,8 @@ func (erc1155 *ERC1155) GetTotalCount(ctx context.Context) (int, error) {
 }
 
 // Get owned NFTs
+//
+// @extension: ERC1155Enumerable
 //
 // address: the address of the owner of the NFTs
 //
@@ -182,6 +190,8 @@ func (erc1155 *ERC1155) GetOwned(ctx context.Context, address string) ([]*Editio
 
 // Get the total supply of an NFT
 //
+// @extension: ERC1155
+//
 // tokenId: the token ID to check the total supply of
 //
 // returns: the supply of NFTs on the specified token ID
@@ -202,6 +212,8 @@ func (erc1155 *ERC1155) TotalSupply(ctx context.Context, tokenId int) (int, erro
 
 // Get NFT balance
 //
+// @extension: ERC1155
+//
 // tokenId: the token ID of a specific token to check the balance of
 //
 // returns: the number of NFTs of the specified token ID owned by the connected wallet
@@ -211,6 +223,8 @@ func (erc1155 *ERC1155) Balance(ctx context.Context, tokenId int) (int, error) {
 }
 
 // Get NFT balance of a specific wallet
+//
+// @extension: ERC1155
 //
 // address: the address of the wallet to get the NFT balance of
 //
@@ -232,6 +246,8 @@ func (erc1155 *ERC1155) BalanceOf(ctx context.Context, address string, tokenId i
 
 // Check NFT approval
 //
+// @extension: ERC1155
+//
 // address: the address whose assets are to be checked
 //
 // operator: the address of the operator to check
@@ -249,6 +265,8 @@ func (erc1155 *ERC1155) IsApproved(ctx context.Context, owner string, operator s
 }
 
 // Transfer NFTs
+//
+// @extension: ERC1155
 //
 // to: wallet address to transfer the tokens to
 //
@@ -286,6 +304,8 @@ func (erc1155 *ERC1155) Transfer(ctx context.Context, to string, tokenId int, am
 
 // Burn NFTs
 //
+// @extension: ERC1155Burnable
+//
 // tokenId: tokenID of the token to burn
 //
 // amount: number of NFTs of the token ID to burn
@@ -316,6 +336,8 @@ func (erc1155 *ERC1155) Burn(ctx context.Context, tokenId int, amount int) (*typ
 }
 
 // Set approval for all NFTs
+//
+// @extension: ERC1155
 //
 // address: the address whose assets are to be approved
 //
@@ -349,6 +371,8 @@ func (erc1155 *ERC1155) SetApprovalForAll(ctx context.Context, operator string, 
 
 // Mint an NFT
 //
+// @extension: ERC1155Mintable
+//
 // metadataWithSupply: nft metadata with supply of the NFT to mint
 //
 // returns: the transaction receipt of the mint
@@ -374,6 +398,8 @@ func (erc1155 *ERC1155) Mint(ctx context.Context, metadataWithSupply *EditionMet
 }
 
 // Mint an NFT to a specific wallet
+//
+// @extension: ERC1155Mintable
 //
 // address: the wallet address to mint the NFT to
 //
@@ -423,6 +449,8 @@ func (erc1155 *ERC1155) MintTo(ctx context.Context, address string, metadataWith
 
 // Mint additionaly supply of an NFT
 //
+// @extension: ERC1155Mintable
+//
 // tokenId: token ID to mint additional supply of
 //
 // additionalSupply: additional supply to mint
@@ -441,6 +469,8 @@ func (erc1155 *ERC1155) MintAdditionalSupply(ctx context.Context, tokenId int, a
 }
 
 // Mint additional supply of an NFT to a specific wallet
+//
+// @extension: ERC1155Mintable
 //
 // to: address of the wallet to mint NFTs to
 //
@@ -483,6 +513,8 @@ func (erc1155 *ERC1155) MintAdditionalSupplyTo(ctx context.Context, to string, t
 
 // Mint many NFTs
 //
+// @extension: ERC1155BatchMintable
+//
 // metadatasWithSupply: list of NFT metadatas with supplies to mint
 //
 // returns: the transaction receipt of the mint
@@ -512,6 +544,8 @@ func (erc1155 *ERC1155) MintBatch(ctx context.Context, metadatasWithSupply []*Ed
 }
 
 // Mint many NFTs to a specific wallet
+//
+// @extension: ERC1155BatchMintable
 //
 // to: address of the wallet to mint NFTs to
 //
@@ -589,6 +623,8 @@ func (erc1155 *ERC1155) MintBatchTo(ctx context.Context, to string, metadatasWit
 }
 
 // Lazy mint NFTs
+//
+// @extension: ERC1155LazyMintableV2
 //
 // metadatas: a list of the metadatas of the NFTs to create
 //
@@ -671,6 +707,8 @@ func (erc1155 *ERC1155) CreateBatch(ctx context.Context, metadatas []*NFTMetadat
 
 // Claim an NFT
 //
+// @extension: ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimConditionsV2
+//
 // tokenId: the token ID of the NFT to claim
 //
 // quantity: the number of NFTs to claim
@@ -689,6 +727,8 @@ func (erc1155 *ERC1155) Claim(ctx context.Context, tokenId int, quantity int) (*
 }
 
 // Claim an NFT to a specific wallet
+//
+// @extension: ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimConditionsV2
 //
 // tokenId: the token ID of the NFT to claim
 //

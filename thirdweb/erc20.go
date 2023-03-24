@@ -64,6 +64,8 @@ func (erc20 *ERC20) Balance(ctx context.Context) (*CurrencyValue, error) {
 
 // Get token balance of a specific wallet
 //
+// @extension: ERC20
+//
 // address: wallet address to check the balance of
 //
 // returns: balance of the specified wallet
@@ -84,6 +86,8 @@ func (erc20 *ERC20) BalanceOf(ctx context.Context, address string) (*CurrencyVal
 
 // Get the total minted supply
 //
+// @extension: ERC20
+//
 // returns: total minted supply of the token
 //
 // Example
@@ -100,6 +104,8 @@ func (erc20 *ERC20) TotalSupply(ctx context.Context) (*CurrencyValue, error) {
 
 // Get token allowance for a specific spender
 //
+// @extension: ERC20
+//
 // spender: wallet address to check the allowance of
 //
 // returns: allowance of the spender for the connected wallets tokens
@@ -115,6 +121,8 @@ func (erc20 *ERC20) Allowance(ctx context.Context, spender string) (*CurrencyVal
 }
 
 // Get token allowance for a specific spender and owner
+//
+// @extension: ERC20
 //
 // owner: wallet address who owns the assets
 //
@@ -139,6 +147,8 @@ func (erc20 *ERC20) AllowanceOf(ctx context.Context, owner string, spender strin
 }
 
 // Transfer tokens
+//
+// @extension: ERC20
 //
 // to: address to transfer the tokens to
 //
@@ -171,6 +181,8 @@ func (erc20 *ERC20) Transfer(ctx context.Context, to string, amount float64) (*t
 }
 
 // Transfer tokens from a specific wallet
+//
+// @extension: ERC20
 //
 // from: address to transfer the tokens from
 //
@@ -206,6 +218,8 @@ func (erc20 *ERC20) TransferFrom(ctx context.Context, from string, to string, am
 }
 
 // Set token allowance
+//
+// @extension: ERC20
 //
 // spender: wallet address to set the allowance of
 //
@@ -292,6 +306,8 @@ func (erc20 *ERC20) TransferBatch(ctx context.Context, args []*TokenAmount) (*ty
 
 // Burn tokens
 //
+// @extension: ERC20Burnable
+//
 // amount: amount of tokens to burn
 //
 // returns: transaction receipt of the burn
@@ -319,6 +335,8 @@ func (erc20 *ERC20) Burn(ctx context.Context, amount float64) (*types.Transactio
 }
 
 // Burn tokens from a specific wallet
+//
+// @extension: ERC20Burnable
 //
 // holder: wallet address to burn the tokens from
 //
@@ -353,6 +371,8 @@ func (erc20 *ERC20) BurnFrom(ctx context.Context, holder string, amount float64)
 
 // Mint tokens
 //
+// @extension: ERC20Mintable
+//
 // amount: amount of tokens to mint
 //
 // returns: transaction receipt of the mint
@@ -365,6 +385,8 @@ func (erc20 *ERC20) Mint(ctx context.Context, amount float64) (*types.Transactio
 }
 
 // Mint tokens to a specific wallet
+//
+// @extension: ERC20Mintable
 //
 // to: wallet address to mint tokens to
 //
@@ -394,6 +416,8 @@ func (erc20 *ERC20) MintTo(ctx context.Context, to string, amount float64) (*typ
 }
 
 // Mint tokens to many wallets
+//
+// @extension: ERC20BatchMintable
 //
 // args: list of wallet addresses and amounts to mint
 //
