@@ -159,7 +159,7 @@ async function generateFeatureSnippets() {
 
   const methods = [];
   for (const cls of Object.values(snippets).filter((cls) =>
-    classes.includes(cls)
+    classes.includes(cls.name)
   )) {
     for (const method of cls.methods) {
       if (method.extensions.length > 0) {
