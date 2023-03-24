@@ -141,7 +141,7 @@ func TestSignatureMintNft(t *testing.T) {
 
 	assert.True(t, valid)
 
-	_, err = nft.Signature.Mint(context.Background(), payload)
+	_, err = nft.Signature.MintAndAwait(context.Background(), payload)
 	assert.Nil(t, err)
 
 	balance, _ = nft.Balance(context.Background())

@@ -53,6 +53,12 @@ func newERC721SignatureMinting(provider *ethclient.Client, address common.Addres
 //	// Learn more about how to craft a payload in the Generate() function
 //	signedPayload, err := contract.Signature.Generate(payload)
 //	tx, err := contract.Signature.Mint(context.Background(), signedPayload)
+
+// Deprecated: use MintAndAwait
+func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error) {
+	return signature.MintAndAwait(ctx, signedPayload)
+}
+
 func (signature *ERC721SignatureMinting) MintAndAwait(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error) {
 	txOpts, err := signature.Helper.GetTxOptions(ctx)
 	if err != nil {
@@ -60,6 +66,7 @@ func (signature *ERC721SignatureMinting) MintAndAwait(ctx context.Context, signe
 	}
 
 	tx, err := signature.MintWithOpts(ctx, signedPayload, txOpts)
+
 	if err != nil {
 		return nil, err
 	}
