@@ -155,8 +155,12 @@ async function generateSnippets() {
 async function generateFeatureSnippets() {
   const snippets = JSON.parse(fs.readFileSync("./docs/snippets.json"));
 
+  const classes = ["ERC20", "ERC721", "ERC1155"];
+
   const methods = [];
-  for (const cls of Object.values(snippets)) {
+  for (const cls of Object.values(snippets).filter((cls) =>
+    classes.includes(cls.name)
+  )) {
     for (const method of cls.methods) {
       if (method.extensions.length > 0) {
         methods.push({
