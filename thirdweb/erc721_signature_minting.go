@@ -53,16 +53,33 @@ func newERC721SignatureMinting(provider *ethclient.Client, address common.Addres
 //	// Learn more about how to craft a payload in the Generate() function
 //	signedPayload, err := contract.Signature.Generate(payload)
 //	tx, err := contract.Signature.Mint(context.Background(), signedPayload)
+
+// Deprecated: use MintAndAwait
 func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error) {
+	return signature.MintAndAwait(ctx, signedPayload)
+}
+
+func (signature *ERC721SignatureMinting) MintAndAwait(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error) {
+	txOpts, err := signature.Helper.GetTxOptions(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	tx, err := signature.MintWithOpts(ctx, signedPayload, txOpts)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return signature.Helper.AwaitTx(ctx, tx.Hash())
+}
+
+func (signature *ERC721SignatureMinting) MintWithOpts(ctx context.Context, signedPayload *SignedPayload721, txOpts *bind.TransactOpts) (*types.Transaction, error) {
 	message, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	txOpts, err := signature.Helper.GetTxOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
 	if err := setErc20Allowance(
 		ctx,
 		signature.Helper,
@@ -78,12 +95,7 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 		return nil, err
 	}
 
-	tx, err := signature.abi.MintWithSignature(txOpts, *message, signatureBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	return signature.Helper.AwaitTx(ctx, tx.Hash())
+	return signature.abi.MintWithSignature(txOpts, *message, signatureBytes)
 }
 
 // Mint a batch of token with the data in given payload.
@@ -128,7 +140,7 @@ func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPa
 		if err != nil {
 			return nil, err
 		}
-	
+
 		tx, err := signature.abi.MintWithSignature(txOpts, *payload, signatureBytes)
 		if err != nil {
 			return nil, err
@@ -390,7 +402,7 @@ func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Conte
 		if err != nil {
 			return nil, err
 		}
-		
+
 		body, err := signature.storage.Get(ctx, p.MetadataUri)
 		if err != nil {
 			return nil, err
