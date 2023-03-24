@@ -235,6 +235,11 @@
             "internalType": "uint256",
             "name": "chainId",
             "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "metadataURI",
+            "type": "string"
           }
         ],
         "internalType": "struct ITWMultichainRegistry.Deployment[]",
