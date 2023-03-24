@@ -1,0 +1,24 @@
+{
+  "ERC20": [
+    {
+      "name": "Balance",
+      "summary": "Get token balance",
+      "examples": {
+        "go": "balance, err := contract.ERC20.Balance()\nbalanceValue := balance.DisplayValue\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-balance"
+      }
+    },
+    {
+      "name": "Get",
+      "summary": "Get token metadata",
+      "examples": {
+        "go": "currency, err := contract.ERC20.Get()\nsymbol := currency.Symbol\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-get"
+      }
+    }
+  ]
+}

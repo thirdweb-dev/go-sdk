@@ -72,7 +72,7 @@ func TestBatchMintNft(t *testing.T) {
 	assert.Equal(t, "NFT 1", nfts[0].Metadata.Name)
 	assert.Equal(t, "NFT 2", nfts[1].Metadata.Name)
 
-	nfts, _ = nft.GetOwned(context.Background(), nft.helper.GetSignerAddress().String())
+	nfts, _ = nft.GetOwned(context.Background(), nft.erc721.helper.GetSignerAddress().String())
 	assert.Equal(t, 2, len(nfts))
 	assert.Equal(t, "NFT 1", nfts[0].Metadata.Name)
 	assert.Equal(t, "NFT 2", nfts[1].Metadata.Name)
@@ -121,7 +121,7 @@ func TestSignatureMintNft(t *testing.T) {
 	payload, err := nft.Signature.Generate(
 		context.Background(),
 		&Signature721PayloadInput{
-			To:                   nft.helper.GetSignerAddress().String(),
+			To:                   nft.erc721.helper.GetSignerAddress().String(),
 			Price:                0,
 			CurrencyAddress:      "0x0000000000000000000000000000000000000000",
 			MintStartTime:        0,

@@ -1,7 +1,7 @@
 
 ## Contract Encoder
 
-This interface is currently supported by all contract encoder classes and provides a generic method to encode write function calls\.
+This interface is currently supported by all contract encoder classes and provides a generic method to encode write function calls.
 
 ```go
 type ContractEncoder struct {}
@@ -13,15 +13,15 @@ type ContractEncoder struct {}
 func (encoder *ContractEncoder) Encode(ctx context.Context, signerAddress string, method string, args ...interface{}) (*types.Transaction, error)
 ```
 
-Get the unsigned transaction data for any contract call on a contract\.
+Get the unsigned transaction data for any contract call on a contract.
 
 signerAddress: the address expected to sign this transaction
 
 method: the name of the contract function to encode transaction data for
 
-args: the arguments to pass to the contract function\.
+args: the arguments to pass to the contract function.
 
-returns: the encoded transaction data for the transaction\.
+returns: the encoded transaction data for the transaction.
 
 #### Example
 
@@ -36,7 +36,7 @@ fmt.Println(tx.Nonce())
 fmt.Println(tx.Value())
 ```
 
-## type [ContractEvent](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_events.go#L49-L53>)
+## type [ContractEvent](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_events.go#L48-L52>)
 
 ```go
 type ContractEvent struct {

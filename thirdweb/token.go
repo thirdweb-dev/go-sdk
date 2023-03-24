@@ -25,7 +25,7 @@ import (
 //
 //	contract, err := sdk.GetToken("{{contract_address}}")
 type Token struct {
-	*ERC20
+	*ERC20Standard
 	abi     *abi.TokenERC20
 	Helper  *contractHelper
 	Encoder *ContractEncoder
@@ -38,7 +38,7 @@ func newToken(provider *ethclient.Client, address common.Address, privateKey str
 	} else if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 		return nil, err
 	} else {
-		if erc20, err := newERC20(provider, address, privateKey, storage); err != nil {
+		if erc20, err := newERC20Standard(provider, address, privateKey, storage); err != nil {
 			return nil, err
 		} else {
 			encoder, err := newContractEncoder(abi.TokenERC20ABI, helper)
@@ -81,7 +81,7 @@ func (token *Token) GetVoteBalanceOf(ctx context.Context, address string) (*Curr
 		return nil, err
 	}
 
-	return token.getValue(ctx, votes)
+	return token.erc20.getValue(ctx, votes)
 }
 
 // Get the connected wallets delegatee address for this token.
@@ -109,7 +109,7 @@ func (token *Token) GetDelegationOf(ctx context.Context, address string) (string
 //
 // returns: transaction receipt of the mint
 func (token *Token) Mint(ctx context.Context, amount float64) (*types.Transaction, error) {
-	return token.MintTo(ctx, token.Helper.GetSignerAddress().String(), amount)
+	return token.erc20.Mint(ctx, amount)
 }
 
 // Mint tokens to a specified wallet.
@@ -124,21 +124,7 @@ func (token *Token) Mint(ctx context.Context, amount float64) (*types.Transactio
 //
 //	tx, err := contract.MintTo(context.Background(), "{{wallet_address}}", 1)
 func (token *Token) MintTo(ctx context.Context, to string, amount float64) (*types.Transaction, error) {
-	amountWithDecimals, err := token.normalizeAmount(ctx, amount)
-	if err != nil {
-		return nil, err
-	}
-
-	txOpts, err := token.Helper.GetTxOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-	tx, err := token.abi.MintTo(txOpts, common.HexToAddress(to), amountWithDecimals)
-	if err != nil {
-		return nil, err
-	}
-
-	return token.Helper.AwaitTx(ctx, tx.Hash())
+	return token.erc20.MintTo(ctx, to, amount)
 }
 
 // Mint tokens to a list of wallets.
@@ -162,36 +148,7 @@ func (token *Token) MintTo(ctx context.Context, to string, amount float64) (*typ
 //
 //	tx, err := contract.MintBatchTo(context.Background(), args)
 func (token *Token) MintBatchTo(ctx context.Context, args []*TokenAmount) (*types.Transaction, error) {
-	encoded := [][]byte{}
-
-	for _, arg := range args {
-		amountWithDecimals, err := token.normalizeAmount(ctx, arg.Amount)
-		if err != nil {
-			return nil, err
-		}
-
-		txOpts, err := token.Helper.getEncodedTxOptions(ctx)
-		if err != nil {
-			return nil, err
-		}
-		tx, err := token.abi.MintTo(txOpts, common.HexToAddress(arg.ToAddress), amountWithDecimals)
-		if err != nil {
-			return nil, err
-		}
-
-		encoded = append(encoded, tx.Data())
-	}
-
-	txOpts, err := token.Helper.GetTxOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-	tx, err := token.abi.Multicall(txOpts, encoded)
-	if err != nil {
-		return nil, err
-	}
-
-	return token.Helper.AwaitTx(ctx, tx.Hash())
+	return token.erc20.MintBatchTo(ctx, args)
 }
 
 // Delegate the connected wallets tokens to a specified wallet.
