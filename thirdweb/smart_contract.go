@@ -79,11 +79,13 @@ type SmartContract struct {
 	Helper   *contractHelper
 	Encoder  *ContractEncoder
 	Events   *ContractEvents
+	ERC20    *ERC20
+	ERC721   *ERC721
+	ERC1155  *ERC1155
 }
 
 func newSmartContract(provider *ethclient.Client, address common.Address, contractAbi string, privateKey string, storage storage) (*SmartContract, error) {
 	helper, err := newContractHelper(address, provider, privateKey)
-	fmt.Println(privateKey)
 	if err != nil {
 		return nil, err
 	}
@@ -105,12 +107,30 @@ func newSmartContract(provider *ethclient.Client, address common.Address, contra
 		return nil, err
 	}
 
+	erc20, err := newERC20(provider, address, privateKey, storage)
+	if err != nil {
+		return nil, err
+	}
+
+	erc721, err := newERC721(provider, address, privateKey, storage)
+	if err != nil {
+		return nil, err
+	}
+
+	erc1155, err := newERC1155(provider, address, privateKey, storage)
+	if err != nil {
+		return nil, err
+	}
+
 	contract := &SmartContract{
 		abi:      &parsedAbi,
 		contract: boundContract,
 		Helper:   helper,
 		Encoder:  encoder,
 		Events:   events,
+		ERC20:    erc20,
+		ERC721:   erc721,
+		ERC1155:  erc1155,
 	}
 
 	return contract, nil

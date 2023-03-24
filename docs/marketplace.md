@@ -19,20 +19,20 @@ contract, err := sdk.GetMarketplace("{{contract_address}}")
 
 ```go
 type Marketplace struct {
-    Abi *abi.Marketplace
-
+    Abi     *abi.Marketplace
+    Helper  *contractHelper
     Encoder *MarketplaceEncoder
     Events  *ContractEvents
 }
 ```
 
-### func \(\*Marketplace\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L192>)
+### func \(\*Marketplace\) [BuyoutListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L193>)
 
 ```go
 func (marketplace *Marketplace) BuyoutListing(ctx context.Context, listingId int, quantityDesired int) (*types.Transaction, error)
 ```
 
-Buy a specific listing from the marketplace\.
+Buy a specific listing from the marketplace.
 
 listingId: listing ID of the asset you want to buy
 
@@ -40,13 +40,13 @@ quantityDesired: the quantity of the asset to buy from the listing
 
 returns: transaction receipt of the purchase
 
-### func \(\*Marketplace\) [BuyoutListingTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L212>)
+### func \(\*Marketplace\) [BuyoutListingTo](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L213>)
 
 ```go
 func (marketplace *Marketplace) BuyoutListingTo(ctx context.Context, listingId int, quantityDesired int, receiver string) (*types.Transaction, error)
 ```
 
-Buy a specific listing from the marketplace to a specific address\.
+Buy a specific listing from the marketplace to a specific address.
 
 listingId: listing ID of the asset you want to buy
 
@@ -65,13 +65,13 @@ receiver := "0x..."
 receipt, err := marketplace.BuyoutListingTo(context.Background(), listingId, quantityDesired, receiver)
 ```
 
-### func \(\*Marketplace\) [CancelListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L171>)
+### func \(\*Marketplace\) [CancelListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L172>)
 
 ```go
 func (marketplace *Marketplace) CancelListing(ctx context.Context, listingId int) (*types.Transaction, error)
 ```
 
-Cancel a listing on the marketplace\.
+Cancel a listing on the marketplace.
 
 listingId: listing ID to cancel
 
@@ -84,13 +84,13 @@ listingId := 0
 receipt, err := marketplace.CancelListing(context.Background(), listingId)
 ```
 
-### func \(\*Marketplace\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L279>)
+### func \(\*Marketplace\) [CreateListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L281>)
 
 ```go
 func (marketplace *Marketplace) CreateListing(ctx context.Context, listing *NewDirectListing) (int, error)
 ```
 
-Create a new listing on the marketplace where people can buy an asset directly\.
+Create a new listing on the marketplace where people can buy an asset directly.
 
 listing: the data for the listing to create
 
@@ -112,13 +112,13 @@ listing := &NewDirectListing{
 listingId, err := marketplace.CreateListing(context.Background(), listing)
 ```
 
-### func \(\*Marketplace\) [GetActiveListings](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L106>)
+### func \(\*Marketplace\) [GetActiveListings](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L107>)
 
 ```go
 func (marketplace *Marketplace) GetActiveListings(ctx context.Context, filter *MarketplaceFilter) ([]*DirectListing, error)
 ```
 
-Get all active listings from the marketplace\.
+Get all active listings from the marketplace.
 
 filter: optional filter parameters
 
@@ -132,13 +132,13 @@ listings, err := marketplace.GetActiveListings(context.Background(), nil)
 listings[0].BuyoutCurrencyValuePerToken.DisplayValue
 ```
 
-### func \(\*Marketplace\) [GetAllListings](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L138>)
+### func \(\*Marketplace\) [GetAllListings](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L139>)
 
 ```go
 func (marketplace *Marketplace) GetAllListings(ctx context.Context, filter *MarketplaceFilter) ([]*DirectListing, error)
 ```
 
-Get all the listings from the marketplace\.
+Get all the listings from the marketplace.
 
 filter: optional filter parameters
 
@@ -152,13 +152,13 @@ listings, err := marketplace.GetAllListings(context.Background(), nil)
 listings[0].BuyoutCurrencyValuePerToken.DisplayValue
 ```
 
-### func \(\*Marketplace\) [GetListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L75>)
+### func \(\*Marketplace\) [GetListing](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L76>)
 
 ```go
 func (marketplace *Marketplace) GetListing(ctx context.Context, listingId int) (*DirectListing, error)
 ```
 
-Get a single listing from the marketplace\.
+Get a single listing from the marketplace.
 
 listingId: listing ID to get
 
@@ -171,12 +171,12 @@ listingId := 0
 listing, err := marketplace.GetListing(context.Background(), listingId)
 ```
 
-### func \(\*Marketplace\) [GetTotalCount](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L150>)
+### func \(\*Marketplace\) [GetTotalCount](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/marketplace.go#L151>)
 
 ```go
 func (marketplace *Marketplace) GetTotalCount(ctx context.Context) (int, error)
 ```
 
-Get the total number of listings in the marketplace\.
+Get the total number of listings in the marketplace.
 
 returns: total number of listings in the marketplace

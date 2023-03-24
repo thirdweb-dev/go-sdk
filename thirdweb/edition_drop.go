@@ -2,13 +2,10 @@ package thirdweb
 
 import (
 	"context"
-	"math/big"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/mitchellh/mapstructure"
 
 	"github.com/thirdweb-dev/go-sdk/v2/abi"
 )
@@ -27,7 +24,7 @@ import (
 //
 //	contract, err := sdk.GetEditionDrop("{{contract_address}}")
 type EditionDrop struct {
-	*ERC1155
+	*ERC1155Standard
 	abi             *abi.DropERC1155
 	Helper          *contractHelper
 	ClaimConditions *EditionDropClaimConditions
@@ -42,7 +39,7 @@ func newEditionDrop(provider *ethclient.Client, address common.Address, privateK
 		if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			if erc1155, err := newERC1155(provider, address, privateKey, storage); err != nil {
+			if erc1155, err := newERC1155Standard(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
 				claimConditions, err := newEditionDropClaimConditions(address, provider, helper, storage)
@@ -109,47 +106,7 @@ func newEditionDrop(provider *ethclient.Client, address common.Address, privateK
 //
 //	tx, err := contract.MintBatchTo(context.Background(), "{{wallet_address}}", metadatasWithSupply)
 func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetadataInput) (*types.Transaction, error) {
-	startNumber, err := drop.abi.NextTokenIdToMint(&bind.CallOpts{Context: ctx})
-	if err != nil {
-		return nil, err
-	}
-	fileStartNumber := int(startNumber.Int64())
-
-	contractAddress := drop.Helper.getAddress().String()
-	signerAddress := drop.Helper.GetSignerAddress().String()
-
-	data := []interface{}{}
-	for _, metadata := range metadatas {
-		data = append(data, metadata)
-	}
-	dataToUpload := []map[string]interface{}{}
-	if err := mapstructure.Decode(data, &dataToUpload); err != nil {
-		return nil, err
-	}
-
-	batch, err := drop.storage.UploadBatch(
-		ctx,
-		dataToUpload,
-		fileStartNumber,
-		contractAddress,
-		signerAddress,
-	)
-
-	txOpts, err := drop.Helper.GetTxOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-	tx, err := drop.abi.LazyMint(
-		txOpts,
-		big.NewInt(int64(len(batch.uris))),
-		batch.baseUri,
-		[]byte{},
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return drop.Helper.AwaitTx(ctx, tx.Hash())
+	return drop.erc1155.CreateBatch(ctx, metadatas)
 }
 
 // Claim NFTs from this contract to the connect wallet.
@@ -160,8 +117,7 @@ func (drop *EditionDrop) CreateBatch(ctx context.Context, metadatas []*NFTMetada
 //
 // returns: the transaction receipt of the claim
 func (drop *EditionDrop) Claim(ctx context.Context, tokenId int, quantity int) (*types.Transaction, error) {
-	address := drop.Helper.GetSignerAddress().String()
-	return drop.ClaimTo(ctx, address, tokenId, quantity)
+	return drop.erc1155.Claim(ctx, tokenId, quantity)
 }
 
 // Claim NFTs from this contract to the connect wallet.
@@ -182,71 +138,5 @@ func (drop *EditionDrop) Claim(ctx context.Context, tokenId int, quantity int) (
 //
 //	tx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)
 func (drop *EditionDrop) ClaimTo(ctx context.Context, destinationAddress string, tokenId int, quantity int) (*types.Transaction, error) {
-	claimVerification, err := drop.prepareClaim(ctx, tokenId, quantity)
-	if err != nil {
-		return nil, err
-	}
-
-	active, err := drop.ClaimConditions.GetActive(ctx, tokenId)
-	if err != nil {
-		return nil, err
-	}
-
-	txOpts, err := drop.Helper.GetTxOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	txOpts.Value = claimVerification.Value
-
-	proof := abi.IDrop1155AllowlistProof{
-		Proof:                  claimVerification.Proofs,
-		QuantityLimitPerWallet: claimVerification.MaxClaimable,
-		PricePerToken:          claimVerification.Price,
-		Currency:               common.HexToAddress(claimVerification.CurrencyAddress),
-	}
-
-	tx, err := drop.abi.Claim(
-		txOpts,
-		common.HexToAddress(destinationAddress),
-		big.NewInt(int64(tokenId)),
-		big.NewInt(int64(quantity)),
-		common.HexToAddress(active.CurrencyAddress),
-		active.Price,
-		proof,
-		[]byte{},
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return drop.Helper.AwaitTx(ctx, tx.Hash())
-}
-
-func (drop *EditionDrop) prepareClaim(ctx context.Context, tokenId int, quantity int) (*ClaimVerification, error) {
-	addressToClaim := drop.helper.GetSignerAddress().Hex()
-	claimCondition, err := drop.ClaimConditions.GetActive(ctx, tokenId)
-	if err != nil {
-		return nil, err
-	}
-
-	merkleMetadata, err := drop.ClaimConditions.GetMerkleMetadata(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	claimVerification, err := prepareClaim(
-		ctx,
-		addressToClaim,
-		quantity,
-		claimCondition,
-		merkleMetadata,
-		drop.Helper,
-		drop.storage,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return claimVerification, nil
+	return drop.erc1155.ClaimTo(ctx, destinationAddress, tokenId, quantity)
 }

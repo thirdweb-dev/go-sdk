@@ -28,7 +28,7 @@ import (
 //
 //	contract, err := sdk.GetMultiwrap("{{contract_address}}")
 type Multiwrap struct {
-	*ERC721
+	*ERC721Standard
 	abi     *abi.Multiwrap
 	Helper  *contractHelper
 	Encoder *ContractEncoder
@@ -41,7 +41,7 @@ func newMultiwrap(provider *ethclient.Client, address common.Address, privateKey
 		if helper, err := newContractHelper(address, provider, privateKey); err != nil {
 			return nil, err
 		} else {
-			if erc721, err := newERC721(provider, address, privateKey, storage); err != nil {
+			if erc721, err := newERC721Standard(provider, address, privateKey, storage); err != nil {
 				return nil, err
 			} else {
 				encoder, err := newContractEncoder(abi.MultiwrapABI, helper)
@@ -164,7 +164,7 @@ func (multiwrap *Multiwrap) Wrap(ctx context.Context, contents *MultiwrapBundle,
 	if !ok {
 		tokenMetadata, ok := wrappedTokenMetadata.(*NFTMetadataInput)
 		if ok {
-			tokenUri, err := uploadOrExtractUri(ctx, tokenMetadata, multiwrap.storage)
+			tokenUri, err := uploadOrExtractUri(ctx, tokenMetadata, multiwrap.erc721.storage)
 			if err != nil {
 				return nil, err
 			}
@@ -247,6 +247,9 @@ func (multiwrap *Multiwrap) toTokenStructList(ctx context.Context, contents *Mul
 			erc20.ContractAddress,
 			normalizedQuantity,
 		)
+		if err != nil {
+			return nil, err
+		}
 
 		if !hasAllowance {
 			return nil, fmt.Errorf(

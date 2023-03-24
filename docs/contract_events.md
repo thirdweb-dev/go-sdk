@@ -1,7 +1,7 @@
 
 ## Contract Events
 
-This interface provides a way to query past events or listen for future events on any contract\. It's currently support on all pre\-built and custom contracts\!
+This interface provides a way to query past events or listen for future events on any contract. It's currently support on all pre\-built and custom contracts\!
 
 ### Example
 
@@ -25,13 +25,13 @@ contract.Events.AddEventListener("Transfer", func (event thirdweb.ContractEvent)
 type ContractEvents struct {}
 ```
 
-### func \(\*ContractEvents\) [AddEventListener](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_events.go#L95>)
+### func \(\*ContractEvents\) [AddEventListener](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_events.go#L94>)
 
 ```go
 func (events *ContractEvents) AddEventListener(ctx context.Context, eventName string, listener func(event ContractEvent)) EventSubscription
 ```
 
-Add a listener to listen in the background for any future events of a specific type\.
+Add a listener to listen in the background for any future events of a specific type.
 
 eventName: The name of the event to listen for
 
@@ -54,13 +54,13 @@ subscription := contract.Events.AddEventListener(context.Background(), "Transfer
 subscription.Unsubscribe()
 ```
 
-### func \(\*ContractEvents\) [GetEvents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_events.go#L175>)
+### func \(\*ContractEvents\) [GetEvents](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/contract_events.go#L174>)
 
 ```go
 func (events *ContractEvents) GetEvents(ctx context.Context, eventName string, options EventQueryOptions) ([]ContractEvent, error)
 ```
 
-Query past events of a specific type on the contract\.
+Query past events of a specific type on the contract.
 
 eventName: The name of the event to query for
 

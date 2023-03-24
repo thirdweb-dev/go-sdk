@@ -46,7 +46,7 @@ func TestBatchMintEdition(t *testing.T) {
 
 	_, err := edition.MintBatchTo(
 		context.Background(),
-		edition.helper.GetSignerAddress().String(),
+		edition.Helper.GetSignerAddress().String(),
 		[]*EditionMetadataInput{
 			{
 				Metadata: &NFTMetadataInput{
@@ -124,7 +124,7 @@ func TestSignatureMint(t *testing.T) {
 	payload, err := edition.Signature.Generate(
 		context.Background(),
 		&Signature1155PayloadInput{
-			To:                   edition.helper.GetSignerAddress().String(),
+			To:                   edition.Helper.GetSignerAddress().String(),
 			Price:                0,
 			CurrencyAddress:      "0x0000000000000000000000000000000000000000",
 			MintStartTime:        0,

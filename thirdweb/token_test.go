@@ -40,7 +40,7 @@ func TestBatchMintToken(t *testing.T) {
 		context.Background(),
 		[]*TokenAmount{
 			{
-				ToAddress: token.helper.GetSignerAddress().String(),
+				ToAddress: token.Helper.GetSignerAddress().String(),
 				Amount:    1.5,
 			},
 			{

@@ -25,6 +25,10 @@ const delimiters = {
     name: "erc20.md",
     header: "ERC20",
   },
+  ERC20Standard: {
+    name: "erc20_standard.md",
+    header: "ERC20 Standard",
+  },
   ERC721SignatureMinting: {
     name: "erc721_signature_minting.md",
     header: "ERC721 Signature Minting",
@@ -33,6 +37,10 @@ const delimiters = {
     name: "erc721.md",
     header: "ERC721",
   },
+  ERC721Standard: {
+    name: "erc721_standard.md",
+    header: "ERC721 Standard",
+  },
   ERC1155SignatureMinting: {
     name: "erc1155_signature_minting.md",
     header: "ERC1155 Signature Minting",
@@ -40,6 +48,10 @@ const delimiters = {
   ERC1155: {
     name: "erc1155.md",
     header: "ERC1155",
+  },
+  ERC1155Standard: {
+    name: "erc1155_standard.md",
+    header: "ERC1155 Standard",
   },
   Edition: {
     name: "edition.md",

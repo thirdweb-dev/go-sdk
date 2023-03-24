@@ -1,7 +1,7 @@
 
 ## Contract Deployments
 
-The contract deployer lets you deploy new contracts to the blockchain using just the thirdweb SDK\. You can access the contract deployer interface as follows:
+The contract deployer lets you deploy new contracts to the blockchain using just the thirdweb SDK. You can access the contract deployer interface as follows:
 
 ```
 import (
@@ -34,7 +34,7 @@ type ContractDeployer struct {
 func (deployer *ContractDeployer) DeployEdition(ctx context.Context, metadata *DeployEditionMetadata) (string, error)
 ```
 
-Deploy a new Edition contract\.
+Deploy a new Edition contract.
 
 metadata: the contract metadata
 
@@ -57,7 +57,7 @@ address, err := sdk.Deployer.DeployEdition(
 func (deployer *ContractDeployer) DeployEditionDrop(ctx context.Context, metadata *DeployEditionDropMetadata) (string, error)
 ```
 
-Deploy a new Edition Drop contract\.
+Deploy a new Edition Drop contract.
 
 metadata: the contract metadata
 
@@ -80,7 +80,7 @@ address, err := sdk.Deployer.DeployEditionDrop(
 func (deployer *ContractDeployer) DeployMarketplace(ctx context.Context, metadata *DeployMarketplaceMetadata) (string, error)
 ```
 
-Deploy a new Marketplace contract\.
+Deploy a new Marketplace contract.
 
 metadata: the contract metadata
 
@@ -103,7 +103,7 @@ address, err := sdk.Deployer.DeployMarketplace(
 func (deployer *ContractDeployer) DeployMultiwrap(ctx context.Context, metadata *DeployMultiwrapMetadata) (string, error)
 ```
 
-Deploy a new Multiwrap contract\.
+Deploy a new Multiwrap contract.
 
 metadata: the contract metadata
 
@@ -126,7 +126,7 @@ address, err := sdk.Deployer.DeployMultiwrap(
 func (deployer *ContractDeployer) DeployNFTCollection(ctx context.Context, metadata *DeployNFTCollectionMetadata) (string, error)
 ```
 
-Deploy a new NFT Collection contract\.
+Deploy a new NFT Collection contract.
 
 metadata: the contract metadata
 
@@ -149,7 +149,7 @@ address, err := sdk.Deployer.DeployNFTCollection(
 func (deployer *ContractDeployer) DeployNFTDrop(ctx context.Context, metadata *DeployNFTDropMetadata) (string, error)
 ```
 
-Deploy a new NFT Drop contract\.
+Deploy a new NFT Drop contract.
 
 metadata: the contract metadata
 
@@ -172,7 +172,7 @@ address, err := sdk.Deployer.DeployNFTDrop(
 func (deployer *ContractDeployer) DeployToken(ctx context.Context, metadata *DeployTokenMetadata) (string, error)
 ```
 
-Deploy a new Token contract\.
+Deploy a new Token contract.
 
 metadata: the contract metadata
 

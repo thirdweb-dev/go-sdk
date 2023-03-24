@@ -1,0 +1,988 @@
+{
+  "ERC1155": [
+    {
+      "name": "Balance",
+      "summary": "Get NFT balance",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-balance"
+      }
+    },
+    {
+      "name": "BalanceOf",
+      "summary": "Get NFT balance of a specific wallet",
+      "examples": {
+        "go": "address := \"{{wallet_address}}\"\ntokenId := 0\nbalance, err := contract.BalanceOf(context.Background(), address, tokenId)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-balanceof"
+      }
+    },
+    {
+      "name": "Get",
+      "summary": "Get an NFT",
+      "examples": {
+        "go": "nft, err := contract.Get(context.Background(), 0)\nsupply := nft.Supply\nname := nft.Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-get"
+      }
+    },
+    {
+      "name": "GetAll",
+      "summary": "Get all NFTs",
+      "examples": {
+        "go": "nfts, err := contract.GetAll(context.Background())\nsupplyOne := nfts[0].Supply\nnameOne := nfts[0].Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-getall"
+      }
+    },
+    {
+      "name": "IsApproved",
+      "summary": "Check NFT approval",
+      "examples": {
+        "go": "owner := \"{{wallet_address}}\"\noperator := \"0x...\"\n\nisApproved, err := contract.IsApproved(context.Background, owner, operator)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-isapproved"
+      }
+    },
+    {
+      "name": "SetApprovalForAll",
+      "summary": "Set approval for all NFTs",
+      "examples": {
+        "go": "operator := \"{{wallet_address}}\"\napproved := true\n\ntx, err := contract.SetApprovalForAll(context.Background(), operator, approved)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-setapprovalforall"
+      }
+    },
+    {
+      "name": "TotalSupply",
+      "summary": "Get the total supply of an NFT",
+      "examples": {
+        "go": "tokenId := 0\n\ntotalSupply, err := contract.TotalSupply(context.Background, tokenId)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-totalsupply"
+      }
+    },
+    {
+      "name": "Transfer",
+      "summary": "Transfer NFTs",
+      "examples": {
+        "go": "to := \"0x...\"\ntokenId := 0\namount := 1\n\ntx, err := contract.Transfer(context.Background(), to, tokenId, amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-transfer"
+      }
+    },
+    {
+      "name": "Balance",
+      "summary": "Get NFT balance",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-balance"
+      }
+    },
+    {
+      "name": "BalanceOf",
+      "summary": "Get NFT balance of a specific wallet",
+      "examples": {
+        "go": "address := \"{{wallet_address}}\"\ntokenId := 0\nbalance, err := contract.BalanceOf(context.Background(), address, tokenId)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-balanceof"
+      }
+    },
+    {
+      "name": "Get",
+      "summary": "Get an NFT",
+      "examples": {
+        "go": "nft, err := contract.Get(context.Background(), 0)\nsupply := nft.Supply\nname := nft.Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-get"
+      }
+    },
+    {
+      "name": "GetAll",
+      "summary": "Get all NFTs",
+      "examples": {
+        "go": "nfts, err := contract.GetAll(context.Background())\nsupplyOne := nfts[0].Supply\nnameOne := nfts[0].Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-getall"
+      }
+    },
+    {
+      "name": "IsApproved",
+      "summary": "Check NFT approval",
+      "examples": {
+        "go": "owner := \"{{wallet_address}}\"\noperator := \"0x...\"\n\nisApproved, err := contract.IsApproved(context.Background, owner, operator)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-isapproved"
+      }
+    },
+    {
+      "name": "SetApprovalForAll",
+      "summary": "Set approval for all NFTs",
+      "examples": {
+        "go": "operator := \"{{wallet_address}}\"\napproved := true\n\ntx, err := contract.SetApprovalForAll(context.Background(), operator, approved)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-setapprovalforall"
+      }
+    },
+    {
+      "name": "TotalSupply",
+      "summary": "Get the total supply of an NFT",
+      "examples": {
+        "go": "tokenId := 0\n\ntotalSupply, err := contract.TotalSupply(context.Background, tokenId)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-totalsupply"
+      }
+    },
+    {
+      "name": "Transfer",
+      "summary": "Transfer NFTs",
+      "examples": {
+        "go": "to := \"0x...\"\ntokenId := 0\namount := 1\n\ntx, err := contract.Transfer(context.Background(), to, tokenId, amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-transfer"
+      }
+    }
+  ],
+  "ERC1155Burnable": [
+    {
+      "name": "Burn",
+      "summary": "Burn NFTs",
+      "examples": {
+        "go": "tokenId := 0\namount := 1\ntx, err := contract.Burn(context.Background(), tokenId, amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-burn"
+      }
+    },
+    {
+      "name": "Burn",
+      "summary": "Burn NFTs",
+      "examples": {
+        "go": "tokenId := 0\namount := 1\ntx, err := contract.Burn(context.Background(), tokenId, amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-burn"
+      }
+    }
+  ],
+  "ERC1155ClaimCustom": [
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim an NFT to a specific wallet",
+      "examples": {
+        "go": "address = \"{{wallet_address}}\"\ntokenId = 0\nquantity = 1\n\ntx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-claimto"
+      }
+    },
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim an NFT to a specific wallet",
+      "examples": {
+        "go": "address = \"{{wallet_address}}\"\ntokenId = 0\nquantity = 1\n\ntx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-claimto"
+      }
+    }
+  ],
+  "ERC1155ClaimPhasesV2": [
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim an NFT to a specific wallet",
+      "examples": {
+        "go": "address = \"{{wallet_address}}\"\ntokenId = 0\nquantity = 1\n\ntx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-claimto"
+      }
+    },
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim an NFT to a specific wallet",
+      "examples": {
+        "go": "address = \"{{wallet_address}}\"\ntokenId = 0\nquantity = 1\n\ntx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-claimto"
+      }
+    }
+  ],
+  "ERC1155ClaimConditionsV2": [
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim an NFT to a specific wallet",
+      "examples": {
+        "go": "address = \"{{wallet_address}}\"\ntokenId = 0\nquantity = 1\n\ntx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-claimto"
+      }
+    },
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim an NFT to a specific wallet",
+      "examples": {
+        "go": "address = \"{{wallet_address}}\"\ntokenId = 0\nquantity = 1\n\ntx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-claimto"
+      }
+    }
+  ],
+  "ERC1155LazyMintableV2": [
+    {
+      "name": "CreateBatch",
+      "summary": "Lazy mint NFTs",
+      "examples": {
+        "go": "image0, err := os.Open(\"path/to/image/0.jpg\")\ndefer image0.Close()\n\nimage1, err := os.Open(\"path/to/image/1.jpg\")\ndefer image1.Close()\n\nmetadatasWithSupply := []*thirdweb.EditionMetadataInput{\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image0,\n\t\t},\n\t\tSupply: 100,\n\t},\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image1,\n\t\t},\n\t\tSupply: 100,\n\t},\n}\n\ntx, err := contract.CreateBatch(context.Background(), metadatasWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-createbatch"
+      }
+    },
+    {
+      "name": "CreateBatch",
+      "summary": "Lazy mint NFTs",
+      "examples": {
+        "go": "image0, err := os.Open(\"path/to/image/0.jpg\")\ndefer image0.Close()\n\nimage1, err := os.Open(\"path/to/image/1.jpg\")\ndefer image1.Close()\n\nmetadatasWithSupply := []*thirdweb.EditionMetadataInput{\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image0,\n\t\t},\n\t\tSupply: 100,\n\t},\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t\tImage: image1,\n\t\t},\n\t\tSupply: 100,\n\t},\n}\n\ntx, err := contract.CreateBatch(context.Background(), metadatasWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-createbatch"
+      }
+    }
+  ],
+  "ERC1155Enumerable": [
+    {
+      "name": "GetOwned",
+      "summary": "Get owned NFTs",
+      "examples": {
+        "go": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(context.Background(), owner)\nname := nfts[0].Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-getowned"
+      }
+    },
+    {
+      "name": "GetTotalCount",
+      "summary": "Get the total number of NFTs",
+      "examples": {
+        "go": "totalCount, err := contract.GetTotalCount(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-gettotalcount"
+      }
+    },
+    {
+      "name": "GetOwned",
+      "summary": "Get owned NFTs",
+      "examples": {
+        "go": "owner := \"{{wallet_address}}\"\nnfts, err := contract.GetOwned(context.Background(), owner)\nname := nfts[0].Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-getowned"
+      }
+    },
+    {
+      "name": "GetTotalCount",
+      "summary": "Get the total number of NFTs",
+      "examples": {
+        "go": "totalCount, err := contract.GetTotalCount(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-gettotalcount"
+      }
+    }
+  ],
+  "ERC1155Mintable": [
+    {
+      "name": "Mint",
+      "summary": "Mint an NFT",
+      "examples": {
+        "go": "image, err := os.Open(\"path/to/image.jpg\")\ndefer image.Close()\n\nmetadataWithSupply := &thirdweb.EditionMetadataInput{\n\tMetadata: &thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT\",\n\t\tDescription: \"This is a cool NFT\",\n\t\tImage: image,\n\t},\n\tSupply: 100,\n}\n\ntx, err := contract.Mint(context.Background(), metadataWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-mint"
+      }
+    },
+    {
+      "name": "MintAdditionalSupply",
+      "summary": "Mint additionaly supply of an NFT",
+      "examples": {
+        "go": "tokenId := 0\nadditionalSupply := 100\n\ntx, err := contract.MintAdditionalSupply(context.Background(), tokenId, additionalSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-mintadditionalsupply"
+      }
+    },
+    {
+      "name": "MintAdditionalSupplyTo",
+      "summary": "Mint additional supply of an NFT to a specific wallet",
+      "examples": {
+        "go": "to := \"{{wallet_address}}\"\ntokenId := 0\nadditionalSupply := 100\n\ntx, err := contract.MintAdditionalSupplyTo(context.Background(), to, tokenId, additionalSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-mintadditionalsupplyto"
+      }
+    },
+    {
+      "name": "MintTo",
+      "summary": "Mint an NFT to a specific wallet",
+      "examples": {
+        "go": "image, err := os.Open(\"path/to/image.jpg\")\ndefer image.Close()\n\nmetadataWithSupply := &thirdweb.EditionMetadataInput{\n\tMetadata: &thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT\",\n\t\tDescription: \"This is a cool NFT\",\n\t\tImage: image,\n\t},\n\tSupply: 100,\n}\n\ntx, err := contract.MintTo(context.Background(), \"{{wallet_address}}\", metadataWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-mintto"
+      }
+    },
+    {
+      "name": "Mint",
+      "summary": "Mint an NFT",
+      "examples": {
+        "go": "image, err := os.Open(\"path/to/image.jpg\")\ndefer image.Close()\n\nmetadataWithSupply := &thirdweb.EditionMetadataInput{\n\tMetadata: &thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT\",\n\t\tDescription: \"This is a cool NFT\",\n\t\tImage: image,\n\t},\n\tSupply: 100,\n}\n\ntx, err := contract.Mint(context.Background(), metadataWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-mint"
+      }
+    },
+    {
+      "name": "MintAdditionalSupply",
+      "summary": "Mint additionaly supply of an NFT",
+      "examples": {
+        "go": "tokenId := 0\nadditionalSupply := 100\n\ntx, err := contract.MintAdditionalSupply(context.Background(), tokenId, additionalSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-mintadditionalsupply"
+      }
+    },
+    {
+      "name": "MintAdditionalSupplyTo",
+      "summary": "Mint additional supply of an NFT to a specific wallet",
+      "examples": {
+        "go": "to := \"{{wallet_address}}\"\ntokenId := 0\nadditionalSupply := 100\n\ntx, err := contract.MintAdditionalSupplyTo(context.Background(), to, tokenId, additionalSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-mintadditionalsupplyto"
+      }
+    },
+    {
+      "name": "MintTo",
+      "summary": "Mint an NFT to a specific wallet",
+      "examples": {
+        "go": "image, err := os.Open(\"path/to/image.jpg\")\ndefer image.Close()\n\nmetadataWithSupply := &thirdweb.EditionMetadataInput{\n\tMetadata: &thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT\",\n\t\tDescription: \"This is a cool NFT\",\n\t\tImage: image,\n\t},\n\tSupply: 100,\n}\n\ntx, err := contract.MintTo(context.Background(), \"{{wallet_address}}\", metadataWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-mintto"
+      }
+    }
+  ],
+  "ERC1155BatchMintable": [
+    {
+      "name": "MintBatch",
+      "summary": "Mint many NFTs",
+      "examples": {
+        "go": "metadatasWithSupply := []*thirdweb.EditionMetadataInput{\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t},\n\t\tSupply: 100,\n\t},\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t},\n\t\tSupply: 100,\n\t},\n}\n\ntx, err := contract.MintBatch(context.Background(), metadatasWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-mintbatch"
+      }
+    },
+    {
+      "name": "MintBatchTo",
+      "summary": "Mint many NFTs to a specific wallet",
+      "examples": {
+        "go": "metadatasWithSupply := []*thirdweb.EditionMetadataInput{\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t},\n\t\tSupply: 100,\n\t},\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t},\n\t\tSupply: 100,\n\t},\n}\n\ntx, err := contract.MintBatchTo(context.Background(), \"{{wallet_address}}\", metadatasWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/edition#func-edition-mintbatchto"
+      }
+    },
+    {
+      "name": "MintBatch",
+      "summary": "Mint many NFTs",
+      "examples": {
+        "go": "metadatasWithSupply := []*thirdweb.EditionMetadataInput{\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t},\n\t\tSupply: 100,\n\t},\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t},\n\t\tSupply: 100,\n\t},\n}\n\ntx, err := contract.MintBatch(context.Background(), metadatasWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-mintbatch"
+      }
+    },
+    {
+      "name": "MintBatchTo",
+      "summary": "Mint many NFTs to a specific wallet",
+      "examples": {
+        "go": "metadatasWithSupply := []*thirdweb.EditionMetadataInput{\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t},\n\t\tSupply: 100,\n\t},\n\t&thirdweb.EditionMetadataInput{\n\t\tMetadata: &thirdweb.NFTMetadataInput{\n\t\t\tName: \"Cool NFT\",\n\t\t\tDescription: \"This is a cool NFT\",\n\t\t},\n\t\tSupply: 100,\n\t},\n}\n\ntx, err := contract.MintBatchTo(context.Background(), \"{{wallet_address}}\", metadatasWithSupply)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc1155#func-erc1155-mintbatchto"
+      }
+    }
+  ],
+  "ERC20": [
+    {
+      "name": "Allowance",
+      "summary": "Get token allowance for a specific spender",
+      "examples": {
+        "go": "spender := \"0x...\"\n\nallowance, err := contract.ERC20.Allowance(spender)\nallowanceValue := allowance.DisplayValue\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-allowance"
+      }
+    },
+    {
+      "name": "AllowanceOf",
+      "summary": "Get token allowance for a specific spender and owner",
+      "examples": {
+        "go": "address := \"{{wallet_address}}\"\nspender := \"0x...\"\n\nallowance, err := contract.ERC20.AllowanceOf(address, spender)\nallowanceValue := allowance.DisplayValue\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-allowanceof"
+      }
+    },
+    {
+      "name": "Balance",
+      "summary": "Get token balance",
+      "examples": {
+        "go": "balance, err := contract.ERC20.Balance()\nbalanceValue := balance.DisplayValue\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-balance"
+      }
+    },
+    {
+      "name": "BalanceOf",
+      "summary": "Get token balance of a specific wallet",
+      "examples": {
+        "go": "address := \"{{wallet_address}}\"\nbalance, err := contract.ERC20.BalanceOf()\nbalanceValue := balance.DisplayValue\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-balanceof"
+      }
+    },
+    {
+      "name": "Get",
+      "summary": "Get token metadata",
+      "examples": {
+        "go": "currency, err := contract.ERC20.Get()\nsymbol := currency.Symbol\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-get"
+      }
+    },
+    {
+      "name": "SetAllowance",
+      "summary": "Set token allowance",
+      "examples": {
+        "go": "spender := \"0x...\"\namount := 1\n\ntx, err := contract.ERC20.SetAllowance(context.Background(), spender, amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-setallowance"
+      }
+    },
+    {
+      "name": "TotalSupply",
+      "summary": "Get the total minted supply",
+      "examples": {
+        "go": "supply, err := contract.ERC20.TotalSupply(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-totalsupply"
+      }
+    },
+    {
+      "name": "Transfer",
+      "summary": "Transfer tokens",
+      "examples": {
+        "go": "to := \"0x...\"\namount := 1\n\ntx, err := contract.ERC20.Transfer(context.Background(), to, amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-transfer"
+      }
+    },
+    {
+      "name": "TransferFrom",
+      "summary": "Transfer tokens from a specific wallet",
+      "examples": {
+        "go": "from := \"{{wallet_address}}\"\nto := \"0x...\"\namount := 1\n\ntx, err := contract.ERC20.TransferFrom(context.Background(), from, to, amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-transferfrom"
+      }
+    }
+  ],
+  "ERC20Burnable": [
+    {
+      "name": "Burn",
+      "summary": "Burn tokens",
+      "examples": {
+        "go": "amount := 1\ntx, err := contract.ERC20.Burn(context.Background(), amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-burn"
+      }
+    },
+    {
+      "name": "BurnFrom",
+      "summary": "Burn tokens from a specific wallet",
+      "examples": {
+        "go": "holder := \"0x...\"\namount := 1\n\ntx, err := contract.ERC20.BurnFrom(context.Background(), holder, amount)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-burnfrom"
+      }
+    }
+  ],
+  "ERC20Mintable": [
+    {
+      "name": "Mint",
+      "summary": "Mint tokens",
+      "examples": {
+        "go": "tx, err := contract.ERC20.Mint(context.Background(), 1)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-mint"
+      }
+    },
+    {
+      "name": "MintTo",
+      "summary": "Mint tokens to a specific wallet",
+      "examples": {
+        "go": "tx, err := contract.ERC20.MintTo(context.Background(), \"{{wallet_address}}\", 1)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-mintto"
+      }
+    }
+  ],
+  "ERC20BatchMintable": [
+    {
+      "name": "MintBatchTo",
+      "summary": "Mint tokens to many wallets",
+      "examples": {
+        "go": "args = []*thirdweb.TokenAmount{\n\t&thirdweb.TokenAmount{\n\t\tToAddress: \"{{wallet_address}}\",\n\t\tAmount:    1\n\t}\n\t&thirdweb.TokenAmount{\n\t\tToAddress: \"{{wallet_address}}\",\n\t\tAmount:    2\n\t}\n}\n\ntx, err := contract.ERC20.MintBatchTo(context.Background(), args)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc20#func-erc20-mintbatchto"
+      }
+    }
+  ],
+  "ERC721": [
+    {
+      "name": "Balance",
+      "summary": "Get NFT balance",
+      "examples": {
+        "go": "balance, err := contract.ERC721.Balance(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-balance"
+      }
+    },
+    {
+      "name": "BalanceOf",
+      "summary": "Get NFT balance of a specific wallet",
+      "examples": {
+        "go": "address := \"{{wallet_address}}\"\nbalance, err := contract.ERC721.BalanceOf(context.Background(), address)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-balanceof"
+      }
+    },
+    {
+      "name": "Get",
+      "summary": "Get an NFT",
+      "examples": {
+        "go": "nft, err := contract.ERC721.Get(context.Background(), 0)\nowner := nft.Owner\nname := nft.Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-get"
+      }
+    },
+    {
+      "name": "IsApproved",
+      "summary": "Check NFT approval",
+      "examples": {
+        "go": "owner := \"{{wallet_address}}\"\noperator := \"0x...\"\n\nisApproved, err := contract.ERC721.IsApproved(ctx, owner, operator)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-isapproved"
+      }
+    },
+    {
+      "name": "OwnerOf",
+      "summary": "Get the owner of an NFT",
+      "examples": {
+        "go": "tokenId := 0\nowner, err := contract.ERC721.OwnerOf(context.Background(), tokenId)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-ownerof"
+      }
+    },
+    {
+      "name": "SetApprovalForAll",
+      "summary": "Set approval for all NFTs",
+      "examples": {
+        "go": "operator := \"{{wallet_address}}\"\napproved := true\n\ntx, err := contract.ERC721.SetApprovalForAll(context.Background(), operator, approved)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-setapprovalforall"
+      }
+    },
+    {
+      "name": "SetApprovalForToken",
+      "summary": "Set approval for a specific NFT",
+      "examples": {
+        "go": "operator := \"{{wallet_address}}\"\napproved := \"0x...\"\ntokenId := 0\n\ntx, err := contract.ERC721.SetApprovalForToken(context.Background(), operator, approved, tokenId)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-setapprovalfortoken"
+      }
+    },
+    {
+      "name": "TotalSupply",
+      "summary": "Get the total number of NFTs",
+      "examples": {
+        "go": "supply, err := contract.ERC721.TotalSupply(context.Background)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-totalsupply"
+      }
+    },
+    {
+      "name": "Transfer",
+      "summary": "Transfer an NFT",
+      "examples": {
+        "go": "to := \"0x...\"\ntokenId := 0\n\ntx, err := contract.ERC721.Transfer(context.Background(), to, tokenId)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-transfer"
+      }
+    }
+  ],
+  "ERC721Burnable": [
+    {
+      "name": "Burn",
+      "summary": "Burna an NFT",
+      "examples": {
+        "go": "tokenId := 0\ntx, err := contract.ERC721.Burn(context.Background(), tokenId)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-burn"
+      }
+    }
+  ],
+  "ERC721ClaimCustom": [
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim NFTs to a specific wallet",
+      "examples": {
+        "go": "address := \"{{wallet_address}}\"\nquantity = 1\n\ntx, err := contract.ERC721.ClaimTo(context.Background(), address, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-claimto"
+      }
+    },
+    {
+      "name": "GetTotalCount",
+      "summary": "Get the total number of NFTs",
+      "examples": {
+        "go": "totalCount, err := contract.ERC721.GetTotalCount(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-gettotalcount"
+      }
+    },
+    {
+      "name": "TotalClaimedSupply",
+      "summary": "Get the number of claimed NFTs",
+      "examples": {
+        "go": "totalClaimed, err := contract.ERC721.TotalClaimedSupply(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-totalclaimedsupply"
+      }
+    },
+    {
+      "name": "TotalUnclaimedSupply",
+      "summary": "Get the number of unclaimed NFTs",
+      "examples": {
+        "go": "totalUnclaimed, err := contract.ERC721.TotalUnclaimedSupply(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-totalunclaimedsupply"
+      }
+    }
+  ],
+  "ERC721ClaimPhasesV2": [
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim NFTs to a specific wallet",
+      "examples": {
+        "go": "address := \"{{wallet_address}}\"\nquantity = 1\n\ntx, err := contract.ERC721.ClaimTo(context.Background(), address, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-claimto"
+      }
+    },
+    {
+      "name": "GetTotalCount",
+      "summary": "Get the total number of NFTs",
+      "examples": {
+        "go": "totalCount, err := contract.ERC721.GetTotalCount(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-gettotalcount"
+      }
+    },
+    {
+      "name": "TotalClaimedSupply",
+      "summary": "Get the number of claimed NFTs",
+      "examples": {
+        "go": "totalClaimed, err := contract.ERC721.TotalClaimedSupply(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-totalclaimedsupply"
+      }
+    },
+    {
+      "name": "TotalUnclaimedSupply",
+      "summary": "Get the number of unclaimed NFTs",
+      "examples": {
+        "go": "totalUnclaimed, err := contract.ERC721.TotalUnclaimedSupply(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-totalunclaimedsupply"
+      }
+    }
+  ],
+  "ERC721ClaimConditionsV2": [
+    {
+      "name": "Claim",
+      "summary": "Claim an NFT",
+      "examples": {
+        "go": ""
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-claim"
+      }
+    },
+    {
+      "name": "ClaimTo",
+      "summary": "Claim NFTs to a specific wallet",
+      "examples": {
+        "go": "address := \"{{wallet_address}}\"\nquantity = 1\n\ntx, err := contract.ERC721.ClaimTo(context.Background(), address, quantity)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-claimto"
+      }
+    },
+    {
+      "name": "GetTotalCount",
+      "summary": "Get the total number of NFTs",
+      "examples": {
+        "go": "totalCount, err := contract.ERC721.GetTotalCount(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-gettotalcount"
+      }
+    },
+    {
+      "name": "TotalClaimedSupply",
+      "summary": "Get the number of claimed NFTs",
+      "examples": {
+        "go": "totalClaimed, err := contract.ERC721.TotalClaimedSupply(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-totalclaimedsupply"
+      }
+    },
+    {
+      "name": "TotalUnclaimedSupply",
+      "summary": "Get the number of unclaimed NFTs",
+      "examples": {
+        "go": "totalUnclaimed, err := contract.ERC721.TotalUnclaimedSupply(context.Background())\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-totalunclaimedsupply"
+      }
+    }
+  ],
+  "ERC721LazyMintable": [
+    {
+      "name": "CreateBatch",
+      "summary": "Lazy mint NFTs",
+      "examples": {
+        "go": "image0, err := os.Open(\"path/to/image/0.jpg\")\ndefer image0.Close()\n\nimage1, err := os.Open(\"path/to/image/1.jpg\")\ndefer image1.Close()\n\nmetadatas := []*thirdweb.NFTMetadataInput{\n\t&thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT\",\n\t\tDescription: \"This is a cool NFT\",\n\t\tImage: image1\n\t}\n\t&thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT 2\",\n\t\tDescription: \"This is also a cool NFT\",\n\t\tImage: image2\n\t}\n}\n\ntx, err := contract.ERC721.CreateBatch(context.Background(), metadatas)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-createbatch"
+      }
+    }
+  ],
+  "ERC721Supply": [
+    {
+      "name": "GetAll",
+      "summary": "Get all NFTs",
+      "examples": {
+        "go": "nfts, err := contract.ERC721.GetAll(context.Background())\nownerOne := nfts[0].Owner\nnameOne := nfts[0].Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-getall"
+      }
+    }
+  ],
+  "ERC721Enumerable": [
+    {
+      "name": "GetAll",
+      "summary": "Get all NFTs",
+      "examples": {
+        "go": "nfts, err := contract.ERC721.GetAll(context.Background())\nownerOne := nfts[0].Owner\nnameOne := nfts[0].Metadata.Name\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-getall"
+      }
+    }
+  ],
+  "ERC721Mintable": [
+    {
+      "name": "Mint",
+      "summary": "Mint an NFT",
+      "examples": {
+        "go": "image, err := os.Open(\"path/to/image.jpg\")\ndefer image.Close()\n\nmetadata := &thirdweb.NFTMetadataInput{\n\tName: \"Cool NFT\",\n\tDescription: \"This is a cool NFT\",\n\tImage: image,\n}\n\ntx, err := contract.ERC721.Mint(context.Background(), metadata)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-mint"
+      }
+    },
+    {
+      "name": "MintTo",
+      "summary": "Mint an NFT to a specific wallet",
+      "examples": {
+        "go": "image, err := os.Open(\"path/to/image.jpg\")\ndefer image.Close()\n\nmetadata := &thirdweb.NFTMetadataInput{\n\tName: \"Cool NFT\",\n\tDescription: \"This is a cool NFT\",\n\tImage: image,\n}\n\ntx, err := contract.ERC721.MintTo(context.Background(), \"{{wallet_address}}\", metadata)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-mintto"
+      }
+    }
+  ],
+  "ERC721BatchMintable": [
+    {
+      "name": "MintBatch",
+      "summary": "Mint many NFTs",
+      "examples": {
+        "go": "metadatas := []*thirdweb.NFTMetadataInput{\n\t&thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT\",\n\t\tDescription: \"This is a cool NFT\",\n\t}\n\t&thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT 2\",\n\t\tDescription: \"This is also a cool NFT\",\n\t}\n}\n\ntx, err := contract.ERC721.MintBatchTo(context.Background(), metadatas)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-mintbatch"
+      }
+    },
+    {
+      "name": "MintBatchTo",
+      "summary": "Mint many NFTs to a specific wallet",
+      "examples": {
+        "go": "metadatas := []*thirdweb.NFTMetadataInput{\n\t&thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT\",\n\t\tDescription: \"This is a cool NFT\",\n\t}\n\t&thirdweb.NFTMetadataInput{\n\t\tName: \"Cool NFT 2\",\n\t\tDescription: \"This is also a cool NFT\",\n\t}\n}\n\ntx, err := contract.ERC721.MintBatchTo(context.Background(), \"{{wallet_address}}\", metadatas)\n"
+      },
+      "reference": {
+        "go": "https://docs.thirdweb.com/go/erc721#func-erc721-mintbatchto"
+      }
+    }
+  ]
+}
