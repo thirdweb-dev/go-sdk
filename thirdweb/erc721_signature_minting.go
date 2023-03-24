@@ -23,23 +23,34 @@ import (
 // You can access this interface from the NFT Collection contract under the
 // signature interface.
 type ERC721SignatureMinting struct {
-	abi     *abi.TokenERC721
-	Helper  *contractHelper
-	storage storage
+	legacy     *abi.TokenERC721
+	extension  *abi.SignatureMintERC721
+	Helper     *contractHelper
+	storage    storage
 }
 
 func newERC721SignatureMinting(provider *ethclient.Client, address common.Address, privateKey string, storage storage) (*ERC721SignatureMinting, error) {
-	if contractAbi, err := abi.NewTokenERC721(address, provider); err != nil {
+	legacy, err := abi.NewTokenERC721(address, provider)
+	if err != nil {
 		return nil, err
-	} else if helper, err := newContractHelper(address, provider, privateKey); err != nil {
+	} 
+
+	extension, err := abi.NewSignatureMintERC721(address, provider)
+	if err != nil {
 		return nil, err
-	} else {
-		return &ERC721SignatureMinting{
-			contractAbi,
-			helper,
-			storage,
-		}, nil
-	}
+	} 
+	
+	helper, err := newContractHelper(address, provider, privateKey)
+	if err != nil {
+		return nil, err
+	} 
+
+	return &ERC721SignatureMinting{
+		legacy,
+		extension,
+		helper,
+		storage,
+	}, nil
 }
 
 // Mint a token with the data in given payload.
@@ -75,27 +86,51 @@ func (signature *ERC721SignatureMinting) MintAndAwait(ctx context.Context, signe
 }
 
 func (signature *ERC721SignatureMinting) MintWithOpts(ctx context.Context, signedPayload *SignedPayload721, txOpts *bind.TransactOpts) (*types.Transaction, error) {
-	message, err := signature.mapLegacyPayloadToContractStruct(ctx, signedPayload.Payload)
-	if err != nil {
-		return nil, err
+	if (signature.isLegacyContract(ctx)) {
+		message, err := signature.mapLegacyPayloadToContractStruct(ctx, signedPayload.Payload)
+		if err != nil {
+			return nil, err
+		}
+	
+		if err := setErc20Allowance(
+			ctx,
+			signature.Helper,
+			message.Price,
+			message.Currency.String(),
+			txOpts,
+		); err != nil {
+			return nil, err
+		}
+	
+		signatureBytes, err := hex.DecodeString(signedPayload.Signature[2:])
+		if err != nil {
+			return nil, err
+		}
+	
+		return signature.legacy.MintWithSignature(txOpts, *message, signatureBytes)
+	} else {
+		message, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
+		if err != nil {
+			return nil, err
+		}
+	
+		if err := setErc20Allowance(
+			ctx,
+			signature.Helper,
+			message.PricePerToken,
+			message.Currency.String(),
+			txOpts,
+		); err != nil {
+			return nil, err
+		}
+	
+		signatureBytes, err := hex.DecodeString(signedPayload.Signature[2:])
+		if err != nil {
+			return nil, err
+		}
+	
+		return signature.extension.MintWithSignature(txOpts, *message, signatureBytes)
 	}
-
-	if err := setErc20Allowance(
-		ctx,
-		signature.Helper,
-		message.Price,
-		message.Currency.String(),
-		txOpts,
-	); err != nil {
-		return nil, err
-	}
-
-	signatureBytes, err := hex.DecodeString(signedPayload.Signature[2:])
-	if err != nil {
-		return nil, err
-	}
-
-	return signature.abi.MintWithSignature(txOpts, *message, signatureBytes)
 }
 
 // Mint a batch of token with the data in given payload.
@@ -110,55 +145,109 @@ func (signature *ERC721SignatureMinting) MintWithOpts(ctx context.Context, signe
 //	signedPayloads, err := contract.Signature.GenerateBatch(payloads)
 //	tx, err := contract.Signature.MintBatch(context.Background(), signedPayloads)
 func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPayloads []*SignedPayload721) (*types.Transaction, error) {
-	contractPayloads := []*abi.ITokenERC721MintRequest{}
-	for _, signedPayload := range signedPayloads {
-		price, ok := big.NewInt(0).SetString(signedPayload.Payload.Price, 10)
-		if !ok {
-			return nil, errors.New("Specified price was not a valid big.Int")
+	if (signature.isLegacyContract(ctx)) {
+		contractPayloads := []*abi.ITokenERC721MintRequest{}
+		for _, signedPayload := range signedPayloads {
+			price, ok := big.NewInt(0).SetString(signedPayload.Payload.Price, 10)
+			if !ok {
+				return nil, errors.New("Specified price was not a valid big.Int")
+			}
+	
+			if price.Cmp(big.NewInt(0)) == 1 {
+				return nil, fmt.Errorf("Can only batch free mints. For mints with a price, use the Mint() function.")
+			}
+	
+			payload, err := signature.mapLegacyPayloadToContractStruct(ctx, signedPayload.Payload)
+			if err != nil {
+				return nil, err
+			}
+	
+			contractPayloads = append(contractPayloads, payload)
 		}
-
-		if price.Cmp(big.NewInt(0)) == 1 {
-			return nil, fmt.Errorf("Can only batch free mints. For mints with a price, use the Mint() function.")
+	
+		encoded := [][]byte{}
+		for i, payload := range contractPayloads {
+			txOpts, err := signature.Helper.getEncodedTxOptions(ctx)
+			if err != nil {
+				return nil, err
+			}
+	
+			signatureBytes, err := hex.DecodeString(signedPayloads[i].Signature[2:])
+			if err != nil {
+				return nil, err
+			}
+	
+			tx, err := signature.legacy.MintWithSignature(txOpts, *payload, signatureBytes)
+			if err != nil {
+				return nil, err
+			}
+	
+			encoded = append(encoded, tx.Data())
 		}
-
-		payload, err := signature.mapLegacyPayloadToContractStruct(ctx, signedPayload.Payload)
+	
+		txOpts, err := signature.Helper.GetTxOptions(ctx)
+		if err != nil {
+			return nil, err
+		}
+		tx, err := signature.legacy.Multicall(txOpts, encoded)
+		if err != nil {
+			return nil, err
+		}
+	
+		return signature.Helper.AwaitTx(ctx, tx.Hash())
+	} else {
+		contractPayloads := []*abi.ISignatureMintERC721MintRequest{}
+		for _, signedPayload := range signedPayloads {
+			price, ok := big.NewInt(0).SetString(signedPayload.Payload.Price, 10)
+			if !ok {
+				return nil, errors.New("Specified price was not a valid big.Int")
+			}
+	
+			if price.Cmp(big.NewInt(0)) == 1 {
+				return nil, fmt.Errorf("Can only batch free mints. For mints with a price, use the Mint() function.")
+			}
+	
+			payload, err := signature.mapPayloadToContractStruct(ctx, signedPayload.Payload)
+			if err != nil {
+				return nil, err
+			}
+	
+			contractPayloads = append(contractPayloads, payload)
+		}
+	
+		encoded := [][]byte{}
+		for i, payload := range contractPayloads {
+			txOpts, err := signature.Helper.getEncodedTxOptions(ctx)
+			if err != nil {
+				return nil, err
+			}
+	
+			signatureBytes, err := hex.DecodeString(signedPayloads[i].Signature[2:])
+			if err != nil {
+				return nil, err
+			}
+	
+			tx, err := signature.extension.MintWithSignature(txOpts, *payload, signatureBytes)
+			if err != nil {
+				return nil, err
+			}
+	
+			encoded = append(encoded, tx.Data())
+		}
+	
+		txOpts, err := signature.Helper.GetTxOptions(ctx)
 		if err != nil {
 			return nil, err
 		}
 
-		contractPayloads = append(contractPayloads, payload)
-	}
-
-	encoded := [][]byte{}
-	for i, payload := range contractPayloads {
-		txOpts, err := signature.Helper.getEncodedTxOptions(ctx)
+		// TODO: This should throw if you don't have multicall on contract
+		tx, err := signature.legacy.Multicall(txOpts, encoded)
 		if err != nil {
 			return nil, err
 		}
-
-		signatureBytes, err := hex.DecodeString(signedPayloads[i].Signature[2:])
-		if err != nil {
-			return nil, err
-		}
-
-		tx, err := signature.abi.MintWithSignature(txOpts, *payload, signatureBytes)
-		if err != nil {
-			return nil, err
-		}
-
-		encoded = append(encoded, tx.Data())
+	
+		return signature.Helper.AwaitTx(ctx, tx.Hash())
 	}
-
-	txOpts, err := signature.Helper.GetTxOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-	tx, err := signature.abi.Multicall(txOpts, encoded)
-	if err != nil {
-		return nil, err
-	}
-
-	return signature.Helper.AwaitTx(ctx, tx.Hash())
 }
 
 // Verify that a signed payload is valid
@@ -179,14 +268,25 @@ func (signature *ERC721SignatureMinting) Verify(ctx context.Context, signedPaylo
 		return false, err
 	}
 
-	message, err := signature.mapLegacyPayloadToContractStruct(ctx, mintRequest)
-
-	if err != nil {
-		return false, err
+	if (signature.isLegacyContract(ctx)) {
+		message, err := signature.mapLegacyPayloadToContractStruct(ctx, mintRequest)
+	
+		if err != nil {
+			return false, err
+		}
+	
+		verification, _, err := signature.legacy.Verify(&bind.CallOpts{Context: ctx}, *message, mintSignatureBytes)
+		return verification, err
+	} else {
+		message, err := signature.mapPayloadToContractStruct(ctx, mintRequest)
+	
+		if err != nil {
+			return false, err
+		}
+	
+		verification, err := signature.extension.Verify(&bind.CallOpts{Context: ctx}, *message, mintSignatureBytes)
+		return verification.Success, err
 	}
-
-	verification, _, err := signature.abi.Verify(&bind.CallOpts{Context: ctx}, *message, mintSignatureBytes)
-	return verification, err
 }
 
 // Generate a new payload from the given data
@@ -274,11 +374,6 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 		return nil, err
 	}
 
-	chainId, err := signature.Helper.GetChainID(ctx)
-	if err != nil {
-		return nil, err
-	}
-
 	signedPayloads := []*SignedPayload721{}
 
 	for i, uri := range uris {
@@ -310,40 +405,9 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 			Uid:                  id,
 		}
 
-		mappedPayload, err := signature.generateMessage(ctx, payload)
+		typedData, err := signature.generateMessage(ctx, payload)
 		if err != nil {
 			return nil, err
-		}
-
-		typedData := signerTypes.TypedData{
-			Types: signerTypes.Types{
-				"MintRequest": []signerTypes.Type{
-					{Name: "to", Type: "address"},
-					{Name: "royaltyRecipient", Type: "address"},
-					{Name: "royaltyBps", Type: "uint256"},
-					{Name: "primarySaleRecipient", Type: "address"},
-					{Name: "uri", Type: "string"},
-					{Name: "price", Type: "uint256"},
-					{Name: "currency", Type: "address"},
-					{Name: "validityStartTimestamp", Type: "uint128"},
-					{Name: "validityEndTimestamp", Type: "uint128"},
-					{Name: "uid", Type: "bytes32"},
-				},
-				"EIP712Domain": []signerTypes.Type{
-					{Name: "name", Type: "string"},
-					{Name: "version", Type: "string"},
-					{Name: "chainId", Type: "uint256"},
-					{Name: "verifyingContract", Type: "address"},
-				},
-			},
-			PrimaryType: "MintRequest",
-			Domain: signerTypes.TypedDataDomain{
-				Name:              "TokenERC721",
-				Version:           "1",
-				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
-				VerifyingContract: signature.Helper.getAddress().String(),
-			},
-			Message: mappedPayload,
 		}
 
 		domainSeparator, err := typedData.HashStruct("EIP712Domain", typedData.Domain.Map())
@@ -381,12 +445,6 @@ func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payl
 
 func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Context, payloadsToSign []*Signature721PayloadInputWithUri) ([]*SignedPayload721, error) {
 	// TODO: Verify roles and return error
-
-	chainId, err := signature.Helper.GetChainID(ctx)
-	if err != nil {
-		return nil, err
-	}
-
 	signedPayloads := []*SignedPayload721{}
 
 	for _, p := range payloadsToSign {
@@ -428,41 +486,11 @@ func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Conte
 			Uid:                  id,
 		}
 
-		mappedPayload, err := signature.generateMessage(ctx, payload)
+		typedData, err := signature.generateMessage(ctx, payload)
 		if err != nil {
 			return nil, err
 		}
 
-		typedData := signerTypes.TypedData{
-			Types: signerTypes.Types{
-				"MintRequest": []signerTypes.Type{
-					{Name: "to", Type: "address"},
-					{Name: "royaltyRecipient", Type: "address"},
-					{Name: "royaltyBps", Type: "uint256"},
-					{Name: "primarySaleRecipient", Type: "address"},
-					{Name: "uri", Type: "string"},
-					{Name: "price", Type: "uint256"},
-					{Name: "currency", Type: "address"},
-					{Name: "validityStartTimestamp", Type: "uint128"},
-					{Name: "validityEndTimestamp", Type: "uint128"},
-					{Name: "uid", Type: "bytes32"},
-				},
-				"EIP712Domain": []signerTypes.Type{
-					{Name: "name", Type: "string"},
-					{Name: "version", Type: "string"},
-					{Name: "chainId", Type: "uint256"},
-					{Name: "verifyingContract", Type: "address"},
-				},
-			},
-			PrimaryType: "MintRequest",
-			Domain: signerTypes.TypedDataDomain{
-				Name:              "TokenERC721",
-				Version:           "1",
-				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
-				VerifyingContract: signature.Helper.getAddress().String(),
-			},
-			Message: mappedPayload,
-		}
 
 		domainSeparator, err := typedData.HashStruct("EIP712Domain", typedData.Domain.Map())
 		if err != nil {
@@ -497,33 +525,119 @@ func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Conte
 	return signedPayloads, nil
 }
 
-func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature721PayloadOutput) (signerTypes.TypedDataMessage, error) {
-	message := signerTypes.TypedDataMessage{
-		"to":                     mintRequest.To,
-		"royaltyRecipient":       mintRequest.RoyaltyRecipient,
-		"royaltyBps":             fmt.Sprintf("%v", mintRequest.RoyaltyBps),
-		"primarySaleRecipient":   mintRequest.PrimarySaleRecipient,
-		"uri":                    mintRequest.Uri,
-		"price":                  fmt.Sprintf("%v", mintRequest.Price),
-		"currency":               mintRequest.CurrencyAddress,
-		"validityStartTimestamp": fmt.Sprintf("%v", mintRequest.MintStartTime),
-		"validityEndTimestamp":   fmt.Sprintf("%v", mintRequest.MintEndTime),
-		"uid":                    mintRequest.Uid[:],
+func (signature *ERC721SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature721PayloadOutput) (*signerTypes.TypedData, error) {
+	chainId, err := signature.Helper.GetChainID(ctx)
+	if err != nil {
+		return nil, err
 	}
 
-	return message, nil
+	if (signature.isLegacyContract(ctx)) {
+		message := signerTypes.TypedDataMessage{
+			"to":                     mintRequest.To,
+			"royaltyRecipient":       mintRequest.RoyaltyRecipient,
+			"royaltyBps":             fmt.Sprintf("%v", mintRequest.RoyaltyBps),
+			"primarySaleRecipient":   mintRequest.PrimarySaleRecipient,
+			"uri":                    mintRequest.Uri,
+			"price":                  fmt.Sprintf("%v", mintRequest.Price),
+			"currency":               mintRequest.CurrencyAddress,
+			"validityStartTimestamp": fmt.Sprintf("%v", mintRequest.MintStartTime),
+			"validityEndTimestamp":   fmt.Sprintf("%v", mintRequest.MintEndTime),
+			"uid":                    mintRequest.Uid[:],
+		}
+	
+		typedData := signerTypes.TypedData{
+			Types: signerTypes.Types{
+				"MintRequest": []signerTypes.Type{
+					{Name: "to", Type: "address"},
+					{Name: "royaltyRecipient", Type: "address"},
+					{Name: "royaltyBps", Type: "uint256"},
+					{Name: "primarySaleRecipient", Type: "address"},
+					{Name: "uri", Type: "string"},
+					{Name: "price", Type: "uint256"},
+					{Name: "currency", Type: "address"},
+					{Name: "validityStartTimestamp", Type: "uint128"},
+					{Name: "validityEndTimestamp", Type: "uint128"},
+					{Name: "uid", Type: "bytes32"},
+				},
+				"EIP712Domain": []signerTypes.Type{
+					{Name: "name", Type: "string"},
+					{Name: "version", Type: "string"},
+					{Name: "chainId", Type: "uint256"},
+					{Name: "verifyingContract", Type: "address"},
+				},
+			},
+			PrimaryType: "MintRequest",
+			Domain: signerTypes.TypedDataDomain{
+				Name:              "TokenERC721",
+				Version:           "1",
+				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
+				VerifyingContract: signature.Helper.getAddress().String(),
+			},
+			Message: message,
+		}
+	
+		return &typedData, nil
+	} else {
+		message := signerTypes.TypedDataMessage{
+			"to":                     mintRequest.To,
+			"royaltyRecipient":       mintRequest.RoyaltyRecipient,
+			"royaltyBps":             fmt.Sprintf("%v", mintRequest.RoyaltyBps),
+			"quantity":               fmt.Sprintf("%v", 1),
+			"primarySaleRecipient":   mintRequest.PrimarySaleRecipient,
+			"uri":                    mintRequest.Uri,
+			"pricePerToken":          fmt.Sprintf("%v", mintRequest.Price),
+			"currency":               mintRequest.CurrencyAddress,
+			"validityStartTimestamp": fmt.Sprintf("%v", mintRequest.MintStartTime),
+			"validityEndTimestamp":   fmt.Sprintf("%v", mintRequest.MintEndTime),
+			"uid":                    mintRequest.Uid[:],
+		}
+
+		typedData := signerTypes.TypedData{
+			Types: signerTypes.Types{
+				"MintRequest": []signerTypes.Type{
+					{Name: "to", Type: "address"},
+					{Name: "royaltyRecipient", Type: "address"},
+					{Name: "royaltyBps", Type: "uint256"},
+					{Name: "primarySaleRecipient", Type: "address"},
+					{Name: "uri", Type: "string"},
+					{Name: "quantity", Type: "uint256"},
+					{Name: "pricePerToken", Type: "uint256"},
+					{Name: "currency", Type: "address"},
+					{Name: "validityStartTimestamp", Type: "uint128"},
+					{Name: "validityEndTimestamp", Type: "uint128"},
+					{Name: "uid", Type: "bytes32"},
+				},
+				"EIP712Domain": []signerTypes.Type{
+					{Name: "name", Type: "string"},
+					{Name: "version", Type: "string"},
+					{Name: "chainId", Type: "uint256"},
+					{Name: "verifyingContract", Type: "address"},
+				},
+			},
+			PrimaryType: "MintRequest",
+			Domain: signerTypes.TypedDataDomain{
+				Name:              "SignatureMintERC721",
+				Version:           "1",
+				ChainId:           math.NewHexOrDecimal256(chainId.Int64()),
+				VerifyingContract: signature.Helper.getAddress().String(),
+			},
+			Message: message,
+		}
+
+		return &typedData, nil
+	}
 }
 
-func (signature *ERC721SignatureMinting) isLegacyContract(ctx context.Context) (bool, error) {
-	contractType, err := signature.abi.ContractType(&bind.CallOpts{
+func (signature *ERC721SignatureMinting) isLegacyContract(ctx context.Context) bool {
+	contractType, err := signature.legacy.ContractType(&bind.CallOpts{
 		Context: ctx,
 	});
 	if err != nil {
-		return false, err
+		return false
 	}
 
 	// If contractType = TokenERC721
-	return hex.EncodeToString(contractType[:]) == "546f6b656e455243373231000000000000000000000000000000000000000000", nil
+	return hex.EncodeToString(contractType[:]) == "546f6b656e455243373231000000000000000000000000000000000000000000"
 }
 
 func (signature *ERC721SignatureMinting) mapLegacyPayloadToContractStruct(ctx context.Context, mintRequest *Signature721PayloadOutput) (*abi.ITokenERC721MintRequest, error) {
