@@ -412,10 +412,7 @@ func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(ctx context.
 			Uid:                  id,
 		}
 
-		mappedPayload, err := signature.generateMessage(ctx, payload)
-		if err != nil {
-			return nil, err
-		}
+		mappedPayload := generateMessage(payload)
 
 		typedData := signerTypes.TypedData{
 			Types: signerTypes.Types{
@@ -483,7 +480,7 @@ func (signature *ERC1155SignatureMinting) GenerateBatchFromTokenIds(ctx context.
 	return signedPayloads, nil
 }
 
-func (signature *ERC1155SignatureMinting) generateMessage(ctx context.Context, mintRequest *Signature1155PayloadOutput) (signerTypes.TypedDataMessage, error) {
+func generateMessage(mintRequest *Signature1155PayloadOutput) signerTypes.TypedDataMessage {
 	// If tokenID < 0, set it to MaxUin256 (to mint a new NFT)
 	tokenId := big.NewInt(int64(mintRequest.TokenId))
 	if mintRequest.TokenId < 0 {
@@ -506,7 +503,7 @@ func (signature *ERC1155SignatureMinting) generateMessage(ctx context.Context, m
 		"uid":                    mintRequest.Uid[:],
 	}
 
-	return message, nil
+	return message
 }
 
 func (signature *ERC1155SignatureMinting) mapPayloadToContractStruct(ctx context.Context, mintRequest *Signature1155PayloadOutput) (*abi.ITokenERC1155MintRequest, error) {
@@ -514,7 +511,6 @@ func (signature *ERC1155SignatureMinting) mapPayloadToContractStruct(ctx context
 	if !ok {
 		return nil, errors.New("Specified price was not a valid big.Int")
 	}
-
 
 	// If tokenID < 0, set it to MaxUin256 (to mint a new NFT)
 	tokenId := big.NewInt(int64(mintRequest.TokenId))
