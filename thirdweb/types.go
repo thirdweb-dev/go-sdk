@@ -144,24 +144,36 @@ type Signature721PayloadInputWithUri struct {
 	RoyaltyBps           int
 }
 
-
 type Signature721PayloadOutput struct {
-	To                   string             `json:"to"`
+	To                   string            `json:"to"`
 	Price                string            `json:"price"`
-	CurrencyAddress      string             `json:"currencyAddress"`
-	MintStartTime        int                `json:"mintStartTime"`
-	MintEndTime          int								`json:"mintEndTime"`
-	PrimarySaleRecipient string				      `json:"primarySaleRecipient"`
-	Metadata             *NFTMetadataInput  `json:"metadata"`
-	RoyaltyRecipient     string             `json:"royaltyRecipient"`
-	RoyaltyBps           int                `json:"royaltyBps"`
-	Uri                  string             `json:"uri"`
-	Uid                  [32]byte           `json:"uid"`
+	CurrencyAddress      string            `json:"currencyAddress"`
+	MintStartTime        int               `json:"mintStartTime"`
+	MintEndTime          int               `json:"mintEndTime"`
+	PrimarySaleRecipient string            `json:"primarySaleRecipient"`
+	Metadata             *NFTMetadataInput `json:"metadata"`
+	RoyaltyRecipient     string            `json:"royaltyRecipient"`
+	RoyaltyBps           int               `json:"royaltyBps"`
+	Uri                  string            `json:"uri"`
+	Uid                  [32]byte          `json:"uid"`
+}
+
+type Signature721Payload struct {
+	To                   common.Address
+	Price                *big.Int
+	CurrencyAddress      common.Address
+	MintStartTime        time.Time
+	MintEndTime          time.Time
+	PrimarySaleRecipient common.Address
+	RoyaltyRecipient     common.Address
+	RoyaltyBps           int
+	MetadataUri          string
 }
 
 type SignedPayload721 struct {
-	Payload   *Signature721PayloadOutput `json:"payload"`
-	Signature string                     `json:"signature"`
+	Payload abi.ITokenERC721MintRequest
+	// this is actually in hex with "0x" prefix (consider just using [x]bytes)
+	Signature string
 }
 
 type Signature1155PayloadInput struct {

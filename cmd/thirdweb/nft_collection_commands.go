@@ -135,7 +135,7 @@ var nftSigmintCmd = &cobra.Command{
 
 		payload, err := nftCollection.Signature.Generate(
 			context.Background(),
-			&thirdweb.Signature721PayloadInput{
+			thirdweb.Signature721PayloadInput{
 				To:                   "0x9e1b8A86fFEE4a7175DAE4bDB1cC12d111Dcb3D6",
 				Price:                0,
 				CurrencyAddress:      "0x0000000000000000000000000000000000000000",
@@ -154,14 +154,14 @@ var nftSigmintCmd = &cobra.Command{
 			panic(err)
 		}
 
-		valid, err := nftCollection.Signature.Verify(context.Background(), payload)
+		valid, err := nftCollection.Signature.Verify(context.Background(), *payload)
 		if err != nil {
 			panic(err)
 		} else if !valid {
 			panic("Invalid signature")
 		}
-		
-		tx, err := nftCollection.Signature.Mint(context.Background(), payload)
+
+		tx, err := nftCollection.Signature.Mint(context.Background(), *payload)
 		if err != nil {
 			panic(err)
 		}

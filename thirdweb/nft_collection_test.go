@@ -120,7 +120,7 @@ func TestSignatureMintNft(t *testing.T) {
 
 	payload, err := nft.Signature.Generate(
 		context.Background(),
-		&Signature721PayloadInput{
+		Signature721PayloadInput{
 			To:                   nft.helper.GetSignerAddress().String(),
 			Price:                0,
 			CurrencyAddress:      "0x0000000000000000000000000000000000000000",
@@ -136,12 +136,12 @@ func TestSignatureMintNft(t *testing.T) {
 	)
 	assert.Nil(t, err)
 
-	valid, err := nft.Signature.Verify(context.Background(), payload)
+	valid, err := nft.Signature.Verify(context.Background(), *payload)
 	assert.Nil(t, err)
 
 	assert.True(t, valid)
 
-	_, err = nft.Signature.Mint(context.Background(), payload)
+	_, err = nft.Signature.Mint(context.Background(), *payload)
 	assert.Nil(t, err)
 
 	balance, _ = nft.Balance(context.Background())
