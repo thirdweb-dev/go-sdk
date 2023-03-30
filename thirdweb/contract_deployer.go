@@ -55,7 +55,7 @@ func newContractDeployer(provider *ethclient.Client, privateKey string, storage 
 	
 	
 	factoryAddress, err := getContractAddressByChainId(ChainID(chainId.Int64()), "TWFactory")
-	if err != nil {
+	if err == nil {
 		factory, err := abi.NewTWFactory(common.HexToAddress(factoryAddress), provider)
 		if err != nil {
 			return nil, err
