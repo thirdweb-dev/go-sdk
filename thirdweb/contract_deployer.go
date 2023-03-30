@@ -52,30 +52,31 @@ func newContractDeployer(provider *ethclient.Client, privateKey string, storage 
 	if err != nil {
 		return nil, err
 	}
-
+	
+	
 	factoryAddress, err := getContractAddressByChainId(ChainID(chainId.Int64()), "TWFactory")
-	if err != nil {
-		return nil, err
-	}
+	if err == nil {
+		factory, err := abi.NewTWFactory(common.HexToAddress(factoryAddress), provider)
+		if err != nil {
+			return nil, err
+		}
 
-	helper, err := newContractHelper(common.HexToAddress(factoryAddress), provider, privateKey)
-	if err != nil {
-		return nil, err
-	}
+		helper, err := newContractHelper(common.HexToAddress(factoryAddress), provider, privateKey)
+		if err != nil {
+			return nil, err
+		}
 
-	factory, err := abi.NewTWFactory(common.HexToAddress(factoryAddress), provider)
-	if err != nil {
-		return nil, err
-	}
+		contractDeployer := &ContractDeployer{
+			handler,
+			factory,
+			helper,
+			storage,
+		}
 
-	contractDeployer := &ContractDeployer{
-		handler,
-		factory,
-		helper,
-		storage,
+		return contractDeployer, nil
+	} else {
+		return nil, nil
 	}
-
-	return contractDeployer, nil
 }
 
 // Deploy a new NFT Collection contract.
