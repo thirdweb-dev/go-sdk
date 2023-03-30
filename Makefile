@@ -18,6 +18,7 @@ abi:
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC1155.json --out abi/ierc1155.go --type IERC1155
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/IERC165.json --out abi/ierc165.go --type IERC165
 	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/SignatureMintERC721.json --out abi/signature_mint_erc721.go --type SignatureMintERC721
+	abigen --alias contractURI=internalContractURI --pkg abi --abi internal/json/SignatureMintERC1155.json --out abi/signature_mint_erc1155.go --type SignatureMintERC1155
 
 docs:
 	rm -rf docs
