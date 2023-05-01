@@ -38,7 +38,6 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 	return NewThirdwebSDKFromProvider(provider, options)
 }
 
-
 func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions) (*ThirdwebSDK, error) {
 	// Define defaults for all the options
 	privateKey := ""
@@ -250,7 +249,7 @@ func getDefaultRpcUrl(rpcUrlorName string) (string, error) {
 	case "arbitrum-goerli":
 		return defaultRpc("arbitrum-goerli")
 	default:
-		if strings.HasPrefix(rpcUrlorName, "http") {
+		if strings.HasPrefix(rpcUrlorName, "http") || strings.HasPrefix(rpcUrlorName, "wss") {
 			return rpcUrlorName, nil
 		} else {
 			return "", fmt.Errorf("invalid rpc url or chain name: %s", rpcUrlorName)
