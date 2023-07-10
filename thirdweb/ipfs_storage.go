@@ -144,6 +144,7 @@ func (ipfs *IpfsStorage) getUploadToken(ctx context.Context) (string, error) {
 		return "", err
 	}
 
+	req.Header.Set("X-App-Name", fmt.Sprintf("Go SDK"))
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", ipfs.apiKey))
 	result, err := ipfs.httpClient.Do(req)
 	if err != nil {
