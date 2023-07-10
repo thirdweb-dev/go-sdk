@@ -34,12 +34,14 @@ type uploadResponse struct {
 }
 
 type IpfsStorage struct {
+	apiKey     string
 	gatewayUrl string
 	httpClient *http.Client
 }
 
-func newIpfsStorage(gatewayUrl string, httpClient *http.Client) *IpfsStorage {
+func newIpfsStorage(apiKey string, gatewayUrl string, httpClient *http.Client) *IpfsStorage {
 	return &IpfsStorage{
+		apiKey:     apiKey,
 		gatewayUrl: gatewayUrl,
 		httpClient: httpClient,
 	}
@@ -128,7 +130,7 @@ func (ipfs *IpfsStorage) UploadBatch(ctx context.Context, data []map[string]inte
 		return nil, errors.New("data must be an array or slice")
 	}
 
-	baseUriWithUris, err := ipfs.uploadBatchWithCid(ctx, dataToUpload, fileStartNumber, contractAddress, signerAddress)
+	baseUriWithUris, err := ipfs.uploadBatchWithCid(ctx, dataToUpload, fileStartNumber)
 	if err != nil {
 		return nil, err
 	}
@@ -136,13 +138,13 @@ func (ipfs *IpfsStorage) UploadBatch(ctx context.Context, data []map[string]inte
 	return baseUriWithUris, nil
 }
 
-func (ipfs *IpfsStorage) getUploadToken(ctx context.Context, contractAddress string) (string, error) {
+func (ipfs *IpfsStorage) getUploadToken(ctx context.Context) (string, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/grant", twIpfsServerUrl), nil)
 	if err != nil {
 		return "", err
 	}
 
-	req.Header.Set("X-App-Name", fmt.Sprintf("CONSOLE-GO-SDK-%v", contractAddress))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", ipfs.apiKey))
 	result, err := ipfs.httpClient.Do(req)
 	if err != nil {
 		return "", err
@@ -168,10 +170,8 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 	// data (string | io.Reader)[] - file or JSON string
 	data []interface{},
 	fileStartNumber int,
-	contractAddress string,
-	signerAddress string,
 ) (*baseUriWithUris, error) {
-	uploadToken, err := ipfs.getUploadToken(ctx, contractAddress)
+	uploadToken, err := ipfs.getUploadToken(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -281,7 +281,7 @@ func (ipfs *IpfsStorage) batchUploadProperties(ctx context.Context, data []map[s
 		return sanitizedMetadatas, nil
 	}
 
-	baseUriWithUris, err := ipfs.uploadBatchWithCid(ctx, filesToUpload, 0, "", "")
+	baseUriWithUris, err := ipfs.uploadBatchWithCid(ctx, filesToUpload, 0)
 	if err != nil {
 		return nil, err
 	}

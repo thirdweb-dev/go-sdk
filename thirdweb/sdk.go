@@ -40,12 +40,17 @@ func NewThirdwebSDK(rpcUrlOrChainName string, options *SDKOptions) (*ThirdwebSDK
 
 func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions) (*ThirdwebSDK, error) {
 	// Define defaults for all the options
+	apiKey := ""
 	privateKey := ""
 	gatewayUrl := defaultIpfsGatewayUrl
 	httpClient := http.DefaultClient
 
 	// Override defaults with the options that are defined
 	if options != nil {
+		if options.ApiKey != "" {
+			privateKey = options.ApiKey
+		}
+
 		if options.PrivateKey != "" {
 			privateKey = options.PrivateKey
 		}
@@ -59,7 +64,7 @@ func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions)
 		}
 	}
 
-	storage := newIpfsStorage(gatewayUrl, httpClient)
+	storage := newIpfsStorage(apiKey, gatewayUrl, httpClient)
 
 	handler, err := NewProviderHandler(provider, privateKey)
 	if err != nil {
