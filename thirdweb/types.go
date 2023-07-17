@@ -10,7 +10,7 @@ import (
 )
 
 type SDKOptions struct {
-	ApiKey     string
+	SecretKey     string
 	PrivateKey string
 	GatewayUrl string
 	HttpClient *http.Client

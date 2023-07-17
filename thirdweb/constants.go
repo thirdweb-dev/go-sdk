@@ -4,8 +4,9 @@ import "errors"
 
 // SERVER URLS
 
-const defaultIpfsGatewayUrl = "https://gateway.ipfscdn.io/ipfs/"
+const defaultIpfsGatewayUrl = "https://ipfs.io/ipfs/"
 const twIpfsServerUrl = "https://upload.nftlabs.co"
+const twStorageUploadUrl = "https://storage.staging.thirdweb.com/ipfs/upload"
 const pinataIpfsUrl = "https://api.pinata.cloud/pinning/pinFileToIPFS"
 
 // CONSTANT VALUES

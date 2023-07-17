@@ -34,14 +34,14 @@ type uploadResponse struct {
 }
 
 type IpfsStorage struct {
-	apiKey     string
+	secretKey     string
 	gatewayUrl string
 	httpClient *http.Client
 }
 
-func newIpfsStorage(apiKey string, gatewayUrl string, httpClient *http.Client) *IpfsStorage {
+func newIpfsStorage(secretKey string, gatewayUrl string, httpClient *http.Client) *IpfsStorage {
 	return &IpfsStorage{
-		apiKey:     apiKey,
+		secretKey:     secretKey,
 		gatewayUrl: gatewayUrl,
 		httpClient: httpClient,
 	}
@@ -60,6 +60,11 @@ func (ipfs *IpfsStorage) Get(ctx context.Context, uri string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if strings.Contains(ipfs.gatewayUrl, ".thirdwebstorage-staging.com") {
+		req.Header.Set("x-secret-key", ipfs.secretKey)
+	}
+
 	resp, err := ipfs.httpClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -138,33 +143,6 @@ func (ipfs *IpfsStorage) UploadBatch(ctx context.Context, data []map[string]inte
 	return baseUriWithUris, nil
 }
 
-func (ipfs *IpfsStorage) getUploadToken(ctx context.Context) (string, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/grant", twIpfsServerUrl), nil)
-	if err != nil {
-		return "", err
-	}
-
-	req.Header.Set("X-App-Name", fmt.Sprintf("Go SDK"))
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", ipfs.apiKey))
-	result, err := ipfs.httpClient.Do(req)
-	if err != nil {
-		return "", err
-	}
-
-	if result.StatusCode != http.StatusOK {
-		return "", &failedToUploadError{
-			statusCode: result.StatusCode,
-		}
-	}
-
-	body, err := ioutil.ReadAll(result.Body)
-	if err != nil {
-		return "", err
-	}
-	text := string(body)
-
-	return text, nil
-}
 
 func (ipfs *IpfsStorage) uploadBatchWithCid(
 	ctx context.Context,
@@ -172,11 +150,6 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 	data []interface{},
 	fileStartNumber int,
 ) (*baseUriWithUris, error) {
-	uploadToken, err := ipfs.getUploadToken(ctx)
-	if err != nil {
-		return nil, err
-	}
-
 	fileNames := []string{}
 
 	body := &bytes.Buffer{}
@@ -215,12 +188,12 @@ func (ipfs *IpfsStorage) uploadBatchWithCid(
 
 	_ = writer.Close()
 
-	req, err := http.NewRequestWithContext(ctx, "POST", pinataIpfsUrl, body)
+	req, err := http.NewRequestWithContext(ctx, "POST", twStorageUploadUrl, body)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %v", uploadToken))
+	req.Header.Set("x-secret-key", ipfs.secretKey)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 
 	if result, err := ipfs.httpClient.Do(req); err != nil {
