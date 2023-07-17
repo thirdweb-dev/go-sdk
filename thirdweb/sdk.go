@@ -64,7 +64,7 @@ func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions)
 			gatewayUrl = options.GatewayUrl
 		} else if secretKey != "" {
 			clientId := deriveClientId(secretKey)
-			gatewayUrl = fmt.Sprintf("https://%s.thirdwebstorage-staging.com/ipfs/", clientId)
+			gatewayUrl = fmt.Sprintf("https://%s.ipfscdn.io/ipfs/", clientId)
 		} else {
 			gatewayUrl = defaultIpfsGatewayUrl
 		}

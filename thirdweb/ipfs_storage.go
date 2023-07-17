@@ -60,8 +60,8 @@ func (ipfs *IpfsStorage) Get(ctx context.Context, uri string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	if strings.Contains(ipfs.gatewayUrl, ".thirdwebstorage-staging.com") {
+	
+	if strings.Contains(ipfs.gatewayUrl, ".ipfscdn.io") {
 		req.Header.Set("x-secret-key", ipfs.secretKey)
 	}
 
