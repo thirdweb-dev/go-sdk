@@ -9,7 +9,7 @@ type ERC721SignatureMinting struct {
 }
 ```
 
-### func \(\*ERC721SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L315>)
+### func \(\*ERC721SignatureMinting\) [Generate](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L314>)
 
 ```go
 func (signature *ERC721SignatureMinting) Generate(ctx context.Context, payloadToSign *Signature721PayloadInput) (*SignedPayload721, error)
@@ -41,7 +41,7 @@ payload := &thirdweb.Signature721PayloadInput{
 signedPayload, err := contract.Signature.Generate(payload)
 ```
 
-### func \(\*ERC721SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L364>)
+### func \(\*ERC721SignatureMinting\) [GenerateBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L363>)
 
 ```go
 func (signature *ERC721SignatureMinting) GenerateBatch(ctx context.Context, payloadsToSign []*Signature721PayloadInput) ([]*SignedPayload721, error)
@@ -90,13 +90,13 @@ payload := []*thirdweb.Signature721PayloadInput{
 signedPayload, err := contract.Signature.GenerateBatch(context.Background(), payload)
 ```
 
-### func \(\*ERC721SignatureMinting\) [GenerateBatchWithUris](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L446>)
+### func \(\*ERC721SignatureMinting\) [GenerateBatchWithUris](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L444>)
 
 ```go
 func (signature *ERC721SignatureMinting) GenerateBatchWithUris(ctx context.Context, payloadsToSign []*Signature721PayloadInputWithUri) ([]*SignedPayload721, error)
 ```
 
-### func \(\*ERC721SignatureMinting\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L69>)
+### func \(\*ERC721SignatureMinting\) [Mint](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L68>)
 
 ```go
 func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error)
@@ -104,13 +104,13 @@ func (signature *ERC721SignatureMinting) Mint(ctx context.Context, signedPayload
 
 Deprecated: use MintAndAwait
 
-### func \(\*ERC721SignatureMinting\) [MintAndAwait](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L73>)
+### func \(\*ERC721SignatureMinting\) [MintAndAwait](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L72>)
 
 ```go
 func (signature *ERC721SignatureMinting) MintAndAwait(ctx context.Context, signedPayload *SignedPayload721) (*types.Transaction, error)
 ```
 
-### func \(\*ERC721SignatureMinting\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L147>)
+### func \(\*ERC721SignatureMinting\) [MintBatch](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L146>)
 
 ```go
 func (signature *ERC721SignatureMinting) MintBatch(ctx context.Context, signedPayloads []*SignedPayload721) (*types.Transaction, error)
@@ -130,13 +130,13 @@ signedPayloads, err := contract.Signature.GenerateBatch(payloads)
 tx, err := contract.Signature.MintBatch(context.Background(), signedPayloads)
 ```
 
-### func \(\*ERC721SignatureMinting\) [MintWithOpts](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L88>)
+### func \(\*ERC721SignatureMinting\) [MintWithOpts](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L87>)
 
 ```go
 func (signature *ERC721SignatureMinting) MintWithOpts(ctx context.Context, signedPayload *SignedPayload721, txOpts *bind.TransactOpts) (*types.Transaction, error)
 ```
 
-### func \(\*ERC721SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L264>)
+### func \(\*ERC721SignatureMinting\) [Verify](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/erc721_signature_minting.go#L263>)
 
 ```go
 func (signature *ERC721SignatureMinting) Verify(ctx context.Context, signedPayload *SignedPayload721) (bool, error)

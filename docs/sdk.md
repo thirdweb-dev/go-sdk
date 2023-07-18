@@ -24,13 +24,13 @@ rpcUrlOrName: the name of the chain to connection to \(e.g. "rinkeby", "mumbai",
 
 options: an SDKOptions instance to specify a private key and/or an IPFS gateway URL
 
-### func [NewThirdwebSDKFromProvider](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L41>)
+### func [NewThirdwebSDKFromProvider](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L46>)
 
 ```go
 func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions) (*ThirdwebSDK, error)
 ```
 
-### func \(\*ThirdwebSDK\) [GetContract](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L194>)
+### func \(\*ThirdwebSDK\) [GetContract](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L213>)
 
 ```go
 func (sdk *ThirdwebSDK) GetContract(ctx context.Context, address string) (*SmartContract, error)
@@ -42,7 +42,7 @@ func (sdk *ThirdwebSDK) GetContract(ctx context.Context, address string) (*Smart
 
 address: the address of the contract
 
-### func \(\*ThirdwebSDK\) [GetContractFromAbi](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L210>)
+### func \(\*ThirdwebSDK\) [GetContractFromAbi](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L229>)
 
 ```go
 func (sdk *ThirdwebSDK) GetContractFromAbi(address string, abi string) (*SmartContract, error)
@@ -56,7 +56,7 @@ address: the address of the contract
 
 abi: the ABI of the contract
 
-### func \(\*ThirdwebSDK\) [GetEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L108>)
+### func \(\*ThirdwebSDK\) [GetEdition](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L127>)
 
 ```go
 func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error)
@@ -68,7 +68,7 @@ func (sdk *ThirdwebSDK) GetEdition(address string) (*Edition, error)
 
 address: the address of the Edition contract
 
-### func \(\*ThirdwebSDK\) [GetEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L152>)
+### func \(\*ThirdwebSDK\) [GetEditionDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L171>)
 
 ```go
 func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error)
@@ -80,7 +80,7 @@ func (sdk *ThirdwebSDK) GetEditionDrop(address string) (*EditionDrop, error)
 
 address: the address of the Edition Drop contract
 
-### func \(\*ThirdwebSDK\) [GetMarketplace](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L180>)
+### func \(\*ThirdwebSDK\) [GetMarketplace](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L199>)
 
 ```go
 func (sdk *ThirdwebSDK) GetMarketplace(address string) (*Marketplace, error)
@@ -92,7 +92,7 @@ func (sdk *ThirdwebSDK) GetMarketplace(address string) (*Marketplace, error)
 
 address: the address of the Marketplace contract
 
-### func \(\*ThirdwebSDK\) [GetMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L166>)
+### func \(\*ThirdwebSDK\) [GetMultiwrap](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L185>)
 
 ```go
 func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error)
@@ -104,7 +104,7 @@ func (sdk *ThirdwebSDK) GetMultiwrap(address string) (*Multiwrap, error)
 
 address: the address of the Multiwrap contract
 
-### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L94>)
+### func \(\*ThirdwebSDK\) [GetNFTCollection](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L113>)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
@@ -116,7 +116,7 @@ func (sdk *ThirdwebSDK) GetNFTCollection(address string) (*NFTCollection, error)
 
 address: the address of the NFT Collection contract
 
-### func \(\*ThirdwebSDK\) [GetNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L138>)
+### func \(\*ThirdwebSDK\) [GetNFTDrop](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L157>)
 
 ```go
 func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error)
@@ -128,7 +128,7 @@ func (sdk *ThirdwebSDK) GetNFTDrop(address string) (*NFTDrop, error)
 
 address: the address of the NFT Drop contract
 
-### func \(\*ThirdwebSDK\) [GetToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L124>)
+### func \(\*ThirdwebSDK\) [GetToken](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/sdk.go#L143>)
 
 ```go
 func (sdk *ThirdwebSDK) GetToken(address string) (*Token, error)
