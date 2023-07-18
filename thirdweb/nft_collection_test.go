@@ -2,6 +2,7 @@ package thirdweb
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,6 +19,7 @@ const tertiaryPrivateKey = "5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9
 func getSDK() *ThirdwebSDK {
 	sdk, _ := NewThirdwebSDK("http://localhost:8545", &SDKOptions{
 		PrivateKey: adminPrivateKey,
+		SecretKey: os.Getenv("THIRDWEB_SECRET_KEY"),
 	})
 
 	return sdk

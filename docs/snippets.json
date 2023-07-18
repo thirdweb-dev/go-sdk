@@ -3,7 +3,7 @@
     "name": "EditionDrop",
     "summary": "",
     "description": "",
-    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetEditionDrop(\"{{contract_address}}\")\n",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey := \"...\"\nsecretKey := \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n\tSecretKey: secretKey\n})\n\ncontract, err := sdk.GetEditionDrop(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "Claim",
@@ -111,7 +111,7 @@
     "name": "Edition",
     "summary": "",
     "description": "",
-    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetEdition(\"{{contract_address}}\")\n",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey := \"...\"\nsecretKey := \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n\tSecretKey: secretKey\n})\n\ncontract, err := sdk.GetEdition(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "Mint",
@@ -347,7 +347,7 @@
     "name": "NFTCollection",
     "summary": "",
     "description": "",
-    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetNFTCollection(\"{{contract_address}}\")\n",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey := \"...\"\nsecretKey := \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n\tSecretKey: secretKey\n})\n\ncontract, err := sdk.GetNFTCollection(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "GetOwned",
@@ -483,7 +483,7 @@
     "name": "NFTDrop",
     "summary": "",
     "description": "",
-    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetNFTDrop(\"{{contract_address}}\")\n",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey := \"...\"\nsecretKey := \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n\tSecretKey: secretKey\n})\n\ncontract, err := sdk.GetNFTDrop(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "Claim",
@@ -668,7 +668,7 @@
     "name": "Token",
     "summary": "",
     "description": "",
-    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetToken(\"{{contract_address}}\")\n",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey := \"...\"\nsecretKey := \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n\tSecretKey: secretKey\n})\n\ncontract, err := sdk.GetToken(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "DelegateTo",
@@ -818,7 +818,7 @@
     "name": "Multiwrap",
     "summary": "",
     "description": "",
-    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetMultiwrap(\"{{contract_address}}\")\n",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey := \"...\"\nsecretKey := \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n\tSecretKey: secretKey\n})\n\ncontract, err := sdk.GetMultiwrap(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "GetWrappedContents",
@@ -933,7 +933,7 @@
     "name": "Marketplace",
     "summary": "",
     "description": "",
-    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey = \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n})\n\ncontract, err := sdk.GetMarketplace(\"{{contract_address}}\")\n",
+    "example": "\nimport (\n\t\"github.com/thirdweb-dev/go-sdk/v2/thirdweb\"\n)\n\nprivateKey := \"...\"\nsecretKey := \"...\"\n\nsdk, err := thirdweb.NewThirdwebSDK(\"mumbai\", &thirdweb.SDKOptions{\n\tPrivateKey: privateKey,\n\tSecretKey: secretKey\n})\n\ncontract, err := sdk.GetMarketplace(\"{{contract_address}}\")\n",
     "methods": [
       {
         "name": "BuyoutListing",

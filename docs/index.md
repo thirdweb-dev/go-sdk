@@ -18,7 +18,7 @@ go get github.com/thirdweb-dev/go-sdk/v2/thirdweb
 
 ## Getting Started
 
-To start using this SDK, you just need to pass in a provider configuration.
+To start using this SDK, you just need to pass in a provider configuration. It's also strongly recommended that you use your thirdweb API keys with the SDK in order to get the best infrastructure performance (across RPCs, IPFS, etc.) - you can learn more about creating and using API keys [here](https://portal.thirdweb.com/api-keys).
 
 ### Instantiating the SDK
 
@@ -34,10 +34,15 @@ import (
 )
 
 func main() {
+	// Your secret key from the thirdweb api keys dashboard
+	secretKey := "..."
+
 	// Creates a new SDK instance to get read-only data for your contracts, you can pass:
 	// - a chain name (mainnet, rinkeby, goerli, polygon, mumbai, avalanche, fantom)
 	// - a custom RPC URL
-	sdk, err := thirdweb.NewThirdwebSDK("mumbai", nil)
+	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+		SecretKey: secretKey,
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -66,7 +71,12 @@ import (
 )
 
 func main() {
-	sdk, err := thirdweb.NewThirdwebSDK("mumbai", nil)
+	// Get your secret key that you created from the thirdweb dashboard
+	secretKey := "..."
+
+	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+		SecretKey: secretKey,
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -107,11 +117,15 @@ import (
 )
 
 func main() {
+	// Get your secret key that you created from the thirdweb dashboard
+	secretKey := "..."
+
 	// Get your private key securely (preferably from an environment variable)
 	privateKey := "..."
 
 	// Instantiate the SDK with your privateKey
 	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
+		SecretKey: secretKey,
 		PrivateKey: privateKey,
 	})
 	if err != nil {

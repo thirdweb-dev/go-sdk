@@ -19,7 +19,7 @@ func TestMerkleTreeSmall(t *testing.T) {
 	}
 
 	uri := "ipfs://QmeAx8aRvsYXN6mzky72b9V1HWokb271FoBmDu4tatC8hE/0"
-	storage := newIpfsStorage(defaultIpfsGatewayUrl, http.DefaultClient)
+	storage := newIpfsStorage("", defaultIpfsGatewayUrl, http.DefaultClient)
 
 	body, err := storage.Get(context.Background(), uri)
 	if err != nil {
@@ -49,7 +49,7 @@ func TestMerkleTreeEdgeCase(t *testing.T) {
 	}
 
 	uri := "ipfs://QmacDnA4i7Za19LpE3pngwLfUtakn71ghaKKjTkM2Phzj8/0"
-	storage := newIpfsStorage(defaultIpfsGatewayUrl, http.DefaultClient)
+	storage := newIpfsStorage("", defaultIpfsGatewayUrl, http.DefaultClient)
 
 	body, err := storage.Get(context.Background(), uri)
 	if err != nil {

@@ -14,10 +14,12 @@ import (
 	"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 )
 
-privateKey = "..."
+privateKey := "..."
+secretKey := "..."
 
 sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
 	PrivateKey: privateKey,
+	SecretKey: secretKey
 })
 
 // You can replace your own contract address here
@@ -74,7 +76,7 @@ type SmartContract struct {
 }
 ```
 
-### func \(\*SmartContract\) [Call](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/smart_contract.go#L153>)
+### func \(\*SmartContract\) [Call](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/smart_contract.go#L155>)
 
 ```go
 func (c *SmartContract) Call(ctx context.Context, method string, args ...interface{}) (interface{}, error)
@@ -107,7 +109,7 @@ type SnapshotClaim struct {
 }
 ```
 
-## type [SnapshotEntry](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L594-L599>)
+## type [SnapshotEntry](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L593-L598>)
 
 ```go
 type SnapshotEntry struct {
@@ -118,7 +120,7 @@ type SnapshotEntry struct {
 }
 ```
 
-## type [SnapshotEntryWithProof](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L572-L578>)
+## type [SnapshotEntryWithProof](<https://github.com/thirdweb-dev/go-sdk/blob/main/thirdweb/types.go#L571-L577>)
 
 ```go
 type SnapshotEntryWithProof struct {

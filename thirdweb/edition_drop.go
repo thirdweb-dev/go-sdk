@@ -16,10 +16,12 @@ import (
 //		"github.com/thirdweb-dev/go-sdk/v2/thirdweb"
 //	)
 //
-//	privateKey = "..."
+//	privateKey := "..."
+//	secretKey := "..."
 //
 //	sdk, err := thirdweb.NewThirdwebSDK("mumbai", &thirdweb.SDKOptions{
 //		PrivateKey: privateKey,
+//		SecretKey: secretKey
 //	})
 //
 //	contract, err := sdk.GetEditionDrop("{{contract_address}}")
