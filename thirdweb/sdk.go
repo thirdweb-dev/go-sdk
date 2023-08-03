@@ -12,8 +12,8 @@ import (
 
 type ThirdwebSDK struct {
 	*ProviderHandler
+	Deployer *ContractDeployer
 	Storage  IpfsStorage
-	Deployer ContractDeployer
 	Auth     WalletAuthenticator
 }
 
@@ -97,8 +97,8 @@ func NewThirdwebSDKFromProvider(provider *ethclient.Client, options *SDKOptions)
 
 	sdk := &ThirdwebSDK{
 		ProviderHandler: handler,
+		Deployer:        deployer,
 		Storage:         *storage,
-		Deployer:        *deployer,
 		Auth:            *auth,
 	}
 
