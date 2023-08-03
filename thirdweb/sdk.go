@@ -271,7 +271,7 @@ func getDefaultRpcUrl(rpcUrlorName string, clientId string) (string, error) {
 		if strings.HasPrefix(rpcUrlorName, "http") || strings.HasPrefix(rpcUrlorName, "wss") {
 			return rpcUrlorName, nil
 		} else {
-			return "", fmt.Errorf("invalid rpc url or chain name: %s", rpcUrlorName)
+			return defaultRpc(rpcUrlorName, clientId)
 		}
 	}
 }
