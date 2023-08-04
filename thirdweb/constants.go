@@ -182,7 +182,16 @@ func getNativeTokenByChainId(chainId ChainID) (*NativeToken, error) {
 			},
 		}, nil
 	default:
-		return nil, errors.New("Unsupported chain id")
+		return &NativeToken{
+			"Ether",
+			"ETH",
+			18,
+			&WrappedToken{
+				zeroAddress,
+				"Wrapped Ether",
+				"WETH",
+			},
+		}, nil
 	}
 }
 
