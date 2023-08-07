@@ -109,14 +109,14 @@ func (nft *NFTDrop) GetOwnedTokenIDs(ctx context.Context, address string) ([]*bi
 		address = nft.Helper.GetSignerAddress().String()
 	}
 
-	totalCount, err := nft.erc721.drop.NextTokenIdToMint(&bind.CallOpts{Context: ctx})
+	totalCount, err := nft.erc721.Drop.NextTokenIdToMint(&bind.CallOpts{Context: ctx})
 	if err != nil {
 		return nil, err
 	}
 
 	tokenIds := []*big.Int{}
 	for i := 0; i < int(totalCount.Int64()); i++ {
-		owner, err := nft.erc721.drop.OwnerOf(&bind.CallOpts{Context: ctx}, big.NewInt(int64(i)))
+		owner, err := nft.erc721.Drop.OwnerOf(&bind.CallOpts{Context: ctx}, big.NewInt(int64(i)))
 		if err != nil {
 			return nil, err
 		}
