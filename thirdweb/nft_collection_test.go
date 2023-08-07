@@ -25,6 +25,7 @@ func getSDK() *ThirdwebSDK {
 	return sdk
 }
 
+
 func getNft() *NFTCollection {
 	sdk := getSDK()
 	address, _ := sdk.Deployer.DeployNFTCollection(context.Background(), &DeployNFTCollectionMetadata{
