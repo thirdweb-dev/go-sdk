@@ -128,8 +128,6 @@ stop-docker:
 	docker rm hardhat-node
 
 test: FORCE
-	@echo "SDK_ALCHEMY_KEY = $$SDK_ALCHEMY_KEY"
-	@echo "THIRDWEB_SECRET_KEY = $$THIRDWEB_SECRET_KEY"
 	docker build . -t hardhat-mainnet-fork
 	docker start hardhat-node || docker run --name hardhat-node -d -p 8545:8545 -e "THIRDWEB_SECRET_KEY=${THIRDWEB_SECRET_KEY}" -e "SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY}" hardhat-mainnet-fork
 	sudo bash ./scripts/test/await-hardhat.sh

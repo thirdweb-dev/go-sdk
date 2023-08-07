@@ -1,6 +1,7 @@
 name: Build & Test
 env:
   SDK_ALCHEMY_KEY: ${{ secrets.SDK_ALCHEMY_KEY }}
+  THIRDWEB_SECRET_KEY: ${{ secrets.THIRDWEB_SECRET_KEY }}
 
 on: [push, pull_request]
 jobs:
@@ -19,7 +20,7 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-        
+
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -30,4 +31,3 @@ jobs:
 
       - name: Test
         run: yarn add hardhat && make test
-
