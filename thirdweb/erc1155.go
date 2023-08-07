@@ -746,7 +746,7 @@ func (erc1155 *ERC1155) Claim(ctx context.Context, tokenId int, quantity int) (*
 //
 //	tx, err := contract.ClaimTo(context.Background(), address, tokenId, quantity)
 func (erc1155 *ERC1155) ClaimTo(ctx context.Context, destinationAddress string, tokenId int, quantity int) (*types.Transaction, error) {
-	claimVerification, err := erc1155.prepareClaim(ctx, tokenId, quantity)
+	claimVerification, err := erc1155.PrepareClaim(ctx, tokenId, quantity)
 	if err != nil {
 		return nil, err
 	}
@@ -787,7 +787,7 @@ func (erc1155 *ERC1155) ClaimTo(ctx context.Context, destinationAddress string, 
 	return erc1155.helper.AwaitTx(ctx, tx.Hash())
 }
 
-func (erc1155 *ERC1155) prepareClaim(ctx context.Context, tokenId int, quantity int) (*ClaimVerification, error) {
+func (erc1155 *ERC1155) PrepareClaim(ctx context.Context, tokenId int, quantity int) (*ClaimVerification, error) {
 	addressToClaim := erc1155.helper.GetSignerAddress().Hex()
 	claimCondition, err := erc1155.ClaimConditions.GetActive(ctx, tokenId)
 	if err != nil {
