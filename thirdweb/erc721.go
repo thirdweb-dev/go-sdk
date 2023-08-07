@@ -867,9 +867,7 @@ func (erc721 *ERC721) Claim(ctx context.Context, quantity int) (*types.Transacti
 //
 //	tx, err := contract.ERC721.ClaimTo(context.Background(), address, quantity)
 func (erc721 *ERC721) ClaimTo(ctx context.Context, destinationAddress string, quantity int) (*types.Transaction, error) {
-	addressToClaim := erc721.helper.GetSignerAddress().Hex()
-
-	claimVerification, err := erc721.prepareClaim(ctx, addressToClaim, quantity, true)
+	preparedClaimTo, err := erc721.PrepareClaimTo(ctx, destinationAddress, quantity)
 	if err != nil {
 		return nil, err
 	}
@@ -879,7 +877,31 @@ func (erc721 *ERC721) ClaimTo(ctx context.Context, destinationAddress string, qu
 		return nil, err
 	}
 
-	txOpts.Value = claimVerification.Value
+	txOpts.Value = preparedClaimTo.Value
+
+	tx, err := erc721.drop.Claim(
+		txOpts,
+		preparedClaimTo.Receiver,
+		preparedClaimTo.Quantity,
+		preparedClaimTo.Currency,
+		preparedClaimTo.PricePerToken,
+		preparedClaimTo.AllowlistProof,
+		preparedClaimTo.Data,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return erc721.helper.AwaitTx(ctx, tx.Hash())
+}
+
+func (erc721 *ERC721) PrepareClaimTo(ctx context.Context, destinationAddress string, quantity int) (*PreparedClaimTo, error) {
+	addressToClaim := erc721.helper.GetSignerAddress().Hex()
+
+	claimVerification, err := erc721.prepareClaim(ctx, addressToClaim, quantity, true)
+	if err != nil {
+		return nil, err
+	}
 
 	proof := abi.IDropAllowlistProof{
 		Proof:                  claimVerification.Proofs,
@@ -888,20 +910,15 @@ func (erc721 *ERC721) ClaimTo(ctx context.Context, destinationAddress string, qu
 		Currency:               common.HexToAddress(claimVerification.CurrencyAddressInProof),
 	}
 
-	tx, err := erc721.drop.Claim(
-		txOpts,
-		common.HexToAddress(destinationAddress),
-		big.NewInt(int64(quantity)),
-		common.HexToAddress(claimVerification.CurrencyAddress),
-		claimVerification.Price,
-		proof,
-		[]byte{},
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return erc721.helper.AwaitTx(ctx, tx.Hash())
+	return &PreparedClaimTo{
+		Value: claimVerification.Value,
+		Receiver: common.HexToAddress(destinationAddress),
+		Quantity: big.NewInt(int64(quantity)),
+		Currency: common.HexToAddress(claimVerification.CurrencyAddress),
+		PricePerToken: claimVerification.Price,
+		AllowlistProof: proof,
+		Data: []byte{},
+	}, nil
 }
 
 func (erc721 *ERC721) GetClaimArguments(

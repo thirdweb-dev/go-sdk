@@ -1,5 +1,7 @@
 .PHONY: abi docs publish local-test
 
+export THIRDWEB_SECRET_KEY
+
 SHELL := /bin/bash
 
 abi:
@@ -127,7 +129,7 @@ stop-docker:
 
 test: FORCE
 	docker build . -t hardhat-mainnet-fork
-	docker start hardhat-node || docker run --name hardhat-node -d -p 8545:8545 -e SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY} hardhat-mainnet-fork
+	docker start hardhat-node || docker run --name hardhat-node -d -p 8545:8545 -e "THIRDWEB_SECRET_KEY=${THIRDWEB_SECRET_KEY}" -e "SDK_ALCHEMY_KEY=${SDK_ALCHEMY_KEY}" hardhat-mainnet-fork
 	sudo bash ./scripts/test/await-hardhat.sh
 	go clean -testcache
 	go test -v ./thirdweb
