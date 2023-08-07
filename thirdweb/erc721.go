@@ -322,7 +322,7 @@ func (erc721 *ERC721) IsApproved(ctx context.Context, owner string, operator str
 }
 
 func (erc721 *ERC721) GetClaimInfo(ctx context.Context, address string) (*ClaimInfo, error) {
-	claimVerification, err := erc721.PrepareClaim(ctx, address, 0, false)
+	claimVerification, err := erc721.prepareClaim(ctx, address, 0, false)
 	if err != nil {
 		return nil, err
 	}
@@ -396,7 +396,7 @@ func (erc721 *ERC721) GetClaimIneligibilityReasons(ctx context.Context, quantity
 		}
 
 		if allowlistEntry != nil {
-			claimVerification, err := erc721.PrepareClaim(
+			claimVerification, err := erc721.prepareClaim(
 				ctx,
 				addressToCheck,
 				quantity,
@@ -898,7 +898,7 @@ func (erc721 *ERC721) ClaimTo(ctx context.Context, destinationAddress string, qu
 func (erc721 *ERC721) PrepareClaimTo(ctx context.Context, destinationAddress string, quantity int) (*PreparedClaimTo, error) {
 	addressToClaim := erc721.helper.GetSignerAddress().Hex()
 
-	claimVerification, err := erc721.PrepareClaim(ctx, addressToClaim, quantity, true)
+	claimVerification, err := erc721.prepareClaim(ctx, addressToClaim, quantity, true)
 	if err != nil {
 		return nil, err
 	}
@@ -929,7 +929,7 @@ func (erc721 *ERC721) GetClaimArguments(
 	*ClaimArguments,
 	error,
 ) {
-	claimVerification, err := erc721.PrepareClaim(ctx, destinationAddress, quantity, false)
+	claimVerification, err := erc721.prepareClaim(ctx, destinationAddress, quantity, false)
 	if err != nil {
 		return nil, err
 	}
@@ -1001,7 +1001,7 @@ func (erc721 *ERC721) fetchNFTsByTokenId(ctx context.Context, tokenIds []*big.In
 }
 
 
-func (erc721 *ERC721) PrepareClaim(ctx context.Context, addressToClaim string, quantity int, handleApproval bool) (*ClaimVerification, error) {
+func (erc721 *ERC721) prepareClaim(ctx context.Context, addressToClaim string, quantity int, handleApproval bool) (*ClaimVerification, error) {
 	active, err := erc721.ClaimConditions.GetActive(ctx)
 	if err != nil {
 		return nil, err
