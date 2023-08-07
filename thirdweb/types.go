@@ -67,6 +67,16 @@ type EditionMetadataInput struct {
 	Supply   int
 }
 
+type PreparedClaimTo struct {
+	Receiver common.Address
+	Quantity *big.Int
+	Currency common.Address
+	PricePerToken *big.Int
+	AllowlistProof abi.IDropAllowlistProof
+	Data []byte
+	Value *big.Int
+}
+
 type ClaimVerification struct {
 	Value                  *big.Int
 	Proofs                 [][32]byte
